@@ -17,7 +17,7 @@ engagement = 5
 description = "bake to desired consistency"
 duration = "2 hours 30 minutes"
 engagement = 2
-depends = ["heat_oven", "cook_bacon"]
+depends = ["heat_oven", "assemble_beans"]
 
 [remove_bacon_from_oven]
 duration = "15 seconds"
@@ -32,7 +32,7 @@ engagement = 3
 [put_bacon_in_oven]
 duration = "2 minutes"
 description = "put 10 slices of bacon on pan and put in oven"
-tools = "flatish baking pan"
+tools = ["flatish baking pan"]
 ingredients = ["bacon, 10 slices"]
 depends = ["heat_oven"]
 
@@ -62,12 +62,12 @@ duration = "5 minutes"
 description = "saute diced green peppers and onion"
 engagement = 10
 # it'd be good to test here if dicing veggies happens before this if dicing takes longer than heating
-depends = ["heat_pan", "dice_pepper_onion"]
+depends = ["heat_pan", "dice_veggies"]
 
 [simmer_beans]
 duration = "90 seconds"
 description = "simmer bean mixture a minute or so"
-depends = ["gather_ingredients", "dice_veggies"]
+depends = ["gather_ingredients", "saute_veggies"]
 
 [assemble_beans]
 duration = "30 seconds"
@@ -77,7 +77,7 @@ depends = ["grease_bean_pan", "cook_bacon", "simmer_beans"]
 [grease_bean_pan]
 duration = "45 seconds"
 description = "grease 3 quart baking pan"
-tools = "3 qt baking pan"
+tools = ["3 qt baking pan"]
 
 [heat_oven]
 duration = "15 minutes"

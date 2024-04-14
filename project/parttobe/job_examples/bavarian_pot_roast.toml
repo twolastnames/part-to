@@ -27,7 +27,8 @@ ingredients = ["chopped onion, 1/2"]
 
 [assemble_ingredients]
 description = "put the following in the bowl onion bowl: 1/2 tsp ground ginger, 1/2 tsp pepper, 1 bay leaf,  1 tsp ground cinnamon, 1 tsp salt, 2 tbs sugar, 1 tbs white vinegar, 8 oz tomato sauce, 3/4 cup beer or beef broth, 1 1/4 cup water"
-ingredients = ["ground ginger, 1/2 tsp", "pepper, 1/2 tsp", "bay leaf, 1", "cinnamon, ground, 1 tsp", "salt, 1 tsp", "sugar, 2 tbs", "white vinegar, 1 tbs", "tomato sauce, 8 oz", "beer or beef broth, 3/4 cup", "water, 1 1/4 cup", "", "",]
+ingredients = ["ground ginger, 1/2 tsp", "pepper, 1/2 tsp", "bay leaf, 1", "cinnamon, ground, 1 tsp", "salt, 1 tsp", "sugar, 2 tbs", "white vinegar, 1 tbs", "tomato sauce, 8 oz", "beer or beef broth, 3/4 cup", "water, 1 1/4 cup",]
+duration = "3 minutes"
 depends = ["chop_onion"]
 
 [add_ingredients]

@@ -3,9 +3,9 @@ name = "Corn on the Cob"
 depends = ["remove_from_heat"]
 
 [wash_corn]
-duration = "2 minutes"
+duration = "1 minutes"
 description = "wash the corn"
-ingredients = ["Corn on the Cob"]
+ingredients = ["cobbed corn"]
 
 [half_cobs]
 duration = "2 minutes"
