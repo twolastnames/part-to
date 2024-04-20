@@ -13,29 +13,6 @@ class HelloWorldTestCase(TestCase):
         self.assertEqual(json.loads(response.content), {"message": "Hello, world!"})
 
 
-class SetupTestCase(TestCase):
-    pass
-
-
-#    @classmethod
-#    def setUpClass(cls):
-#        file_directory = os.path.dirname(__file__)
-#        client = Client()
-#        loadables = [
-#            "/baked_beans.toml",
-#            "/bavarian_pot_roast.toml",
-#            "/corn_on_the_cob.toml",
-#        ]
-#        for loadable in loadables:
-#            data = json.dumps(toml.load(file_directory + "/job_examples" + loadable))
-#            response = client.post("/api/job/", data, content_type="application/json")
-#            if response.status_code != 200:
-#                content = json.loads(response.content)
-#                raise Exception('{} did not work with status {} with message: {}'.format(
-#                    loadable, response.status_code, content['message']
-#                    ))
-
-
 def loadExamples():
     file_directory = os.path.dirname(__file__)
     client = Client()
@@ -142,7 +119,7 @@ class UploadJobCase(TestCase):
         )
 
 
-class ListToolsTestClass(SetupTestCase):
+class ListToolsTestClass(TestCase):
     def setUp(self):
         loadExamples()
 
@@ -190,7 +167,7 @@ class ListToolsTestClass(SetupTestCase):
         )
 
 
-class ListIngredientsTestClass(SetupTestCase):
+class ListIngredientsTestClass(TestCase):
     def setUp(self):
         loadExamples()
 
@@ -251,7 +228,7 @@ class ListIngredientsTestClass(SetupTestCase):
         )
 
 
-class JobTestClass(SetupTestCase):
+class JobTestClass(TestCase):
     def test_get_job_set(self):
         client = Client()
         response = client.post(
@@ -289,7 +266,7 @@ class JobTestClass(SetupTestCase):
         )
 
 
-class TaskTestClass(SetupTestCase):
+class TaskTestClass(TestCase):
     def test_get_running_task(self):
         client = Client()
         response = client.get("/api/task/someID", format="json")
@@ -351,7 +328,7 @@ class TaskTestClass(SetupTestCase):
         )
 
 
-class DutyTestClass(SetupTestCase):
+class DutyTestClass(TestCase):
     def test_get_duty(self):
         client = Client()
         response = client.get("/api/duty/someId", format="json")
