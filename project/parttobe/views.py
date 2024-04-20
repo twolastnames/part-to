@@ -68,6 +68,15 @@ def check_task(task):
     return missing
 
 
+class UnusedTaskFoundException(Exception):
+    def __init__(self, task_name):
+        self.task_name = task_name
+        super().__init__()
+
+    def __str__(self):
+        return 'Unused Task(s): "{}"'.format(self.task_name)
+
+
 class TaskNotFoundException(Exception):
     def __init__(self, task_name):
         self.task_name = task_name
@@ -88,8 +97,10 @@ class MissingTaskKeyException(Exception):
 
 
 def traverse_tasks(tasks):
+    seen_keys = set()
     if "part_to" not in tasks:
         raise TaskNotFoundException("part_to")
+    seen_keys.add("part_to")
     part_to = tasks["part_to"]
     if "depends" not in part_to:
         raise MissingTaskKeyException("part_to", "depends")
@@ -98,6 +109,7 @@ def traverse_tasks(tasks):
     stack = part_to["depends"][:]
     while len(stack) > 0:
         current = stack.pop()
+        seen_keys.add(current)
         if current not in tasks:
             raise TaskNotFoundException(current)
         task = tasks[current]
@@ -105,6 +117,10 @@ def traverse_tasks(tasks):
         if "depends" in task:
             for depend in task["depends"]:
                 stack.append(depend)
+    all_keys = set(tasks.keys())
+    extra_keys = all_keys - seen_keys
+    if extra_keys:
+        raise UnusedTaskFoundException(list(extra_keys))
 
 
 def verify_tasks(tasks):
@@ -122,6 +138,8 @@ def job_post(request):
     except TaskNotFoundException as exception:
         return Response({"message": str(exception)}, 400)
     except MissingTaskKeyException as exception:
+        return Response({"message": str(exception)}, 400)
+    except UnusedTaskKeyException as exception:
         return Response({"message": str(exception)}, 400)
     except Exception as exception:
         return Response({"message": str(exception)}, 500)
