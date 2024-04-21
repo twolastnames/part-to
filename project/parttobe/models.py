@@ -21,7 +21,7 @@ class ToolDefinition(models.Model):
 
 
 class TaskDefinition(models.Model):
-    duration = models.DurationField()
+    initial_duration = models.DurationField()
     part_to = models.ForeignKey("PartTo", on_delete=models.CASCADE)
     description = models.CharField(max_length=0x100)
     engagement = models.BigIntegerField(null=True)

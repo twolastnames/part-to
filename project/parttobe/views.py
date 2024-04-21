@@ -30,7 +30,7 @@ def save_job(tasks, dependeds):
         if "depends" in task:
             stack.extend(task["depends"])
         saved_tasks[current] = models.TaskDefinition.objects.create(
-            duration=datetime.timedelta(
+            initial_duration=datetime.timedelta(
                 seconds=duration_parser.parse(task["duration"])
             ),
             depended=depended,
