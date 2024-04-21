@@ -6,6 +6,7 @@ from . import models
 import duration_parser
 import datetime
 
+ROOT_TASK_NAME = 'part_to'
 
 @api_view(["GET"])
 def hello_world(request):
@@ -120,7 +121,7 @@ def traverse_tasks(tasks):
     all_keys = set(tasks.keys())
     extra_keys = all_keys - seen_keys
     if extra_keys:
-        raise UnusedTaskFoundException(list(extra_keys))
+        raise UnusedTaskFoundException(",".join(extra_keys))
 
 
 def verify_tasks(tasks):
@@ -139,7 +140,7 @@ def job_post(request):
         return Response({"message": str(exception)}, 400)
     except MissingTaskKeyException as exception:
         return Response({"message": str(exception)}, 400)
-    except UnusedTaskKeyException as exception:
+    except UnusedTaskFoundException as exception:
         return Response({"message": str(exception)}, 400)
     except Exception as exception:
         return Response({"message": str(exception)}, 500)
