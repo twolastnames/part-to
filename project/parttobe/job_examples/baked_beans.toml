@@ -19,10 +19,6 @@ duration = "2 hours 30 minutes"
 engagement = 2
 depends = ["heat_oven", "assemble_beans"]
 
-[remove_bacon_from_oven]
-duration = "15 seconds"
-description = "remove bacon from oven"
-
 [cook_bacon]
 duration = "20 minutes"
 description = "cook bacon to slightly rare"

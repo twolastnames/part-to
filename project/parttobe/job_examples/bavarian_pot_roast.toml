@@ -17,8 +17,9 @@ depends = ["put_oil_in_dutch_oven"]
 
 [brown_roast]
 description = "put roast meat in dutch oven and brown all sides"
-duration = ["10 minutes"]
+duration = "10 minutes"
 ingredients = ["beef chuck roast, boneless, 1 roast, about 3 lbs"]
+depends = ["heat_dutch_oven"]
 
 [chop_onion]
 description = "chop an onion and put it in 4ish cup bowl"
@@ -33,7 +34,7 @@ depends = ["chop_onion"]
 
 [add_ingredients]
 description = "dump ingredients in dutch oven and stir"
-depends = ["assemble_ingredients"]
+depends = ["assemble_ingredients", "brown_roast"]
 duration = "30 seconds"
 
 [simmer]
