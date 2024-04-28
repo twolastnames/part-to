@@ -19,11 +19,6 @@ class PartTo(models.Model):
         return self.id
 
 
-class PartToTaskDefinition(models.Model):
-    part_to = models.ForeignKey("PartTo", on_delete=models.CASCADE)
-    depend = models.ForeignKey("TaskDefinition", on_delete=models.CASCADE)
-
-
 class IngredientDefinition(models.Model):
     name = models.CharField(max_length=0x80)
     task = models.ForeignKey("TaskDefinition", on_delete=models.CASCADE)
