@@ -6,7 +6,8 @@ from . import models
 import duration_parser
 import datetime
 
-ROOT_TASK_NAME = 'part_to'
+ROOT_TASK_NAME = "part_to"
+
 
 @api_view(["GET"])
 def hello_world(request):
@@ -150,6 +151,18 @@ def job_post(request):
 
 def job_get(request):
     return Response(status=404)
+
+
+def run_post(request):
+    part_tos = models.PartTo(name__in=request.data.jobs)
+    tasks = map(lambda part_to: models.TaskDefinition(part_to=part_to), part_tos)
+
+
+@api_view(["GET", "POST"])
+def run(request):
+    if request.method == "GET":
+        raise NotImplementedError()
+    return run_post(request)
 
 
 @api_view(["GET", "POST"])

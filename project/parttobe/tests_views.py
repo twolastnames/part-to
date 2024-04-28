@@ -4,6 +4,7 @@ import json
 import toml
 import os
 import urllib
+from unittest import mock
 
 
 class HelloWorldTestCase(TestCase):
@@ -20,6 +21,7 @@ def loadExamples():
         "/baked_beans.toml",
         "/bavarian_pot_roast.toml",
         "/corn_on_the_cob.toml",
+        "/frozen_green_beans.toml",
     ]
     for loadable in loadables:
         data = json.dumps(toml.load(file_directory + "/job_examples" + loadable))
@@ -229,6 +231,39 @@ class ListIngredientsTestClass(TestCase):
 
 
 class JobTestClass(TestCase):
+    def setUp(self):
+        loadExamples()
+
+    @mock.patch(
+        "uuid.uuid4",
+        mock.MagicMock(return_value="12345678-1234-4321-1234-123456789021"),
+    )
+    @mock.patch("time.time", mock.MagicMock(return_value=12345))
+    def test_get_simple_job_set(self):
+        client = Client()
+        response = client.post(
+            "/api/run",
+            {
+                "jobs": ["Frozen Green Beans"],
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            json.loads(response.content),
+            {
+                "id": "12345678-1234-4321-1234-123456789021",
+                "report": "2024-03-29 15:29:10.418159",
+                "complete": "2024-03-29 15:29:10.418159",
+                "duties": [
+                    {
+                        "description": "boil water in large pot",
+                        "duration": 540000,
+                    }
+                ],
+            },
+        )
+
     def test_get_job_set(self):
         client = Client()
         response = client.post(
