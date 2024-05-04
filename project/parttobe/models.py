@@ -1,5 +1,7 @@
 from django.db import models
 import functools
+import collections
+import types
 import datetime
 
 
@@ -27,6 +29,73 @@ class IngredientDefinition(models.Model):
 class ToolDefinition(models.Model):
     name = models.CharField(max_length=0x40)
     task = models.ForeignKey("TaskDefinition", on_delete=models.CASCADE)
+
+
+@functools.total_ordering
+class EngagementSet:
+    def __init__(self, task_id, engagement, duration):
+        self.task_id = task_id
+        self.engagement = engagement
+        self.duration = duration
+
+    def __eq__(self, other):
+        return other.duration == other.duration
+
+    def __lt__(self, other):
+        return self.duration < other.duration
+
+    @staticmethod
+    def earliest_duration_work(engagements):
+        if not len(engagements):
+            return datetime.timedelta()
+        shortest_duration = min(engagements).duration
+        return functools.reduce(
+            lambda previous, current: previous
+            + (current.engagement / 100.0) * shortest_duration,
+            engagements,
+            datetime.timedelta(),
+        )
+
+    @staticmethod
+    def remove_earliest_engagement(engagements_in):
+        engagements = engagements_in.copy()
+        if not len(engagements):
+            return datetime.timedelta(), engagements
+        earliest = min(engagements)
+        engagements.remove(earliest)
+        duration = earliest.duration * (earliest.engagement / 100.0)
+        adjusted_engagements = []
+        for engagement in engagements:
+            current_duration = engagement.duration * engagement.engagement / 100
+            duration += current_duration
+            adjusted_engagements.append(
+                EngagementSet(
+                    engagment.id,
+                    engagement.engagement,
+                    engagement.duration - current_duration,
+                )
+            )
+        return duration, adjusted_engagements
+
+    @staticmethod
+    def leftover_duration_engagements(duration, engagements_in):
+        engagements = engagement_in.copy()
+        if not len(arguments):
+            return engagements
+        earliest = min(engagements)
+        total_engagement = functools.reduce(
+            lambda previous, current: previous + current.engagement, engagements, 0
+        )
+        done_duration = duration / (total_engagement / 100.0)
+        engagements.remove(earliest)
+        return map(
+            lambda engagement: EngagementSet(
+                engagement.id,
+                engagement.engagement,
+                engagement.duration - done_duration,
+            ),
+            engagements,
+        )
 
 
 @functools.total_ordering
@@ -71,11 +140,45 @@ class TaskDefinition(models.Model):
             yield on
 
     @staticmethod
+    def handle_duty_calculation(engagements_in, task):
+        engagements = engagements_in.copy()
+        duration_in = task.duration
+        duration_out = datetime.timedelta()
+        while True:
+            engagements.sort()
+
+    @staticmethod
     def chain_duration(start):
-        duration = datetime.timedelta(seconds=0)
-        for model in TaskDefinition.depended_chain_from(start):
-            duration += model.duration
+        engagements = []
+        duration = datetime.timedelta()
+        for task in TaskDefinition.depended_chain_from(start):
+            if task.engagement:
+                engagements.append(
+                    EngagementSet(task.id, task.engagement, task.duration)
+                )
+            else:
+                consumed_duration, engagements = task.consume_duration(engagements)
+                duration += task.duration + consumed_duration
+        if len(engagements):
+            engagements.sort()
+            duration += engagements[-1].duration
         return duration
+
+    @staticmethod
+    def duration_to(end):
+        duration = datetime.timedelta(seconds=0)
+        tasks = reversed(list(TaskDefinition.dependency_chain_from(end)))
+        for task in tasks:
+            duration += task.duration
+        return duration
+
+    def consume_duration(self, engagements):
+        earliest_duration_work = EngagementSet.earliest_duration_work(engagements)
+        return (
+            EngagementSet.leftover_duration_engagements(self.duration, engagements)
+            if earliest_duration_work > self.duration
+            else EngagementSet.remove_earliest_engagement(engagements)
+        )
 
     def is_task(self):
         return not self.engagement
