@@ -196,6 +196,10 @@ class TaskDefinition(models.Model):
             return False
         if not other:
             return True
+        if other.part_to != self.part_to:
+            otherDuration = TaskDefinition.chain_duration(other)
+            selfDuration = TaskDefinition.chain_duration(self)
+            return otherDuration < selfDuration
         *_, first = self.depended_chain_from(other)
         seen_self = False
         for model in self.dependency_chain_from(first):

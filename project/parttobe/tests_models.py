@@ -176,6 +176,190 @@ class CollectionOuterDutyTestClass(TestCase):
         self.assertEqual(backward, ["do task1", "do task2", "do task3", "do duty1"])
 
 
+class MultiplePartToMiddleDutyTestClass(TestCase):
+    def setUp(self):
+        get_task_definitions.cache_clear()
+
+    @classmethod
+    def setUpClass(cls):
+        super(MultiplePartToMiddleDutyTestClass, cls).setUpClass()
+        part_to1 = PartTo.objects.create(name="My Part To One")
+        MultiplePartToMiddleDutyTestClass.part_to1 = part_to1
+        MultiplePartToMiddleDutyTestClass.task1_1 = TaskDefinition.objects.create(
+            initial_duration=datetime.timedelta(minutes=1),
+            part_to=part_to1,
+            description="do task1-1",
+        )
+        MultiplePartToMiddleDutyTestClass.duty1_1 = TaskDefinition.objects.create(
+            initial_duration=datetime.timedelta(seconds=30),
+            part_to=part_to1,
+            description="do duty1-1",
+            depended=MultiplePartToMiddleDutyTestClass.task1_1,
+            engagement=10,
+        )
+        MultiplePartToMiddleDutyTestClass.task1_2 = TaskDefinition.objects.create(
+            initial_duration=datetime.timedelta(minutes=2),
+            part_to=part_to1,
+            description="do task1-2",
+            depended=MultiplePartToMiddleDutyTestClass.duty1_1,
+        )
+        part_to2 = PartTo.objects.create(name="My Part To Two")
+        MultiplePartToMiddleDutyTestClass.part_to2 = part_to2
+        MultiplePartToMiddleDutyTestClass.task2_1 = TaskDefinition.objects.create(
+            initial_duration=datetime.timedelta(minutes=1),
+            part_to=part_to2,
+            description="do task2-1",
+        )
+        MultiplePartToMiddleDutyTestClass.task2_2 = TaskDefinition.objects.create(
+            initial_duration=datetime.timedelta(minutes=4),
+            part_to=part_to2,
+            description="do task2-2",
+            depended=MultiplePartToMiddleDutyTestClass.task2_1,
+        )
+        MultiplePartToMiddleDutyTestClass.duty2_1 = TaskDefinition.objects.create(
+            initial_duration=datetime.timedelta(seconds=30),
+            part_to=part_to2,
+            description="do duty2-1",
+            depended=MultiplePartToMiddleDutyTestClass.task2_2,
+            engagement=10,
+        )
+
+    def test_singlepartto_sorting(self):
+        all = [
+            MultiplePartToMiddleDutyTestClass.task1_1,
+            MultiplePartToMiddleDutyTestClass.task1_2,
+            MultiplePartToMiddleDutyTestClass.duty1_1,
+        ]
+        all.sort()
+        descriptions = list(map(lambda task: task.description, all))
+        self.assertEqual(descriptions, ["do task1-2", "do duty1-1", "do task1-1"])
+
+    def test_multipartto_sorting(self):
+        all = [
+            MultiplePartToMiddleDutyTestClass.task1_1,
+            MultiplePartToMiddleDutyTestClass.task1_2,
+            MultiplePartToMiddleDutyTestClass.task2_2,
+            MultiplePartToMiddleDutyTestClass.duty1_1,
+            MultiplePartToMiddleDutyTestClass.task2_1,
+            MultiplePartToMiddleDutyTestClass.duty2_1,
+        ]
+        all.sort()
+        descriptions = list(map(lambda task: task.description, all))
+        self.assertEqual(
+            descriptions,
+            [
+                "do duty2-1",
+                "do task2-2",
+                "do task1-2",
+                "do duty1-1",
+                "do task1-1",
+                "do task2-1",
+            ],
+        )
+
+    def test_time_calculation(self):
+        all = [
+            MultiplePartToMiddleDutyTestClass.task1_1,
+            MultiplePartToMiddleDutyTestClass.task1_2,
+            MultiplePartToMiddleDutyTestClass.duty1_1,
+            MultiplePartToMiddleDutyTestClass.task2_1,
+            MultiplePartToMiddleDutyTestClass.task2_2,
+            MultiplePartToMiddleDutyTestClass.duty2_1,
+        ]
+        all.sort()
+        self.assertEqual(
+            TaskDefinition.chain_duration(all[0]),
+            datetime.timedelta(minutes=5, seconds=3),
+        )
+
+
+class MultiplePartToTestClass(TestCase):
+    def setUp(self):
+        get_task_definitions.cache_clear()
+
+    @classmethod
+    def setUpClass(cls):
+        super(MultiplePartToTestClass, cls).setUpClass()
+        part_to1 = PartTo.objects.create(name="My Part To One")
+        MultiplePartToTestClass.part_to1 = part_to1
+        MultiplePartToTestClass.task1_1 = TaskDefinition.objects.create(
+            initial_duration=datetime.timedelta(minutes=1),
+            part_to=part_to1,
+            description="do task1-1",
+        )
+        MultiplePartToTestClass.task1_2 = TaskDefinition.objects.create(
+            initial_duration=datetime.timedelta(minutes=2),
+            part_to=part_to1,
+            description="do task1-2",
+            depended=MultiplePartToTestClass.task1_1,
+        )
+        MultiplePartToTestClass.duty1_1 = TaskDefinition.objects.create(
+            initial_duration=datetime.timedelta(seconds=30),
+            part_to=part_to1,
+            description="do duty1-1",
+            depended=MultiplePartToTestClass.task1_2,
+            engagement=10,
+        )
+        part_to2 = PartTo.objects.create(name="My Part To Two")
+        MultiplePartToTestClass.part_to2 = part_to2
+        MultiplePartToTestClass.task2_1 = TaskDefinition.objects.create(
+            initial_duration=datetime.timedelta(minutes=4),
+            part_to=part_to2,
+            description="do task2-1",
+        )
+        MultiplePartToTestClass.task2_2 = TaskDefinition.objects.create(
+            initial_duration=datetime.timedelta(minutes=2),
+            part_to=part_to2,
+            description="do task2-2",
+            depended=MultiplePartToTestClass.task2_1,
+        )
+        MultiplePartToTestClass.duty2_1 = TaskDefinition.objects.create(
+            initial_duration=datetime.timedelta(seconds=30),
+            part_to=part_to2,
+            description="do duty2-1",
+            depended=MultiplePartToTestClass.task2_2,
+            engagement=10,
+        )
+
+    def test_multipartto_sorting(self):
+        all = [
+            MultiplePartToTestClass.task1_1,
+            MultiplePartToTestClass.task1_2,
+            MultiplePartToTestClass.task2_2,
+            MultiplePartToTestClass.duty1_1,
+            MultiplePartToTestClass.task2_1,
+            MultiplePartToTestClass.duty2_1,
+        ]
+        all.sort()
+        descriptions = list(map(lambda task: task.description, all))
+        self.assertEqual(
+            descriptions,
+            [
+                "do duty2-1",
+                "do task2-2",
+                "do task2-1",
+                "do duty1-1",
+                "do task1-2",
+                "do task1-1",
+            ],
+        )
+
+    def test_time_calculation(self):
+        all = [
+            MultiplePartToTestClass.task1_1,
+            MultiplePartToTestClass.task1_2,
+            MultiplePartToTestClass.duty1_1,
+            MultiplePartToTestClass.task2_1,
+            MultiplePartToTestClass.task2_2,
+            MultiplePartToTestClass.duty2_1,
+        ]
+        all.sort()
+        self.assertEqual(
+            TaskDefinition.chain_duration(all[0]),
+            datetime.timedelta(minutes=6, seconds=3),
+        )
+
+
 class CollectionInnerDutyTestClass(TestCase):
     def setUp(self):
         get_task_definitions.cache_clear()
@@ -212,12 +396,11 @@ class CollectionInnerDutyTestClass(TestCase):
 
     def test_calculating_underflowing_task_duractions(self):
         duty1 = CollectionInnerDutyTestClass.duty1
-        duty1.initial_duration = datetime.timedelta(minutes = 5)
+        duty1.initial_duration = datetime.timedelta(minutes=5)
         self.assertEqual(
             TaskDefinition.chain_duration(CollectionInnerDutyTestClass.duty1),
             datetime.timedelta(minutes=3, seconds=30),
         )
-
 
     def test_sorting_tasks(self):
         task1 = CollectionInnerDutyTestClass.task1
