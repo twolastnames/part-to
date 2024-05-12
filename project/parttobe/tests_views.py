@@ -311,7 +311,7 @@ class TaskTestClass(TestCase):
             {
                 "description": "Hello, world!",
                 "status": "running",
-                "projectedSeconds": 77.7,
+                "duration": 77700,
             },
         )
 
@@ -324,7 +324,7 @@ class TaskTestClass(TestCase):
             {
                 "description": "Hello, world!",
                 "status": "waiting",
-                "projectedSeconds": 77.7,
+                "duration": 77700,
             },
         )
 
@@ -372,7 +372,7 @@ class DutyTestClass(TestCase):
             json.loads(response.content),
             {
                 "description": "Do something cool",
-                "projectedSeconds": 55.7,
+                "duration": 55700,
             },
         )
 
@@ -383,7 +383,7 @@ class DutyTestClass(TestCase):
             json.dumps(
                 {
                     "status": "complete",
-                    "duration": 888.88,
+                    "duration": 888880,
                 }
             ),
             format="json",
