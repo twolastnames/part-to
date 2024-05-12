@@ -207,7 +207,7 @@ class TaskDefinition(models.Model):
                 seen_self = True
             elif model == other:
                 return not seen_self
-        raise Exception("self and other do not connect")
+        raise SystemError("can't find way to connect self & other")
 
 
 # TODO: introduce this model
