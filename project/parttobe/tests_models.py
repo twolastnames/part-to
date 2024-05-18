@@ -34,7 +34,7 @@ class CollectionTaskTestClass(TestCase):
 
     def test_calculating_task_duractions(self):
         self.assertEqual(
-            TaskDefinition.chain_duration(CollectionTaskTestClass.task3),
+            CollectionTaskTestClass.task3.chain_duration(),
             datetime.timedelta(minutes=5),
         )
 
@@ -66,7 +66,7 @@ class CollectionTaskTestClass(TestCase):
         self.assertEqual(backward, ["do task1", "do task2", "do task4", "do task3"])
 
     def test_dependency_chain_from(self):
-        chain_from = TaskDefinition.dependency_chain_from(CollectionTaskTestClass.task1)
+        chain_from = CollectionTaskTestClass.task1.dependency_chain_from()
         result = list(map(lambda task: task.description, chain_from))
         self.assertEquals(result, ["do task1", "do task2", "do task3"])
 
@@ -77,7 +77,7 @@ class CollectionTaskTestClass(TestCase):
             description="do task4",
             depended=CollectionTaskTestClass.task2,
         )
-        chain_from = TaskDefinition.dependency_chain_from(CollectionTaskTestClass.task1)
+        chain_from = CollectionTaskTestClass.task1.dependency_chain_from()
         result = list(map(lambda task: task.description, chain_from))
         self.assertEquals(result, ["do task1", "do task2", "do task3", "do task4"])
 
@@ -88,7 +88,7 @@ class CollectionTaskTestClass(TestCase):
             description="do task4",
             depended=CollectionTaskTestClass.task2,
         )
-        chain_from = TaskDefinition.dependency_chain_from(CollectionTaskTestClass.task1)
+        chain_from = CollectionTaskTestClass.task1.dependency_chain_from()
         result = list(map(lambda task: task.description, chain_from))
         self.assertEquals(result, ["do task1", "do task2", "do task4", "do task3"])
 
@@ -153,7 +153,7 @@ class CollectionOuterDutyTestClass(TestCase):
 
     def test_calculating_overflowing_task_duractions(self):
         self.assertEqual(
-            TaskDefinition.duration_to(CollectionOuterDutyTestClass.task1),
+            CollectionOuterDutyTestClass.task1.duration_to(),
             datetime.timedelta(minutes=5, seconds=30),
         )
 
@@ -355,7 +355,7 @@ class MultiplePartToTestClass(TestCase):
         ]
         all.sort()
         self.assertEqual(
-            TaskDefinition.chain_duration(all[0]),
+            all[0].chain_duration(),
             datetime.timedelta(minutes=6, seconds=3),
         )
 
@@ -390,7 +390,7 @@ class CollectionInnerDutyTestClass(TestCase):
 
     def test_calculating_overflowing_task_duractions(self):
         self.assertEqual(
-            TaskDefinition.chain_duration(CollectionInnerDutyTestClass.duty1),
+            CollectionInnerDutyTestClass.duty1.chain_duration(),
             datetime.timedelta(minutes=3, seconds=3),
         )
 
@@ -398,7 +398,7 @@ class CollectionInnerDutyTestClass(TestCase):
         duty1 = CollectionInnerDutyTestClass.duty1
         duty1.initial_duration = datetime.timedelta(minutes=5)
         self.assertEqual(
-            TaskDefinition.chain_duration(CollectionInnerDutyTestClass.duty1),
+            CollectionInnerDutyTestClass.duty1.chain_duration(),
             datetime.timedelta(minutes=3, seconds=30),
         )
 

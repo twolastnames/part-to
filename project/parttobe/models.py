@@ -116,18 +116,16 @@ class TaskDefinition(models.Model):
         result = set(filter(lambda o: o.depended == self, part_tos))
         return result
 
-    @staticmethod
-    def depended_chain_from(start):
-        on = start
+    def depended_chain_from(self):
+        on = self
         while True:
             yield on
             if not on.depended:
                 return
             on = on.depended
 
-    @staticmethod
-    def dependency_chain_from(start):
-        queue = [start]
+    def dependency_chain_from(self):
+        queue = [self]
 
         def sort_queue():
             queue.sort(key=TaskDefinition.chain_duration, reverse=True)
@@ -147,11 +145,10 @@ class TaskDefinition(models.Model):
         while True:
             engagements.sort()
 
-    @staticmethod
-    def chain_duration(start):
+    def chain_duration(self):
         engagements = []
         duration = datetime.timedelta()
-        for task in TaskDefinition.depended_chain_from(start):
+        for task in TaskDefinition.depended_chain_from(self):
             if task.engagement:
                 engagements.append(
                     EngagementSet(task.id, task.engagement, task.duration)
@@ -164,10 +161,9 @@ class TaskDefinition(models.Model):
             duration += engagements[-1].duration
         return duration
 
-    @staticmethod
-    def duration_to(end):
+    def duration_to(self):
         duration = datetime.timedelta(seconds=0)
-        tasks = reversed(list(TaskDefinition.dependency_chain_from(end)))
+        tasks = reversed(list(TaskDefinition.dependency_chain_from(self)))
         for task in tasks:
             duration += task.duration
         return duration
