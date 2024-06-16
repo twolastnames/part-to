@@ -3,6 +3,7 @@ import functools
 import collections
 import types
 import datetime
+import uuid
 
 
 @functools.lru_cache(maxsize=64)
@@ -12,6 +13,10 @@ def get_task_definitions(part_to):
 
 class PartTo(models.Model):
     name = models.CharField(max_length=0x80)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+
+    class Meta:
+        indexes = [models.Index(fields=["uuid"])]
 
     @property
     def task_definitions(self):
@@ -105,6 +110,10 @@ class TaskDefinition(models.Model):
     description = models.CharField(max_length=0x100)
     engagement = models.BigIntegerField(null=True)
     depended = models.ForeignKey("TaskDefinition", on_delete=models.CASCADE, null=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+
+    class Meta:
+        indexes = [models.Index(fields=["uuid"])]
 
     @property
     def duration(self):
@@ -136,6 +145,24 @@ class TaskDefinition(models.Model):
             dependencies = on.dependencies
             queue += dependencies
             yield on
+
+    def depends_on(self, other):
+        for task in self.dependency_chain_from():
+            if other == task:
+                return True
+        return False
+
+    def duties(self):
+        for task in self.depended_chain_from():
+            if not task.is_task():
+                yield
+
+    def weight(self):
+        return (
+            self.duration
+            if self.is_task()
+            else self.duration * (self.engagement / 100.0)
+        )
 
     @staticmethod
     def handle_duty_calculation(engagements_in, task):
@@ -193,12 +220,12 @@ class TaskDefinition(models.Model):
         if not other:
             return True
         if other.part_to != self.part_to:
-            otherDuration = TaskDefinition.chain_duration(other)
-            selfDuration = TaskDefinition.chain_duration(self)
+            otherDuration = other.chain_duration()
+            selfDuration = self.chain_duration()
             return otherDuration < selfDuration
-        *_, first = self.depended_chain_from(other)
+        *_, first = other.depended_chain_from()
         seen_self = False
-        for model in self.dependency_chain_from(first):
+        for model in first.dependency_chain_from():
             if model == self:
                 seen_self = True
             elif model == other:
@@ -206,14 +233,109 @@ class TaskDefinition(models.Model):
         raise SystemError("can't find way to connect self & other")
 
 
-# TODO: introduce this model
-# class PartToRun(models.Model):
-#    part_to = models.ForeignKey("PartTo", on_delete=models.CASCADE)
+class PartToRun(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+
+    class Meta:
+        indexes = [models.Index(fields=["uuid"])]
+
+    def left_definitions(self):
+        definitions = set()
+        run_parts = RunPart.objects.filter(run=self)
+        for run_part in run_parts:
+            definitions.update(get_task_definitions(run_part.part_to))
+        started = TaskStatus.objects.filter(run=self.id)
+        started_definitions = set(self.unwaiting_definitions())
+        return filter(
+            lambda definition: definition not in started_definitions, definitions
+        )
+
+    def startable_duties(self):
+        leftover_duties = list(
+            filter(lambda definition: not definition.is_task(), self.left_definitions())
+        )
+        leftover_duties.sort(key=lambda definition: definition.chain_duration())
+        return leftover_duties
+
+    def running_definitions(self):
+        started = TaskStatus.objects.filter(
+            run=self, started__isnull=False, ended__isnull=True
+        )
+        return map(lambda task: task.definition, started)
+
+    def unwaiting_definitions(self):
+        started = TaskStatus.objects.filter(run=self.id, started__isnull=False)
+        return map(lambda task: task.definition, started)
+
+    def until_next_duty(self):
+        duties = self.startable_duties()
+        if len(duties) == 0:
+            return None
+        duty = duties[0]
+        left_tasks = list(
+            filter(lambda definition: definition.is_task(), self.left_definitions())
+        ) + list(
+            filter(lambda definition: definition.is_task(), self.running_definitions())
+        )
+        left_tasks.sort()
+        task_sum = datetime.timedelta()
+        for task in left_tasks:
+            if task.depends_on(duty):
+                continue
+            task_sum += task.duration
+        task_sum += duty.weight()
+        until = task_sum - duty.duration
+        return until if until > datetime.timedelta() else datetime.timedelta()
+
+    def first_undones(self):
+        lefts = self.left_definitions()
+        unwaiting_definitions = set(self.unwaiting_definitions())
+        earliests = {}
+        for left in lefts:
+            for dependency in left.dependency_chain_from():
+                if dependency in unwaiting_definitions:
+                    continue
+                earliests[dependency.part_to] = dependency
+        return earliests
+
+    def __next__(self):
+        next_duty_time = self.until_next_duty()
+        duties = self.startable_duties()
+        if next_duty_time and next_duty_time <= datetime.timedelta():
+            return TaskStatus.objects.create(run=self, definition=duties[0])
+        left = list(
+            filter(lambda definition: definition.is_task(), self.left_definitions())
+        )
+        if len(left) == 0:
+            raise StopIteration
+        left.sort()
+        if left[0] in map(lambda task: task.depended, duties):
+            return TaskStatus.objects.create(run=self, definition=duties[0])
+        return TaskStatus.objects.create(run=self, definition=left[0])
 
 
-# TODO: introduce this model
-# class TaskStatus(models.Model):
-#    part_to = models.ForeignKey("PartToRun", on_delete=models.CASCADE)
-#    definition = models.ForeignKey("TaskDefinition", on_delete=models.CASCADE)
-#    started = models.DateTimeField()
-#    ended = models.DateTimeField(null=True)
+class TaskStatus(models.Model):
+    run = models.ForeignKey("PartToRun", on_delete=models.CASCADE)
+    definition = models.ForeignKey("TaskDefinition", on_delete=models.CASCADE)
+    started = models.DateTimeField(default=datetime.datetime.now)
+    ended = models.DateTimeField(null=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+
+    class Meta:
+        indexes = [models.Index(fields=["uuid"])]
+
+    def __call__(self):
+        self.ended = datetime.datetime.now()
+        self.save()
+
+
+class RunPart(models.Model):
+    part_to = models.ForeignKey("PartTo", on_delete=models.CASCADE)
+    run = models.ForeignKey("PartToRun", on_delete=models.CASCADE)
+
+
+def start_run(part_tos):
+    run = PartToRun.objects.create()
+    for part_to in part_tos:
+        RunPart.objects.create(part_to=part_to, run=run)
+    return run

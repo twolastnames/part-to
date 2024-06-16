@@ -280,7 +280,7 @@ class JobTestClass(TestCase):
                 "id": "someId",
                 "report": "2024-03-29 15:29:10.418159",
                 "complete": "2024-03-29 15:29:10.418159",
-                "task": "taskId2",
+                "tasks": ["taskId2"],
                 "duties": ["dutyId1", "dutyId2"],
             },
         )
@@ -295,7 +295,7 @@ class JobTestClass(TestCase):
                 "id": "someId",
                 "report": "2024-03-29 15:29:10.418159",
                 "complete": "2024-03-29 15:29:10.418159",
-                "task": "taskId2",
+                "tasks": ["taskId2"],
                 "duties": ["dutyId1", "dutyId2", "dutyId3"],
             },
         )
@@ -340,7 +340,7 @@ class TaskTestClass(TestCase):
                 "id": "someId",
                 "report": "2024-03-29 15:29:10.418159",
                 "complete": "2024-03-29 15:29:10.418159",
-                "task": "taskId2",
+                "tasks": ["taskId2"],
                 "duties": ["dutyId1", "dutyId2"],
             },
         )
@@ -357,7 +357,7 @@ class TaskTestClass(TestCase):
                 "id": "someId",
                 "report": "2024-03-29 15:29:10.418159",
                 "complete": "2024-03-29 15:29:10.418159",
-                "task": "taskId4",
+                "tasks": ["taskId2"],
                 "duties": ["dutyId1", "dutyId2", "dutyId3"],
             },
         )
@@ -395,7 +395,7 @@ class DutyTestClass(TestCase):
                 "id": "someId",
                 "report": "2024-03-29 15:29:10.418159",
                 "complete": "2024-03-29 15:29:10.418159",
-                "task": "taskId1",
+                "tasks": ["taskId2"],
                 "duties": ["dutyId2"],
             },
         )
