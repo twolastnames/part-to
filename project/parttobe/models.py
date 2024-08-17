@@ -4,6 +4,7 @@ import collections
 import types
 import datetime
 import uuid
+import re
 
 
 @functools.lru_cache(maxsize=64)
@@ -75,7 +76,7 @@ class EngagementSet:
             duration += current_duration
             adjusted_engagements.append(
                 EngagementSet(
-                    engagment.id,
+                    engagement.task_id,
                     engagement.engagement,
                     engagement.duration - current_duration,
                 )
@@ -254,7 +255,9 @@ class PartToRun(models.Model):
         leftover_duties = list(
             filter(lambda definition: not definition.is_task(), self.left_definitions())
         )
-        leftover_duties.sort(key=lambda definition: definition.chain_duration())
+        leftover_duties.sort(
+            key=lambda definition: definition.chain_duration(), reverse=True
+        )
         return leftover_duties
 
     def running_definitions(self):
@@ -301,7 +304,7 @@ class PartToRun(models.Model):
     def __next__(self):
         next_duty_time = self.until_next_duty()
         duties = self.startable_duties()
-        if next_duty_time and next_duty_time <= datetime.timedelta():
+        if next_duty_time is not None and next_duty_time <= datetime.timedelta():
             return TaskStatus.objects.create(run=self, definition=duties[0])
         left = list(
             filter(lambda definition: definition.is_task(), self.left_definitions())

@@ -330,37 +330,37 @@ class PartToRunTestClass(TestCase):
     def test_no_task(self):
         runner = PartToRunTestClass.runner
         self.assertEqual(
-            runner.until_next_duty(), datetime.timedelta(minutes=8, seconds=36)
+            runner.until_next_duty(), datetime.timedelta(minutes=7, seconds=42)
         )
         first = next(runner)
         self.assertEqual(first.definition.description, "do task2-2")
         self.assertEqual(
-            runner.until_next_duty(), datetime.timedelta(minutes=8, seconds=36)
+            runner.until_next_duty(), datetime.timedelta(minutes=7, seconds=42)
         )
         first()
         second = next(runner)
         self.assertEqual(second.definition.description, "do task2-1")
         self.assertEqual(
-            runner.until_next_duty(), datetime.timedelta(minutes=6, seconds=36)
+            runner.until_next_duty(), datetime.timedelta(minutes=5, seconds=42)
         )
         second()
         third = next(runner)
         self.assertEqual(third.definition.description, "do task1-2")
         self.assertEqual(
-            runner.until_next_duty(), datetime.timedelta(minutes=2, seconds=36)
+            runner.until_next_duty(), datetime.timedelta(minutes=1, seconds=42)
         )
         third()
         fourth = next(runner)
-        self.assertEqual(runner.until_next_duty(), datetime.timedelta())
-        self.assertEqual(fourth.definition.description, "do duty2-1")
+        self.assertEqual(runner.until_next_duty(), datetime.timedelta(seconds=36))
+        self.assertEqual(fourth.definition.description, "do duty1-1")
         fourth()
         fifth = next(runner)
-        self.assertEqual(runner.until_next_duty(), None)
-        self.assertEqual(fifth.definition.description, "do duty1-1")
+        self.assertEqual(runner.until_next_duty(), datetime.timedelta(seconds=36))
+        self.assertEqual(fifth.definition.description, "do task1-1")
         fifth()
         sixth = next(runner)
         self.assertEqual(runner.until_next_duty(), None)
-        self.assertEqual(sixth.definition.description, "do task1-1")
+        self.assertEqual(sixth.definition.description, "do duty2-1")
         sixth()
 
         def get_last():
