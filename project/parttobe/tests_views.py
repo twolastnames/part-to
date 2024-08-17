@@ -1,10 +1,25 @@
 from django.test import TestCase
 from django.test import Client
+from freezegun import freeze_time
 import json
 import toml
 import os
 import urllib
 from unittest import mock
+import uuid
+import re
+
+SHARED_UUID = "12345678-1234-4321-1234-123456789021"
+
+
+def use_shared_uuid(content):
+    value_lengths = [8, 4, 4, 4, 12]
+    expression = "-".join(
+        list(map(lambda l: "[\da-fA-F]{{{count}}}".format(count=l), value_lengths))
+    )
+    text = content.decode("utf-8")
+    substituted = re.sub(expression, SHARED_UUID, text)
+    return substituted
 
 
 class HelloWorldTestCase(TestCase):
@@ -14,6 +29,9 @@ class HelloWorldTestCase(TestCase):
         self.assertEqual(json.loads(response.content), {"message": "Hello, world!"})
 
 
+@mock.patch(
+    "uuid.uuid4", mock.MagicMock(return_value="12345678-1234-4321-1234-123456789021")
+)
 def loadExamples():
     file_directory = os.path.dirname(__file__)
     client = Client()
@@ -135,7 +153,9 @@ class ListToolsTestClass(TestCase):
         )
         response = client.get("/api/tools/?" + params, format="json")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.content), ["kitchen shears", "large pot"])
+        self.assertEqual(
+            json.loads(response.content), ["dutch oven", "kitchen shears", "large pot"]
+        )
 
     def test_unknown_name(self):
         client = Client()
@@ -184,7 +204,9 @@ class ListIngredientsTestClass(TestCase):
             json.loads(response.content),
             [
                 "bay leaf, 1",
+                "beef chuck roast, boneless, 1 roast, about 3 lbs",
                 "beer or beef broth, 3/4 cup",
+                "canola oil, 2 tbs",
                 "chopped onion, 1/2",
                 "cinnamon, ground, 1 tsp",
                 "cobbed corn",
@@ -230,31 +252,32 @@ class ListIngredientsTestClass(TestCase):
         )
 
 
+TEST_UUIDS = ["uuid_{}".format(i) for i in range(10000)]
+
+
+@mock.patch(
+    "uuid.uuid4", mock.MagicMock(return_value="12345678-1234-4321-1234-123456789021")
+)
 class JobTestClass(TestCase):
     def setUp(self):
         loadExamples()
 
-    @mock.patch(
-        "uuid.uuid4",
-        mock.MagicMock(return_value="12345678-1234-4321-1234-123456789021"),
-    )
-    @mock.patch("time.time", mock.MagicMock(return_value=12345))
+    @freeze_time("2024-03-21 01:23:45")
     def test_get_simple_job_set(self):
         client = Client()
         response = client.post(
-            "/api/run",
-            {
-                "jobs": ["Frozen Green Beans"],
-            },
-            format="json",
+            "/api/run/",
+            data=json.dumps({"jobs": ["Frozen Green Beans"]}),
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 200)
+        content = json.loads(response.content)
         self.assertEqual(
-            json.loads(response.content),
+            json.loads(use_shared_uuid(response.content)),
             {
                 "id": "12345678-1234-4321-1234-123456789021",
-                "report": "2024-03-29 15:29:10.418159",
-                "complete": "2024-03-29 15:29:10.418159",
+                "report": "2024-03-21T01:23:45",
+                "complete": "2024-03-21T01:28:19.800000",
                 "duties": [
                     {
                         "description": "boil water in large pot",
@@ -269,7 +292,7 @@ class JobTestClass(TestCase):
         response = client.post(
             "/api/job_run",
             {
-                jobs: ["Baked Beans (Easy)", "Corn on the Cob"],
+                "jobs": ["Baked Beans (Easy)", "Corn on the Cob"],
             },
             format="json",
         )

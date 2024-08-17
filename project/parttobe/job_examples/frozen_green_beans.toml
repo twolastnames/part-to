@@ -15,7 +15,7 @@ engagement = 2
 depends = ["boil_beans_in_pot"]
 
 [boil_water]
-tools = "large pot"
+tools = ["large pot"]
 description = "boil water in large pot"
 duration = "9 minutes"
 engagement = 2

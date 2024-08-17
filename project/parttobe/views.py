@@ -5,6 +5,8 @@ from django.db import IntegrityError, transaction
 from . import models
 import duration_parser
 import datetime
+import time
+import json
 
 ROOT_TASK_NAME = "part_to"
 
@@ -12,6 +14,10 @@ ROOT_TASK_NAME = "part_to"
 @api_view(["GET"])
 def hello_world(request):
     return Response({"message": "Hello, world!"})
+
+
+def ensure_list(value):
+    return value if isinstance(value, list) else [value]
 
 
 @transaction.atomic
@@ -39,17 +45,14 @@ def save_job(tasks, dependeds):
             description=task["description"],
             engagement=task["engagement"] if "engagement" in task else None,
         )
-        for ingredient in task["ingredients"] if "ingredients" in task else []:
+        for ingredient in (
+            ensure_list(task["ingredients"]) if "ingredients" in task else []
+        ):
             models.IngredientDefinition.objects.create(
                 name=ingredient, task=saved_tasks[current]
             )
-        for tool in task["tools"] if "tools" in task else []:
+        for tool in ensure_list(task["tools"]) if "tools" in task else []:
             models.ToolDefinition.objects.create(name=tool, task=saved_tasks[current])
-    for root in tasks["part_to"]["depends"]:
-        models.PartToTaskDefinition.objects.create(
-            part_to=part_to,
-            depend=saved_tasks[root],
-        )
 
 
 def invert_depends(tasks):
@@ -154,8 +157,30 @@ def job_get(request):
 
 
 def run_post(request):
-    part_tos = models.PartTo(name__in=request.data.jobs)
-    tasks = map(lambda part_to: models.TaskDefinition(part_to=part_to), part_tos)
+    part_tos = models.PartTo.objects.filter(name__in=request.data["jobs"])
+    run = models.start_run(part_tos)
+    duties = []
+    try:
+        task = next(run)
+        duties.append(
+            {
+                "description": task.definition.description,
+                "duration": int(task.definition.duration.total_seconds() * 1000),
+            }
+        )
+    except StopIteration:
+        pass
+    running_definitions = run.running_definitions()
+    next_duty = datetime.datetime.now() + run.until_next_duty()
+    complete = datetime.datetime.now() + task.definition.chain_duration()
+    return Response(
+        {
+            "id": run.uuid,
+            "report": next_duty,
+            "complete": complete,
+            "duties": duties,
+        }
+    )
 
 
 @api_view(["GET", "POST"])
