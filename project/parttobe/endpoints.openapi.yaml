@@ -1,0 +1,119 @@
+openapi: "3.0.0"
+servers:
+- url: http://testserver/api
+info:
+  version: 1.0.0
+  title: Part To
+  license:
+    name: MIT
+paths:
+  /api/job/:
+    post:
+      summary: Define a job
+      operationId: job:post
+      tags:
+      - job
+      requestBody:
+        description: describe job
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                part_to:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    depends:
+                      type: array
+                      items:
+                        type: string
+                tasks:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Task"
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: string
+  /api/run/:
+    post:
+      summary: Start a run
+      operationId: run:post
+      tags:
+      - run
+      requestBody:
+        description: List of unique job titles to run
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                jobs:
+                  type: array
+                  items:
+                    type: string  
+                  minItems: 1
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunState"
+components:
+  schemas:
+    Task:
+      required:
+      - duration
+      - description
+      - name
+      properties:
+        name:
+          type: string
+        duration:
+          type: string
+          format: duration
+        description:
+          type: string
+        depends:
+          type: array
+          items:
+            type: string
+        engagement:
+          type: number
+    RunState:
+      required:
+      - id
+      - report
+      - complete
+      - duties
+      - tasks
+      properties:
+        id:
+          type: string
+          format: uuid
+        report:
+          type: string
+          format: date-time
+        complete:
+          type: string
+          format: date-time
+        duties:
+          type: array
+          items:
+            type: string
+            format: uuid
+        tasks:
+          type: array
+          items:
+            type: string
+            format: uuid

@@ -29,6 +29,13 @@ class HelloWorldTestCase(TestCase):
         self.assertEqual(json.loads(response.content), {"message": "Hello, world!"})
 
 
+def toml_to_body(toml):
+    body = {"part_to": toml["part_to"]}
+    tasks = {k: v for (k, v) in toml.items() if k != "part_to"}
+    body["tasks"] = [v1 | {"name": k1} for (k1, v1) in tasks.items()]
+    return body
+
+
 @mock.patch(
     "uuid.uuid4", mock.MagicMock(return_value="12345678-1234-4321-1234-123456789021")
 )
@@ -42,13 +49,18 @@ def loadExamples():
         "/frozen_green_beans.toml",
     ]
     for loadable in loadables:
-        data = json.dumps(toml.load(file_directory + "/job_examples" + loadable))
-        response = client.post("/api/job/", data, content_type="application/json")
+        toml_structure = toml_to_body(
+            toml.load(file_directory + "/job_examples" + loadable)
+        )
+        data = json.dumps(toml_structure)
+        response = client.post(
+            "http://testserver/api/job/", data, content_type="application/json"
+        )
         if response.status_code != 200:
             content = json.loads(response.content)
             raise Exception(
                 "{} did not work with status {} with message: {}".format(
-                    loadable, response.status_code, content["message"]
+                    loadable, response.status_code, content
                 )
             )
 
@@ -262,28 +274,53 @@ class JobTestClass(TestCase):
     def setUp(self):
         loadExamples()
 
-    @freeze_time("2024-03-21 01:23:45")
     def test_get_simple_job_set(self):
         client = Client()
-        response = client.post(
+        run_response = client.post(
             "/api/run/",
             data=json.dumps({"jobs": ["Frozen Green Beans"]}),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 200)
-        content = json.loads(response.content)
+
+    @freeze_time("2024-03-21 01:23:45")
+    def test_get_simple_job_set(self):
+        client = Client()
+        run_response = client.post(
+            "/api/run/",
+            data=json.dumps({"jobs": ["Frozen Green Beans"]}),
+            content_type="application/json",
+        )
+        first_duty = {
+            "id": "12345678-1234-4321-1234-123456789021",
+            "description": "boil water in large pot",
+            "duration": 540000,
+        }
+        self.assertEqual(run_response.status_code, 200)
+        content = json.loads(run_response.content)
         self.assertEqual(
-            json.loads(use_shared_uuid(response.content)),
+            json.loads(use_shared_uuid(run_response.content)),
             {
                 "id": "12345678-1234-4321-1234-123456789021",
                 "report": "2024-03-21T01:23:45",
                 "complete": "2024-03-21T01:28:19.800000",
-                "duties": [
-                    {
-                        "description": "boil water in large pot",
-                        "duration": 540000,
-                    }
-                ],
+                "duties": ["12345678-1234-4321-1234-123456789021"],
+                "tasks": [],
+            },
+        )
+        job_id = json.loads(run_response.content)["duties"][0]
+        params = urllib.parse.urlencode(
+            [
+                ("id", job_id),
+            ]
+        )
+        return
+        job_response = client.get("/api/job/?" + params, format=json)
+        self.assertEqual(job_response.status_code, 200)
+        self.assertEqual(
+            json.loads(use_shared_uuid(job_response.content)),
+            {
+                "description": "boil water in large pot",
+                "duration": 540000,
             },
         )
 

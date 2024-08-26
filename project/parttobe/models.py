@@ -266,6 +266,16 @@ class PartToRun(models.Model):
         )
         return map(lambda task: task.definition, started)
 
+    def running_tasks(self):
+        return filter(
+            lambda definition: definition.is_task(), self.running_definitions()
+        )
+
+    def running_duties(self):
+        return filter(
+            lambda definition: not definition.is_task(), self.running_definitions()
+        )
+
     def unwaiting_definitions(self):
         started = TaskStatus.objects.filter(run=self.id, started__isnull=False)
         return map(lambda task: task.definition, started)

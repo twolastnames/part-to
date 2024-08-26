@@ -7,6 +7,12 @@ import duration_parser
 import datetime
 import time
 import json
+import os
+from openapi_core import OpenAPI
+
+self_directory = os.path.dirname(os.path.abspath(__file__))
+openapi_filename = self_directory + "/endpoints.openapi.yaml"
+openapi = OpenAPI.from_file_path(openapi_filename)
 
 ROOT_TASK_NAME = "part_to"
 
@@ -15,145 +21,34 @@ ROOT_TASK_NAME = "part_to"
 def hello_world(request):
     return Response({"message": "Hello, world!"})
 
-
-def ensure_list(value):
-    return value if isinstance(value, list) else [value]
-
-
-@transaction.atomic
-def save_job(tasks, dependeds):
-    saved_tasks = {}
-    part_to = models.PartTo.objects.create(name=tasks["part_to"]["name"])
-    stack = tasks["part_to"]["depends"][:]
-    while len(stack) > 0:
-        current = stack.pop()
-        if current in saved_tasks:
-            continue
-        if current in dependeds and dependeds[current] not in saved_tasks:
-            stack.append(current)
-            continue
-        depended = saved_tasks[dependeds[current]] if current in dependeds else None
-        task = tasks[current]
-        if "depends" in task:
-            stack.extend(task["depends"])
-        saved_tasks[current] = models.TaskDefinition.objects.create(
-            initial_duration=datetime.timedelta(
-                seconds=duration_parser.parse(task["duration"])
-            ),
-            depended=depended,
-            part_to=part_to,
-            description=task["description"],
-            engagement=task["engagement"] if "engagement" in task else None,
-        )
-        for ingredient in (
-            ensure_list(task["ingredients"]) if "ingredients" in task else []
-        ):
-            models.IngredientDefinition.objects.create(
-                name=ingredient, task=saved_tasks[current]
-            )
-        for tool in ensure_list(task["tools"]) if "tools" in task else []:
-            models.ToolDefinition.objects.create(name=tool, task=saved_tasks[current])
-
-
-def invert_depends(tasks):
-    invertion = {}
-    for name, task in traverse_tasks(tasks):
-        if "depends" not in task:
-            continue
-        for depend in task["depends"]:
-            invertion[depend] = name
-    return invertion
-
-
-def check_task(task):
-    missing = []
-    for key in ["duration", "description"]:
-        if key not in task:
-            missing.append(key)
-    return missing
-
-
-class UnusedTaskFoundException(Exception):
-    def __init__(self, task_name):
-        self.task_name = task_name
-        super().__init__()
-
-    def __str__(self):
-        return 'Unused Task(s): "{}"'.format(self.task_name)
-
-
-class TaskNotFoundException(Exception):
-    def __init__(self, task_name):
-        self.task_name = task_name
-        super().__init__()
-
-    def __str__(self):
-        return 'Missing Task(s): "{}"'.format(self.task_name)
-
-
-class MissingTaskKeyException(Exception):
-    def __init__(self, task_name, key_name):
-        self.task_name = task_name
-        self.key_name = key_name
-        super().__init__()
-
-    def __str__(self):
-        return 'Missing "{}" key on: "{}"'.format(self.key_name, self.task_name)
-
-
-def traverse_tasks(tasks):
-    seen_keys = set()
-    if "part_to" not in tasks:
-        raise TaskNotFoundException("part_to")
-    seen_keys.add("part_to")
-    part_to = tasks["part_to"]
-    if "depends" not in part_to:
-        raise MissingTaskKeyException("part_to", "depends")
-    if "name" not in part_to:
-        raise MissingTaskKeyException("part_to", "name")
-    stack = part_to["depends"][:]
-    while len(stack) > 0:
-        current = stack.pop()
-        seen_keys.add(current)
-        if current not in tasks:
-            raise TaskNotFoundException(current)
-        task = tasks[current]
-        yield current, task
-        if "depends" in task:
-            for depend in task["depends"]:
-                stack.append(depend)
-    all_keys = set(tasks.keys())
-    extra_keys = all_keys - seen_keys
-    if extra_keys:
-        raise UnusedTaskFoundException(",".join(extra_keys))
-
-
-def verify_tasks(tasks):
-    for name, task in traverse_tasks(tasks):
-        missing = check_task(task)
-        if len(missing) > 0:
-            raise MissingTaskKeyException(name, ",".join(missing))
-    return
-
-
-def job_post(request):
-    tasks = request.data
-    try:
-        verify_tasks(tasks)
-    except TaskNotFoundException as exception:
-        return Response({"message": str(exception)}, 400)
-    except MissingTaskKeyException as exception:
-        return Response({"message": str(exception)}, 400)
-    except UnusedTaskFoundException as exception:
-        return Response({"message": str(exception)}, 400)
-    except Exception as exception:
-        return Response({"message": str(exception)}, 500)
-    save_job(tasks, invert_depends(tasks))
-    return Response({"message": "job insert successfull"})
-
-
+# this isn't connected, but here for when it is implemented with openapi
 def job_get(request):
-    return Response(status=404)
+    id = request.args.get("id")
+    definition = TaskDefinition.objects.get(uuid=id)
+    return Response(json.dumps(definition))
+
+
+def get_id_list(definitions):
+    return list(map(lambda definition: definition.uuid, definitions))
+
+
+def get_run_state(run):
+    running_definitions = list(run.running_definitions())
+    running_duties = get_id_list(run.running_duties())
+    running_tasks = get_id_list(run.running_tasks())
+    next_duty = datetime.datetime.now() + run.until_next_duty()
+    current = sorted(list(running_definitions))
+    if len(current) > 0:
+        complete = datetime.datetime.now() + current[0].chain_duration()
+    else:
+        complete = None
+    return {
+        "id": run.uuid,
+        "report": next_duty,
+        "complete": complete,
+        "duties": running_duties,
+        "tasks": running_tasks,
+    }
 
 
 def run_post(request):
@@ -164,6 +59,7 @@ def run_post(request):
         task = next(run)
         duties.append(
             {
+                "id": task.uuid,
                 "description": task.definition.description,
                 "duration": int(task.definition.duration.total_seconds() * 1000),
             }
@@ -173,14 +69,7 @@ def run_post(request):
     running_definitions = run.running_definitions()
     next_duty = datetime.datetime.now() + run.until_next_duty()
     complete = datetime.datetime.now() + task.definition.chain_duration()
-    return Response(
-        {
-            "id": run.uuid,
-            "report": next_duty,
-            "complete": complete,
-            "duties": duties,
-        }
-    )
+    return Response(get_run_state(run))
 
 
 @api_view(["GET", "POST"])
@@ -188,13 +77,6 @@ def run(request):
     if request.method == "GET":
         raise NotImplementedError()
     return run_post(request)
-
-
-@api_view(["GET", "POST"])
-def job(request):
-    if request.method == "GET":
-        return job_get(request)
-    return job_post(request)
 
 
 def get_needs(request, need):
