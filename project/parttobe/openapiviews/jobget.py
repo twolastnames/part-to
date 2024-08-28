@@ -2,7 +2,6 @@ from parttobe import models
 
 
 def handle(id=None):
-    print("id", id)
     part_to = models.PartTo.objects.get(uuid=id)
 
     payload = {
