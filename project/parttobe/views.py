@@ -8,11 +8,6 @@ import datetime
 import time
 import json
 import os
-from openapi_core import OpenAPI
-
-self_directory = os.path.dirname(os.path.abspath(__file__))
-openapi_filename = self_directory + "/endpoints.openapi.yaml"
-openapi = OpenAPI.from_file_path(openapi_filename)
 
 ROOT_TASK_NAME = "part_to"
 
@@ -20,6 +15,7 @@ ROOT_TASK_NAME = "part_to"
 @api_view(["GET"])
 def hello_world(request):
     return Response({"message": "Hello, world!"})
+
 
 # this isn't connected, but here for when it is implemented with openapi
 def job_get(request):

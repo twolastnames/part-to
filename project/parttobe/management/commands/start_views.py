@@ -40,10 +40,18 @@ def get_request_body_arguments(operation):
         return []
 
 
+def get_parameter_arguments(operation):
+    try:
+        return [parameter["name"] for parameter in operation["parameters"]]
+    except KeyError:
+        return []
+
+
 def write_file(operation):
     operatorId = OperationId(operation["operationId"])
     arguments = []
-    arguments |= get_request_body_arguments(operation)
+    arguments.extend(get_request_body_arguments(operation))
+    arguments.extend(get_parameter_arguments(operation))
     noned_arguments = ["{} = None".format(name) for name in arguments]
     argument_string = ",".join(noned_arguments)
     contents = implementation_template.format(

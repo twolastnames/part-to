@@ -8,6 +8,25 @@ info:
     name: MIT
 paths:
   /api/job/:
+    get:
+      summary: Disclose a job definition
+      operationId: job:get
+      tags:
+      - job
+      parameters:
+      - name: id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunState"
     post:
       summary: Define a job
       operationId: job:post

@@ -7,6 +7,7 @@ import duration_parser
 def ensure_list(value):
     return value if isinstance(value, list) else [value]
 
+
 def check_task(task):
     missing = []
     for key in ["duration", "description"]:
@@ -85,6 +86,8 @@ def save_job(tasks, dependeds):
             )
         for tool in ensure_list(task["tools"]) if "tools" in task else []:
             models.ToolDefinition.objects.create(name=tool, task=saved_tasks[current])
+    return part_to.uuid
+
 
 class UnusedTaskFoundException(RuntimeError):
     def __init__(self, task_name):
@@ -159,7 +162,11 @@ def validate(part_to=None, tasks=None):
     except RuntimeError as exception:
         return [str(exception)]
 
+
 def handle(part_to=None, tasks=None):
     together = {"part_to": part_to} | {task["name"]: task for task in tasks}
-    save_job(together, invert_depends(together))
-    return {"message": "job insert successfull"}
+    id = save_job(together, invert_depends(together))
+    return {
+        "id": id,
+        "message": "job insert successfull",
+    }

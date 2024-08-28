@@ -36,6 +36,12 @@ def toml_to_body(toml):
     return body
 
 
+def job_body_from_key(key):
+    file_directory = os.path.dirname(__file__)
+    raw = toml.load(file_directory + "/job_examples/{}.toml".format(key))
+    return json.dumps(toml_to_body(raw))
+
+
 @mock.patch(
     "uuid.uuid4", mock.MagicMock(return_value="12345678-1234-4321-1234-123456789021")
 )
@@ -57,10 +63,9 @@ def loadExamples():
             "http://testserver/api/job/", data, content_type="application/json"
         )
         if response.status_code != 200:
-            content = json.loads(response.content)
             raise Exception(
                 "{} did not work with status {} with message: {}".format(
-                    loadable, response.status_code, content
+                    loadable, response.status_code, response.content
                 )
             )
 
@@ -148,6 +153,29 @@ class UploadJobCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             json.loads(response.content), {"message": 'Unused Task(s): "play_euchre"'}
+        )
+
+    def test_can_read_job_successfully(self):
+        file_directory = os.path.dirname(__file__)
+        client = Client()
+        post_response = client.post(
+            "/api/job/",
+            job_body_from_key("baked_beans"),
+            content_type="application/json",
+        )
+        self.assertEqual(post_response.status_code, 200)
+        body = json.loads(post_response.content)
+        get_response = client.get("/api/job/?id={}".format(body["id"]))
+        self.assertEqual(get_response.status_code, 200)
+        loaded_content = json.loads(get_response.content)
+        self.assertEqual(loaded_content["id"], body["id"])
+        self.assertEqual(
+            json.loads(use_shared_uuid(get_response.content)),
+            {
+                "id": SHARED_UUID,
+                "name": "Baked Beans (Easy)",
+                "tasks": [SHARED_UUID for task in range(14)],
+            },
         )
 
 
