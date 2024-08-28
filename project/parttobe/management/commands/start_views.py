@@ -1,5 +1,11 @@
-from django.core.management.base import BaseCommand
-from parttobe.endpoints import openapi, OperationId, implementation_filename
+from django.core.management.base import (
+    BaseCommand,
+)
+from parttobe.endpoints import (
+    openapi,
+    OperationId,
+    implementation_filename,
+)
 import os
 import subprocess
 
@@ -25,16 +31,18 @@ def is_file_generated(operatorId):
 
 def get_request_body_arguments(operation):
     try:
-        return operation["requestBody"]["content"]["application/json"]["schema"][
-            "properties"
-        ].keys()
+        return operation["requestBody"]["content"][
+            "application/json"
+        ]["schema"]["properties"].keys()
     except KeyError:
         return []
 
 
 def get_parameter_arguments(operation):
     try:
-        return [parameter["name"] for parameter in operation["parameters"]]
+        return [
+            parameter["name"] for parameter in operation["parameters"]
+        ]
     except KeyError:
         return []
 

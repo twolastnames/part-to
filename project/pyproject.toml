@@ -2,3 +2,5 @@
 [tool.djlint]
 profile="django"
 
+[tool.black]
+line-length=70

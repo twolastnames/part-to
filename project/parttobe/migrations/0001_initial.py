@@ -23,7 +23,10 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("name", models.CharField(max_length=128)),
+                (
+                    "name",
+                    models.CharField(max_length=128),
+                ),
             ],
         ),
         migrations.CreateModel(
@@ -38,9 +41,18 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("duration", models.DurationField()),
-                ("description", models.CharField(max_length=256)),
-                ("engagement", models.BigIntegerField(null=True)),
+                (
+                    "duration",
+                    models.DurationField(),
+                ),
+                (
+                    "description",
+                    models.CharField(max_length=256),
+                ),
+                (
+                    "engagement",
+                    models.BigIntegerField(null=True),
+                ),
                 (
                     "depended",
                     models.ForeignKey(
@@ -98,7 +110,10 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("name", models.CharField(max_length=128)),
+                (
+                    "name",
+                    models.CharField(max_length=128),
+                ),
                 (
                     "task",
                     models.ForeignKey(
@@ -120,7 +135,10 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("name", models.CharField(max_length=64)),
+                (
+                    "name",
+                    models.CharField(max_length=64),
+                ),
                 (
                     "task",
                     models.ForeignKey(

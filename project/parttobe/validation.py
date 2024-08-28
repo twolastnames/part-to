@@ -14,16 +14,25 @@ PATH_START = "api/"
 
 @api_view(["GET", "POST"])
 def undefined_path(request):
-    return Response({"messages": ["path '{}' not defined".format(request.path)]}, 500)
+    return Response(
+        {"messages": ["path '{}' not defined".format(request.path)]},
+        500,
+    )
 
 
 def path_from_operation_id(id):
     variants = {}
     partial_path = ""
-    for openapi_path, method_definition in openapi["paths"].items():
+    for (
+        openapi_path,
+        method_definition,
+    ) in openapi["paths"].items():
         for operation in method_definition.values():
             operationId = OperationId(operation["operationId"])
-            slug = "{}{}".format(operationId.name(), operationId.variant())
+            slug = "{}{}".format(
+                operationId.name(),
+                operationId.variant(),
+            )
             filename = "./parttobe/openapiviews/{}.py".format(slug)
             if not os.path.isfile(filename):
                 return path(
@@ -31,13 +40,17 @@ def path_from_operation_id(id):
                     undefined_path,
                     name=id,
                 )
-            spec = importlib.util.spec_from_file_location(slug, filename)
+            spec = importlib.util.spec_from_file_location(
+                slug, filename
+            )
             module = importlib.util.module_from_spec(spec)
             sys.modules[slug] = module
             loaded = spec.loader.exec_module(module)
             handler = getattr(module, "handle")
             if operationId.name() == id:
-                partial_path = openapi_path.replace("/" + PATH_START, "")
+                partial_path = openapi_path.replace(
+                    "/" + PATH_START, ""
+                )
                 variants[operationId.variant().upper()] = handler
     return path(
         partial_path,
@@ -61,7 +74,9 @@ def are_request_parameters_required(definition):
 
 
 def get_request_body_schema(definition):
-    return definition["requestBody"]["content"]["application/json"]["schema"]
+    return definition["requestBody"]["content"]["application/json"][
+        "schema"
+    ]
 
 
 def get_definition(request):
@@ -89,17 +104,25 @@ def unmarshal(request):
         return response
     for parameter in definition["parameters"]:
         if "default" in parameter:
-            value = request.GET.get(parameter["name"], parameter["default"])
+            value = request.GET.get(
+                parameter["name"],
+                parameter["default"],
+            )
         else:
             value = request.GET.get(parameter["name"])
         type = parameter["schema"]["type"]
-        response[parameter["name"]] = unmarshal_parameter_handlers[type](value)
+        response[parameter["name"]] = unmarshal_parameter_handlers[
+            type
+        ](value)
     return response
 
 
 def is_parameter_correct(request, parameter):
     if "default" in parameter:
-        value = request.GET.get(parameter["name"], parameter["default"])
+        value = request.GET.get(
+            parameter["name"],
+            parameter["default"],
+        )
     else:
         value = request.GET.get(parameter["name"])
     type = parameter["schema"]["type"]
@@ -119,7 +142,12 @@ def get_parameter_errors(request):
     if "parameters" not in definition:
         return []
     errors = [
-        error for error in map(is_parameter_correct, definition["paramaters"]) if error
+        error
+        for error in map(
+            is_parameter_correct,
+            definition["paramaters"],
+        )
+        if error
     ]
 
 
@@ -129,7 +157,10 @@ def is_valid_body(request):
         return
     body = json.loads(request.body)
     try:
-        jsonschema.validate(instance=body, schema=get_request_body_schema(definition))
+        jsonschema.validate(
+            instance=body,
+            schema=get_request_body_schema(definition),
+        )
     except jsonschema.ValidationError as e:
         return Response({"messages", [e.message]}, 400)
     parameter_errors = get_parameter_errors(request)
@@ -140,7 +171,10 @@ def is_valid_body(request):
 def validate(request):
     definition = get_definition(request)
     if not definition:
-        return Response({"messages": ["Path not defined"]}, 404)
+        return Response(
+            {"messages": ["Path not defined"]},
+            404,
+        )
     body_validation_error = is_valid_body(request)
     if body_validation_error:
         return body_validation_error

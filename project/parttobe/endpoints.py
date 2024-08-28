@@ -28,7 +28,9 @@ class RefInjector:
                     continue
                 parts = v.split("/")[2:]
                 schema = functools.reduce(
-                    lambda current, next: current[next], parts, self.components
+                    lambda current, next: current[next],
+                    parts,
+                    self.components,
                 )
                 returnable |= schema
             return returnable
@@ -44,7 +46,9 @@ openapi_filename = self_directory + "/endpoints.openapi.yaml"
 
 def implementation_filename(operationId):
     return "{}/openapiviews/{}{}.py".format(
-        self_directory, operationId.name(), operationId.variant()
+        self_directory,
+        operationId.name(),
+        operationId.variant(),
     )
 
 

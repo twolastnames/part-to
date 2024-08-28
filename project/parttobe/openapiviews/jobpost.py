@@ -56,16 +56,25 @@ def invert_depends(tasks):
 @transaction.atomic
 def save_job(tasks, dependeds):
     saved_tasks = {}
-    part_to = models.PartTo.objects.create(name=tasks["part_to"]["name"])
+    part_to = models.PartTo.objects.create(
+        name=tasks["part_to"]["name"]
+    )
     stack = tasks["part_to"]["depends"][:]
     while len(stack) > 0:
         current = stack.pop()
         if current in saved_tasks:
             continue
-        if current in dependeds and dependeds[current] not in saved_tasks:
+        if (
+            current in dependeds
+            and dependeds[current] not in saved_tasks
+        ):
             stack.append(current)
             continue
-        depended = saved_tasks[dependeds[current]] if current in dependeds else None
+        depended = (
+            saved_tasks[dependeds[current]]
+            if current in dependeds
+            else None
+        )
         task = tasks[current]
         if "depends" in task:
             stack.extend(task["depends"])
@@ -76,16 +85,26 @@ def save_job(tasks, dependeds):
             depended=depended,
             part_to=part_to,
             description=task["description"],
-            engagement=task["engagement"] if "engagement" in task else None,
+            engagement=(
+                task["engagement"] if "engagement" in task else None
+            ),
         )
         for ingredient in (
-            ensure_list(task["ingredients"]) if "ingredients" in task else []
+            ensure_list(task["ingredients"])
+            if "ingredients" in task
+            else []
         ):
             models.IngredientDefinition.objects.create(
-                name=ingredient, task=saved_tasks[current]
+                name=ingredient,
+                task=saved_tasks[current],
             )
-        for tool in ensure_list(task["tools"]) if "tools" in task else []:
-            models.ToolDefinition.objects.create(name=tool, task=saved_tasks[current])
+        for tool in (
+            ensure_list(task["tools"]) if "tools" in task else []
+        ):
+            models.ToolDefinition.objects.create(
+                name=tool,
+                task=saved_tasks[current],
+            )
     return part_to.uuid
 
 
@@ -114,7 +133,9 @@ class MissingTaskKeyException(RuntimeError):
         super().__init__()
 
     def __str__(self):
-        return 'Missing "{}" key on: "{}"'.format(self.key_name, self.task_name)
+        return 'Missing "{}" key on: "{}"'.format(
+            self.key_name, self.task_name
+        )
 
 
 def traverse_tasks(tasks):
@@ -152,7 +173,9 @@ def verify_tasks(tasks):
 
 
 def request_to_dictionary(part_to, tasks):
-    return {"part_to": part_to} | {task["name"]: task for task in tasks}
+    return {"part_to": part_to} | {
+        task["name"]: task for task in tasks
+    }
 
 
 def validate(part_to=None, tasks=None):
@@ -160,14 +183,19 @@ def validate(part_to=None, tasks=None):
     try:
         verify_tasks(tasks)
     except RuntimeError as exception:
-        return ({'messages': [str(exception)]}, "400")
+        return (
+            {"messages": [str(exception)]},
+            "400",
+        )
 
 
 def handle(part_to=None, tasks=None):
     validation = validate(part_to, tasks)
     if validation:
         return validation
-    together = {"part_to": part_to} | {task["name"]: task for task in tasks}
+    together = {"part_to": part_to} | {
+        task["name"]: task for task in tasks
+    }
     id = save_job(together, invert_depends(together))
     return {
         "id": id,

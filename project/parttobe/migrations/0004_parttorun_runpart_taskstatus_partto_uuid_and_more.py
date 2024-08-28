@@ -8,7 +8,10 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("parttobe", "0003_delete_parttotaskdefinition"),
+        (
+            "parttobe",
+            "0003_delete_parttotaskdefinition",
+        ),
     ]
 
     operations = [
@@ -24,7 +27,13 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("uuid", models.UUIDField(default=uuid.uuid4, editable=False)),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
@@ -53,45 +62,74 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("started", models.DateTimeField()),
-                ("ended", models.DateTimeField(null=True)),
-                ("uuid", models.UUIDField(default=uuid.uuid4, editable=False)),
+                (
+                    "started",
+                    models.DateTimeField(),
+                ),
+                (
+                    "ended",
+                    models.DateTimeField(null=True),
+                ),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
             model_name="partto",
             name="uuid",
-            field=models.UUIDField(default=uuid.uuid4, editable=False),
+            field=models.UUIDField(
+                default=uuid.uuid4,
+                editable=False,
+            ),
         ),
         migrations.AddField(
             model_name="taskdefinition",
             name="uuid",
-            field=models.UUIDField(default=uuid.uuid4, editable=False),
+            field=models.UUIDField(
+                default=uuid.uuid4,
+                editable=False,
+            ),
         ),
         migrations.AddIndex(
             model_name="partto",
-            index=models.Index(fields=["uuid"], name="parttobe_pa_uuid_0afe89_idx"),
+            index=models.Index(
+                fields=["uuid"],
+                name="parttobe_pa_uuid_0afe89_idx",
+            ),
         ),
         migrations.AddIndex(
             model_name="taskdefinition",
-            index=models.Index(fields=["uuid"], name="parttobe_ta_uuid_a6718b_idx"),
+            index=models.Index(
+                fields=["uuid"],
+                name="parttobe_ta_uuid_a6718b_idx",
+            ),
         ),
         migrations.AddIndex(
             model_name="parttorun",
-            index=models.Index(fields=["uuid"], name="parttobe_pa_uuid_3d5965_idx"),
+            index=models.Index(
+                fields=["uuid"],
+                name="parttobe_pa_uuid_3d5965_idx",
+            ),
         ),
         migrations.AddField(
             model_name="runpart",
             name="part_to",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="parttobe.partto"
+                on_delete=django.db.models.deletion.CASCADE,
+                to="parttobe.partto",
             ),
         ),
         migrations.AddField(
             model_name="runpart",
             name="run",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="parttobe.parttorun"
+                on_delete=django.db.models.deletion.CASCADE,
+                to="parttobe.parttorun",
             ),
         ),
         migrations.AddField(
@@ -106,11 +144,15 @@ class Migration(migrations.Migration):
             model_name="taskstatus",
             name="run",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="parttobe.parttorun"
+                on_delete=django.db.models.deletion.CASCADE,
+                to="parttobe.parttorun",
             ),
         ),
         migrations.AddIndex(
             model_name="taskstatus",
-            index=models.Index(fields=["uuid"], name="parttobe_ta_uuid_967b41_idx"),
+            index=models.Index(
+                fields=["uuid"],
+                name="parttobe_ta_uuid_967b41_idx",
+            ),
         ),
     ]

@@ -6,7 +6,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("parttobe", "0002_rename_duration_taskdefinition_initial_duration"),
+        (
+            "parttobe",
+            "0002_rename_duration_taskdefinition_initial_duration",
+        ),
     ]
 
     operations = [

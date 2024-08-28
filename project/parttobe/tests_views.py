@@ -15,7 +15,12 @@ SHARED_UUID = "12345678-1234-4321-1234-123456789021"
 def use_shared_uuid(content):
     value_lengths = [8, 4, 4, 4, 12]
     expression = "-".join(
-        list(map(lambda l: "[\da-fA-F]{{{count}}}".format(count=l), value_lengths))
+        list(
+            map(
+                lambda l: "[\da-fA-F]{{{count}}}".format(count=l),
+                value_lengths,
+            )
+        )
     )
     text = content.decode("utf-8")
     substituted = re.sub(expression, SHARED_UUID, text)
@@ -26,7 +31,10 @@ class HelloWorldTestCase(TestCase):
     def test_hello_world(self):
         client = Client()
         response = client.get("/api/hello-world/", format="json")
-        self.assertEqual(json.loads(response.content), {"message": "Hello, world!"})
+        self.assertEqual(
+            json.loads(response.content),
+            {"message": "Hello, world!"},
+        )
 
 
 def toml_to_body(toml):
@@ -38,12 +46,17 @@ def toml_to_body(toml):
 
 def job_body_from_key(key):
     file_directory = os.path.dirname(__file__)
-    raw = toml.load(file_directory + "/job_examples/{}.toml".format(key))
+    raw = toml.load(
+        file_directory + "/job_examples/{}.toml".format(key)
+    )
     return json.dumps(toml_to_body(raw))
 
 
 @mock.patch(
-    "uuid.uuid4", mock.MagicMock(return_value="12345678-1234-4321-1234-123456789021")
+    "uuid.uuid4",
+    mock.MagicMock(
+        return_value="12345678-1234-4321-1234-123456789021"
+    ),
 )
 def loadExamples():
     file_directory = os.path.dirname(__file__)
@@ -60,12 +73,16 @@ def loadExamples():
         )
         data = json.dumps(toml_structure)
         response = client.post(
-            "http://testserver/api/job/", data, content_type="application/json"
+            "http://testserver/api/job/",
+            data,
+            content_type="application/json",
         )
         if response.status_code != 200:
             raise Exception(
                 "{} did not work with status {} with message: {}".format(
-                    loadable, response.status_code, response.content
+                    loadable,
+                    response.status_code,
+                    response.content,
                 )
             )
 
@@ -74,23 +91,32 @@ class UploadJobCase(TestCase):
     def test_missing_part_to(self):
         file_directory = os.path.dirname(__file__)
         client = Client()
-        data = toml.load(file_directory + "/job_examples/baked_beans.toml")
+        data = toml.load(
+            file_directory + "/job_examples/baked_beans.toml"
+        )
         del data["part_to"]
         response = client.post(
-            "/api/job/", json.dumps(data), content_type="application/json"
+            "/api/job/",
+            json.dumps(data),
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            json.loads(response.content), {"message": 'Missing Task(s): "part_to"'}
+            json.loads(response.content),
+            {"message": 'Missing Task(s): "part_to"'},
         )
 
     def test_missing_part_to_name(self):
         file_directory = os.path.dirname(__file__)
         client = Client()
-        data = toml.load(file_directory + "/job_examples/baked_beans.toml")
+        data = toml.load(
+            file_directory + "/job_examples/baked_beans.toml"
+        )
         del data["part_to"]["name"]
         response = client.post(
-            "/api/job/", json.dumps(data), content_type="application/json"
+            "/api/job/",
+            json.dumps(data),
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -101,10 +127,14 @@ class UploadJobCase(TestCase):
     def test_missing_part_to_depends(self):
         file_directory = os.path.dirname(__file__)
         client = Client()
-        data = toml.load(file_directory + "/job_examples/baked_beans.toml")
+        data = toml.load(
+            file_directory + "/job_examples/baked_beans.toml"
+        )
         del data["part_to"]["depends"]
         response = client.post(
-            "/api/job/", json.dumps(data), content_type="application/json"
+            "/api/job/",
+            json.dumps(data),
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -115,10 +145,14 @@ class UploadJobCase(TestCase):
     def test_missing_duration(self):
         file_directory = os.path.dirname(__file__)
         client = Client()
-        data = toml.load(file_directory + "/job_examples/baked_beans.toml")
+        data = toml.load(
+            file_directory + "/job_examples/baked_beans.toml"
+        )
         del data["simmer_beans"]["duration"]
         response = client.post(
-            "/api/job/", json.dumps(data), content_type="application/json"
+            "/api/job/",
+            json.dumps(data),
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -129,30 +163,40 @@ class UploadJobCase(TestCase):
     def test_missing_task(self):
         file_directory = os.path.dirname(__file__)
         client = Client()
-        data = toml.load(file_directory + "/job_examples/baked_beans.toml")
+        data = toml.load(
+            file_directory + "/job_examples/baked_beans.toml"
+        )
         del data["simmer_beans"]
         response = client.post(
-            "/api/job/", json.dumps(data), content_type="application/json"
+            "/api/job/",
+            json.dumps(data),
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            json.loads(response.content), {"message": 'Missing Task(s): "simmer_beans"'}
+            json.loads(response.content),
+            {"message": 'Missing Task(s): "simmer_beans"'},
         )
 
     def test_unused_task(self):
         file_directory = os.path.dirname(__file__)
         client = Client()
-        data = toml.load(file_directory + "/job_examples/baked_beans.toml")
+        data = toml.load(
+            file_directory + "/job_examples/baked_beans.toml"
+        )
         data["play_euchre"] = {
             "duration": "15 minutes",
             "description": "take a break and play a game of euchre with your family darn it",
         }
         response = client.post(
-            "/api/job/", json.dumps(data), content_type="application/json"
+            "/api/job/",
+            json.dumps(data),
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            json.loads(response.content), {"message": 'Unused Task(s): "play_euchre"'}
+            json.loads(response.content),
+            {"message": 'Unused Task(s): "play_euchre"'},
         )
 
     def test_can_read_job_successfully(self):
@@ -165,7 +209,9 @@ class UploadJobCase(TestCase):
         )
         self.assertEqual(post_response.status_code, 200)
         body = json.loads(post_response.content)
-        get_response = client.get("/api/job/?id={}".format(body["id"]))
+        get_response = client.get(
+            "/api/job/?id={}".format(body["id"])
+        )
         self.assertEqual(get_response.status_code, 200)
         loaded_content = json.loads(get_response.content)
         self.assertEqual(loaded_content["id"], body["id"])
@@ -187,14 +233,25 @@ class ListToolsTestClass(TestCase):
         client = Client()
         params = urllib.parse.urlencode(
             [
-                ("name[]", "Bavarian Pot Roast"),
+                (
+                    "name[]",
+                    "Bavarian Pot Roast",
+                ),
                 ("name[]", "Corn on the Cob"),
             ]
         )
-        response = client.get("/api/tools/?" + params, format="json")
+        response = client.get(
+            "/api/tools/?" + params,
+            format="json",
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
-            json.loads(response.content), ["dutch oven", "kitchen shears", "large pot"]
+            json.loads(response.content),
+            [
+                "dutch oven",
+                "kitchen shears",
+                "large pot",
+            ],
         )
 
     def test_unknown_name(self):
@@ -205,7 +262,10 @@ class ListToolsTestClass(TestCase):
                 ("name[]", "Corn on the Cob"),
             ]
         )
-        response = client.get("/api/tools/?" + params, format="json")
+        response = client.get(
+            "/api/tools/?" + params,
+            format="json",
+        )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             json.loads(response.content),
@@ -221,11 +281,16 @@ class ListToolsTestClass(TestCase):
                 ("name[]", "Not a name2"),
             ]
         )
-        response = client.get("/api/tools/?" + params, format="json")
+        response = client.get(
+            "/api/tools/?" + params,
+            format="json",
+        )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             json.loads(response.content),
-            {"message": 'Unknown Job Name(s): "Not a name", "Not a name2"'},
+            {
+                "message": 'Unknown Job Name(s): "Not a name", "Not a name2"'
+            },
         )
 
 
@@ -236,9 +301,18 @@ class ListIngredientsTestClass(TestCase):
     def test_can_get_ingredients(self):
         client = Client()
         params = urllib.parse.urlencode(
-            [("name[]", "Bavarian Pot Roast"), ("name[]", "Corn on the Cob")]
+            [
+                (
+                    "name[]",
+                    "Bavarian Pot Roast",
+                ),
+                ("name[]", "Corn on the Cob"),
+            ]
         )
-        response = client.get("/api/ingredients/?" + params, format="json")
+        response = client.get(
+            "/api/ingredients/?" + params,
+            format="json",
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             json.loads(response.content),
@@ -268,7 +342,10 @@ class ListIngredientsTestClass(TestCase):
                 ("name[]", "Corn on the Cob"),
             ]
         )
-        response = client.get("/api/ingredients/?" + params, format="json")
+        response = client.get(
+            "/api/ingredients/?" + params,
+            format="json",
+        )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             json.loads(response.content),
@@ -284,11 +361,16 @@ class ListIngredientsTestClass(TestCase):
                 ("name[]", "Not a name2"),
             ]
         )
-        response = client.get("/api/ingredients/?" + params, format="json")
+        response = client.get(
+            "/api/ingredients/?" + params,
+            format="json",
+        )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             json.loads(response.content),
-            {"message": 'Unknown Job Name(s): "Not a name", "Not a name2"'},
+            {
+                "message": 'Unknown Job Name(s): "Not a name", "Not a name2"'
+            },
         )
 
 
@@ -296,7 +378,10 @@ TEST_UUIDS = ["uuid_{}".format(i) for i in range(10000)]
 
 
 @mock.patch(
-    "uuid.uuid4", mock.MagicMock(return_value="12345678-1234-4321-1234-123456789021")
+    "uuid.uuid4",
+    mock.MagicMock(
+        return_value="12345678-1234-4321-1234-123456789021"
+    ),
 )
 class JobTestClass(TestCase):
     def setUp(self):
@@ -357,7 +442,10 @@ class JobTestClass(TestCase):
         response = client.post(
             "/api/job_run",
             {
-                "jobs": ["Baked Beans (Easy)", "Corn on the Cob"],
+                "jobs": [
+                    "Baked Beans (Easy)",
+                    "Corn on the Cob",
+                ],
             },
             format="json",
         )
@@ -369,7 +457,10 @@ class JobTestClass(TestCase):
                 "report": "2024-03-29 15:29:10.418159",
                 "complete": "2024-03-29 15:29:10.418159",
                 "tasks": ["taskId2"],
-                "duties": ["dutyId1", "dutyId2"],
+                "duties": [
+                    "dutyId1",
+                    "dutyId2",
+                ],
             },
         )
 
@@ -384,7 +475,11 @@ class JobTestClass(TestCase):
                 "report": "2024-03-29 15:29:10.418159",
                 "complete": "2024-03-29 15:29:10.418159",
                 "tasks": ["taskId2"],
-                "duties": ["dutyId1", "dutyId2", "dutyId3"],
+                "duties": [
+                    "dutyId1",
+                    "dutyId2",
+                    "dutyId3",
+                ],
             },
         )
 
@@ -419,7 +514,9 @@ class TaskTestClass(TestCase):
     def test_patch_complete_task(self):
         client = Client()
         response = client.patch(
-            "/api/task/taskId1", json.dumps({"status": "complete"}), format="json"
+            "/api/task/taskId1",
+            json.dumps({"status": "complete"}),
+            format="json",
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
@@ -429,14 +526,19 @@ class TaskTestClass(TestCase):
                 "report": "2024-03-29 15:29:10.418159",
                 "complete": "2024-03-29 15:29:10.418159",
                 "tasks": ["taskId2"],
-                "duties": ["dutyId1", "dutyId2"],
+                "duties": [
+                    "dutyId1",
+                    "dutyId2",
+                ],
             },
         )
 
     def test_patch_complete_task_new_duty(self):
         client = Client()
         response = client.patch(
-            "/api/task/taskId3", json.dumps({"status": "complete"}), format="json"
+            "/api/task/taskId3",
+            json.dumps({"status": "complete"}),
+            format="json",
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
@@ -446,7 +548,11 @@ class TaskTestClass(TestCase):
                 "report": "2024-03-29 15:29:10.418159",
                 "complete": "2024-03-29 15:29:10.418159",
                 "tasks": ["taskId2"],
-                "duties": ["dutyId1", "dutyId2", "dutyId3"],
+                "duties": [
+                    "dutyId1",
+                    "dutyId2",
+                    "dutyId3",
+                ],
             },
         )
 
