@@ -35,14 +35,10 @@ def path_from_operation_id(id):
             module = importlib.util.module_from_spec(spec)
             sys.modules[slug] = module
             loaded = spec.loader.exec_module(module)
-            validator = getattr(module, "validate")
             handler = getattr(module, "handle")
             if operationId.name() == id:
                 partial_path = openapi_path.replace("/" + PATH_START, "")
-                variants[operationId.variant().upper()] = {
-                    "handler": handler,
-                    "validator": validator,
-                }
+                variants[operationId.variant().upper()] = handler
     return path(
         partial_path,
         unmarshaler(variants),
@@ -153,18 +149,14 @@ def validate(request):
 def unmarshaler(variants):
     @api_view(["GET", "POST"])
     def handle_request(request):
-        validator = variants[request.method]["validator"]
-        handler = variants[request.method]["handler"]
+        handler = variants[request.method]
         validation = validate(request)
         arguments = unmarshal(request)
         if validation:
             return validation
-        application_validation = validator and validator(**arguments)
-        if isinstance(application_validation, Response):
-            return application_validation
-        if application_validation:
-            return Response(application_validation, 400)
         response = handler(**arguments)
+        if type(response) is tuple:
+            return Response(*response)
         if isinstance(response, Response):
             return response
         return Response(response)

@@ -1,15 +1,6 @@
 from parttobe import models
 
 
-def validate(id=None):
-    """
-    openapi has already been validated against
-    this would be for application specific errors
-    return an list of string errors ['error 1', 'error 2']
-    """
-    pass
-
-
 def handle(id=None):
     print("id", id)
     part_to = models.PartTo.objects.get(uuid=id)

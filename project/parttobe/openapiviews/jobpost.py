@@ -160,10 +160,13 @@ def validate(part_to=None, tasks=None):
     try:
         verify_tasks(tasks)
     except RuntimeError as exception:
-        return [str(exception)]
+        return ({'messages': [str(exception)]}, "400")
 
 
 def handle(part_to=None, tasks=None):
+    validation = validate(part_to, tasks)
+    if validation:
+        return validation
     together = {"part_to": part_to} | {task["name"]: task for task in tasks}
     id = save_job(together, invert_depends(together))
     return {

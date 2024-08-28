@@ -4,14 +4,6 @@ import os
 import subprocess
 
 implementation_template = """
-def validate({arguments}):
-    '''
-        openapi has already been validated against
-        this would be for application specific errors
-        return an list of string errors ['error 1', 'error 2']
-    '''
-    pass
-
 def handle({arguments}):
     ''' return payload here '''
     return {{}}
