@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "parttofe",
 ]
 
+STATICFILES_DIRS = ["parttofe/partto/build/"]
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

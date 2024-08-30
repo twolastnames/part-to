@@ -6,6 +6,10 @@
   <title>Part To</title>
 </head>
 <body>
-  <div id="app"></div>
+  <div id="root" ></div>
+  {% load static %}
+  {% for filename in js_files %}
+    <script src="{{ filename  }}"></script>
+  {% endfor %}
 </body>
 </html>
