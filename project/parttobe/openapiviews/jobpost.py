@@ -189,14 +189,18 @@ def validate(part_to=None, tasks=None):
         )
 
 
-def handle(part_to=None, tasks=None):
-    validation = validate(part_to, tasks)
+def handle(argument):
+    validation = validate(argument.part_to, argument.tasks)
     if validation:
         return validation
-    together = {"part_to": part_to} | {
-        task["name"]: task for task in tasks
+    together = {"part_to": argument.part_to} | {
+        task["name"]: task for task in argument.tasks
     }
     id = save_job(together, invert_depends(together))
+    return argument.respond_200(str(id))
+
+
+def create200Body(id):
     return {
         "id": id,
         "message": "job insert successfull",

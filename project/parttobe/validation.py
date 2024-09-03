@@ -6,8 +6,13 @@ import json
 import importlib
 import sys
 import os
-from .endpoints import openapi, OperationId
-
+from .endpoints import (
+    openapi,
+    OperationId,
+    implementation_filename,
+    definition_filename,
+)
+from uuid import uuid4
 
 PATH_START = "api/"
 
@@ -18,6 +23,15 @@ def undefined_path(request):
         {"messages": ["path '{}' not defined".format(request.path)]},
         500,
     )
+
+
+def get_meta_definition(filename, symbol):
+    id = "anon_{}".format(uuid4().hex)
+    spec = importlib.util.spec_from_file_location(id, filename)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[id] = module
+    loaded = spec.loader.exec_module(module)
+    return getattr(module, symbol)
 
 
 def path_from_operation_id(id):
@@ -33,25 +47,30 @@ def path_from_operation_id(id):
                 operationId.name(),
                 operationId.variant(),
             )
-            filename = "./parttobe/openapiviews/{}.py".format(slug)
-            if not os.path.isfile(filename):
+            filename = implementation_filename(operationId)
+            definition = definition_filename(operationId)
+            if not (
+                os.path.isfile(filename)
+                and os.path.isfile(definition)
+            ):
                 return path(
                     openapi_path.replace("/" + PATH_START, ""),
                     undefined_path,
                     name=id,
                 )
-            spec = importlib.util.spec_from_file_location(
-                slug, filename
-            )
-            module = importlib.util.module_from_spec(spec)
-            sys.modules[slug] = module
-            loaded = spec.loader.exec_module(module)
-            handler = getattr(module, "handle")
             if operationId.name() == id:
                 partial_path = openapi_path.replace(
                     "/" + PATH_START, ""
                 )
-                variants[operationId.variant().upper()] = handler
+                variants[operationId.variant().upper()] = {
+                    "handle": get_meta_definition(filename, "handle"),
+                    "responders": get_meta_definition(
+                        definition, "responders"
+                    ),
+                    "argumentType": get_meta_definition(
+                        definition, "arguments"
+                    ),
+                }
     return path(
         partial_path,
         unmarshaler(variants),
@@ -183,14 +202,21 @@ def validate(request):
 def unmarshaler(variants):
     @api_view(["GET", "POST"])
     def handle_request(request):
-        handler = variants[request.method]
+        response = None
+        handle = variants[request.method]["handle"]
+        responders = variants[request.method]["responders"]
+        argumentType = variants[request.method]["argumentType"]
         validation = validate(request)
         arguments = unmarshal(request)
+        for status, responder in responders.items():
+            arguments["respond_{}".format(status)] = responders[
+                status
+            ]
         if validation:
             return validation
-        response = handler(**arguments)
+        response = handle(argumentType(**arguments))
         if type(response) is tuple:
-            return Response(*response)
+            return Response(response)
         if isinstance(response, Response):
             return response
         return Response(response)
