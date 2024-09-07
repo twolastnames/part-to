@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "cwd":"${workspaceFolder}/project",
+            "name": "runserver",
+            "type": "debugpy",
+            "request": "launch",
+            "python": "${workspaceFolder}/venv/bin/python",
+            "program": "${workspaceFolder}/project/manage.py",
+            "args": [
+                "runserver"
+            ],
+            "django": true
+        },
+        {
+            "cwd":"${workspaceFolder}/project",
+            "name": "unit test",
+            "type": "debugpy",
+            "request": "launch",
+            "python": "${workspaceFolder}/venv/bin/python",
+            "program": "${workspaceFolder}/project/manage.py",
+            "args": [
+                "test",
+                "${workspaceFolder}/project/parttobe",
+                // choose single ones here temporarily
+            ],
+            "django": true
+        },
+
+
+    ]
+}
