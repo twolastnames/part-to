@@ -75,7 +75,7 @@ def loadExamples():
         response = client.post(
             "http://testserver/api/job/",
             data,
-            content_type="application/json",
+            content_type="*",
         )
         if response.status_code != 200:
             raise Exception(
@@ -98,7 +98,7 @@ class UploadJobCase(TestCase):
         response = client.post(
             "/api/job/",
             json.dumps(data),
-            content_type="application/json",
+            content_type="*",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -116,7 +116,7 @@ class UploadJobCase(TestCase):
         response = client.post(
             "/api/job/",
             json.dumps(data),
-            content_type="application/json",
+            content_type="*",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -134,7 +134,7 @@ class UploadJobCase(TestCase):
         response = client.post(
             "/api/job/",
             json.dumps(data),
-            content_type="application/json",
+            content_type="*",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -152,7 +152,7 @@ class UploadJobCase(TestCase):
         response = client.post(
             "/api/job/",
             json.dumps(data),
-            content_type="application/json",
+            content_type="*",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -170,7 +170,7 @@ class UploadJobCase(TestCase):
         response = client.post(
             "/api/job/",
             json.dumps(data),
-            content_type="application/json",
+            content_type="*",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -191,7 +191,7 @@ class UploadJobCase(TestCase):
         response = client.post(
             "/api/job/",
             json.dumps(data),
-            content_type="application/json",
+            content_type="*",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -205,7 +205,7 @@ class UploadJobCase(TestCase):
         post_response = client.post(
             "/api/job/",
             job_body_from_key("baked_beans"),
-            content_type="application/json",
+            content_type="*",
         )
         self.assertEqual(post_response.status_code, 200)
         body = json.loads(post_response.content)
@@ -392,7 +392,7 @@ class JobTestClass(TestCase):
         run_response = client.post(
             "/api/run/",
             data=json.dumps({"jobs": ["Frozen Green Beans"]}),
-            content_type="application/json",
+            content_type="*",
         )
 
     @freeze_time("2024-03-21 01:23:45")
@@ -401,7 +401,7 @@ class JobTestClass(TestCase):
         run_response = client.post(
             "/api/run/",
             data=json.dumps({"jobs": ["Frozen Green Beans"]}),
-            content_type="application/json",
+            content_type="*",
         )
         first_duty = {
             "id": "12345678-1234-4321-1234-123456789021",

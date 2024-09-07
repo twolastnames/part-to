@@ -75,7 +75,7 @@ def response_definitions():
                 code,
                 OperationId(operation["operationId"]),
                 description["description"],
-                description["content"]["application/json"]["schema"],
+                description["content"]["*"]["schema"],
             )
 
 

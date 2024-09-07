@@ -87,11 +87,27 @@ for method in openapi["paths"].values():
         operations[id] = operation
 
 
+def map_tree(mapper, schema, data):
+    if not data:
+        return data
+    elif isinstance(data, dict):
+        return {
+            key: map_tree(mapper, schema["properties"][key], value)
+            for key, value in data.items()
+        }
+    elif isinstance(data, list):
+        return [
+            map_tree(mapper, schema["items"], value) for value in data
+        ]
+    else:
+        return mapper(data, schema)
+
+
 def get_request_body_arguments(operation):
     try:
-        return operation["requestBody"]["content"][
-            "application/json"
-        ]["schema"]["properties"].keys()
+        return operation["requestBody"]["content"]["*"]["schema"][
+            "properties"
+        ].keys()
     except KeyError:
         return []
 

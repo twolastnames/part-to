@@ -33,7 +33,8 @@ def get_body_constructor(id_value, status):
 
     def responder(*args, **kargs):
         body = creator(*args, **kargs)
-        return Response(body, status)
+        return {"body": body, "status": status}
+        # return Response(body, status)
 
     return responder
 

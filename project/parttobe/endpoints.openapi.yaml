@@ -24,9 +24,20 @@ paths:
         '200':
           description: Expected response to a valid request
           content:
-            application/json:
+            '*':
               schema:
-                $ref: "#/components/schemas/RunState"
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  tasks:
+                    type: array
+                    items:
+                      type: string
+                      format: uuid
     post:
       summary: Define a job
       operationId: job:post
@@ -34,9 +45,8 @@ paths:
       - job
       requestBody:
         description: describe job
-        required: true
         content:
-          application/json:
+          '*':
             schema:
               type: object
               properties:
@@ -57,10 +67,12 @@ paths:
         '200':
           description: Expected response to a valid request
           content:
-            application/json:
+            '*':
               schema:
                 properties:
                   id:
+                    type: string
+                  message:
                     type: string
   /api/run/:
     post:
@@ -72,20 +84,21 @@ paths:
         description: List of unique job titles to run
         required: true
         content:
-          application/json:
+          '*':
             schema:
               type: object
               properties:
                 jobs:
                   type: array
                   items:
-                    type: string  
+                    type: string
+                    format: uuid
                   minItems: 1
       responses:
         '200':
           description: Expected response to a valid request
           content:
-            application/json:
+            '*':
               schema:
                 $ref: "#/components/schemas/RunState"
 components:

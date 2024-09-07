@@ -11,10 +11,16 @@ from .endpoints import (
     OperationId,
     implementation_filename,
     definition_filename,
+    map_tree,
 )
 from uuid import uuid4
 
 PATH_START = "api/"
+
+
+class ValidationError(RuntimeError):
+    def __init__(self, message):
+        self.message = message
 
 
 @api_view(["GET", "POST"])
@@ -32,6 +38,30 @@ def get_meta_definition(filename, symbol):
     sys.modules[id] = module
     loaded = spec.loader.exec_module(module)
     return getattr(module, symbol)
+
+
+def map_value(value, schema):
+    if "format" in schema:
+        type = schema["format"]
+    else:
+        type = schema["type"]
+    if type == "date-time":
+        return value.isoformat()
+    return value
+
+
+def have_marshaled_bodies(operation, responders):
+    return {
+        status: lambda *args, **kargs: Response(
+            map_tree(
+                map_value,
+                response["content"]["*"]["schema"],
+                responders[status](*args, **kargs)["body"],
+            ),
+            status,
+        )
+        for status, response in operation["responses"].items()
+    }
 
 
 def path_from_operation_id(id):
@@ -64,8 +94,9 @@ def path_from_operation_id(id):
                 )
                 variants[operationId.variant().upper()] = {
                     "handle": get_meta_definition(filename, "handle"),
-                    "responders": get_meta_definition(
-                        definition, "responders"
+                    "responders": have_marshaled_bodies(
+                        operation,
+                        get_meta_definition(definition, "responders"),
                     ),
                     "argumentType": get_meta_definition(
                         definition, "arguments"
@@ -93,9 +124,7 @@ def are_request_parameters_required(definition):
 
 
 def get_request_body_schema(definition):
-    return definition["requestBody"]["content"]["application/json"][
-        "schema"
-    ]
+    return definition["requestBody"]["content"]["*"]["schema"]
 
 
 def get_definition(request):
@@ -108,7 +137,9 @@ def get_definition(request):
 
 unmarshal_parameter_handlers = {
     "string": lambda value: value,
+    "uuid": lambda value: value,
     "number": int,
+    "date-time": lambda value: datetime.datetime.fromisoformat(value),
 }
 
 
@@ -129,7 +160,10 @@ def unmarshal(request):
             )
         else:
             value = request.GET.get(parameter["name"])
-        type = parameter["schema"]["type"]
+        if "format" in parameter["schema"]:
+            type = parameter["schema"]["format"]
+        else:
+            type = parameter["schema"]["type"]
         response[parameter["name"]] = unmarshal_parameter_handlers[
             type
         ](value)
@@ -172,6 +206,8 @@ def get_parameter_errors(request):
 
 def is_valid_body(request):
     definition = get_definition(request)
+    if not definition:
+        raise ValidationError("Path not defined")
     if not is_request_body_required(definition) and not request.body:
         return
     body = json.loads(request.body)
@@ -181,10 +217,10 @@ def is_valid_body(request):
             schema=get_request_body_schema(definition),
         )
     except jsonschema.ValidationError as e:
-        return Response({"messages", [e.message]}, 400)
+        raise ValidationError(e.message)
     parameter_errors = get_parameter_errors(request)
     if len(parameter_errors) > 0:
-        return Response({"messages", parameter_errors}, 400)
+        raise ValidationError(parameter_errors)
 
 
 def validate(request):
@@ -206,14 +242,19 @@ def unmarshaler(variants):
         handle = variants[request.method]["handle"]
         responders = variants[request.method]["responders"]
         argumentType = variants[request.method]["argumentType"]
-        validation = validate(request)
-        arguments = unmarshal(request)
+        try:
+            validation = is_valid_body(request)
+            arguments = unmarshal(request)
+        except ValidationError as e:
+            if isinstance(e.message, list):
+                message = e.message
+            else:
+                message = [e.message]
+            return Response({"messages", message}, 400)
         for status, responder in responders.items():
             arguments["respond_{}".format(status)] = responders[
                 status
             ]
-        if validation:
-            return validation
         response = handle(argumentType(**arguments))
         if type(response) is tuple:
             return Response(response)
