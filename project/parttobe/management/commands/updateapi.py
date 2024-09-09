@@ -65,8 +65,12 @@ class OperationFileWriter:
         file = open(self.filename(), permission)
         file.write(self.template().render(Context(self.context())))
         file.close()
-        format_python_file(self.filename())
+        self.format_file(self.filename())
         print("generated file '{}'".format(self.filename()))
+
+class PythonFileWriter(OperationFileWriter):
+    def format_file(self, name):
+        format_python_file(self.filename())
 
 
 def response_definitions():
@@ -95,7 +99,7 @@ def create{{status}}Body(*args, **kargs):
 )
 
 
-class ImplementationFileWriter(OperationFileWriter):
+class ImplementationFileWriter(PythonFileWriter):
     def template(self):
         return ImplementationTemplate
 
@@ -136,7 +140,7 @@ responders={
 )
 
 
-class DefinitionFileWriter(OperationFileWriter):
+class DefinitionFileWriter(PythonFileWriter):
     def template(self):
         return DefinitionTemplate
 
