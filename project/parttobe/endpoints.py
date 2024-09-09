@@ -54,6 +54,8 @@ class RefInjector:
             return specification
 
 
+global_status_codes = ["400", "500"]
+
 self_directory = os.path.dirname(os.path.abspath(__file__))
 openapi_filename = self_directory + "/endpoints.openapi.yaml"
 

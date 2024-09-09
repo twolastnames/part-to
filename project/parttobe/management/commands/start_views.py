@@ -11,6 +11,7 @@ from parttobe.endpoints import (
     get_request_body_arguments,
     get_parameter_arguments,
     operations,
+    global_status_codes,
 )
 import os
 import subprocess
@@ -147,6 +148,8 @@ class DefinitionFileWriter(OperationFileWriter):
         responders = []
         for response in response_definitions():
             if response.id != self.id:
+                continue
+            if response.status in global_status_codes:
                 continue
             arguments.append("respond_{}".format(response.status))
             responders.append((response.status, response.id.value))

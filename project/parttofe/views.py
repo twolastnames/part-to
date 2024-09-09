@@ -27,9 +27,9 @@ import json
 print(shaed_files)
 
 
-def index(request):
+def index(*args, **kargs):
     return render(
-        request,
+        args[0],
         "entry/index.html",
         context={"js_files": shaed_files.values()},
     )

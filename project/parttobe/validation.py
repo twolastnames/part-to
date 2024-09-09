@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.urls import path
+import django.core.exceptions as exceptions
 import jsonschema
 import json
 import importlib
@@ -12,8 +13,10 @@ from .endpoints import (
     implementation_filename,
     definition_filename,
     map_tree,
+    global_status_codes,
 )
-from uuid import uuid4
+from uuid import uuid4, UUID
+from string import ascii_lowercase, ascii_uppercase
 
 PATH_START = "api/"
 
@@ -21,6 +24,43 @@ PATH_START = "api/"
 class ValidationError(RuntimeError):
     def __init__(self, message):
         self.message = message
+
+
+letter_to_number = {}
+number_to_letter = {}
+
+for index, letter in enumerate(
+    "".join([str(number) for number in range(10)])
+    + ascii_lowercase
+    + ascii_uppercase
+):
+    letter_to_number[letter] = index
+    number_to_letter[index] = letter
+
+
+def shorten_uuid(value):
+    #current = int(str(value).replace('-', ''))
+    #current = int(str(value).replace('-', ''))
+    current = UUID(str(value)).int
+    shortened = ''
+    while True:
+        if current< len(number_to_letter):
+            return shortened + number_to_letter[current] 
+        remainder = current % len(number_to_letter)
+        shortened += number_to_letter[remainder]
+        current = current // len(number_to_letter)
+
+
+def recover_uuid(value):
+    current = 0
+    for index, digit in enumerate(value):
+        reversed_index = len(letter_to_number) - index
+        if digit == "-":
+            continue
+        current += (
+            len(letter_to_number) ** index * letter_to_number[digit]
+        )
+    return UUID(int=current)
 
 
 @api_view(["GET", "POST"])
@@ -47,6 +87,8 @@ def map_value(value, schema):
         type = schema["type"]
     if type == "date-time":
         return value.isoformat()
+    elif type == 'uuid':
+        return shorten_uuid(value)
     return value
 
 
@@ -61,6 +103,7 @@ def have_marshaled_bodies(operation, responders):
             status,
         )
         for status, response in operation["responses"].items()
+        if status not in global_status_codes
     }
 
 
@@ -137,7 +180,7 @@ def get_definition(request):
 
 unmarshal_parameter_handlers = {
     "string": lambda value: value,
-    "uuid": lambda value: value,
+    "uuid": recover_uuid,
     "number": int,
     "date-time": lambda value: datetime.datetime.fromisoformat(value),
 }
@@ -250,12 +293,15 @@ def unmarshaler(variants):
                 message = e.message
             else:
                 message = [e.message]
-            return Response({"messages", message}, 400)
+            return Response(message, status=400)
         for status, responder in responders.items():
             arguments["respond_{}".format(status)] = responders[
                 status
             ]
-        response = handle(argumentType(**arguments))
+        try:
+            response = handle(argumentType(**arguments))
+        except exceptions.ValidationError as e:
+            return Response(e.message, status=404)
         if type(response) is tuple:
             return Response(response)
         if isinstance(response, Response):

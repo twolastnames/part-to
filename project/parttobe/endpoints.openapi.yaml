@@ -21,6 +21,20 @@ paths:
           type: string
           format: uuid
       responses:
+        '500':
+          description: a backend bug
+          content:
+            '*':
+              schema:
+                type: string
+        '400':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                type: array
+                items:
+                  type: string
         '200':
           description: Expected response to a valid request
           content:
@@ -59,11 +73,26 @@ paths:
                       type: array
                       items:
                         type: string
+                        format: uuid
                 tasks:
                   type: array
                   items:
                     $ref: "#/components/schemas/Task"
       responses:
+        '500':
+          description: a backend bug
+          content:
+            '*':
+              schema:
+                type: string
+        '400':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                type: array
+                items:
+                  type: string
         '200':
           description: Expected response to a valid request
           content:
@@ -72,6 +101,7 @@ paths:
                 properties:
                   id:
                     type: string
+                    format: uuid
                   message:
                     type: string
   /api/run/:
@@ -95,6 +125,20 @@ paths:
                     format: uuid
                   minItems: 1
       responses:
+        '500':
+          description: a backend bug
+          content:
+            '*':
+              schema:
+                type: string
+        '400':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                type: array
+                items:
+                  type: string
         '200':
           description: Expected response to a valid request
           content:
@@ -108,6 +152,7 @@ components:
       - duration
       - description
       - name
+      type: object
       properties:
         name:
           type: string

@@ -1,0 +1,56 @@
+{
+    "part_to": {
+      "name": "Corn on the Cob",
+      "depends": [
+        "remove_from_heat"
+      ]
+    },
+    "tasks": [
+        {
+            "name":"wash_corn",
+            "duration": "1 minute",
+            "description": "wash the corn",
+            "ingredients": [
+                "cobbed corn"
+            ]
+        },
+        {
+            "name":"half_cobs",
+            "duration": "2 minutes",
+            "description": "cut partially with kitchen shears to weaken cob middle to break in half",
+            "tools": [
+                "kitchen shears"
+            ],
+            "depends": [
+                "wash_corn"
+            ]
+        },
+     {
+        "name":"boil_water",
+      "duration": "8 minutes",
+      "description": "boil water in large pot",
+      "tools": [
+        "large pot"
+      ],
+      "engagement": 2
+    },
+    {
+        "name":"boil",
+        "duration": "6 minutes",
+        "description": "put corn in and boil",
+        "engagement": 4,
+        "depends": [
+          "boil_water",
+          "half_cobs"
+        ]
+      },
+      {
+        "name":"remove_from_heat",
+      "duration": "20 seconds",
+      "description": "remove from heat",
+      "depends": [
+        "boil"
+      ]
+    }
+  ]
+}
