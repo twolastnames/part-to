@@ -39,13 +39,11 @@ for index, letter in enumerate(
 
 
 def shorten_uuid(value):
-    #current = int(str(value).replace('-', ''))
-    #current = int(str(value).replace('-', ''))
     current = UUID(str(value)).int
-    shortened = ''
+    shortened = ""
     while True:
-        if current< len(number_to_letter):
-            return shortened + number_to_letter[current] 
+        if current < len(number_to_letter):
+            return shortened + number_to_letter[current]
         remainder = current % len(number_to_letter)
         shortened += number_to_letter[remainder]
         current = current // len(number_to_letter)
@@ -87,7 +85,7 @@ def map_value(value, schema):
         type = schema["type"]
     if type == "date-time":
         return value.isoformat()
-    elif type == 'uuid':
+    elif type == "uuid":
         return shorten_uuid(value)
     return value
 
