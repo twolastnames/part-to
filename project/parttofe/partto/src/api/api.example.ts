@@ -49,16 +49,16 @@ interface JobGetExternalMappers {
 export const useJobGet: (args: JobGetArguments) => Result<JobGet200Body> = ({
   id,
 }) =>
-  useGet<JobGet200WireBody, JobGet200Body,JobGetExternalMappers>(
+  useGet<JobGet200WireBody, JobGet200Body, JobGetExternalMappers>(
     "/api/job/",
     [{ name: "id", value: parameterMarshalers["uuid"](id) }],
     {
-     200: (body: JobGet200WireBody) => ({
-      id: unmarshalers["uuid"](body.id),
-      name: unmarshalers["string"](body.name),
-      tasks: body.tasks.map(unmarshalers["uuid"]),
-    })
-  },
+      200: (body: JobGet200WireBody) => ({
+        id: unmarshalers["uuid"](body.id),
+        name: unmarshalers["string"](body.name),
+        tasks: body.tasks.map(unmarshalers["uuid"]),
+      }),
+    },
   );
 
 export interface JobPostBody {

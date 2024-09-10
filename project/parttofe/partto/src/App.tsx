@@ -8,7 +8,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="job/:id" element={<JobGet />} />
-        <Route path="jobpost" element={<JobPost/>} />
+        <Route path="jobpost" element={<JobPost />} />
         <Route path="" element={<div>Hello Back</div>} />
       </Routes>
     </BrowserRouter>

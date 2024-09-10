@@ -8,7 +8,7 @@ export const JobGet = () => {
   // shouldn't be here if not in the URL
   const castedId = id as UUID;
   const { data, status, stage } = useJobGet({ id: castedId });
-  if (stage != Stage.Ok || !data) {
+  if (stage !== Stage.Ok || !data) {
     return <div>Loading...</div>;
   }
   const { name, tasks } = data;

@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
 
-const sixtyTwoBases = {}
-
-
 export const unmarshalUuid = (value: string) => {
-  return value
-}
+  return value;
+};
 
 export const marshalUuid = (value: string) => {
-  return value
-}
+  return value;
+};
 
 export enum Stage {
   Setup,
@@ -91,16 +88,9 @@ export interface Result<RESPONSE_TYPE> {
   data?: RESPONSE_TYPE;
 }
 
-interface ErrorListener<RESPONSE_TYPE> {
-  // onError: (result: Result<RESPONSE_TYPE>) => void;
-  // onOk: (result: Result<RESPONSE_TYPE>) => void;
-}
+export interface GetArgumentsBase {}
 
-export interface GetArgumentsBase<RESPONSE_TYPE>
-  extends ErrorListener<RESPONSE_TYPE> {}
-
-export interface PostArgumentsBase<POST_BODY, RESPONSE_TYPE>
-  extends ErrorListener<RESPONSE_TYPE> {
+export interface PostArgumentsBase<POST_BODY> {
   body: POST_BODY;
 }
 
@@ -140,34 +130,36 @@ const appendParameterString = (url: string, parameters: Parameters) => {
   return parameterString ? `${url}?${parameterString}` : url;
 };
 
-export function useGet<WIRED_RESPONSE_TYPE, RESPONSE_TYPE, 
-EXTERNAL_MAPPERS  extends {
+export function useGet<
+  WIRED_RESPONSE_TYPE,
+  RESPONSE_TYPE,
+  EXTERNAL_MAPPERS extends {
     [status: string]: (wired: WIRED_RESPONSE_TYPE) => RESPONSE_TYPE;
-  }>(
-  url: string,
-  parameters: Parameters,
-  unmarshaler: EXTERNAL_MAPPERS) {
+  },
+>(url: string, parameters: Parameters, unmarshaler: EXTERNAL_MAPPERS) {
   const [result, setResult] = useState<Result<RESPONSE_TYPE>>({
     stage: Stage.Fetching,
   });
   useEffect(() => {
     (async () => {
-      if([Stage.Errored, Stage.Ok].includes(result.stage)) {
-        return
+      if ([Stage.Errored, Stage.Ok].includes(result.stage)) {
+        return;
       }
       const wiredResponse = await handleResponse<WIRED_RESPONSE_TYPE>(
         await fetch(appendParameterString(url, parameters)),
       );
       const status = wiredResponse.status;
-      if(status != 200) {
+      if (status !== 200) {
         return {
           status,
           stage: Stage.Errored,
-        }
+        };
       }
       const response = {
         ...wiredResponse,
-        data: wiredResponse?.data ? unmarshaler[status](wiredResponse.data) : undefined,
+        data: wiredResponse?.data
+          ? unmarshaler[status](wiredResponse.data)
+          : undefined,
       };
       setResult(response);
     })();
