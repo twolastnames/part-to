@@ -10,7 +10,7 @@ from parttobe.endpoints import (
     definition_filename,
 )
 
-DefinitionTemplate = """
+Template = """
 import parttobe.openapiviews.helpers as helpers
 import collections
 
@@ -28,9 +28,9 @@ responders={
 """
 
 
-class DefinitionFileWriter(PythonFileWriter):
+class PythonDefinitionFileWriter(PythonFileWriter):
     def template(self):
-        return DefinitionTemplate
+        return Template
 
     def context(self):
         operation = operations[self.id.value]

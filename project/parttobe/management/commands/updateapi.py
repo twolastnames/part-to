@@ -5,17 +5,17 @@ from parttobe.endpoints import (
     operations,
 )
 
-from .updateapihelpers.implementationfilewriter import (
-    ImplementationFileWriter,
+from .updateapihelpers.pythonimplementationfilewriter import (
+    PythonImplementationFileWriter,
 )
 
-from .updateapihelpers.definitionfilewriter import (
-    DefinitionFileWriter,
+from .updateapihelpers.pythondefinitionfilewriter import (
+    PythonDefinitionFileWriter,
 )
 
 
 class Command(BaseCommand):
     def handle(self, **options):
         for operation in operations.values():
-            DefinitionFileWriter(operation)()
-            ImplementationFileWriter(operation)()
+            PythonDefinitionFileWriter(operation)()
+            PythonImplementationFileWriter(operation)()

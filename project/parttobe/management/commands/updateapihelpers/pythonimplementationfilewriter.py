@@ -11,7 +11,7 @@ from parttobe.endpoints import (
 )
 
 
-ImplementationTemplate = """
+Template = """
 def handle(arguments):
     ''' return body here '''
     return {}
@@ -24,9 +24,9 @@ def create{{status}}Body(*args, **kargs):
 """
 
 
-class ImplementationFileWriter(PythonFileWriter):
+class PythonImplementationFileWriter(PythonFileWriter):
     def template(self):
-        return ImplementationTemplate
+        return Template
 
     def context(self):
         responses = [
