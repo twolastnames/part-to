@@ -46,6 +46,8 @@ interface JobGetExternalMappers {
   200: (arg: JobGet200WireBody) => JobGet200Body;
 }
 
+export type JobGetResultType = Result<JobGet200Body>;
+
 export const useJobGet: (args: JobGetArguments) => Result<JobGet200Body> = ({
   id,
 }) =>

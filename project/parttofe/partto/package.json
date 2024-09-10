@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@storybook/preset-create-react-app": "^8.2.9",
+    "@storybook/react": "^8.2.9",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -21,11 +23,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "storybook": "start-storybook",
+    "storybook": "storybook dev -p 9009",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "clean": "rm -rf node_mudules",
     "format": "eslint src && prettier --write src"
   },
   "eslintConfig": {
@@ -45,5 +48,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@chromatic-com/storybook": "^1.9.0",
+    "@storybook/react-webpack5": "^8.2.9",
+    "babel-loader": "^9.1.3"
   }
 }

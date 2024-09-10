@@ -1,13 +1,17 @@
 import React from "react";
 import { Stage, UUID } from "../api/helpers";
-import { useJobGet } from "../api/api.example";
+import { JobGetResultType, useJobGet } from "../api/api.example";
 import { useParams } from "react-router-dom";
 
-export const JobGet = () => {
+const useDefaultDataFetcher = () => {
   const { id } = useParams();
   // shouldn't be here if not in the URL
   const castedId = id as UUID;
-  const { data, status, stage } = useJobGet({ id: castedId });
+  return useJobGet({ id: castedId });
+};
+
+export const JobGet = ({ useData }: { useData?: () => JobGetResultType }) => {
+  const { data, status, stage } = (useData || useDefaultDataFetcher)();
   if (stage !== Stage.Ok || !data) {
     return <div>Loading...</div>;
   }
