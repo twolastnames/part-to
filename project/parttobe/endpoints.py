@@ -81,12 +81,22 @@ with open(openapi_filename, "r") as file:
     openapi_raw = yaml.safe_load(file.read())
     openapi = RefInjector(openapi_raw["components"])(openapi_raw)
 
-operations = {}
 
-for method in openapi["paths"].values():
+def get_raw_operation(operationId):
+    for path, method in openapi_raw["paths"].items():
+        for operation in method.values():
+            if operationId == operation["operationId"]:
+                return operation
+
+
+operations = {}
+operation_paths = {}
+
+for path, method in openapi["paths"].items():
     for operation in method.values():
         id = operation["operationId"]
         operations[id] = operation
+        operation_paths[id] = path
 
 
 def map_tree(mapper, schema, data):

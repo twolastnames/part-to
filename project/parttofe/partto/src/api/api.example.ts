@@ -81,8 +81,7 @@ export interface JobPost200Body {
   id: UUID;
 }
 
-export interface JobPostArguments
-  extends PostArgumentsBase<JobPostBody, JobPost200Body> {
+export interface JobPostArguments extends PostArgumentsBase<JobPostBody> {
   on200: (arg: JobPost200Body) => void;
 }
 
@@ -156,8 +155,7 @@ interface RunPost200WireBody {
 
 type RunPost200ExternalHandler = (arg: RunPost200Body) => void;
 
-export interface RunPostArguments
-  extends PostArgumentsBase<RunPostBody, RunPost200Body> {
+export interface RunPostArguments extends PostArgumentsBase<RunPostBody> {
   on200: RunPost200ExternalHandler;
 }
 

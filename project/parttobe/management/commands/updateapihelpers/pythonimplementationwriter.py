@@ -10,7 +10,6 @@ from parttobe.endpoints import (
     implementation_filename,
 )
 
-
 Template = """
 def handle(arguments):
     ''' return body here '''

@@ -16,6 +16,9 @@ export enum Stage {
   Ok,
 }
 
+export interface DateTime {}
+export interface Duration {}
+
 interface DefaultErrorHandlers {
   [index: string]: () => void;
 }

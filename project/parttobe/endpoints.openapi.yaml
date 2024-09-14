@@ -98,6 +98,7 @@ paths:
           content:
             '*':
               schema:
+                type: object
                 properties:
                   id:
                     type: string
@@ -174,6 +175,7 @@ components:
       - complete
       - duties
       - tasks
+      type: object
       properties:
         id:
           type: string
