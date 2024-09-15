@@ -30,7 +30,6 @@ import {
 
 import { 
   parameterMarshalers,
-  bodyMarshalers,
   unmarshalers,
 {% for shared_type in shared_types %}
   {{ shared_type }},
