@@ -1,45 +1,47 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { PostArgumentsBase, DateTime, Duration, doPost } from "./helpers";
+
 import {
-  PostArgumentsBase,
-  UUID,
-  DateTime,
-  Duration,
-  doPost,
+  parameterMarshalers,
   bodyMarshalers,
   unmarshalers,
-} from "./helpers";
-
-import { Task, RunState } from "./sharedschemas";
+  PartTo,
+  TaskDefinition,
+  RunState,
+  TaskDefinitionId,
+  RunStateId,
+  PartToId,
+} from "./sharedschemas";
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 export interface RunPostBody {
-  jobs: Array<UUID>;
+  jobs: Array<PartToId>;
 }
 
-interface RunPostWireBody {
-  jobs: Array<string>;
+interface WireBody {
+  jobs: Array<PartToId>;
 }
 
 export interface RunPost200Body {
-  id: UUID;
+  id: RunStateId;
   report: DateTime;
   complete: DateTime;
-  duties: Array<UUID>;
-  tasks: Array<UUID>;
+  duties: Array<TaskDefinitionId>;
+  tasks: Array<TaskDefinitionId>;
 }
 
-interface RunPost200WireBody {
-  id: string;
+interface Wire200Body {
+  id: RunStateId;
   report: string;
   complete: string;
-  duties: Array<string>;
-  tasks: Array<string>;
+  duties: Array<TaskDefinitionId>;
+  tasks: Array<TaskDefinitionId>;
 }
 
 interface ExternalMappers {
-  [status: string]: (arg: RunPost200WireBody) => RunPost200Body;
+  [status: string]: (arg: Wire200Body) => RunPost200Body;
 
-  200: (arg: RunPost200WireBody) => RunPost200Body;
+  200: (arg: Wire200Body) => RunPost200Body;
 }
 
 interface ExternalHandlers {
@@ -58,21 +60,25 @@ export const doRunPost = async ({
   on200,
 }: JobPostArguments) =>
   await doPost<
-    RunPostWireBody,
-    RunPost200WireBody,
+    WireBody,
+    Wire200Body,
     RunPost200Body,
     ExternalMappers,
     ExternalHandlers
   >(
     "/api/run/",
-    { jobs: body.jobs.map((value) => unmarshalers["uuid"](value)) },
+    { jobs: body.jobs.map((value) => bodyMarshalers["PartToId"](value)) },
     {
-      200: (body: RunPost200WireBody) => ({
-        id: unmarshalers["uuid"](body.id),
+      200: (body: Wire200Body) => ({
+        id: unmarshalers["RunStateId"](body.id),
         report: unmarshalers["date-time"](body.report),
         complete: unmarshalers["date-time"](body.complete),
-        duties: body.duties.map((value) => unmarshalers["uuid"](value)),
-        tasks: body.tasks.map((value) => unmarshalers["uuid"](value)),
+        duties: body.duties.map((value) =>
+          unmarshalers["TaskDefinitionId"](value),
+        ),
+        tasks: body.tasks.map((value) =>
+          unmarshalers["TaskDefinitionId"](value),
+        ),
       }),
     },
     {

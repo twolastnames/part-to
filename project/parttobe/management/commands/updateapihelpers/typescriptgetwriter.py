@@ -23,33 +23,40 @@ Template = """
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Result,
-  UUID,
   DateTime,
   Duration,
-  parameterMarshalers,
-  unmarshalers,
   useGet,
 } from "./helpers";
+
+import { 
+  parameterMarshalers,
+  bodyMarshalers,
+  unmarshalers,
+{% for shared_type in shared_types %}
+  {{ shared_type }},
+{% endfor %}
+} from "./sharedschemas";
+
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 {% for body in bodies %}
 export interface {{title}}{{body.status}}Body {{ body.typed_schema }}
 
 
-interface {{title}}{{body.status}}WireBody {{ body.wired_schema }}
+interface Wire{{ body.status }}Body {{ body.wired_schema }}
 
 {% endfor %}
 
 export interface {{title}}Arguments { {{ typed_arguments }} }
 
-interface {{ title }}ExternalMappers {
+interface ExternalMappers {
   [status: string]:
     {% for body in bodies %}
-   (arg: {{ title }}{{ body.status }}WireBody) => {{ title }}{{ body.status }}Body
+   (arg: Wire{{ body.status }}Body) => {{ title }}{{ body.status }}Body
    {% if not forloop.last %} | {% endif %} 
     {% endfor %};
     {% for body in bodies %}
-    {{body.status}}: (arg: {{ title }}{{ body.status }}WireBody) => {{ title }}{{ body.status }}Body
+    {{body.status}}: (arg: Wire{{ body.status }}Body) => {{ title }}{{ body.status }}Body
     {% endfor %};
 }
 
@@ -63,9 +70,9 @@ export const use{{ title }}: (args: {{ title }}Arguments) => Result<
 }) =>
   useGet<
     {% for body in bodies %}
-    {{ title }}{{ body.status }}WireBody, {{ title }}{{ body.status }}Body, 
+    Wire{{ body.status }}Body, {{ title }}{{ body.status }}Body, 
     {% endfor %}
-    {{title}}ExternalMappers>(
+    ExternalMappers>(
     "{{ operation_path }}",
     [
     {% for parameter in parameters %}
@@ -74,7 +81,7 @@ export const use{{ title }}: (args: {{ title }}Arguments) => Result<
     ],
     {
     {% for body in bodies %}
-      {{ body.status }}: (body: {{ title }}{{ body.status }}WireBody) => (
+      {{ body.status }}: (body: Wire{{ body.status }}Body) => (
         {{ body.unmarshalling }}
       ),
     {% endfor %}
@@ -91,7 +98,7 @@ class TypescriptGetWriter(TypescriptFileWriter):
 
     def context(self):
         bodies = []
-        for definition in response_definitions(self.id):
+        for definition in response_definitions(id=self.id):
             if definition.status in global_status_codes:
                 continue
             bodies.append(
@@ -128,8 +135,11 @@ class TypescriptGetWriter(TypescriptFileWriter):
             }
             for parameter in self.operation["parameters"]
         ]
+        shared_types = list(self.definitions.keys())
+        shared_types.extend(self.format_ids)
         returnable = {
             "bodies": bodies,
+            "shared_types": shared_types,
             "title": self.id.title(),
             "typed_arguments": parameters_to_schema(
                 self.operation["parameters"],
@@ -139,6 +149,7 @@ class TypescriptGetWriter(TypescriptFileWriter):
             "arguments": arguments,
             "operation_path": operation_paths[self.id.value],
         }
+        print('rt', returnable['shared_types'], list(self.definitions.keys()).extend( self.format_ids))
         return returnable
 
     def filename(self):

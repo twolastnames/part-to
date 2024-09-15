@@ -1,48 +1,55 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { Result, DateTime, Duration, useGet } from "./helpers";
+
 import {
-  Result,
-  UUID,
-  DateTime,
-  Duration,
   parameterMarshalers,
+  bodyMarshalers,
   unmarshalers,
-  useGet,
-} from "./helpers";
+  PartTo,
+  TaskDefinition,
+  RunState,
+  TaskDefinitionId,
+  RunStateId,
+  PartToId,
+} from "./sharedschemas";
+
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 export interface JobGet200Body {
-  id: UUID;
+  id: PartToId;
   name: string;
-  tasks: Array<UUID>;
+  tasks: Array<TaskDefinitionId>;
 }
 
-interface JobGet200WireBody {
-  id: string;
+interface Wire200Body {
+  id: PartToId;
   name: string;
-  tasks: Array<string>;
+  tasks: Array<TaskDefinitionId>;
 }
 
 export interface JobGetArguments {
-  id: UUID;
+  id: PartToId;
 }
 
-interface JobGetExternalMappers {
-  [status: string]: (arg: JobGet200WireBody) => JobGet200Body;
+interface ExternalMappers {
+  [status: string]: (arg: Wire200Body) => JobGet200Body;
 
-  200: (arg: JobGet200WireBody) => JobGet200Body;
+  200: (arg: Wire200Body) => JobGet200Body;
 }
 
 export const useJobGet: (args: JobGetArguments) => Result<JobGet200Body> = ({
   id,
 }) =>
-  useGet<JobGet200WireBody, JobGet200Body, JobGetExternalMappers>(
+  useGet<Wire200Body, JobGet200Body, ExternalMappers>(
     "/api/job/",
-    [{ name: id, value: parameterMarshalers["uuid"](id) }],
+    [{ name: id, value: parameterMarshalers["PartToId"](id) }],
     {
-      200: (body: JobGet200WireBody) => ({
-        id: unmarshalers["uuid"](body.id),
+      200: (body: Wire200Body) => ({
+        id: unmarshalers["PartToId"](body.id),
         name: unmarshalers["string"](body.name),
-        tasks: body.tasks.map((value) => unmarshalers["uuid"](value)),
+        tasks: body.tasks.map((value) =>
+          unmarshalers["TaskDefinitionId"](value),
+        ),
       }),
     },
   );

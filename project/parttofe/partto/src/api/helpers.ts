@@ -1,13 +1,5 @@
 import { useEffect, useState } from "react";
 
-export const unmarshalUuid = (value: string) => {
-  return value;
-};
-
-export const marshalUuid = (value: string) => {
-  return value;
-};
-
 export enum Stage {
   Setup,
   Ready,
@@ -16,8 +8,17 @@ export enum Stage {
   Ok,
 }
 
-export interface DateTime {}
-export interface Duration {}
+export interface DateTime {
+  epoch: () => number;
+}
+
+export const getDateTime: (date?: Date) => DateTime = (date) => ({
+  epoch: () => (date || new Date()).getDate(),
+});
+
+export interface Duration {
+  inMilliseconds: () => number;
+}
 
 interface DefaultErrorHandlers {
   [index: string]: () => void;
@@ -34,47 +35,47 @@ const defaultErrorHandler = () => {
 
 export type UUID = string; // base 32 string number
 
-type MarshalMapper<IN, OUT> = (arg: IN) => OUT;
+export type MarshalMapper<IN, OUT> = (arg: IN) => OUT;
 
-interface ParameterMarshalers {
+export interface BaseParameterMarshalers {
   "date-time": MarshalMapper<Date, string>;
   number: MarshalMapper<number, string>;
-  uuid: MarshalMapper<UUID, string>;
   string: MarshalMapper<string, string>;
 }
 
-export const parameterMarshalers: ParameterMarshalers = {
+export const baseParameterMarshalers: BaseParameterMarshalers = {
   "date-time": (date: Date) => date.toISOString(),
   number: (value: number) => Number(value).toString(),
-  uuid: (uuid: UUID) => uuid,
   string: (value: string) => value,
 };
 
-interface BodyMarshalers {
-  "date-time": MarshalMapper<Date, string>;
+export interface BaseBodyMarshalers {
+  "date-time": MarshalMapper<DateTime, string>;
   number: MarshalMapper<number, number>;
-  uuid: MarshalMapper<UUID, string>;
   string: MarshalMapper<string, string>;
+  duration: MarshalMapper<Duration, number>;
 }
 
-export const bodyMarshalers: BodyMarshalers = {
-  "date-time": (date: Date) => date.toISOString(),
+export const baseBodyMarshalers: BaseBodyMarshalers = {
+  "date-time": (date: DateTime) => new Date(date.epoch()).toISOString(),
   number: (value: number) => value,
-  uuid: (uuid: UUID) => uuid,
   string: (value: string) => value,
+  duration: (value: Duration) => value.inMilliseconds(),
 };
 
-interface Unmarshalers {
-  "date-time": MarshalMapper<string, Date>;
+export interface BaseUnmarshalers {
+  "date-time": MarshalMapper<string, DateTime>;
   number: MarshalMapper<number, number>;
-  uuid: MarshalMapper<string, UUID>;
   string: MarshalMapper<string, string>;
+  duration: MarshalMapper<number, Duration>;
 }
 
-export const unmarshalers: Unmarshalers = {
-  "date-time": (value: string) => new Date(value),
+export const baseUnmarshalers: BaseUnmarshalers = {
+  "date-time": (value: string) => getDateTime(new Date(value)),
+  duration: (value: number) => ({
+    inMilliseconds: () => value,
+  }),
   number: (value: number) => value,
-  uuid: (uuid: string) => uuid,
   string: (value: string) => value,
 };
 

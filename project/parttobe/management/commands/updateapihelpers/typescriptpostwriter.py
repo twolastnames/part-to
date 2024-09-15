@@ -24,15 +24,15 @@ Template = """
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   PostArgumentsBase,
-  UUID,
   DateTime,
   Duration,
   doPost,
-  bodyMarshalers,
-  unmarshalers,
 } from "./helpers";
 
 import { 
+  parameterMarshalers,
+  bodyMarshalers,
+  unmarshalers,
 {% for shared_type in shared_types %}
   {{ shared_type }},
 {% endfor %}
@@ -42,22 +42,22 @@ import {
 export interface {{title}}Body {{ typed_arguments }}
 
 
-interface {{title}}WireBody {{ wired_arguments }}
+interface WireBody {{ wired_arguments }}
 
 {% for body in bodies %}
 export interface {{title}}{{body.status}}Body {{ body.typed_schema }}
 
-interface {{title}}{{body.status}}WireBody {{ body.wired_schema }}
+interface Wire{{body.status}}Body {{ body.wired_schema }}
 {% endfor %}
 
 interface ExternalMappers {
   [status: string]:
     {% for body in bodies %}
-   (arg: {{ title }}{{ body.status }}WireBody) => {{ title }}{{ body.status }}Body
+   (arg: Wire{{ body.status }}Body) => {{ title }}{{ body.status }}Body
    {% if not forloop.last %} | {% endif %} 
     {% endfor %};
     {% for body in bodies %}
-    {{body.status}}: (arg: {{ title }}{{ body.status }}WireBody) => {{ title }}{{ body.status }}Body 
+    {{body.status}}: (arg: Wire{{ body.status }}Body) => {{ title }}{{ body.status }}Body 
     {% endfor %};
 }
 
@@ -84,9 +84,9 @@ export const do{{ title }} = async ({ body,
     {% endfor %}
  }: JobPostArguments) =>
   await doPost<
-    {{ title }}WireBody,
+    WireBody,
     {% for body in bodies %}
-      {{ title }}{{ body.status }}WireBody
+      Wire{{ body.status }}Body
       {% if not forloop.last %} | {% endif %} 
     {% endfor %},
     {% for body in bodies %}
@@ -97,10 +97,10 @@ export const do{{ title }} = async ({ body,
     ExternalHandlers
   >(
     "{{ operation_path }}",
-    {{ body_unmarshalling }},
+    {{ body_marshalling }},
     {
     {% for body in bodies %}
-      {{ body.status }}: (body: {{ title }}{{ body.status }}WireBody) => (
+      {{ body.status }}: (body: Wire{{ body.status }}Body) => (
         {{ body.unmarshalling }}
       ),
     {% endfor %}
@@ -147,13 +147,14 @@ class TypescriptPostWriter(TypescriptFileWriter):
         schema = self.operation["requestBody"]["content"]["*"][
                     "schema"
                 ]
-        body_unmarshalling = map_body_to_typescript(
-          "unmarshalers", "body", schema, {}
+        body_marshalling = map_body_to_typescript(
+          "bodyMarshalers", "body", schema, {}
         ),
-        print('body_unmarshalling', body_unmarshalling[0])
+        shared_types = list(self.definitions.keys())
+        shared_types.extend(self.format_ids)
         returnable = {
             "bodies": bodies,
-            "shared_types": self.definitions.keys(),
+            "shared_types": shared_types,
             "title": self.id.title(),
             "wired_arguments": schema_to_typescript(
                 schema,
@@ -162,7 +163,7 @@ class TypescriptPostWriter(TypescriptFileWriter):
             "typed_arguments": schema_to_typescript(
                 input_schema, typed_schema_formatter
             ),
-            "body_unmarshalling" : body_unmarshalling[0],
+            "body_marshalling" : body_marshalling[0],
             "operation_path": operation_paths[self.id.value],
         }
         return returnable

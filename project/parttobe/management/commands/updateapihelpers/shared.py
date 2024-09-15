@@ -153,7 +153,7 @@ def typescript_base_directory():
 
 def format_typescript_file(filename):
     process = subprocess.Popen(
-        'npm run format -- "{}"'.format(filename),
+        './node_modules/.bin/prettier -w "{}"'.format(filename),
         shell=True,
         cwd=typescript_base_directory(),
         stdout=subprocess.PIPE,
@@ -165,11 +165,12 @@ def format_typescript_file(filename):
 
 
 class OperationFileWriter:
-    def __init__(self, operation, raw_operation, definitions):
+    def __init__(self, operation, raw_operation, definitions, format_ids):
         self.operation = operation
         self.raw_operation = raw_operation
         self.definitions = definitions
         self.id = OperationId(operation["operationId"])
+        self.format_ids = format_ids
 
     def context(self):
         raise NotImplementedError("please override this")

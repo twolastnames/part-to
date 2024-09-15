@@ -74,7 +74,6 @@ def definition_filename(operationId):
         operationId, extension="definition"
     )
 
-
 OpenAPI.from_file_path(openapi_filename)
 
 with open(openapi_filename, "r") as file:
@@ -88,6 +87,19 @@ def get_raw_operation(operationId):
             if operationId == operation["operationId"]:
                 return operation
 
+def traverse_api(should_yield_keys_value):
+    stack = [openapi]
+    while True:
+        next = stack.pop()
+        if isinstance(next, dict):
+            for key, value in next.items():
+                if should_yield_keys_value(key):
+                    yield value
+                stack.append(value)
+        elif isinstance(next, list):
+            stack.extend(next)
+        if len(stack) == 0:
+            break
 
 operations = {}
 operation_paths = {}

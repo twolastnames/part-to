@@ -426,6 +426,10 @@ class RunPart(models.Model):
     part_to = models.ForeignKey("PartTo", on_delete=models.CASCADE)
     run = models.ForeignKey("PartToRun", on_delete=models.CASCADE)
 
+class RunState:
+    ''' This is an unimplemented place holder '''
+    def __init__(self, *args, **kargs):
+        pass
 
 def start_run(part_tos):
     run = PartToRun.objects.create()
