@@ -3,6 +3,7 @@ from .shared import (
     response_definitions,
     parameters_to_schema,
     schema_to_typescript,
+    required_question,
     typed_schema_formatter,
     wired_schema_formatter,
     typescript_base_directory,
@@ -59,12 +60,16 @@ interface ExternalMappers {
     {% endfor %};
 }
 
-export const use{{ title }}: (args: {{ title }}Arguments) => Result<
-   {% for body in bodies %}
-      {{ title }}{{ body.status }}Body
-      {% if not forloop.last %} | {% endif %} 
-    {% endfor %},
- > = ({
+export type {{ title }}Result = Result<
+{% for body in bodies %}
+   {{title}}{{body.status}}Body 
+    {% if not forloop.last %} | {% endif %} 
+{% endfor %}
+>
+
+export const use{{ title }}: (
+    args: {{ title }}Arguments
+) => {{ title }}Result = ({
   {{ arguments }}
 }) =>
   useGet<
@@ -106,10 +111,12 @@ class TypescriptGetWriter(TypescriptFileWriter):
                     "typed_schema": schema_to_typescript(
                         definition.schema,
                         typed_schema_formatter,
+                        required_question,
                     ),
                     "wired_schema": schema_to_typescript(
                         definition.schema,
                         wired_schema_formatter,
+                        required_question,
                     ),
                     "unmarshalling": map_body_to_typescript(
                         "unmarshalers", "body", definition.schema, {}
@@ -148,7 +155,11 @@ class TypescriptGetWriter(TypescriptFileWriter):
             "arguments": arguments,
             "operation_path": operation_paths[self.id.value],
         }
-        print('rt', returnable['shared_types'], list(self.definitions.keys()).extend( self.format_ids))
+        print(
+            "rt",
+            returnable["shared_types"],
+            list(self.definitions.keys()).extend(self.format_ids),
+        )
         return returnable
 
     def filename(self):

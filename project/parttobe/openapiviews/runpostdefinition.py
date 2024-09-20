@@ -12,7 +12,7 @@ import collections
 arguments = collections.namedtuple(
     "RunPostArgumentsType",
     [
-        "jobs",
+        "partTo",
         "respond_200",
     ],
 )

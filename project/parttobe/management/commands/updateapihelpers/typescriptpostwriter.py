@@ -3,6 +3,7 @@ from .shared import (
     response_definitions,
     parameters_to_schema,
     schema_to_typescript,
+    required_question,
     typed_schema_formatter,
     wired_schema_formatter,
     typescript_base_directory,
@@ -131,25 +132,29 @@ class TypescriptPostWriter(TypescriptFileWriter):
                     "typed_schema": schema_to_typescript(
                         definition.schema,
                         typed_schema_formatter,
+                        required_question,
                     ),
                     "wired_schema": schema_to_typescript(
                         definition.schema,
                         wired_schema_formatter,
+                        required_question,
                     ),
                     "unmarshalling": map_body_to_typescript(
                         "unmarshalers", "body", definition.schema, {}
                     ),
                 }
             )
-        input_schema = self.raw_operation["requestBody"]["content"]["*"][
+        input_schema = self.raw_operation["requestBody"]["content"][
+            "*"
+        ]["schema"]
+        schema = self.operation["requestBody"]["content"]["*"][
             "schema"
         ]
-        schema = self.operation["requestBody"]["content"]["*"][
-                    "schema"
-                ]
-        body_marshalling = map_body_to_typescript(
-          "bodyMarshalers", "body", schema, {}
-        ),
+        body_marshalling = (
+            map_body_to_typescript(
+                "bodyMarshalers", "body", schema, {}
+            ),
+        )
         shared_types = list(self.definitions.keys())
         shared_types.extend(self.format_ids)
         returnable = {
@@ -159,11 +164,13 @@ class TypescriptPostWriter(TypescriptFileWriter):
             "wired_arguments": schema_to_typescript(
                 schema,
                 wired_schema_formatter,
+                        required_question,
             ),
             "typed_arguments": schema_to_typescript(
-                input_schema, typed_schema_formatter
+                input_schema, typed_schema_formatter,
+                        required_question,
             ),
-            "body_marshalling" : body_marshalling[0],
+            "body_marshalling": body_marshalling[0],
             "operation_path": operation_paths[self.id.value],
         }
         return returnable

@@ -74,6 +74,7 @@ def definition_filename(operationId):
         operationId, extension="definition"
     )
 
+
 OpenAPI.from_file_path(openapi_filename)
 
 with open(openapi_filename, "r") as file:
@@ -86,6 +87,7 @@ def get_raw_operation(operationId):
         for operation in method.values():
             if operationId == operation["operationId"]:
                 return operation
+
 
 def traverse_api(should_yield_keys_value):
     stack = [openapi]
@@ -100,6 +102,7 @@ def traverse_api(should_yield_keys_value):
             stack.extend(next)
         if len(stack) == 0:
             break
+
 
 operations = {}
 operation_paths = {}

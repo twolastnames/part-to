@@ -7,6 +7,7 @@ from .shared import (
     map_body_to_typescript,
     self_directory,
     format_typescript_file,
+    required_question,
 )
 from parttobe.endpoints import (
     operations,
@@ -42,43 +43,64 @@ export type {{ id }} = string;
 {% endfor %}
 
 
-export interface ParameterMarshalers extends BaseParameterMarshalers {
+export type ParameterMarshalers = BaseParameterMarshalers & {
+required: {
 {% for id in ids %}
     {{ id }}: MarshalMapper<{{ id }}, string>;
 {% endfor %}
+}
 }
 
 export const parameterMarshalers : ParameterMarshalers = {
-    ...baseParameterMarshalers,
-{% for id in ids %}
-    {{ id }}: (value : {{ id }}) => value, 
-{% endfor %}
+    unrequired: {
+        ...(baseParameterMarshalers.unrequired),
+    },
+    required: {
+        ...(baseParameterMarshalers.required),
+        {% for id in ids %}
+            {{ id }}: (value : {{ id }}) => value, 
+        {% endfor %}
+    },
 }
 
-export interface BodyMarshalers extends BaseBodyMarshalers {
+export type BodyMarshalers = BaseBodyMarshalers & {
+required: {
 {% for id in ids %}
     {{ id }}: MarshalMapper<{{ id }}, string>;
 {% endfor %}
 }
-
-export const bodyMarshalers : BodyMarshalers = {
-    ...baseBodyMarshalers,
-{% for id in ids %}
-    {{ id }}: (value : {{ id }}) => value, 
-{% endfor %}
 }
 
-export interface Unmarshalers extends BaseUnmarshalers {
+export const bodyMarshalers : BodyMarshalers = {
+    unrequired: {
+        ...(baseBodyMarshalers.unrequired),
+    },
+    required: {
+        ...(baseBodyMarshalers.required),
+        {% for id in ids %}
+            {{ id }}: (value : {{ id }}) => value, 
+        {% endfor %}
+    },
+}
+
+export type Unmarshalers = BaseUnmarshalers & {
+required: {
 {% for id in ids %}
     {{ id }}: MarshalMapper<string, {{ id }}>;
 {% endfor %}
 }
+}
 
 export const unmarshalers : Unmarshalers = {
-    ...baseUnmarshalers,
-{% for id in ids %}
-    {{ id }}: (value : string) => value, 
-{% endfor %}
+    unrequired: {
+    ...(baseUnmarshalers.unrequired),
+    },
+    required: {
+    ...(baseUnmarshalers.required),
+        {% for id in ids %}
+            {{ id }}: (value : string) => value, 
+        {% endfor %}
+    },
 }
 
 
@@ -95,18 +117,28 @@ def write_shared_definitions(definitions, format_ids):
     filename = "{}/src/api/{}".format(
         typescript_base_directory(), "sharedschemas.ts"
     )
-    formatIds = list(set([ id for id in traverse_api(lambda value: value == 'format') if id.endswith('Id')  ]))
+    formatIds = list(
+        set(
+            [
+                id
+                for id in traverse_api(
+                    lambda value: value == "format"
+                )
+                if id.endswith("Id")
+            ]
+        )
+    )
     context = {
         "ids": format_ids,
         "definitions": [
             {
                 "title": title,
                 "schema": schema_to_typescript(
-                    schema, typed_schema_formatter
+                    schema, typed_schema_formatter, required_question
                 ),
             }
             for title, schema in definitions.items()
-        ]
+        ],
     }
     print("generating file: '{}'".format(filename))
     file = open(filename, "w")

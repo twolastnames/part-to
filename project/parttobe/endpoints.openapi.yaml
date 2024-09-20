@@ -7,12 +7,12 @@ info:
   license:
     name: MIT
 paths:
-  /api/job/:
+  /api/partto/:
     get:
-      summary: Disclose a job definition
-      operationId: job:get
+      summary: Disclose a part to definition
+      operationId: partto:get
       tags:
-      - job
+      - partto 
       parameters:
       - name: id
         in: query
@@ -42,19 +42,25 @@ paths:
               schema:
                 $ref: "#/components/schemas/PartTo"
     post:
-      summary: Define a job
-      operationId: job:post
+      summary: Define a part to
+      operationId: partto:post
       tags:
-      - job
+      - partto 
       requestBody:
-        description: describe job
+        description: describe part to
         content:
           '*':
             schema:
+              required:
+              - part_to
+              - tasks
               type: object
               properties:
                 part_to:
                   type: object
+                  required:
+                  - name
+                  - depends
                   properties:
                     name:
                       type: string
@@ -87,6 +93,9 @@ paths:
             '*':
               schema:
                 type: object
+                required:
+                - id
+                - message
                 properties:
                   id:
                     type: string
@@ -100,14 +109,16 @@ paths:
       tags:
       - run
       requestBody:
-        description: List of unique job titles to run
+        description: List of unique part to titles to run
         required: true
         content:
           '*':
             schema:
               type: object
+              required:
+                - partTo
               properties:
-                jobs:
+                partTo:
                   type: array
                   items:
                     type: string
@@ -138,10 +149,10 @@ components:
   schemas:
     PartTo:
       type: object
+      required:
+      - name
+      - tasks
       properties:
-        id:
-          type: string
-          format: PartToId
         name:
           type: string
         tasks:
@@ -156,9 +167,6 @@ components:
       - name
       type: object
       properties:
-        id:
-          type: string
-          format: TaskDefinitionId
         name:
           type: string
         duration:

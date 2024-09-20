@@ -10,14 +10,13 @@ import parttobe.openapiviews.helpers as helpers
 import collections
 
 arguments = collections.namedtuple(
-    "JobPostArgumentsType",
+    "ParttoGetArgumentsType",
     [
-        "part_to",
-        "tasks",
+        "id",
         "respond_200",
     ],
 )
 
 responders = {
-    "200": helpers.get_body_constructor("job:post", "200"),
+    "200": helpers.get_body_constructor("partto:get", "200"),
 }

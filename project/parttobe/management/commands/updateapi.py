@@ -31,14 +31,32 @@ from .updateapihelpers.typescriptpostwriter import (
 class Command(BaseCommand):
     def handle(self, **options):
         definitions = openapi["components"]["schemas"]
-        format_ids = list(set([ id for id in traverse_api(lambda value: value == 'format') if id.endswith('Id')  ]))
+        format_ids = list(
+            set(
+                [
+                    id
+                    for id in traverse_api(
+                        lambda value: value == "format"
+                    )
+                    if id.endswith("Id")
+                ]
+            )
+        )
         write_shared_definitions(definitions, format_ids)
         for operation in operations.values():
             id = OperationId(operation["operationId"])
             raw_operation = get_raw_operation(id.value)
-            PythonDefinitionFileWriter(operation, raw_operation, definitions, format_ids)()
-            PythonImplementationFileWriter(operation, raw_operation, definitions, format_ids)()
+            PythonDefinitionFileWriter(
+                operation, raw_operation, definitions, format_ids
+            )()
+            PythonImplementationFileWriter(
+                operation, raw_operation, definitions, format_ids
+            )()
             if id.variant() == "get":
-               TypescriptGetWriter(operation, raw_operation, definitions, format_ids)()
+                TypescriptGetWriter(
+                    operation, raw_operation, definitions, format_ids
+                )()
             if id.variant() == "post":
-                TypescriptPostWriter(operation, raw_operation, definitions, format_ids)()
+                TypescriptPostWriter(
+                    operation, raw_operation, definitions, format_ids
+                )()
