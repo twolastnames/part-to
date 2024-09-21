@@ -18,6 +18,7 @@ from parttobe.endpoints import (
     implementation_filename,
     operation_paths,
 )
+import os
 
 Template = """
 {% autoescape off %}
@@ -163,9 +164,11 @@ class TypescriptGetWriter(TypescriptFileWriter):
         return returnable
 
     def filename(self):
-        return "{}/src/api/{}.ts".format(
+        return os.path.join(
             typescript_base_directory(),
-            self.id.slug(),
+            "src",
+            "api",
+            "{}.ts".format(self.id.slug()),
         )
 
     def overwritable(self):

@@ -19,6 +19,7 @@ from parttobe.endpoints import (
     traverse_api,
 )
 from django.template import Context, Template
+import os
 
 
 ConstructedTemplate = Template(
@@ -114,8 +115,8 @@ export interface {{ definition.title }} {{ definition.schema }}
 
 
 def write_shared_definitions(definitions, format_ids):
-    filename = "{}/src/api/{}".format(
-        typescript_base_directory(), "sharedschemas.ts"
+    filename = os.path.join(
+        typescript_base_directory(), "src", "api", "scharedschemas.ts"
     )
     formatIds = list(
         set(

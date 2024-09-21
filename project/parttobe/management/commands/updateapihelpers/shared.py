@@ -23,12 +23,18 @@ wired_schema_formatter = {
 }
 
 RequirementQuestien = namedtuple(
-    "RequirementQuestion", ["symbol", "required", "formatter", "format"]
+    "RequirementQuestion",
+    ["symbol", "required", "formatter", "format"],
 )
 
-required_question = RequirementQuestien("", True, "required", lambda v: v)
+required_question = RequirementQuestien(
+    "", True, "required", lambda v: v
+)
 
-unrequired_question = RequirementQuestien("?", False, "unrequired", lambda v: "{} | undefined".format(v))
+unrequired_question = RequirementQuestien(
+    "?", False, "unrequired", lambda v: "{} | undefined".format(v)
+)
+
 
 def maybe_required_question(schema, key):
     if "required" in schema:
@@ -42,16 +48,22 @@ def maybe_required_question(schema, key):
 
 
 def get_marshaller_variant(marshaller_name):
-    def getter (schema, key):
+    def getter(schema, key):
         question = maybe_required_question(schema, key)
-        return "{}.{}".format(marshaller_name, question.formatter),
+        return ("{}.{}".format(marshaller_name, question.formatter),)
+
     return getter
 
+
 def map_body_to_typescript(
-    marshaller_name, variable, schema, formatter, question=required_question
+    marshaller_name,
+    variable,
+    schema,
+    formatter,
+    question=required_question,
 ):
     if isinstance(schema, str):
-        print('variable', variable, question)
+        print("variable", variable, question)
         return "({})".format(variable)
     type = schema["type"]
     if "format" in schema:
@@ -63,15 +75,15 @@ def map_body_to_typescript(
         format = type
     if type == "object":
         current = []
-        if 'required' in schema:
-            requireds = schema['required'] 
+        if "required" in schema:
+            requireds = schema["required"]
         else:
             requireds = []
         for key, value in schema["properties"].items():
             if key in requireds:
-                question=required_question
+                question = required_question
             else:
-                question=unrequired_question
+                question = unrequired_question
             current.append(
                 "{}: {}".format(
                     key,
@@ -90,7 +102,11 @@ def map_body_to_typescript(
             variable,
             question.symbol,
             map_body_to_typescript(
-                marshaller_name, "value", schema["items"], formatter, required_question
+                marshaller_name,
+                "value",
+                schema["items"],
+                formatter,
+                required_question,
             ),
         )
     return "{}.{}['{}']({})".format(
@@ -124,11 +140,7 @@ def schema_to_typescript(schema, formatter, last):
                 "{}{}: {};".format(
                     key,
                     question.symbol,
-                    schema_to_typescript(
-                        value,
-                        formatter,
-                        question
-                    ),
+                    schema_to_typescript(value, formatter, question),
                 )
             )
         return "{" + "".join(current) + "}"
@@ -156,7 +168,7 @@ def parameters_to_schema(parameters, formatter):
             schema_to_typescript(
                 parameter["schema"], formatter, question
             ),
-    )
+        )
     return result
 
 
@@ -187,12 +199,19 @@ def format_python_file(filename):
 
 
 def typescript_base_directory():
-    return "{}/../../../../parttofe/partto".format(self_directory)
+    return os.path.join(
+        self_directory, "..", "..", "..", "..", "parttofe", "partto"
+    )
 
 
 def format_typescript_file(filename):
     process = subprocess.Popen(
-        './node_modules/.bin/prettier -w "{}"'.format(filename),
+        os.path.join(
+            ".",
+            "node_modules",
+            ".bin",
+            'prettier -w "{}"'.format(filename),
+        ),
         shell=True,
         cwd=typescript_base_directory(),
         stdout=subprocess.PIPE,

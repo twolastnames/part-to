@@ -19,6 +19,7 @@ from parttobe.endpoints import (
     get_raw_operation,
     operation_paths,
 )
+import os
 
 Template = """
 {% autoescape off %}
@@ -164,11 +165,12 @@ class TypescriptPostWriter(TypescriptFileWriter):
             "wired_arguments": schema_to_typescript(
                 schema,
                 wired_schema_formatter,
-                        required_question,
+                required_question,
             ),
             "typed_arguments": schema_to_typescript(
-                input_schema, typed_schema_formatter,
-                        required_question,
+                input_schema,
+                typed_schema_formatter,
+                required_question,
             ),
             "body_marshalling": body_marshalling[0],
             "operation_path": operation_paths[self.id.value],
@@ -176,9 +178,11 @@ class TypescriptPostWriter(TypescriptFileWriter):
         return returnable
 
     def filename(self):
-        return "{}/src/api/{}.ts".format(
+        return os.path.join(
             typescript_base_directory(),
-            self.id.slug(),
+            "src",
+            "api",
+            "{}.ts".format(self.id.slug()),
         )
 
     def overwritable(self):
