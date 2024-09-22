@@ -10,10 +10,12 @@ export enum Stage {
 
 export interface DateTime {
   epoch: () => number;
+  toISOString: () => string;
 }
 
 export const getDateTime: (date?: Date) => DateTime = (date) => ({
   epoch: () => (date || new Date()).getDate(),
+  toISOString: () => (date || new Date()).toISOString(),
 });
 
 export interface Duration {
@@ -38,45 +40,98 @@ export type UUID = string; // base 32 string number
 export type MarshalMapper<IN, OUT> = (arg: IN) => OUT;
 
 export interface BaseParameterMarshalers {
-  "date-time": MarshalMapper<Date, string>;
-  number: MarshalMapper<number, string>;
-  string: MarshalMapper<string, string>;
+  required: {
+    "date-time": MarshalMapper<DateTime, string>;
+    number: MarshalMapper<number, string>;
+    string: MarshalMapper<string, string>;
+  };
+  unrequired: {
+    "date-time": MarshalMapper<DateTime | undefined, string | undefined>;
+    number: MarshalMapper<number | undefined, string | undefined>;
+    string: MarshalMapper<string | undefined, string | undefined>;
+  };
 }
 
 export const baseParameterMarshalers: BaseParameterMarshalers = {
-  "date-time": (date: Date) => date.toISOString(),
-  number: (value: number) => Number(value).toString(),
-  string: (value: string) => value,
+  required: {
+    "date-time": (date: DateTime) => date.toISOString(),
+    number: (value: number) => Number(value).toString(),
+    string: (value: string) => value,
+  },
+  unrequired: {
+    "date-time": (date: DateTime | undefined) => date?.toISOString(),
+    number: (value: number | undefined) =>
+      value ? Number(value).toString() : undefined,
+    string: (value: string | undefined) => value,
+  },
 };
 
 export interface BaseBodyMarshalers {
-  "date-time": MarshalMapper<DateTime, string>;
-  number: MarshalMapper<number, number>;
-  string: MarshalMapper<string, string>;
-  duration: MarshalMapper<Duration, number>;
+  required: {
+    "date-time": MarshalMapper<DateTime, string>;
+    number: MarshalMapper<number, number>;
+    string: MarshalMapper<string, string>;
+    duration: MarshalMapper<Duration, number>;
+  };
+  unrequired: {
+    "date-time": MarshalMapper<DateTime | undefined, string | undefined>;
+    number: MarshalMapper<number | undefined, number | undefined>;
+    string: MarshalMapper<string | undefined, string | undefined>;
+    duration: MarshalMapper<Duration | undefined, number | undefined>;
+  };
 }
 
 export const baseBodyMarshalers: BaseBodyMarshalers = {
-  "date-time": (date: DateTime) => new Date(date.epoch()).toISOString(),
-  number: (value: number) => value,
-  string: (value: string) => value,
-  duration: (value: Duration) => value.inMilliseconds(),
+  required: {
+    "date-time": (date: DateTime) => new Date(date.epoch()).toISOString(),
+    number: (value: number) => value,
+    string: (value: string) => value,
+    duration: (value: Duration) => value.inMilliseconds(),
+  },
+  unrequired: {
+    "date-time": (date: DateTime | undefined) =>
+      date ? new Date(date.epoch()).toISOString() : undefined,
+    number: (value: number | undefined) => value,
+    string: (value: string | undefined) => value,
+    duration: (value: Duration | undefined) =>
+      value ? value.inMilliseconds() : undefined,
+  },
 };
 
 export interface BaseUnmarshalers {
-  "date-time": MarshalMapper<string, DateTime>;
-  number: MarshalMapper<number, number>;
-  string: MarshalMapper<string, string>;
-  duration: MarshalMapper<number, Duration>;
+  required: {
+    "date-time": MarshalMapper<string, DateTime>;
+    number: MarshalMapper<number, number>;
+    string: MarshalMapper<string, string>;
+    duration: MarshalMapper<number, Duration>;
+  };
+  unrequired: {
+    "date-time": MarshalMapper<string | undefined, DateTime | undefined>;
+    number: MarshalMapper<number | undefined, number | undefined>;
+    string: MarshalMapper<string | undefined, string | undefined>;
+    duration: MarshalMapper<number | undefined, Duration | undefined>;
+  };
 }
 
+export const getDuration: (arg: number) => Duration = (value) => ({
+  inMilliseconds: () => value,
+});
+
 export const baseUnmarshalers: BaseUnmarshalers = {
-  "date-time": (value: string) => getDateTime(new Date(value)),
-  duration: (value: number) => ({
-    inMilliseconds: () => value,
-  }),
-  number: (value: number) => value,
-  string: (value: string) => value,
+  unrequired: {
+    "date-time": (value: string | undefined) =>
+      value ? getDateTime(new Date(value)) : undefined,
+    duration: (value: number | undefined) =>
+      value ? getDuration(value) : undefined,
+    number: (value: number | undefined) => value,
+    string: (value: string | undefined) => value,
+  },
+  required: {
+    "date-time": (value: string) => getDateTime(new Date(value)),
+    duration: (value: number) => getDuration(value),
+    number: (value: number) => value,
+    string: (value: string) => value,
+  },
 };
 
 interface Parameter {

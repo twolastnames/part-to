@@ -9,7 +9,7 @@ class OperationId:
         self.value = value
 
     def name(self):
-        return self.value.split(":")[0]
+        return self.value.split(":")[0].lower()
 
     def variant(self):
         return self.value.split(":")[1]
@@ -57,15 +57,24 @@ class RefInjector:
 global_status_codes = ["400", "500"]
 
 self_directory = os.path.dirname(os.path.abspath(__file__))
-openapi_filename = self_directory + "/endpoints.openapi.yaml"
+openapi_filename = os.path.join(
+    self_directory, "endpoints.openapi.yaml"
+)
+
+
+def get_models_filename():
+    return os.path.join(self_directory, "models.py")
 
 
 def implementation_filename(operationId, extension=""):
-    return "{}/openapiviews/{}{}{}.py".format(
+    return os.path.join(
         self_directory,
-        operationId.name(),
-        operationId.variant(),
-        extension,
+        "openapiviews",
+        "{}{}{}.py".format(
+            operationId.name(),
+            operationId.variant(),
+            extension,
+        ),
     )
 
 
@@ -122,7 +131,7 @@ def map_tree(mapper, schema, data):
             key: map_tree(mapper, schema["properties"][key], value)
             for key, value in data.items()
         }
-    elif isinstance(data, list):
+    elif isinstance(data, list) or isinstance(data, set):
         return [
             map_tree(mapper, schema["items"], value) for value in data
         ]

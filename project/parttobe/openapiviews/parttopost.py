@@ -1,7 +1,8 @@
 from django.db import transaction
 from parttobe import models
 import datetime
-import duration_parser
+
+# import duration_parser
 
 
 def ensure_list(value):
@@ -80,7 +81,7 @@ def save_job(tasks, dependeds):
             stack.extend(task["depends"])
         saved_tasks[current] = models.TaskDefinition.objects.create(
             initial_duration=datetime.timedelta(
-                seconds=duration_parser.parse(task["duration"])
+                milliseconds=task["duration"]
             ),
             depended=depended,
             part_to=part_to,
@@ -197,11 +198,16 @@ def handle(argument):
         task["name"]: task for task in argument.tasks
     }
     id = save_job(together, invert_depends(together))
-    return argument.respond_200(str(id))
-
-
-def create200Body(id):
-    return {
-        "id": id,
+    return argument.respond_200({
+        "id": str(id),
         "message": "job insert successfull",
-    }
+    })
+#    return argument.respond_200(str(id))
+#    return argument.respond_200(str(id))
+
+
+#def create200Body(id):
+#    return {
+#        "id": id,
+#        "message": "job insert successfull",
+#    }

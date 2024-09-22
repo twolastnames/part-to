@@ -23,11 +23,11 @@ import {
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 export interface RunPostBody {
-  jobs: Array<PartToId>;
+  partTo: Array<PartToId>;
 }
 
 interface WireBody {
-  jobs: Array<PartToId>;
+  partTo: Array<PartToId>;
 }
 
 export interface RunPost200Body {
@@ -75,17 +75,21 @@ export const doRunPost = async ({
     ExternalHandlers
   >(
     "/api/run/",
-    { jobs: body.jobs.map((value) => bodyMarshalers["PartToId"](value)) },
+    {
+      partTo: body.partTo.map((value) =>
+        bodyMarshalers.required["PartToId"](value),
+      ),
+    },
     {
       200: (body: Wire200Body) => ({
-        id: unmarshalers["RunStateId"](body.id),
-        report: unmarshalers["date-time"](body.report),
-        complete: unmarshalers["date-time"](body.complete),
+        id: unmarshalers.required["RunStateId"](body.id),
+        report: unmarshalers.required["date-time"](body.report),
+        complete: unmarshalers.required["date-time"](body.complete),
         duties: body.duties.map((value) =>
-          unmarshalers["TaskDefinitionId"](value),
+          unmarshalers.required["TaskDefinitionId"](value),
         ),
         tasks: body.tasks.map((value) =>
-          unmarshalers["TaskDefinitionId"](value),
+          unmarshalers.required["TaskDefinitionId"](value),
         ),
       }),
     },

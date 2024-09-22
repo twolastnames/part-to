@@ -1,11 +1,59 @@
 import React, { useState } from "react";
-import { JobPost200Body, JobPostBody, doJobPost } from "../api/api.example";
 import { useNavigate } from "react-router-dom";
+import {
+  ParttoPost200Body,
+  ParttoPostBody,
+  doParttoPost,
+} from "../api/parttopost";
+import { getDuration } from "../api/helpers";
+
+const payload = {
+  part_to: {
+    name: "Corn on the Cob",
+    depends: ["remove_from_heat"],
+  },
+  tasks: [
+    {
+      name: "wash_corn",
+      duration: getDuration(1000),
+      description: "wash the corn",
+      ingredients: ["cobbed corn"],
+    },
+    {
+      name: "half_cobs",
+      duration: getDuration(2000),
+      description:
+        "cut partially with kitchen shears to weaken cob middle to break in half",
+      tools: ["kitchen shears"],
+      depends: ["wash_corn"],
+    },
+    {
+      name: "boil_water",
+      duration: getDuration(8000),
+      description: "boil water in large pot",
+      tools: ["large pot"],
+      engagement: 2,
+    },
+    {
+      name: "boil",
+      duration: getDuration(4000),
+      description: "put corn in and boil",
+      engagement: 4,
+      depends: ["boil_water", "half_cobs"],
+    },
+    {
+      name: "remove_from_heat",
+      duration: getDuration(600),
+      description: "remove from heat",
+      depends: ["boil"],
+    },
+  ],
+};
 
 export const JobPost = () => {
   const [text, setText] = useState<string>("");
   const navigate = useNavigate();
-  const response = useState<JobPost200Body | undefined>();
+  const response = useState<ParttoPost200Body | undefined>();
   if (!response) {
     return <div>Loading...</div>;
   }
@@ -20,8 +68,8 @@ export const JobPost = () => {
       ></textarea>
       <button
         onClick={() =>
-          doJobPost({
-            body: JSON.parse(text) as JobPostBody,
+          doParttoPost({
+            body: payload,
             on200: ({ id }) => {
               navigate(`/job/${id}`);
             },

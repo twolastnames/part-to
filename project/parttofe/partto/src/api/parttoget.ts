@@ -22,40 +22,39 @@ import {
 
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-export interface JobGet200Body {
-  id: PartToId;
+export interface ParttoGet200Body {
   name: string;
   tasks: Array<TaskDefinitionId>;
 }
 
 interface Wire200Body {
-  id: PartToId;
   name: string;
   tasks: Array<TaskDefinitionId>;
 }
 
-export interface JobGetArguments {
+export interface ParttoGetArguments {
   id: PartToId;
 }
 
 interface ExternalMappers {
-  [status: string]: (arg: Wire200Body) => JobGet200Body;
+  [status: string]: (arg: Wire200Body) => ParttoGet200Body;
 
-  200: (arg: Wire200Body) => JobGet200Body;
+  200: (arg: Wire200Body) => ParttoGet200Body;
 }
 
-export const useJobGet: (args: JobGetArguments) => Result<JobGet200Body> = ({
+export type ParttoGetResult = Result<ParttoGet200Body>;
+
+export const useParttoGet: (args: ParttoGetArguments) => ParttoGetResult = ({
   id,
 }) =>
-  useGet<Wire200Body, JobGet200Body, ExternalMappers>(
-    "/api/job/",
-    [{ name: id, value: parameterMarshalers["PartToId"](id) }],
+  useGet<Wire200Body, ParttoGet200Body, ExternalMappers>(
+    "/api/partto/",
+    [{ name: "id", value: parameterMarshalers.required["PartToId"](id) }],
     {
       200: (body: Wire200Body) => ({
-        id: unmarshalers["PartToId"](body.id),
-        name: unmarshalers["string"](body.name),
+        name: unmarshalers.required["string"](body.name),
         tasks: body.tasks.map((value) =>
-          unmarshalers["TaskDefinitionId"](value),
+          unmarshalers.required["TaskDefinitionId"](value),
         ),
       }),
     },

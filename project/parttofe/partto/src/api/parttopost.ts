@@ -22,7 +22,7 @@ import {
 } from "./sharedschemas";
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-export interface JobPostBody {
+export interface ParttoPostBody {
   part_to: { name: string; depends: Array<string> };
   tasks: Array<TaskDefinition>;
 }
@@ -30,16 +30,15 @@ export interface JobPostBody {
 interface WireBody {
   part_to: { name: string; depends: Array<string> };
   tasks: Array<{
-    id: TaskDefinitionId;
     name: string;
     duration: number;
     description: string;
-    depends: Array<string>;
-    engagement: number;
+    depends?: Array<string>;
+    engagement?: number | undefined;
   }>;
 }
 
-export interface JobPost200Body {
+export interface ParttoPost200Body {
   id: PartToId;
   message: string;
 }
@@ -50,22 +49,22 @@ interface Wire200Body {
 }
 
 interface ExternalMappers {
-  [status: string]: (arg: Wire200Body) => JobPost200Body;
+  [status: string]: (arg: Wire200Body) => ParttoPost200Body;
 
-  200: (arg: Wire200Body) => JobPost200Body;
+  200: (arg: Wire200Body) => ParttoPost200Body;
 }
 
 interface ExternalHandlers {
-  [status: string]: (arg: JobPost200Body) => void;
+  [status: string]: (arg: ParttoPost200Body) => void;
 
-  200: (arg: JobPost200Body) => void;
+  200: (arg: ParttoPost200Body) => void;
 }
 
-export interface JobPostArguments extends PostArgumentsBase<JobPostBody> {
-  on200: (arg: JobPost200Body) => void;
+export interface JobPostArguments extends PostArgumentsBase<ParttoPostBody> {
+  on200: (arg: ParttoPost200Body) => void;
 }
 
-export const doJobPost = async ({
+export const doParttoPost = async ({
   body,
 
   on200,
@@ -73,31 +72,32 @@ export const doJobPost = async ({
   await doPost<
     WireBody,
     Wire200Body,
-    JobPost200Body,
+    ParttoPost200Body,
     ExternalMappers,
     ExternalHandlers
   >(
-    "/api/job/",
+    "/api/partto/",
     {
       part_to: {
-        name: bodyMarshalers["string"](body.part_to.name),
+        name: bodyMarshalers.required["string"](body.part_to.name),
         depends: body.part_to.depends.map((value) =>
-          bodyMarshalers["string"](value),
+          bodyMarshalers.required["string"](value),
         ),
       },
       tasks: body.tasks.map((value) => ({
-        id: bodyMarshalers["TaskDefinitionId"](value.id),
-        name: bodyMarshalers["string"](value.name),
-        duration: bodyMarshalers["duration"](value.duration),
-        description: bodyMarshalers["string"](value.description),
-        depends: value.depends.map((value) => bodyMarshalers["string"](value)),
-        engagement: bodyMarshalers["number"](value.engagement),
+        name: bodyMarshalers.required["string"](value.name),
+        duration: bodyMarshalers.required["duration"](value.duration),
+        description: bodyMarshalers.required["string"](value.description),
+        depends: value.depends?.map((value) =>
+          bodyMarshalers.required["string"](value),
+        ),
+        engagement: bodyMarshalers.unrequired["number"](value.engagement),
       })),
     },
     {
       200: (body: Wire200Body) => ({
-        id: unmarshalers["PartToId"](body.id),
-        message: unmarshalers["string"](body.message),
+        id: unmarshalers.required["PartToId"](body.id),
+        message: unmarshalers.required["string"](body.message),
       }),
     },
     {

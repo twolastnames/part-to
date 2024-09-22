@@ -81,7 +81,7 @@ export const use{{ title }}: (
     "{{ operation_path }}",
     [
     {% for parameter in parameters %}
-        { name: {{ parameter.name }}, value: {{ parameter.value }} }
+        { name: "{{ parameter.name }}", value: {{ parameter.value }} }
     {% endfor %}
     ],
     {

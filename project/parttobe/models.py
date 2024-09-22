@@ -17,6 +17,7 @@ class PartTo(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
 
     class Meta:
+        unique_together = [("uuid")]
         indexes = [models.Index(fields=["uuid"])]
 
     @property
@@ -133,6 +134,7 @@ class TaskDefinition(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
 
     class Meta:
+        unique_together = [("uuid")]
         indexes = [models.Index(fields=["uuid"])]
 
     @property
@@ -278,6 +280,7 @@ class PartToRun(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
 
     class Meta:
+        unique_together = [("uuid")]
         indexes = [models.Index(fields=["uuid"])]
 
     def left_definitions(self):
@@ -415,6 +418,7 @@ class TaskStatus(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
 
     class Meta:
+        unique_together = [("uuid")]
         indexes = [models.Index(fields=["uuid"])]
 
     def __call__(self):

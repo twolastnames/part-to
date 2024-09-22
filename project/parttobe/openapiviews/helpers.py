@@ -10,6 +10,10 @@ ResponseDescription = namedtuple(
 )
 
 
+class CodeNotMatchingConfig(RuntimeError):
+    pass
+
+
 def get_body_constructor(id_value, status):
     id = endpoints.OperationId(id_value)
     filename = "./parttobe/openapiviews/{}.py".format(id.slug())
@@ -22,14 +26,11 @@ def get_body_constructor(id_value, status):
     loaded = spec.loader.exec_module(module)
     try:
         creator = getattr(module, definition)
-    except KeyError:
-        print(
-            "method {} needs to be defined in {}".format(
-                definition, filename
-            ),
-            file=sys.stderr,
+    except (KeyError, AttributeError):
+        message = "method {} needs to be defined in {}".format(
+            definition, filename
         )
-        sys.exit(1)
+        #raise CodeNotMatchingConfig(message)
 
     def responder(*args, **kargs):
         body = creator(*args, **kargs)

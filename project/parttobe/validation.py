@@ -7,11 +7,14 @@ import json
 import importlib
 import sys
 import os
+import re
+from . import models
 from .endpoints import (
     openapi,
     OperationId,
     implementation_filename,
     definition_filename,
+    traverse_api,
     map_tree,
     global_status_codes,
 )
@@ -20,6 +23,10 @@ from string import ascii_lowercase, ascii_uppercase
 
 PATH_START = "api/"
 
+
+class ResourceError(RuntimeError):
+    def __init__(self, message):
+        self.message = message
 
 class ValidationError(RuntimeError):
     def __init__(self, message):
@@ -77,9 +84,15 @@ def get_meta_definition(filename, symbol):
     loaded = spec.loader.exec_module(module)
     return getattr(module, symbol)
 
+def handle_id_type(value, format):
+    if hasattr(value, 'uuid'):
+        return shorten_uuid(value.uuid)
+    return shorten_uuid(value)
 
 def map_value(value, schema):
-    if "format" in schema:
+    if "format" in schema and schema['format'].endswith('Id'):
+        return handle_id_type(value, schema['format'])
+    elif "format" in schema:
         type = schema["format"]
     else:
         type = schema["type"]
@@ -90,13 +103,13 @@ def map_value(value, schema):
     return value
 
 
-def have_marshaled_bodies(operation, responders):
+def have_marshaled_bodies(operation):
     return {
-        status: lambda *args, **kargs: Response(
+        status: lambda raw_body: Response(
             map_tree(
                 map_value,
                 response["content"]["*"]["schema"],
-                responders[status](*args, **kargs)["body"],
+                raw_body,
             ),
             status,
         )
@@ -137,7 +150,6 @@ def path_from_operation_id(id):
                     "handle": get_meta_definition(filename, "handle"),
                     "responders": have_marshaled_bodies(
                         operation,
-                        get_meta_definition(definition, "responders"),
                     ),
                     "argumentType": get_meta_definition(
                         definition, "arguments"
@@ -176,11 +188,48 @@ def get_definition(request):
         pass
 
 
+loaded_model_definitions = {}
+
+
+def add_loadable_model_definition(name):
+    self_directory = os.path.dirname(os.path.abspath(__file__))
+    model_filename = os.path.join(self_directory, "models.py")
+    definition_name = re.sub(r"Id$", "", name)
+    exec(
+        "loaded_model_definitions[name] = models.{}".format(
+            definition_name
+        )
+    )
+
+
+def get_model_uuid_constructor(name):
+    def construct_model(wire_uuid):
+        if name not in loaded_model_definitions:
+            add_loadable_model_definition(name)
+        print("wire_uuid", wire_uuid)
+        try:
+            return loaded_model_definitions[name].objects.get(
+                uuid=recover_uuid(wire_uuid)
+            )
+        except exceptions.ObjectDoesNotExist:
+            raise ResourceError("Id {} does not exist".format(wire_uuid))
+    return construct_model
+
+
 unmarshal_parameter_handlers = {
     "string": lambda value: value,
     "uuid": recover_uuid,
     "number": int,
     "date-time": lambda value: datetime.datetime.fromisoformat(value),
+} | {
+    type: get_model_uuid_constructor(type)
+    for type in set(
+        [
+            format
+            for format in traverse_api(lambda key: key == "format")
+            if format.endswith("Id")
+        ]
+    )
 }
 
 
@@ -205,6 +254,11 @@ def unmarshal(request):
             type = parameter["schema"]["format"]
         else:
             type = parameter["schema"]["type"]
+        if type not in unmarshal_parameter_handlers:
+            raise ValidationError(
+                "Format of type {} not defined in schema".format(type)
+            )
+        print("value", parameter, value)
         response[parameter["name"]] = unmarshal_parameter_handlers[
             type
         ](value)
@@ -286,6 +340,8 @@ def unmarshaler(variants):
         try:
             validation = is_valid_body(request)
             arguments = unmarshal(request)
+        except (exceptions.ValidationError, ResourceError) as e:
+            return Response(e.message, status=404)
         except ValidationError as e:
             if isinstance(e.message, list):
                 message = e.message
@@ -298,7 +354,7 @@ def unmarshaler(variants):
             ]
         try:
             response = handle(argumentType(**arguments))
-        except exceptions.ValidationError as e:
+        except (exceptions.ValidationError, ResourceError) as e:
             return Response(e.message, status=404)
         if type(response) is tuple:
             return Response(response)

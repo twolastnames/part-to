@@ -6,15 +6,20 @@ import re
 self_directory = os.path.dirname(os.path.abspath(__file__))
 js_directory = "{}/partto/build/static/js".format(self_directory)
 
+try:
+    files = os.listdir(js_directory)
+    print(os.listdir(js_directory))
+except:
+    print("could not find the js directory")
+    files = []
 
-print(os.listdir(js_directory))
 
 try:
     shaed_files = {
         re.sub(
             "\.[a-f0-8]{8}", "", filename
         ): "/static/static/js/{}".format(filename)
-        for filename in os.listdir(js_directory)
+        for filename in files
     }
 except KeyError:
     print(
