@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  ParttoPost200Body,
-  ParttoPostBody,
-  doParttoPost,
-} from "../api/parttopost";
-import { getDuration } from "../api/helpers";
+import { ParttoPost200Body, doParttoPost } from "../../api/parttopost";
+import { getDuration } from "../../api/helpers";
+//import { Button } from "@mantine/core";
+import { Button } from "../../components/Button/Button";
 
 const payload = {
   part_to: {
@@ -66,18 +64,19 @@ export const JobPost = () => {
           setText(input.target.value);
         }}
       ></textarea>
-      <button
-        onClick={() =>
+      <Button
+        onClick={() => {
+          console.log()
           doParttoPost({
             body: payload,
             on200: ({ id }) => {
               navigate(`/job/${id}`);
             },
-          })
-        }
+          });
+        }}
       >
         Post Job
-      </button>
+      </Button>
     </div>
   );
 };

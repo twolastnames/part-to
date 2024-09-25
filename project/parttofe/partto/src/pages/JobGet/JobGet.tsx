@@ -1,9 +1,9 @@
 import React from "react";
-import { Stage, UUID } from "../api/helpers";
+import { Stage, UUID } from "../../api/helpers";
 //import { JobGetResultType, useJobGet } from "../api/api.example";
 import { useParams } from "react-router-dom";
-import { ParttoGetResult, useParttoGet } from "../api/parttoget";
-import { PartToId } from "../api/sharedschemas";
+import { ParttoGetResult, useParttoGet } from "../../api/parttoget";
+import { PartToId } from "../../api/sharedschemas";
 
 const useDefaultDataFetcher = () => {
   const { id } = useParams();

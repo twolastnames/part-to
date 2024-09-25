@@ -11,5 +11,8 @@
   {% for filename in js_files %}
     <script src="{{ filename  }}"></script>
   {% endfor %}
+  {% for filename in css_files %}
+    <link rel="stylesheet" href="{{ filename  }}"></script>
+  {% endfor %}
 </body>
 </html>

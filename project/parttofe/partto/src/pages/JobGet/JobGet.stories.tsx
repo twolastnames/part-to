@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { JobGet } from "./JobGet";
-import { Stage } from "../api/helpers";
+import { Stage } from "../../api/helpers";
 
 const meta: Meta<typeof JobGet> = {
   component: JobGet,
