@@ -4,12 +4,12 @@ import {
   ButtonProps as MantineButtonProps,
 } from "@mantine/core";
 
-import classes from "./Button.module.css";
+import classes from "./Button.module.scss";
 
 export interface ButtonProps extends PropsWithChildren {onClick: () => void}
 
 console.log({classes})
 
 export const Button = (props: ButtonProps) => (
-  <MantineButton data-testid="Button" className={classes.buttonBase} {...props} />
+  <MantineButton data-testid="Button" classNames={classes} {...props} />
 );
