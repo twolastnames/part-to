@@ -30,7 +30,7 @@ def get_body_constructor(id_value, status):
         message = "method {} needs to be defined in {}".format(
             definition, filename
         )
-        #raise CodeNotMatchingConfig(message)
+        # raise CodeNotMatchingConfig(message)
 
     def responder(*args, **kargs):
         body = creator(*args, **kargs)

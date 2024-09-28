@@ -139,6 +139,20 @@ def map_tree(mapper, schema, data):
         return mapper(data, schema)
 
 
+def response_definitions(operations=operations, id=None):
+    for operation in operations.values():
+        for code, description in operation["responses"].items():
+            operationId = OperationId(operation["operationId"])
+            if id and operationId != id:
+                continue
+            yield ResponseDescription(
+                code,
+                operationId,
+                description["description"],
+                description["content"]["*"]["schema"],
+            )
+
+
 def get_request_body_arguments(operation):
     try:
         return operation["requestBody"]["content"]["*"]["schema"][

@@ -4,8 +4,12 @@ import os
 import re
 
 self_directory = os.path.dirname(os.path.abspath(__file__))
-js_directory = os.path.join(self_directory, 'partto', 'build', 'static', 'js')
-css_directory = os.path.join(self_directory, 'partto', 'build', 'static', 'css')
+js_directory = os.path.join(
+    self_directory, "partto", "build", "static", "js"
+)
+css_directory = os.path.join(
+    self_directory, "partto", "build", "static", "css"
+)
 
 try:
     js_files = os.listdir(js_directory)
@@ -36,8 +40,9 @@ except KeyError:
 
 import json
 
-print('css files', shaed_css_files)
-print('js files', shaed_js_files)
+print("css files", shaed_css_files)
+print("js files", shaed_js_files)
+
 
 def index(*args, **kargs):
     return render(

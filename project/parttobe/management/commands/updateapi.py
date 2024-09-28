@@ -13,10 +13,6 @@ from .updateapihelpers.pythonimplementationwriter import (
     PythonImplementationFileWriter,
 )
 
-from .updateapihelpers.pythondefinitionwriter import (
-    PythonDefinitionFileWriter,
-)
-
 from .updateapihelpers.typescriptgetwriter import (
     TypescriptGetWriter,
 )
@@ -46,9 +42,6 @@ class Command(BaseCommand):
         for operation in operations.values():
             id = OperationId(operation["operationId"])
             raw_operation = get_raw_operation(id.value)
-            PythonDefinitionFileWriter(
-                operation, raw_operation, definitions, format_ids
-            )()
             PythonImplementationFileWriter(
                 operation, raw_operation, definitions, format_ids
             )()

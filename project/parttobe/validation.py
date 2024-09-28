@@ -5,6 +5,7 @@ import django.core.exceptions as exceptions
 import jsonschema
 import json
 import importlib
+import collections
 import sys
 import os
 import re
@@ -12,21 +13,26 @@ from . import models
 from .endpoints import (
     openapi,
     OperationId,
+    operations,
     implementation_filename,
     definition_filename,
     traverse_api,
+    get_request_body_arguments,
+    get_parameter_arguments,
     map_tree,
-    global_status_codes,
+    response_definitions,
 )
 from uuid import uuid4, UUID
 from string import ascii_lowercase, ascii_uppercase
 
 PATH_START = "api/"
 
+automatic_status_returns = ["500"]
 
 class ResourceError(RuntimeError):
     def __init__(self, message):
         self.message = message
+
 
 class ValidationError(RuntimeError):
     def __init__(self, message):
@@ -84,14 +90,16 @@ def get_meta_definition(filename, symbol):
     loaded = spec.loader.exec_module(module)
     return getattr(module, symbol)
 
+
 def handle_id_type(value, format):
-    if hasattr(value, 'uuid'):
+    if hasattr(value, "uuid"):
         return shorten_uuid(value.uuid)
     return shorten_uuid(value)
 
+
 def map_value(value, schema):
-    if "format" in schema and schema['format'].endswith('Id'):
-        return handle_id_type(value, schema['format'])
+    if "format" in schema and schema["format"].endswith("Id"):
+        return handle_id_type(value, schema["format"])
     elif "format" in schema:
         type = schema["format"]
     else:
@@ -114,8 +122,30 @@ def have_marshaled_bodies(operation):
             status,
         )
         for status, response in operation["responses"].items()
-        if status not in global_status_codes
+        if status not in automatic_status_returns
     }
+
+
+argument_types = {}
+
+
+def populate_input_argument_types():
+    for operationId, operation in operations.items():
+        arguments = (
+            list(get_request_body_arguments(operation))
+            + list(get_parameter_arguments(operation))
+            + [
+                "respond_{}".format(status)
+                for status in operation["responses"].keys()
+                if status not in automatic_status_returns
+            ]
+        )
+        argument_types[operationId] = collections.namedtuple(
+            "ArgumentType_{}".format(OperationId(operationId).slug()), arguments
+        )
+
+
+populate_input_argument_types()
 
 
 def path_from_operation_id(id):
@@ -132,10 +162,8 @@ def path_from_operation_id(id):
                 operationId.variant(),
             )
             filename = implementation_filename(operationId)
-            definition = definition_filename(operationId)
             if not (
                 os.path.isfile(filename)
-                and os.path.isfile(definition)
             ):
                 return path(
                     openapi_path.replace("/" + PATH_START, ""),
@@ -148,12 +176,8 @@ def path_from_operation_id(id):
                 )
                 variants[operationId.variant().upper()] = {
                     "handle": get_meta_definition(filename, "handle"),
-                    "responders": have_marshaled_bodies(
-                        operation,
-                    ),
-                    "argumentType": get_meta_definition(
-                        definition, "arguments"
-                    ),
+                    "responders": have_marshaled_bodies(operation),
+                    "argumentType": argument_types[operationId.value],
                 }
     return path(
         partial_path,
@@ -212,7 +236,10 @@ def get_model_uuid_constructor(name):
                 uuid=recover_uuid(wire_uuid)
             )
         except exceptions.ObjectDoesNotExist:
-            raise ResourceError("Id {} does not exist".format(wire_uuid))
+            raise ResourceError(
+                "Id {} does not exist".format(wire_uuid)
+            )
+
     return construct_model
 
 
