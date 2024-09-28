@@ -1,0 +1,222 @@
+#!/usr/bin/env python3
+from jinja2  import Template
+import os
+import sys
+import collections
+import re
+import pathlib
+import subprocess
+
+self_directory = os.path.normpath(
+    os.path.abspath(os.path.dirname(os.path.abspath(__file__)))
+).split(os.sep)
+
+
+class SystemArgumentsParseError(RuntimeError):
+    pass
+
+
+Command = collections.namedtuple("Command", "target parts")
+
+
+def get_command_from_sysargv():
+    if len(sys.argv) != 2:
+        print(
+            "requires one argument that is a directory/file to template in",
+            file=sys.stderr,
+        )
+        exit(1)
+    target=os.path.abspath(sys.argv[1])
+    parts=os.path.normpath(target).split(os.sep)
+    for directory in self_directory:
+        if directory != parts[0]:
+            break
+        parts = parts[1:]
+    
+    return Command(
+        target=target,
+        parts=parts
+    )
+
+
+class PathPartsValidationError(RuntimeError):
+    pass
+
+
+def validate_parts(parts):
+    if not len(parts) > 1:
+        raise PathPartsValidationError(
+            "the input must be a path with at least, first, a directory to define"
+            + " the temlpate to use, and second, the name. Deeper directories can be used"
+            + " to be templated with in said directory.",
+        )
+    if parts[0] not in definitions.keys():
+        raise PathPartsValidationError(
+            "this tool only knows how to template in the {} directorie(s)".format(
+            ", ".join(
+                ["src/{}".format(key) for key in definitions.keys()]
+            )
+        ))
+
+Definition = collections.namedtuple(
+    "Definitions", "filename definition"
+)
+
+PreTemplate = ""
+PostTemplate = ""
+
+definitions = {
+    "hooks": [
+        Definition(
+            filename=os.path.join("..", "{{ name.camel }}.ts"),
+            definition="""
+export const use{{ name.title }} = () => {
+}
+            """,
+        ),
+    ],
+    "components": [
+        Definition(
+            filename="{{ name.title }}.tsx",
+            definition="""
+import React from "react";
+
+import classes from "./{{ name.title }}.module.scss";
+
+export interface {{ name.title }}Props {}
+
+export const {{name.title}} = (props: {{ name.title }}Props) => {
+    return <div className={ classes.{{ name.camel }} } data-testid="{{ name.title }}" ></div>
+}; """,
+        ),
+        Definition(
+            filename="{{ name.title }}.module.scss",
+            definition="""
+.{{ name.camel }} {
+}
+            """
+        ),
+        Definition(
+            filename="{{ name.title }}.stories.tsx",
+            definition="""
+import React from "react";
+import type { Meta, StoryObj } from "@storybook/react";
+
+import { {{ name.title }} } from "./{{ name.title }}";
+import { ShellProvider } from "{{ depthDots }}ShellProvider"
+
+const meta: Meta<typeof {{ name.title }}> = {
+  component: {{ name.title }},
+  decorators: (Story) => <ShellProvider><Story/></ShellProvider>
+};
+export default meta;
+
+type Story = StoryObj<typeof {{ name.title }}>;
+
+export const Simple: Story = {
+  args: {
+  },
+};""",
+        ),
+        Definition(
+            filename=os.path.join(
+                "test", "{{ name.title }}.test.tsx"
+            ),
+            definition="""
+import React  from 'react';
+import {describe, expect, test} from '@jest/globals';
+import { render, screen } from '@testing-library/react';
+import { {{ name.title }} } from '../{{ name.title }}';
+
+describe("{{ name.title }}", () => {
+    beforeAll(() => {
+        render(<{{name.title}}/>)
+    })
+
+  test('snapshot', () => {
+    const component = screen.getByTestId("{{ name.title }}")
+    expect(component).toMatchSnapshot();
+  });
+}); """,
+        ),
+    ],
+}
+
+def format_file(filename):
+    process = subprocess.Popen(
+        os.path.join(
+            ".",
+            "node_modules",
+            ".bin",
+            'prettier -w "{}"'.format(filename),
+        ),
+        shell=True,
+        cwd=os.sep.join(self_directory + [".."]),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+    for line in process.stdout.readlines():
+        print(str(line))
+    process.wait()
+
+
+def get_name_types(name):
+    return {
+        "title": name[0].upper() + name[1:],
+        "camel": name[0].lower() + name[1:],
+    }
+
+
+def get_context(parts):
+    context = {
+        "name": get_name_types(parts[-1]),
+        "depthDots": '../' * len(parts),
+    }
+    return context
+
+
+def render_definition(context, definition):
+    return Definition(
+        filename=Template(definition.filename).render(
+            context
+        ),
+        definition=Template(
+            PreTemplate + definition.definition + PostTemplate
+        ).render(context),
+    )
+
+
+def execute_definition(context, target, definition):
+    rendered = render_definition(context, definition)
+    absolute_filename = os.path.normpath(os.sep.join([target, rendered.filename]))
+    pathlib.Path(os.path.dirname(absolute_filename)).mkdir(parents=True, exist_ok=True)
+    print("Generating File: {}".format(absolute_filename))
+    if os.path.isfile(absolute_filename):
+        print(
+            "Not generating file {} because it exists".format(
+                absolute_filename
+            )
+        )
+        return
+    with open(absolute_filename, "w") as handle:
+        handle.write(rendered.definition)
+    format_file(absolute_filename)
+
+
+def create(command):
+    validate_parts(command.parts)
+    context = get_context(command.parts)
+    for definition in definitions[command.parts[0]]:
+        execute_definition(context, command.target, definition)
+
+
+if __name__ == "__main__":
+    try:
+        create( get_command_from_sysargv())
+    except RuntimeError as e:
+        print(
+           "Error: {}".format(e),
+           file=sys.stderr
+        )
+        exit(1)
+

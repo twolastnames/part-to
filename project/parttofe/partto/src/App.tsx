@@ -2,12 +2,11 @@ import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { JobGet } from "./pages/JobGet/JobGet";
 import { JobPost } from "./pages/JobPost/JobPost";
-import { MantineProvider } from "@mantine/core";
-import '@mantine/core/styles.layer.css';
+import { ShellProvider } from "./ShellProvider"
 
 function App() {
   return (
-    <MantineProvider>
+    <ShellProvider>
       <BrowserRouter>
         <Routes>
           <Route path="job/:id" element={<JobGet />} />
@@ -15,7 +14,7 @@ function App() {
           <Route path="" element={<div>Hello Back</div>} />
         </Routes>
       </BrowserRouter>
-    </MantineProvider>
+    </ShellProvider>
   );
 }
 
