@@ -17,17 +17,17 @@ export default meta;
 type Story = StoryObj<typeof Icon>;
 
 export const Medium: Story = {
-  args: {definition: Next},
+  args: { definition: Next },
 };
 
 export const Small: Story = {
-  args: {definition: Next, size: Size.Small},
+  args: { definition: Next, size: Size.Small },
 };
 
 export const Large: Story = {
-  args: {definition: Next, size: Size.Large},
+  args: { definition: Next, size: Size.Large },
 };
 
 export const ExtraLarge: Story = {
-  args: {definition: Next, size: Size.ExtraLarge},
+  args: { definition: Next, size: Size.ExtraLarge },
 };
