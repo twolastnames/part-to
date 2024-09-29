@@ -56,13 +56,10 @@ export const JobPost = () => {
   }
   return (
     <div>
-      <textarea
-        rows={20}
-        cols={60}
-      ></textarea>
+      <textarea rows={20} cols={60}></textarea>
       <Button
         onClick={() => {
-          console.log()
+          console.log();
           doParttoPost({
             body: payload,
             on200: ({ id }) => {
