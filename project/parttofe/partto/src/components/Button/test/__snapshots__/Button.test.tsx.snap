@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button snapshot 1`] = `
+<button
+  class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+  data-testid="Button"
+  style="--button-color: var(--mantine-color-white);"
+  type="button"
+>
+  <span
+    class="m_80f1301b mantine-Button-inner"
+  >
+    <span
+      class="m_811560b9 mantine-Button-label"
+    />
+  </span>
+</button>
+`;

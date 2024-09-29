@@ -11,7 +11,7 @@ export interface ButtonProps extends PropsWithChildren {
 
 export const Button = ({ onClick, icon, children }: ButtonProps) => (
   <>
-    <Tooltip label={children}>
+    <Tooltip label={children} data-testid="Button">
       <span>
         <MantineButton
           data-testid="Button"
