@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from jinja2  import Template
+from jinja2 import Template
 import os
 import sys
 import collections
@@ -26,17 +26,14 @@ def get_command_from_sysargv():
             file=sys.stderr,
         )
         exit(1)
-    target=os.path.abspath(sys.argv[1])
-    parts=os.path.normpath(target).split(os.sep)
+    target = os.path.abspath(sys.argv[1])
+    parts = os.path.normpath(target).split(os.sep)
     for directory in self_directory:
         if directory != parts[0]:
             break
         parts = parts[1:]
-    
-    return Command(
-        target=target,
-        parts=parts
-    )
+
+    return Command(target=target, parts=parts)
 
 
 class PathPartsValidationError(RuntimeError):
@@ -53,10 +50,15 @@ def validate_parts(parts):
     if parts[0] not in definitions.keys():
         raise PathPartsValidationError(
             "this tool only knows how to template in the {} directorie(s)".format(
-            ", ".join(
-                ["src/{}".format(key) for key in definitions.keys()]
+                ", ".join(
+                    [
+                        "src/{}".format(key)
+                        for key in definitions.keys()
+                    ]
+                )
             )
-        ))
+        )
+
 
 Definition = collections.namedtuple(
     "Definitions", "filename definition"
@@ -64,6 +66,22 @@ Definition = collections.namedtuple(
 
 PreTemplate = ""
 PostTemplate = ""
+
+ForTestDirectory = "tests"
+
+ForTestFilename = "{{ name.title }}.test.tsx"
+
+ForTestDefinition = """
+import React  from 'react';
+import {expect, test} from '@jest/globals';
+import { render, screen } from '@testing-library/react';
+import { {{ name.title }} } from '../{{ name.title }}';
+
+test('snapshot', () => {
+  render(<{{name.title}}/>)
+  const component = screen.getByTestId("{{ name.title }}")
+  expect(component).toMatchSnapshot();
+}); """
 
 definitions = {
     "hooks": [
@@ -94,7 +112,7 @@ export function {{name.title}} (props: {{ name.title }}Props) {
             definition="""
 .{{ name.camel }} {
 }
-            """
+            """,
         ),
         Definition(
             filename="{{ name.title }}.stories.tsx",
@@ -119,28 +137,12 @@ export const Simple: Story = {
 };""",
         ),
         Definition(
-            filename=os.path.join(
-                "test", "{{ name.title }}.test.tsx"
-            ),
-            definition="""
-import React  from 'react';
-import {describe, expect, test} from '@jest/globals';
-import { render, screen } from '@testing-library/react';
-import { {{ name.title }} } from '../{{ name.title }}';
-
-describe("{{ name.title }}", () => {
-    beforeAll(() => {
-        render(<{{name.title}}/>)
-    })
-
-  test('snapshot', () => {
-    const component = screen.getByTestId("{{ name.title }}")
-    expect(component).toMatchSnapshot();
-  });
-}); """,
+            filename=os.path.join(ForTestDirectory, ForTestFilename),
+            definition=ForTestDefinition,
         ),
     ],
 }
+
 
 def format_file(filename):
     process = subprocess.Popen(
@@ -167,19 +169,26 @@ def get_name_types(name):
     }
 
 
+def get_single_test_context(parts):
+    context = {
+        "name": get_name_types(parts[-3]),
+        "filename": get_name_types(parts[-1]),
+        "depthDots": "../" * len(parts),
+    }
+    return context
+
+
 def get_context(parts):
     context = {
         "name": get_name_types(parts[-1]),
-        "depthDots": '../' * len(parts),
+        "depthDots": "../" * len(parts),
     }
     return context
 
 
 def render_definition(context, definition):
     return Definition(
-        filename=Template(definition.filename).render(
-            context
-        ),
+        filename=Template(definition.filename).render(context),
         definition=Template(
             PreTemplate + definition.definition + PostTemplate
         ).render(context),
@@ -187,9 +196,14 @@ def render_definition(context, definition):
 
 
 def execute_definition(context, target, definition):
+    print(context, definition)
     rendered = render_definition(context, definition)
-    absolute_filename = os.path.normpath(os.sep.join([target, rendered.filename]))
-    pathlib.Path(os.path.dirname(absolute_filename)).mkdir(parents=True, exist_ok=True)
+    absolute_filename = os.path.normpath(
+        os.sep.join([target, rendered.filename])
+    )
+    pathlib.Path(os.path.dirname(absolute_filename)).mkdir(
+        parents=True, exist_ok=True
+    )
     print("Generating File: {}".format(absolute_filename))
     if os.path.isfile(absolute_filename):
         print(
@@ -206,17 +220,23 @@ def execute_definition(context, target, definition):
 def create(command):
     validate_parts(command.parts)
     context = get_context(command.parts)
+    if command.parts[-2] == ForTestDirectory:
+        execute_definition(
+            get_single_test_context(command.parts),
+            command.target,
+            Definition(
+                filename=os.path.join("..", "{{ filename.title }}.test.tsx"),
+                definition=ForTestDefinition,
+            ),
+        )
+        return
     for definition in definitions[command.parts[0]]:
         execute_definition(context, command.target, definition)
 
 
 if __name__ == "__main__":
     try:
-        create( get_command_from_sysargv())
+        create(get_command_from_sysargv())
     except RuntimeError as e:
-        print(
-           "Error: {}".format(e),
-           file=sys.stderr
-        )
+        print("Error: {}".format(e), file=sys.stderr)
         exit(1)
-
