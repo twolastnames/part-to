@@ -4,11 +4,10 @@ import { render, screen } from "@testing-library/react";
 import { Button } from "../Button";
 
 describe("Button", () => {
-  beforeAll(() => {
-    render(<Button onClick={() => undefined}>Hello</Button>);
-  });
+  beforeAll(() => {});
 
   test("snapshot", () => {
+    render(<Button onClick={() => undefined}>Hello</Button>);
     const component = screen.getByTestId("Button");
     expect(component).toMatchSnapshot();
   });

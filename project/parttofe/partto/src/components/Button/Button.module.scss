@@ -1,2 +1,12 @@
-.button {
+button {
+  border-radius: 36px;
+  height: 36px;
+  width: 36px;
+}
+
+svg {
+  position: relative;
+  right: 28px;
+  top: 6px;
+  //z-index: -5;
 }

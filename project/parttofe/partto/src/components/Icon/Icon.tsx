@@ -3,10 +3,13 @@ import { rem } from "@mantine/core";
 import {
   Icon as TablerIcon,
   IconProps as TablerIconProps,
-  IconPlayerTrackNextFilled,
+  IconPlayerTrackNext,
+  IconPlayerPlay,
 } from "@tabler/icons-react";
 
-type IconType = ForwardRefExoticComponent<
+import classes from "./Icon.module.scss";
+
+export type IconType = ForwardRefExoticComponent<
   TablerIconProps & RefAttributes<TablerIcon>
 >;
 
@@ -20,10 +23,17 @@ export enum Size {
 export interface IconProps {
   definition: IconType;
   size?: Size;
+  onClick?: () => void;
 }
 
-export function Icon({ definition, size }: IconProps) {
+export function Icon({ onClick, definition, size }: IconProps) {
   return React.createElement(definition, {
+    ...(onClick
+      ? {
+          onClick,
+          className: classes.clickable,
+        }
+      : {}),
     style: {
       width: rem((size || Size.Medium) as number),
       height: rem((size || Size.Medium) as number),
@@ -31,4 +41,5 @@ export function Icon({ definition, size }: IconProps) {
   });
 }
 
-export const Next = IconPlayerTrackNextFilled;
+export const Next = IconPlayerTrackNext;
+export const Start = IconPlayerPlay;
