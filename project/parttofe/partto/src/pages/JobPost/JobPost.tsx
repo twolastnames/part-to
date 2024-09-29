@@ -49,7 +49,6 @@ const payload = {
 };
 
 export const JobPost = () => {
-  const [text, setText] = useState<string>("");
   const navigate = useNavigate();
   const response = useState<ParttoPost200Body | undefined>();
   if (!response) {
@@ -60,9 +59,6 @@ export const JobPost = () => {
       <textarea
         rows={20}
         cols={60}
-        onChange={(input) => {
-          setText(input.target.value);
-        }}
       ></textarea>
       <Button
         onClick={() => {
