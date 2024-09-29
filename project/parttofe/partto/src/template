@@ -70,7 +70,7 @@ definitions = {
         Definition(
             filename=os.path.join("..", "{{ name.camel }}.ts"),
             definition="""
-export const use{{ name.title }} = () => {
+export function use{{ name.title }} () {
 }
             """,
         ),
@@ -85,7 +85,7 @@ import classes from "./{{ name.title }}.module.scss";
 
 export interface {{ name.title }}Props {}
 
-export const {{name.title}} = (props: {{ name.title }}Props) => {
+export function {{name.title}} (props: {{ name.title }}Props) {
     return <div className={ classes.{{ name.camel }} } data-testid="{{ name.title }}" ></div>
 }; """,
         ),
