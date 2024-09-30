@@ -34,7 +34,6 @@ export function Icon({ onClick, definition, size }: IconProps) {
           className: classes.clickable,
         }
       : {}),
-    "data-testid": "Icon",
     style: {
       width: rem((size || Size.Medium) as number),
       height: rem((size || Size.Medium) as number),
