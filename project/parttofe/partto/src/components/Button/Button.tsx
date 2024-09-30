@@ -4,14 +4,15 @@ import { Button as MantineButton, Tooltip } from "@mantine/core";
 import classes from "./Button.module.scss";
 import { IconType, Icon, Size as IconSize } from "../Icon/Icon";
 
-export interface ButtonProps extends PropsWithChildren {
+export interface ButtonProps {
+  text: string;
   icon: IconType;
   onClick: () => void;
 }
 
-export const Button = ({ onClick, icon, children }: ButtonProps) => (
+export const Button = ({ onClick, icon, text }: ButtonProps) => (
   <>
-    <Tooltip label={children} data-testid="Button">
+    <Tooltip label={text} data-testid="Button">
       <span>
         <MantineButton
           data-testid="Button"

@@ -21,7 +21,7 @@ export const NextButton: Story = {
   args: {
     onClick: () => console.log("clicked"),
     icon: Next,
-    children: "Is Complete",
+    text: "Is Complete",
   },
 };
 
@@ -29,6 +29,6 @@ export const StartButton: Story = {
   args: {
     onClick: () => console.log("clicked"),
     icon: Start,
-    children: "Start Making Dinner",
+    text: "Start Making Dinner",
   },
 };

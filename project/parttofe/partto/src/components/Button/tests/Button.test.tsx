@@ -24,9 +24,7 @@ describe("Button", () => {
     });
     render(
       <MantineProvider>
-        <Button icon={Next} onClick={() => undefined}>
-          Hello
-        </Button>
+        <Button icon={Next} text={"Hello"} onClick={() => undefined} />
       </MantineProvider>,
     );
     const component = screen.getByTestId("Button");

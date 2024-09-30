@@ -25,9 +25,7 @@ describe("Button", () => {
     const onClick = jest.fn();
     render(
       <MantineProvider>
-        <Button icon={Next} onClick={onClick}>
-          Hello
-        </Button>
+        <Button icon={Next} text="Hello" onClick={onClick} />
       </MantineProvider>,
     );
     const button = screen.getByTestId("Button");
