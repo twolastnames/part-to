@@ -2,7 +2,7 @@
 
 exports[`Button snapshot 1`] = `
 <button
-  class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+  class="mantine-focus-auto mantine-active button m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
   data-testid="Button"
   style="--button-color: var(--mantine-color-white);"
   type="button"

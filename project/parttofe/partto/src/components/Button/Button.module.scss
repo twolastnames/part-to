@@ -1,12 +1,17 @@
-button {
+.container {
+  height: 36px;
+  width: 36px;
+}
+
+.button {
   border-radius: 36px;
   height: 36px;
   width: 36px;
 }
 
-svg {
+.icon {
   position: relative;
-  right: 28px;
-  top: 6px;
-  //z-index: -5;
+  left: 10px;
+  bottom: 28px;
+  z-index: 5;
 }

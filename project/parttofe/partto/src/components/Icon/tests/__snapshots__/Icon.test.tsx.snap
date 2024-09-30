@@ -3,7 +3,6 @@
 exports[`Icon snapshot 1`] = `
 <svg
   className="tabler-icon tabler-icon-player-track-next "
-  data-testid="Icon"
   fill="none"
   height={24}
   stroke="currentColor"
