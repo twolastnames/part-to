@@ -1,0 +1,12 @@
+.dynamicItemSet {
+  display: flex;
+  width: 100%;
+}
+
+@mixin innerContent {
+  padding: 16px;
+}
+
+.emptyPage {
+  @include innerContent();
+}

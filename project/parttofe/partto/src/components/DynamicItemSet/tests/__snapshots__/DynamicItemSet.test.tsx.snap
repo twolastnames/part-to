@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DynamicItemSet snapshot 1`] = `
+<div
+  class="dynamicItemSet"
+  data-testid="DynamicItemSet"
+>
+  <div
+    class="buttonSet"
+    data-testid="ButtonSet"
+  />
+  <div
+    class="empty"
+    data-testid="Empty"
+  >
+    <div>
+      still empty
+    </div>
+  </div>
+</div>
+`;
