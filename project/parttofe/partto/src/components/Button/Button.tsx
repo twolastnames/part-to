@@ -1,5 +1,5 @@
 import React from "react";
-import { Button as MantineButton, Tooltip } from "@mantine/core";
+import { ActionIcon as MantineButton, Tooltip } from "@mantine/core";
 
 import classes from "./Button.module.scss";
 import { IconType, Icon, Size as IconSize } from "../Icon/Icon";
@@ -13,15 +13,14 @@ export interface ButtonProps {
 export const Button = ({ onClick, icon, text }: ButtonProps) => (
   <>
     <Tooltip label={text} data-testid="Button">
-      <div className={classes.container}>
+      <div onClick={onClick} className={classes.container}>
         <MantineButton
           data-testid="Button"
-          onClick={onClick}
+          aria-label={text}
           className={classes.button}
-        />
-        <span className={classes.icon}>
-          <Icon onClick={onClick} definition={icon} size={IconSize.Small} />
-        </span>
+        >
+          <Icon definition={icon} size={IconSize.Small} />
+        </MantineButton>
       </div>
     </Tooltip>
   </>

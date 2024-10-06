@@ -9,39 +9,33 @@ exports[`snapshot 1`] = `
     class="container"
   >
     <button
-      class="mantine-focus-auto mantine-active button m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+      aria-label="start cooking"
+      class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
       data-testid="Button"
-      style="--button-color: var(--mantine-color-white);"
+      style="--ai-color: var(--mantine-color-white);"
       type="button"
     >
       <span
-        class="m_80f1301b mantine-Button-inner"
+        class="m_8d3afb97 mantine-ActionIcon-icon"
       >
-        <span
-          class="m_811560b9 mantine-Button-label"
-        />
+        <svg
+          class="tabler-icon tabler-icon-player-play "
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M7 4v16l13 -8z"
+          />
+        </svg>
       </span>
     </button>
-    <span
-      class="icon"
-    >
-      <svg
-        class="tabler-icon tabler-icon-player-play clickable"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M7 4v16l13 -8z"
-        />
-      </svg>
-    </span>
   </div>
 </div>
 `;

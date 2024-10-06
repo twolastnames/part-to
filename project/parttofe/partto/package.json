@@ -20,9 +20,9 @@
     "prettier": "^3.3.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-test-renderer": "^18.3.1",
     "react-router-dom": "^6.26.1",
     "react-scripts": "5.0.1",
-    "react-test-renderer": "^18.3.1",
     "sass": "^1.79.3",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
@@ -31,7 +31,7 @@
     "storybook": "storybook dev -p 9009",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --silent",
     "eject": "react-scripts eject",
     "clean": "rm -rf node_mudules",
     "format": "eslint src && prettier --write src"

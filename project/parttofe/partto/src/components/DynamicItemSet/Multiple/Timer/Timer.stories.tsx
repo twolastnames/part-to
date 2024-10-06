@@ -1,11 +1,11 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { ButtonSet } from "./ButtonSet";
-import { ShellProvider } from "../../../ShellProvider";
+import { Timer } from "./Timer";
+import { ShellProvider } from "../../../../ShellProvider";
 
-const meta: Meta<typeof ButtonSet> = {
-  component: ButtonSet,
+const meta: Meta<typeof Timer> = {
+  component: Timer,
   decorators: (Story) => (
     <ShellProvider>
       <Story />
@@ -14,7 +14,7 @@ const meta: Meta<typeof ButtonSet> = {
 };
 export default meta;
 
-type Story = StoryObj<typeof ButtonSet>;
+type Story = StoryObj<typeof Timer>;
 
 export const Simple: Story = {
   args: {},

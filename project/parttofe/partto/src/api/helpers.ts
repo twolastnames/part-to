@@ -9,18 +9,28 @@ export enum Stage {
 }
 
 export interface DateTime {
-  epoch: () => number;
+  sinceEpoch: () => number;
   toISOString: () => string;
+  add: (arg: Duration) => DateTime;
+  subtract: (arg: DateTime) => Duration;
 }
-
-export const getDateTime: (date?: Date) => DateTime = (date) => ({
-  epoch: () => (date || new Date()).getDate(),
-  toISOString: () => (date || new Date()).toISOString(),
-});
 
 export interface Duration {
-  inMilliseconds: () => number;
+  toMilliseconds: () => number;
 }
+
+export const getDateTime: (date?: Date) => DateTime = (inDate) => {
+  const date = inDate || new Date();
+
+  return {
+    sinceEpoch: () => date.getTime(),
+    toISOString: () => date.toISOString(),
+    add: (duration: Duration) =>
+      getDateTime(new Date(date.getTime() + duration.toMilliseconds())),
+    subtract: (subtrahend: DateTime) =>
+      getDuration(date.getTime() - subtrahend.sinceEpoch()),
+  };
+};
 
 interface DefaultErrorHandlers {
   [index: string]: () => void;
@@ -114,7 +124,7 @@ export interface BaseUnmarshalers {
 }
 
 export const getDuration: (arg: number) => Duration = (value) => ({
-  inMilliseconds: () => value,
+  toMilliseconds: () => value,
 });
 
 export const baseUnmarshalers: BaseUnmarshalers = {

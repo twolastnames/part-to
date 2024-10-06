@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<span
+  data-testid="LocalProgress"
+>
+  <div
+    class="m_b32e4812 mantine-RingProgress-root"
+    data-testid="Progress"
+    style="--rp-size: calc(4.5rem * var(--mantine-scale)); --rp-label-offset: calc(1.5rem * var(--mantine-scale));"
+  >
+    <svg
+      class="m_d43b5134 mantine-RingProgress-svg"
+    >
+      <circle
+        class="m_b1ca1fbf mantine-RingProgress-curve"
+        cx="36"
+        cy="36"
+        fill="none"
+        r="20.4"
+        stroke-dasharray="18.31099718092337, 109.86598308554017"
+        stroke-dashoffset="0"
+        stroke-linecap="butt"
+        stroke-width="12"
+        transform="scale(1, -1) translate(0, -72)"
+      />
+      <circle
+        class="m_b1ca1fbf mantine-RingProgress-curve"
+        cx="36"
+        cy="36"
+        fill="none"
+        r="20.4"
+        stroke-dasharray="109.86598308554017, 18.31099718092337"
+        stroke-dashoffset="128.17698026646354"
+        stroke-linecap="butt"
+        stroke-width="12"
+        style="--curve-color: var(--mantine-color-indigo-filled);"
+      />
+    </svg>
+    <div
+      class="m_b23f9dc4 mantine-RingProgress-label"
+    >
+      <div
+        class="label"
+      >
+        11
+      </div>
+    </div>
+  </div>
+</span>
+`;

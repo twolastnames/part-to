@@ -1,0 +1,38 @@
+.multiple {
+  display: flex;
+  height: 100%;
+}
+
+.carouselButton {
+  margin: 0 50%;
+  flex: 0 1 auto;
+}
+
+.carousel {
+  height: 100%;
+  width: 100%;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1 1 auto;
+}
+
+.slide {
+  height: 100%;
+  width: 100%;
+}
+
+.buttonSet {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.buttons {
+  justify-content: center;
+  flex: 1 0 auto;
+}

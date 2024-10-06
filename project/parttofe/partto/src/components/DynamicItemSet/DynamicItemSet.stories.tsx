@@ -9,7 +9,9 @@ const meta: Meta<typeof DynamicItemSet> = {
   component: DynamicItemSet,
   decorators: (Story) => (
     <ShellProvider>
-      <Story />
+      <div style={{ height: "600px" }}>
+        <Story />
+      </div>
     </ShellProvider>
   ),
 };
@@ -56,6 +58,92 @@ export const Single: Story = {
         ],
       },
     ],
+    setOperations: [
+      {
+        icon: Start,
+        text: "start cooking",
+        onClick: () => console.log("clicked"),
+      },
+      {
+        icon: Next,
+        text: "mark complete",
+        onClick: () => console.log("clicked"),
+      },
+    ],
+    emptyPage: <div>Empty Yo</div>,
+  },
+};
+
+export const Multiple: Story = {
+  args: {
+    items: [
+      {
+        listView: <div>Should see this first</div>,
+        detailView: <div>This is a detail view 1</div>,
+        itemOperations: [
+          {
+            icon: Next,
+            text: "mark complete",
+            onClick: () => console.log("clicked"),
+          },
+          {
+            icon: Start,
+            text: "start cooking",
+            onClick: () => console.log("clicked"),
+          },
+        ],
+      },
+      {
+        listView: <div>Should see this second</div>,
+        detailView: <div>This is a detail view 2</div>,
+        itemOperations: [
+          {
+            icon: Start,
+            text: "start cooking",
+            onClick: () => console.log("clicked"),
+          },
+          {
+            icon: Next,
+            text: "mark complete",
+            onClick: () => console.log("clicked"),
+          },
+        ],
+      },
+    ],
+    setOperations: [
+      {
+        icon: Start,
+        text: "start cooking",
+        onClick: () => console.log("clicked"),
+      },
+      {
+        icon: Next,
+        text: "mark complete",
+        onClick: () => console.log("clicked"),
+      },
+    ],
+    emptyPage: <div>Empty Yo</div>,
+  },
+};
+
+export const MultiPageList: Story = {
+  args: {
+    items: new Array(17).fill(1).map((_, index) => ({
+      listView: <div>Should see this {index}st</div>,
+      detailView: <div>This is a detail view {index}</div>,
+      itemOperations: [
+        {
+          icon: Next,
+          text: "mark complete",
+          onClick: () => console.log("clicked"),
+        },
+        {
+          icon: Start,
+          text: "start cooking",
+          onClick: () => console.log("clicked"),
+        },
+      ],
+    })),
     setOperations: [
       {
         icon: Start,

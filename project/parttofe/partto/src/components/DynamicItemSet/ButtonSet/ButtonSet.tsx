@@ -11,8 +11,8 @@ export interface ButtonSetProps {
 export function ButtonSet(props: ButtonSetProps) {
   return (
     <div className={classes.buttonSet} data-testid="ButtonSet">
-      {props.operations.map((operation: Operation) => (
-        <Button {...operation} />
+      {props.operations.map((operation: Operation, index) => (
+        <Button key={index} {...operation} />
       ))}
     </div>
   );

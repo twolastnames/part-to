@@ -1,4 +1,4 @@
-import "./App.css";
+import "./App.scss";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { JobGet } from "./pages/JobGet/JobGet";
 import { JobPost } from "./pages/JobPost/JobPost";

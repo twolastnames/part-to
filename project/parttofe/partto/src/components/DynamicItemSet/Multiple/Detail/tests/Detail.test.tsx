@@ -1,30 +1,28 @@
 import React from "react";
 import { expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
-import { ShellProvider } from "../../../../ShellProvider";
-import { Multiple } from "../Multiple";
+import { ShellProvider } from "../../../../../ShellProvider";
+import { Detail } from "../Detail";
 
 test("snapshot", () => {
   render(
     <ShellProvider>
-      <Multiple
+      <Detail
         items={[
           {
-            listView: <div>first list view</div>,
-            detailView: <div>first detail view</div>,
+            listView: <div>hello</div>,
+            detailView: <div>hello</div>,
             itemOperations: [],
           },
           {
-            listView: <div>second list view</div>,
-            detailView: <div>second detail view</div>,
+            listView: <div>hello</div>,
+            detailView: <div>hello</div>,
             itemOperations: [],
           },
         ]}
       />
-      ,
     </ShellProvider>,
   );
-
-  const component = screen.getByTestId("Multiple");
+  const component = screen.getByTestId("Detail");
   expect(component).toMatchSnapshot();
 });

@@ -1,2 +1,11 @@
 .multiple {
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  flex-direction: row;
+}
+
+.switchButton {
+  position: absolute;
+  left: 14px;
 }

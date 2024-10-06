@@ -5,6 +5,10 @@ import {
   IconProps as TablerIconProps,
   IconPlayerTrackNext,
   IconPlayerPlay,
+  IconList,
+  IconFile,
+  IconCaretDown,
+  IconCaretUp,
 } from "@tabler/icons-react";
 
 import classes from "./Icon.module.scss";
@@ -43,3 +47,7 @@ export function Icon({ onClick, definition, size }: IconProps) {
 
 export const Next = IconPlayerTrackNext;
 export const Start = IconPlayerPlay;
+export const List = IconList;
+export const File = IconFile;
+export const Up = IconCaretUp;
+export const Down = IconCaretDown;
