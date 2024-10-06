@@ -75,10 +75,11 @@ ForTestDefinition = """
 import React  from 'react';
 import {expect, test} from '@jest/globals';
 import { render, screen } from '@testing-library/react';
+import { ShellProvider } from "{{ depthDots }}ShellProvider";
 import { {{ name.title }} } from '../{{ name.title }}';
 
 test('snapshot', () => {
-  render(<{{name.title}}/>)
+  render(<ShellProvider><{{name.title}}/></ShellProvider>)
   const component = screen.getByTestId("{{ name.title }}")
   expect(component).toMatchSnapshot();
 }); """
@@ -173,7 +174,7 @@ def get_single_test_context(parts):
     context = {
         "name": get_name_types(parts[-3]),
         "filename": get_name_types(parts[-1]),
-        "depthDots": "../" * len(parts),
+        "depthDots": "../" * (len(parts) - 1),
     }
     return context
 
@@ -225,7 +226,9 @@ def create(command):
             get_single_test_context(command.parts),
             command.target,
             Definition(
-                filename=os.path.join("..", "{{ filename.title }}.test.tsx"),
+                filename=os.path.join(
+                    "..", "{{ filename.title }}.test.tsx"
+                ),
                 definition=ForTestDefinition,
             ),
         )
