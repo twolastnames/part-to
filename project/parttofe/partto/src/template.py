@@ -139,7 +139,18 @@ export const Simple: Story = {
         ),
         Definition(
             filename=os.path.join(ForTestDirectory, ForTestFilename),
-            definition=ForTestDefinition,
+            definition="""
+import React  from 'react';
+import {expect, test} from '@jest/globals';
+import { render, screen } from '@testing-library/react';
+import { ShellProvider } from "{{ depthDots }}../ShellProvider";
+import { {{ name.title }} } from '../{{ name.title }}';
+
+test('snapshot', () => {
+  render(<ShellProvider><{{name.title}}/></ShellProvider>)
+  const component = screen.getByTestId("{{ name.title }}")
+  expect(component).toMatchSnapshot();
+}); """,
         ),
     ],
 }
