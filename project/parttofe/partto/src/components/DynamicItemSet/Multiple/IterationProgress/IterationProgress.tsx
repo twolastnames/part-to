@@ -56,7 +56,6 @@ export function IterationProgress({
           step={1}
           marks={marks}
           styles={{ markLabel: { display: "none" } }}
-          color="indigo"
           onChangeEnd={setShowDuration}
         />
       </span>

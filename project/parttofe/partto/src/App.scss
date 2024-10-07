@@ -2,3 +2,46 @@
   --navigation-height: 48px;
   --content-height: calc(100vh - var(--navigation-height));
 }
+
+@mixin themeSpacing {
+  --gap-xsmall: 2px;
+  --gap-small: 4px;
+  --gap-medium: 8px;
+  --gap-large: 12px;
+  --gap-xlarge: 20px;
+}
+
+@mixin themeFonts {
+  --font-strong-large: 600 16px/18px Verdana, sans-serif;
+  --font-strong-medium: 600 12px/14px Verdana, sans-serif;
+  --font-strong-small: 600 10px/12px Verdana, sans-serif;
+  --font-large: 450 16px/18px Verdana, sans-serif;
+  --font-medium: 450 12px/16px Verdana, sans-serif;
+  --font-small: 450 10px/12px Verdana, sans-serif;
+  --font-weak-large: 300 16px/18px Verdana, sans-serif;
+  --font-weak-medium: 300 12px/14px Verdana, sans-serif;
+  --font-weak-small: 300 10px/12px Verdana, sans-serif;
+  font:
+    450 12px/16px Verdana,
+    sans-serif;
+}
+
+.defaultTheme {
+  @include themeSpacing;
+  @include themeFonts;
+  --secondary-color: #dfb30e;
+  --background-color: #fafcf8;
+  color: black;
+}
+
+.darkTheme {
+  @include themeSpacing;
+  @include themeFonts;
+  --secondary-color: #7b4020;
+  --background-color: #1a1e1c;
+  color: white;
+}
+
+body {
+  background-color: var(--background-color);
+}

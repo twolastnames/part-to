@@ -15,7 +15,9 @@ export function Progress({ on, total, label }: ProgressProps) {
       <RingProgress
         size={72}
         label={<div className={classes.label}>{label}</div>}
-        sections={[{ value: ((on + 1) / total) * 100, color: "indigo" }]}
+        sections={[
+          { value: ((on + 1) / total) * 100, color: "var(--secondary-color)" },
+        ]}
         data-testid="Progress"
       />
     </span>

@@ -1,0 +1,26 @@
+.navigationLogo {
+  display: flex;
+  border: 1px solid var(--background-color);
+  margin: var(--gap-medium);
+}
+
+.navigationLogoText {
+  padding: var(--gap-large) var(--gap-medium) 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  left: -8px;
+  top: -4px;
+}
+
+.navigationLogoTitle {
+  font: var(--font-strong-medium);
+  position: relative;
+  top: -2px;
+}
+
+.navigationLogoDescription {
+  font: var(--font-weak-medium);
+  position: relative;
+  top: 6px;
+}

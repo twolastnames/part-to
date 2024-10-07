@@ -1,0 +1,21 @@
+.navigationBar {
+  background-color: var(--secondary-color);
+  height: 100vh;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.notes {
+}
+
+.nonNotes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xlarge);
+}
+
+.navLink:hover {
+  background-color: var(--background-color);
+}

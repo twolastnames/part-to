@@ -9,6 +9,9 @@ import {
   IconFile,
   IconCaretDown,
   IconCaretUp,
+  IconChefHat,
+  IconCooker,
+  IconToolsKitchen,
 } from "@tabler/icons-react";
 
 import classes from "./Icon.module.scss";
@@ -51,3 +54,6 @@ export const List = IconList;
 export const File = IconFile;
 export const Up = IconCaretUp;
 export const Down = IconCaretDown;
+export const ChefHat = IconChefHat;
+export const Oven = IconCooker;
+export const KitchenTools = IconToolsKitchen;
