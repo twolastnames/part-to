@@ -238,5 +238,61 @@ exports[`snapshot 1`] = `
       class="m_e17b862f mantine-NavLink-children"
     />
   </div>
+  <a
+    class="mantine-focus-auto navLink m_f0824112 mantine-NavLink-root m_87cf2631 mantine-UnstyledButton-root"
+  >
+    <span
+      class="m_690090b5 mantine-NavLink-section"
+      data-position="left"
+    >
+      <svg
+        class="tabler-icon tabler-icon-info-square-rounded "
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M12 9h.01"
+        />
+        <path
+          d="M11 12h1v4h1"
+        />
+        <path
+          d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z"
+        />
+      </svg>
+    </span>
+    <div
+      class="m_f07af9d2 mantine-NavLink-body"
+    >
+      <span
+        class="m_1f6ac4c4 mantine-NavLink-label"
+      >
+        <div
+          class="text"
+        >
+          About
+        </div>
+      </span>
+      <span
+        class="m_57492dcc mantine-NavLink-description"
+      />
+    </div>
+  </a>
+  <div
+    aria-hidden="true"
+    class="mantine-NavLink-collapse"
+    style="box-sizing: border-box; opacity: 0; transition: opacity 200ms ease; display: none; height: 0px; overflow: hidden;"
+  >
+    <div
+      class="m_e17b862f mantine-NavLink-children"
+    />
+  </div>
 </nav>
 `;

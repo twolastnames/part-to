@@ -29,6 +29,21 @@
   }
 }
 
+.logo {
+  position: relative;
+//  top: var(--gap-small);
+  @media #{$desktop} {
+  top: var(--gap-xsmall);
+  }
+  @media #{$tablet} {
+  top: var(--gap-xsmall);
+  }
+  @media #{$portrait} {
+//  top: var(--gap-xsmall);
+top: 1px;
+  }
+}
+
 .navigationLogoText {
   padding: var(--gap-large) var(--gap-medium) 0;
   display: flex;

@@ -10,17 +10,17 @@ exports[`snapshot 1`] = `
     style="position: relative; top: -48px;"
   >
     <div
-      style="height: 78px; overflow: hidden;"
+      style="height: 96px; overflow: hidden;"
     >
       <div>
         T
       </div>
     </div>
     <div
-      style="height: 72px; overflow: hidden; position: relative; top: -48px; left: 24px;"
+      style="height: 50.4px; overflow: hidden; position: relative; top: -48px; left: 24px;"
     >
       <div
-        style="position: relative; top: -24px; width: 80.4px;"
+        style="position: absolute; top: -40.800000000000004px; width: 80.4px;"
       >
         o
       </div>

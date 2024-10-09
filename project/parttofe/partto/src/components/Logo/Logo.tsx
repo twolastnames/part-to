@@ -36,7 +36,7 @@ export function Logo({ size: rawSize }: LogoProps) {
       >
         <div
           style={{
-            height: `${size * 0.65}px`,
+            height: `${size * 0.8}px`,
             overflow: "hidden",
           }}
         >
@@ -44,7 +44,7 @@ export function Logo({ size: rawSize }: LogoProps) {
         </div>
         <div
           style={{
-            height: `${size * 0.6}px`,
+            height: `${size * 0.42}px`,
             overflow: "hidden",
             position: "relative",
             top: `-${size * 0.4}px`,
@@ -53,8 +53,8 @@ export function Logo({ size: rawSize }: LogoProps) {
         >
           <div
             style={{
-              position: "relative",
-              top: `-${size * 0.2}px`,
+              position: "absolute",
+              top: `-${size * 0.34}px`,
               width: `${size * 0.67}px`,
             }}
           >

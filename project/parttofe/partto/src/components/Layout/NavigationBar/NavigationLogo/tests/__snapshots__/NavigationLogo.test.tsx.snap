@@ -6,7 +6,7 @@ exports[`snapshot 1`] = `
   data-testid="NavigationLogo"
 >
   <span
-    class="mediumLogo"
+    class="mediumLogo logo"
   >
     <div
       class="logo"
@@ -17,17 +17,17 @@ exports[`snapshot 1`] = `
         style="position: relative; top: -48px;"
       >
         <div
-          style="height: 78px; overflow: hidden;"
+          style="height: 96px; overflow: hidden;"
         >
           <div>
             T
           </div>
         </div>
         <div
-          style="height: 72px; overflow: hidden; position: relative; top: -48px; left: 24px;"
+          style="height: 50.4px; overflow: hidden; position: relative; top: -48px; left: 24px;"
         >
           <div
-            style="position: relative; top: -24px; width: 80.4px;"
+            style="position: absolute; top: -40.800000000000004px; width: 80.4px;"
           >
             o
           </div>
@@ -36,7 +36,7 @@ exports[`snapshot 1`] = `
     </div>
   </span>
   <span
-    class="smallLogo"
+    class="smallLogo logo"
   >
     <div
       class="logo"
@@ -47,17 +47,17 @@ exports[`snapshot 1`] = `
         style="position: relative; top: -24px;"
       >
         <div
-          style="height: 39px; overflow: hidden;"
+          style="height: 48px; overflow: hidden;"
         >
           <div>
             T
           </div>
         </div>
         <div
-          style="height: 36px; overflow: hidden; position: relative; top: -24px; left: 12px;"
+          style="height: 25.2px; overflow: hidden; position: relative; top: -24px; left: 12px;"
         >
           <div
-            style="position: relative; top: -12px; width: 40.2px;"
+            style="position: absolute; top: -20.400000000000002px; width: 40.2px;"
           >
             o
           </div>
@@ -76,7 +76,7 @@ exports[`snapshot 1`] = `
     <div
       class="navigationLogoDescription"
     >
-      Interactive cookbook
+      Interactive Cookbook
     </div>
   </div>
 </div>

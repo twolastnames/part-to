@@ -32,7 +32,7 @@ exports[`snapshot 1`] = `
         data-testid="NavigationLogo"
       >
         <span
-          class="mediumLogo"
+          class="mediumLogo logo"
         >
           <div
             class="logo"
@@ -43,17 +43,17 @@ exports[`snapshot 1`] = `
               style="position: relative; top: -48px;"
             >
               <div
-                style="height: 78px; overflow: hidden;"
+                style="height: 96px; overflow: hidden;"
               >
                 <div>
                   T
                 </div>
               </div>
               <div
-                style="height: 72px; overflow: hidden; position: relative; top: -48px; left: 24px;"
+                style="height: 50.4px; overflow: hidden; position: relative; top: -48px; left: 24px;"
               >
                 <div
-                  style="position: relative; top: -24px; width: 80.4px;"
+                  style="position: absolute; top: -40.800000000000004px; width: 80.4px;"
                 >
                   o
                 </div>
@@ -62,7 +62,7 @@ exports[`snapshot 1`] = `
           </div>
         </span>
         <span
-          class="smallLogo"
+          class="smallLogo logo"
         >
           <div
             class="logo"
@@ -73,17 +73,17 @@ exports[`snapshot 1`] = `
               style="position: relative; top: -24px;"
             >
               <div
-                style="height: 39px; overflow: hidden;"
+                style="height: 48px; overflow: hidden;"
               >
                 <div>
                   T
                 </div>
               </div>
               <div
-                style="height: 36px; overflow: hidden; position: relative; top: -24px; left: 12px;"
+                style="height: 25.2px; overflow: hidden; position: relative; top: -24px; left: 12px;"
               >
                 <div
-                  style="position: relative; top: -12px; width: 40.2px;"
+                  style="position: absolute; top: -20.400000000000002px; width: 40.2px;"
                 >
                   o
                 </div>
@@ -102,7 +102,7 @@ exports[`snapshot 1`] = `
           <div
             class="navigationLogoDescription"
           >
-            Interactive cookbook
+            Interactive Cookbook
           </div>
         </div>
       </div>
@@ -346,6 +346,62 @@ exports[`snapshot 1`] = `
               class="m_e17b862f mantine-NavLink-children"
             />
           </div>
+          <a
+            class="mantine-focus-auto navLink m_f0824112 mantine-NavLink-root m_87cf2631 mantine-UnstyledButton-root"
+          >
+            <span
+              class="m_690090b5 mantine-NavLink-section"
+              data-position="left"
+            >
+              <svg
+                class="tabler-icon tabler-icon-info-square-rounded "
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 9h.01"
+                />
+                <path
+                  d="M11 12h1v4h1"
+                />
+                <path
+                  d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z"
+                />
+              </svg>
+            </span>
+            <div
+              class="m_f07af9d2 mantine-NavLink-body"
+            >
+              <span
+                class="m_1f6ac4c4 mantine-NavLink-label"
+              >
+                <div
+                  class="text"
+                >
+                  About
+                </div>
+              </span>
+              <span
+                class="m_57492dcc mantine-NavLink-description"
+              />
+            </div>
+          </a>
+          <div
+            aria-hidden="true"
+            class="mantine-NavLink-collapse"
+            style="box-sizing: border-box; opacity: 0; transition: opacity 200ms ease; display: none; height: 0px; overflow: hidden;"
+          >
+            <div
+              class="m_e17b862f mantine-NavLink-children"
+            />
+          </div>
         </nav>
         <div
           class="themeSwitch"
@@ -365,7 +421,7 @@ exports[`snapshot 1`] = `
               >
                 <input
                   class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
-                  id="mantine-3guxikjio"
+                  id="mantine-1buffgsqg"
                   type="checkbox"
                 />
                 <svg
@@ -388,7 +444,7 @@ exports[`snapshot 1`] = `
               >
                 <label
                   class="m_8ee546b8 mantine-Checkbox-label"
-                  for="mantine-3guxikjio"
+                  for="mantine-1buffgsqg"
                 >
                   Dark Theme
                 </label>
