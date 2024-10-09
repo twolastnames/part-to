@@ -1,15 +1,15 @@
 import React from "react";
 import { expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
-import { ShellProvider } from "../../../../ShellProvider";
-import { NavigationBar } from "../NavigationBar";
+import { ShellProvider } from "../../../../../ShellProvider";
+import { Menu } from "../Menu";
 
 test("snapshot", () => {
   render(
     <ShellProvider>
-      <NavigationBar extra="hello world" />
+      <Menu />
     </ShellProvider>,
   );
-  const component = screen.getByTestId("NavigationBar");
+  const component = screen.getByTestId("Menu");
   expect(component).toMatchSnapshot();
 });

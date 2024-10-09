@@ -1,0 +1,15 @@
+@import "../../../../App.scss";
+
+.notes {
+}
+
+.note {
+  width: 100%;
+  margin-bottom: var(--gap-small);
+}
+
+.inactive {
+  @media #{$portrait} {
+    display: none;
+  }
+}

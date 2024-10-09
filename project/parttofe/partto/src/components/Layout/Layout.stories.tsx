@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Layout } from "./Layout";
 import { ShellProvider } from "../../ShellProvider";
 import { Next, Start } from "../Icon/Icon";
+import { Notes } from "./NavigationBar/Notes/Notes";
 
 const meta: Meta<typeof Layout> = {
   component: Layout,
@@ -19,17 +20,21 @@ type Story = StoryObj<typeof Layout>;
 
 export const Simple: Story = {
   args: {
-    notes: [
-      {
-        heading: "Something",
-        detail: "wicked this way comes and it should be longer",
-      },
-      {
-        heading: "Something Else",
-        detail: "is fine",
-      },
-    ],
-    setPair: [
+    extra: (
+      <Notes
+        notes={[
+          {
+            heading: "Something",
+            detail: "wicked this way comes and it should be longer",
+          },
+          {
+            heading: "Something Else",
+            detail: "is fine",
+          },
+        ]}
+      />
+    ),
+    pair: [
       {
         items: [],
         setOperations: [

@@ -2,17 +2,22 @@ import React from "react";
 import { expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { ShellProvider } from "../../../../../ShellProvider";
-import { Note } from "../Note";
+import { Notes } from "../Notes";
 
 test("snapshot", () => {
   render(
     <ShellProvider>
-      <Note
-        heading="Due North"
-        detail="$500 for fancy cars, $20 if it looks like you're poor"
+      <Notes
+        notes={[
+          { detail: "may be in the middle of the keyboard", heading: "C" },
+          {
+            detail: "high pitched, but there could be higher octaves",
+            heading: "F",
+          },
+        ]}
       />
     </ShellProvider>,
   );
-  const component = screen.getByTestId("Note");
+  const component = screen.getByTestId("Notes");
   expect(component).toMatchSnapshot();
 });

@@ -1,40 +1,27 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 import classes from "./NavigationBar.module.scss";
-import { NavLink } from "@mantine/core";
-import { ChefHat, Icon, Oven } from "../../Icon/Icon";
 import { NavigationLogo } from "./NavigationLogo/NavigationLogo";
-import { Note, NoteProps } from "./Note/Note";
-import { ThemeSwitch } from "./ThemeSwitch/ThemeSwitch";
+import { Menu } from "./Menu/Menu";
+import { MobileMenu } from "./MobileMenu/MobileMenu";
 
 export interface NavigationBarProps {
-  notes: Array<NoteProps>;
+  extra: ReactNode;
 }
 
-export function NavigationBar({ notes }: NavigationBarProps) {
+export function NavigationBar({ extra }: NavigationBarProps) {
   return (
-    <div className={classes.navigationBar}>
+    <div className={classes.navigationBar} data-testid="NavigationBar">
       <div className={classes.nonNotes}>
+        <div className={classes.mobileMenu}>
+          <MobileMenu />
+        </div>
         <NavigationLogo />
-        <nav data-testid="NavigationBar">
-          <NavLink
-            className={classes.navLink}
-            label="Start Run"
-            leftSection={<Icon definition={ChefHat} />}
-          />
-          <NavLink
-            className={classes.navLink}
-            label="Continue Cooking"
-            leftSection={<Icon definition={Oven} />}
-          />
-        </nav>
-        <ThemeSwitch />
+        <span className={classes.menu}>
+          <Menu />
+        </span>
       </div>
-      <div className={classes.notes}>
-        {notes.map((note) => (
-          <Note {...note} />
-        ))}
-      </div>
+      {extra}
     </div>
   );
 }

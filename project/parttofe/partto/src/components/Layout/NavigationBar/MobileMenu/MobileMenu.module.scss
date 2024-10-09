@@ -1,0 +1,29 @@
+@import "../../../../App.scss";
+
+.mobileMenu {
+  position: relative;
+  @media #{$portrait} {
+    left: var(--gap-medium);
+    top: var(--gap-medium);
+  }
+  @media #{$landscape} {
+    left: var(--gap-small);
+    top: var(--gap-small);
+  }
+}
+
+.menu {
+  position: absolute;
+  background: var(--secondary-color);
+  z-index: 111;
+  border: 1px solid var(--detail-color);
+  padding: var(--gap-large);
+  @media #{$portrait} {
+    top: 48px;
+  }
+  @media #{$landscape} {
+    top: 0;
+    left: 112px;
+  }
+  //display: none;
+}

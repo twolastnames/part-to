@@ -22,7 +22,7 @@ export function Logo({ size: rawSize }: LogoProps) {
         display: "inline-block",
         height: `${size * 0.5}px`,
         overflow: "hidden",
-        width: `${size * 1.5}px`,
+        width: `${size * 0.8}px`,
         fontFamily: '"Courier New", Courier, monospace',
         fontSize: `${size}px`,
         lineHeight: `${size * 1.5}px`,
@@ -55,6 +55,7 @@ export function Logo({ size: rawSize }: LogoProps) {
             style={{
               position: "relative",
               top: `-${size * 0.2}px`,
+              width: `${size * 0.67}px`,
             }}
           >
             o

@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<div
+  class="notes"
+  data-testid="Notes"
+>
+  <div
+    class=" note"
+  >
+    <div
+      class="note"
+      data-testid="Note"
+    >
+      <div
+        class="heading"
+      >
+        C
+      </div>
+      <div
+        class="detail"
+      >
+        may be in the middle of the keyboard
+      </div>
+    </div>
+  </div>
+  <div
+    class="inactive note"
+  >
+    <div
+      class="note"
+      data-testid="Note"
+    >
+      <div
+        class="heading"
+      >
+        F
+      </div>
+      <div
+        class="detail"
+      >
+        high pitched, but there could be higher octaves
+      </div>
+    </div>
+  </div>
+</div>
+`;

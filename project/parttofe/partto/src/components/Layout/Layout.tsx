@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 import classes from "./Layout.module.scss";
 import { NavigationBar } from "./NavigationBar/NavigationBar";
@@ -6,20 +6,19 @@ import {
   DynamicItemSet,
   DynamicItemSetProps,
 } from "../DynamicItemSet/DynamicItemSet";
-import { NoteProps } from "./NavigationBar/Note/Note";
 
 export interface LayoutProps {
-  setPair: [DynamicItemSetProps, DynamicItemSetProps];
-  notes: Array<NoteProps>;
+  pair: [DynamicItemSetProps, DynamicItemSetProps];
+  extra: ReactNode;
 }
 
-export function Layout({ setPair, notes }: LayoutProps) {
+export function Layout({ pair, extra }: LayoutProps) {
   return (
     <div className={classes.layout} data-testid="Layout">
-      <NavigationBar notes={notes} />
-      {setPair.map((set) => (
+      <NavigationBar extra={extra} />
+      {pair.map((set, index) => (
         <div className={classes.itemSet}>
-          <DynamicItemSet {...set} />
+          <DynamicItemSet key={index} {...set} />
         </div>
       ))}
     </div>

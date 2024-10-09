@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<button
+  aria-label="Toggle Navigation"
+  class="mantine-focus-auto mobileMenu m_fea6bf1a mantine-Burger-root m_87cf2631 mantine-UnstyledButton-root"
+  data-testid="MobileMenu"
+  type="button"
+>
+  <div
+    class="m_d4fb9cad mantine-Burger-burger"
+    data-reduce-motion="true"
+  />
+</button>
+`;

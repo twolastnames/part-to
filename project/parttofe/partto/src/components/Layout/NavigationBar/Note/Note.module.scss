@@ -1,7 +1,13 @@
+@import "../../../../App.scss";
+
 .note {
   border: 1px solid var(--background-color);
   margin: var(--gap-medium);
   padding: var(--gap-medium);
+  @media #{$portrait} {
+    margin: var(--gap-small);
+    padding: var(--gap-small);
+  }
 }
 
 .heading {

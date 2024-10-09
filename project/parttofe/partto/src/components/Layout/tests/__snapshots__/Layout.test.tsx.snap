@@ -1,0 +1,624 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<div
+  class="layout"
+  data-testid="Layout"
+>
+  <div
+    class="navigationBar"
+    data-testid="NavigationBar"
+  >
+    <div
+      class="nonNotes"
+    >
+      <div
+        class="mobileMenu"
+      >
+        <button
+          aria-label="Toggle Navigation"
+          class="mantine-focus-auto mobileMenu m_fea6bf1a mantine-Burger-root m_87cf2631 mantine-UnstyledButton-root"
+          data-testid="MobileMenu"
+          type="button"
+        >
+          <div
+            class="m_d4fb9cad mantine-Burger-burger"
+            data-reduce-motion="true"
+          />
+        </button>
+      </div>
+      <div
+        class="navigationLogo"
+        data-testid="NavigationLogo"
+      >
+        <span
+          class="mediumLogo"
+        >
+          <div
+            class="logo"
+            data-testid="Logo"
+            style="display: inline-block; height: 60px; overflow: hidden; width: 96px; font-family: \\"Courier New\\", Courier, monospace; font-size: 120px; line-height: 180px;"
+          >
+            <div
+              style="position: relative; top: -48px;"
+            >
+              <div
+                style="height: 78px; overflow: hidden;"
+              >
+                <div>
+                  T
+                </div>
+              </div>
+              <div
+                style="height: 72px; overflow: hidden; position: relative; top: -48px; left: 24px;"
+              >
+                <div
+                  style="position: relative; top: -24px; width: 80.4px;"
+                >
+                  o
+                </div>
+              </div>
+            </div>
+          </div>
+        </span>
+        <span
+          class="smallLogo"
+        >
+          <div
+            class="logo"
+            data-testid="Logo"
+            style="display: inline-block; height: 30px; overflow: hidden; width: 48px; font-family: \\"Courier New\\", Courier, monospace; font-size: 60px; line-height: 90px;"
+          >
+            <div
+              style="position: relative; top: -24px;"
+            >
+              <div
+                style="height: 39px; overflow: hidden;"
+              >
+                <div>
+                  T
+                </div>
+              </div>
+              <div
+                style="height: 36px; overflow: hidden; position: relative; top: -24px; left: 12px;"
+              >
+                <div
+                  style="position: relative; top: -12px; width: 40.2px;"
+                >
+                  o
+                </div>
+              </div>
+            </div>
+          </div>
+        </span>
+        <div
+          class="navigationLogoText"
+        >
+          <div
+            class="navigationLogoTitle"
+          >
+            Part To
+          </div>
+          <div
+            class="navigationLogoDescription"
+          >
+            Interactive cookbook
+          </div>
+        </div>
+      </div>
+      <span
+        class="menu"
+      >
+        <nav
+          class="nav"
+          data-testid="Menu"
+        >
+          <a
+            class="mantine-focus-auto navLink m_f0824112 mantine-NavLink-root m_87cf2631 mantine-UnstyledButton-root"
+          >
+            <span
+              class="m_690090b5 mantine-NavLink-section"
+              data-position="left"
+            >
+              <svg
+                class="tabler-icon tabler-icon-chef-hat "
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 3c1.918 0 3.52 1.35 3.91 3.151a4 4 0 0 1 2.09 7.723l0 7.126h-12v-7.126a4 4 0 1 1 2.092 -7.723a4 4 0 0 1 3.908 -3.151z"
+                />
+                <path
+                  d="M6.161 17.009l11.839 -.009"
+                />
+              </svg>
+            </span>
+            <div
+              class="m_f07af9d2 mantine-NavLink-body"
+            >
+              <span
+                class="m_1f6ac4c4 mantine-NavLink-label"
+              >
+                <div
+                  class="text"
+                >
+                  Enter Recipe
+                </div>
+              </span>
+              <span
+                class="m_57492dcc mantine-NavLink-description"
+              />
+            </div>
+          </a>
+          <div
+            aria-hidden="true"
+            class="mantine-NavLink-collapse"
+            style="box-sizing: border-box; opacity: 0; transition: opacity 200ms ease; display: none; height: 0px; overflow: hidden;"
+          >
+            <div
+              class="m_e17b862f mantine-NavLink-children"
+            />
+          </div>
+          <a
+            class="mantine-focus-auto navLink m_f0824112 mantine-NavLink-root m_87cf2631 mantine-UnstyledButton-root"
+          >
+            <span
+              class="m_690090b5 mantine-NavLink-section"
+              data-position="left"
+            >
+              <svg
+                class="tabler-icon tabler-icon-book "
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0"
+                />
+                <path
+                  d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0"
+                />
+                <path
+                  d="M3 6l0 13"
+                />
+                <path
+                  d="M12 6l0 13"
+                />
+                <path
+                  d="M21 6l0 13"
+                />
+              </svg>
+            </span>
+            <div
+              class="m_f07af9d2 mantine-NavLink-body"
+            >
+              <span
+                class="m_1f6ac4c4 mantine-NavLink-label"
+              >
+                <div
+                  class="text"
+                >
+                  Start Meal
+                </div>
+              </span>
+              <span
+                class="m_57492dcc mantine-NavLink-description"
+              />
+            </div>
+          </a>
+          <div
+            aria-hidden="true"
+            class="mantine-NavLink-collapse"
+            style="box-sizing: border-box; opacity: 0; transition: opacity 200ms ease; display: none; height: 0px; overflow: hidden;"
+          >
+            <div
+              class="m_e17b862f mantine-NavLink-children"
+            />
+          </div>
+          <a
+            class="mantine-focus-auto navLink m_f0824112 mantine-NavLink-root m_87cf2631 mantine-UnstyledButton-root"
+          >
+            <span
+              class="m_690090b5 mantine-NavLink-section"
+              data-position="left"
+            >
+              <svg
+                class="tabler-icon tabler-icon-cooker "
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 7h.01"
+                />
+                <path
+                  d="M15 7h.01"
+                />
+                <path
+                  d="M9 7h.01"
+                />
+                <path
+                  d="M5 3m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z"
+                />
+                <path
+                  d="M9 15h6"
+                />
+                <path
+                  d="M5 11h14"
+                />
+              </svg>
+            </span>
+            <div
+              class="m_f07af9d2 mantine-NavLink-body"
+            >
+              <span
+                class="m_1f6ac4c4 mantine-NavLink-label"
+              >
+                <div
+                  class="text"
+                >
+                  Continue Cooking
+                </div>
+              </span>
+              <span
+                class="m_57492dcc mantine-NavLink-description"
+              />
+            </div>
+          </a>
+          <div
+            aria-hidden="true"
+            class="mantine-NavLink-collapse"
+            style="box-sizing: border-box; opacity: 0; transition: opacity 200ms ease; display: none; height: 0px; overflow: hidden;"
+          >
+            <div
+              class="m_e17b862f mantine-NavLink-children"
+            />
+          </div>
+          <a
+            class="mantine-focus-auto navLink m_f0824112 mantine-NavLink-root m_87cf2631 mantine-UnstyledButton-root"
+          >
+            <span
+              class="m_690090b5 mantine-NavLink-section"
+              data-position="left"
+            >
+              <svg
+                class="tabler-icon tabler-icon-settings "
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"
+                />
+                <path
+                  d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"
+                />
+              </svg>
+            </span>
+            <div
+              class="m_f07af9d2 mantine-NavLink-body"
+            >
+              <span
+                class="m_1f6ac4c4 mantine-NavLink-label"
+              >
+                <div
+                  class="text"
+                >
+                  Settings
+                </div>
+              </span>
+              <span
+                class="m_57492dcc mantine-NavLink-description"
+              />
+            </div>
+          </a>
+          <div
+            aria-hidden="true"
+            class="mantine-NavLink-collapse"
+            style="box-sizing: border-box; opacity: 0; transition: opacity 200ms ease; display: none; height: 0px; overflow: hidden;"
+          >
+            <div
+              class="m_e17b862f mantine-NavLink-children"
+            />
+          </div>
+        </nav>
+        <div
+          class="themeSwitch"
+          data-testid="ThemeSwitch"
+        >
+          <div
+            class="m_bf2d988c mantine-Checkbox-root m_5f75b09e mantine-Checkbox-root"
+            data-label-position="right"
+            style="--checkbox-color: var(--mantine-color-red-filled);"
+          >
+            <div
+              class="m_5f6e695e mantine-Checkbox-body"
+            >
+              <div
+                class="m_26062bec mantine-Checkbox-inner"
+                data-label-position="right"
+              >
+                <input
+                  class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
+                  id="mantine-3guxikjio"
+                  type="checkbox"
+                />
+                <svg
+                  aria-hidden="true"
+                  class="m_bf295423 mantine-Checkbox-icon"
+                  fill="none"
+                  viewBox="0 0 10 7"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M4 4.586L1.707 2.293A1 1 0 1 0 .293 3.707l3 3a.997.997 0 0 0 1.414 0l5-5A1 1 0 1 0 8.293.293L4 4.586z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div
+                class="m_d3ea56bb mantine-Checkbox-labelWrapper"
+              >
+                <label
+                  class="m_8ee546b8 mantine-Checkbox-label"
+                  for="mantine-3guxikjio"
+                >
+                  Dark Theme
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </span>
+    </div>
+    <div
+      class="notes"
+      data-testid="Notes"
+    >
+      <div
+        class=" note"
+      >
+        <div
+          class="note"
+          data-testid="Note"
+        >
+          <div
+            class="heading"
+          >
+            Something
+          </div>
+          <div
+            class="detail"
+          >
+            wicked this way comes and it should be longer
+          </div>
+        </div>
+      </div>
+      <div
+        class="inactive note"
+      >
+        <div
+          class="note"
+          data-testid="Note"
+        >
+          <div
+            class="heading"
+          >
+            Something Else
+          </div>
+          <div
+            class="detail"
+          >
+            is fine
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="itemSet"
+  >
+    <div
+      class="dynamicItemSet"
+      data-testid="DynamicItemSet"
+    >
+      <div
+        class="buttonSet"
+        data-testid="ButtonSet"
+      >
+        <div
+          class="container"
+        >
+          <button
+            aria-label="start cooking"
+            class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+            data-testid="Button"
+            style="--ai-color: var(--mantine-color-white);"
+            type="button"
+          >
+            <span
+              class="m_8d3afb97 mantine-ActionIcon-icon"
+            >
+              <svg
+                class="tabler-icon tabler-icon-player-play "
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7 4v16l13 -8z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+        <div
+          class="container"
+        >
+          <button
+            aria-label="mark complete"
+            class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+            data-testid="Button"
+            style="--ai-color: var(--mantine-color-white);"
+            type="button"
+          >
+            <span
+              class="m_8d3afb97 mantine-ActionIcon-icon"
+            >
+              <svg
+                class="tabler-icon tabler-icon-player-track-next "
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3 5v14l8 -7z"
+                />
+                <path
+                  d="M14 5v14l8 -7z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="empty"
+        data-testid="Empty"
+      >
+        <div>
+          Empty Yo
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="itemSet"
+  >
+    <div
+      class="dynamicItemSet"
+      data-testid="DynamicItemSet"
+    >
+      <div
+        class="buttonSet"
+        data-testid="ButtonSet"
+      >
+        <div
+          class="container"
+        >
+          <button
+            aria-label="start cooking"
+            class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+            data-testid="Button"
+            style="--ai-color: var(--mantine-color-white);"
+            type="button"
+          >
+            <span
+              class="m_8d3afb97 mantine-ActionIcon-icon"
+            >
+              <svg
+                class="tabler-icon tabler-icon-player-play "
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7 4v16l13 -8z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+        <div
+          class="container"
+        >
+          <button
+            aria-label="mark complete"
+            class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+            data-testid="Button"
+            style="--ai-color: var(--mantine-color-white);"
+            type="button"
+          >
+            <span
+              class="m_8d3afb97 mantine-ActionIcon-icon"
+            >
+              <svg
+                class="tabler-icon tabler-icon-player-track-next "
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3 5v14l8 -7z"
+                />
+                <path
+                  d="M14 5v14l8 -7z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="empty"
+        data-testid="Empty"
+      >
+        <div>
+          Empty Yo
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

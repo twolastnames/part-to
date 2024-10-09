@@ -191,7 +191,7 @@ exports[`snapshot 1`] = `
                     stroke-dashoffset="128.17698026646354"
                     stroke-linecap="butt"
                     stroke-width="12"
-                    style="--curve-color: var(--mantine-color-indigo-filled);"
+                    style="--curve-color: var(--secondary-color);"
                   />
                 </svg>
                 <div
@@ -200,124 +200,7 @@ exports[`snapshot 1`] = `
                   <div
                     class="label"
                   >
-                    function on(emitter, event, options = kEmptyObject) {
-  const signal = options?.signal;
-  validateAbortSignal(signal, 'options.signal');
-  if (signal?.aborted)
-    throw new AbortError(undefined, { cause: signal?.reason });
-
-  const unconsumedEvents = [];
-  const unconsumedPromises = [];
-  let error = null;
-  let finished = false;
-
-  const iterator = ObjectSetPrototypeOf({
-    next() {
-      // First, we consume all unread events
-      const value = unconsumedEvents.shift();
-      if (value) {
-        return PromiseResolve(createIterResult(value, false));
-      }
-
-      // Then we error, if an error happened
-      // This happens one time if at all, because after 'error'
-      // we stop listening
-      if (error) {
-        const p = PromiseReject(error);
-        // Only the first element errors
-        error = null;
-        return p;
-      }
-
-      // If the iterator is finished, resolve to done
-      if (finished) {
-        return PromiseResolve(createIterResult(undefined, true));
-      }
-
-      // Wait until an event happens
-      return new Promise(function(resolve, reject) {
-        unconsumedPromises.push({ resolve, reject });
-      });
-    },
-
-    return() {
-      eventTargetAgnosticRemoveListener(emitter, event, eventHandler);
-      eventTargetAgnosticRemoveListener(emitter, 'error', errorHandler);
-
-      if (signal) {
-        eventTargetAgnosticRemoveListener(
-          signal,
-          'abort',
-          abortListener,
-          { once: true });
-      }
-
-      finished = true;
-
-      for (const promise of unconsumedPromises) {
-        promise.resolve(createIterResult(undefined, true));
-      }
-
-      return PromiseResolve(createIterResult(undefined, true));
-    },
-
-    throw(err) {
-      if (!err || !(err instanceof Error)) {
-        throw new ERR_INVALID_ARG_TYPE('EventEmitter.AsyncIterator',
-                                       'Error', err);
-      }
-      error = err;
-      eventTargetAgnosticRemoveListener(emitter, event, eventHandler);
-      eventTargetAgnosticRemoveListener(emitter, 'error', errorHandler);
-    },
-
-    [SymbolAsyncIterator]() {
-      return this;
-    },
-  }, AsyncIteratorPrototype);
-
-  eventTargetAgnosticAddListener(emitter, event, eventHandler);
-  if (event !== 'error' && typeof emitter.on === 'function') {
-    emitter.on('error', errorHandler);
-  }
-
-  if (signal) {
-    eventTargetAgnosticAddListener(
-      signal,
-      'abort',
-      abortListener,
-      { once: true });
-  }
-
-  function abortListener() {
-    errorHandler(new AbortError(undefined, { cause: signal?.reason }));
-  }
-
-  function eventHandler(...args) {
-    const promise = ArrayPrototypeShift(unconsumedPromises);
-    if (promise) {
-      promise.resolve(createIterResult(args, false));
-    } else {
-      unconsumedEvents.push(args);
-    }
-  }
-
-  function errorHandler(err) {
-    finished = true;
-
-    const toError = ArrayPrototypeShift(unconsumedPromises);
-
-    if (toError) {
-      toError.reject(err);
-    } else {
-      // The next time we call next()
-      error = err;
-    }
-
-    iterator.return();
-  }
-  return iterator;
-}1
+                    1
                   </div>
                 </div>
               </div>
@@ -347,7 +230,7 @@ exports[`snapshot 1`] = `
                     cy="36"
                     fill="none"
                     r="20.4"
-                    stroke-dasharray="NaN, NaN"
+                    stroke-dasharray="64.08849013323177, 64.08849013323177"
                     stroke-dashoffset="0"
                     stroke-linecap="butt"
                     stroke-width="12"
@@ -359,11 +242,11 @@ exports[`snapshot 1`] = `
                     cy="36"
                     fill="none"
                     r="20.4"
-                    stroke-dasharray="NaN, NaN"
+                    stroke-dasharray="64.08849013323177, 64.08849013323177"
                     stroke-dashoffset="128.17698026646354"
                     stroke-linecap="butt"
                     stroke-width="12"
-                    style="--curve-color: var(--mantine-color-indigo-filled);"
+                    style="--curve-color: var(--secondary-color);"
                   />
                 </svg>
                 <div
@@ -384,7 +267,7 @@ exports[`snapshot 1`] = `
         >
           <div
             class="m_dd36362e mantine-Slider-root"
-            style="--slider-color: var(--mantine-color-indigo-filled); --slider-radius: var(--mantine-radius-xl); --slider-thumb-size: calc(var(--slider-size) * 2);"
+            style="--slider-radius: var(--mantine-radius-xl); --slider-thumb-size: calc(var(--slider-size) * 2);"
             tabindex="-1"
           >
             <div

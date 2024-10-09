@@ -1,21 +1,50 @@
+@import "../../../App.scss";
+
 .navigationBar {
   background-color: var(--secondary-color);
-  height: 100vh;
   width: 200px;
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
+  @media #{$landscape} {
+    height: 100vh;
+    flex-direction: column;
+  }
+  @media #{$portrait} {
+    width: 100vw;
+    flex-direction: row;
+    height: 48px;
+  }
 }
 
-.notes {
+.mobileMenu {
+  display: none;
+  @media #{$tablet} {
+    display: unset;
+  }
+  @media #{$mobile} {
+    display: unset;
+  }
+  @media #{$portrait} {
+    display: unset;
+  }
+}
+
+.menu {
+  display: none;
+  @media #{$desktop} {
+    display: unset;
+  }
 }
 
 .nonNotes {
   display: flex;
   flex-direction: column;
   gap: var(--gap-xlarge);
-}
-
-.navLink:hover {
-  background-color: var(--background-color);
+  @media #{$tablet} {
+    gap: 0;
+  }
+  @media #{$portrait} {
+    flex-direction: row;
+    gap: 0;
+  }
 }

@@ -1,0 +1,83 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<div
+  class="navigationLogo"
+  data-testid="NavigationLogo"
+>
+  <span
+    class="mediumLogo"
+  >
+    <div
+      class="logo"
+      data-testid="Logo"
+      style="display: inline-block; height: 60px; overflow: hidden; width: 96px; font-family: \\"Courier New\\", Courier, monospace; font-size: 120px; line-height: 180px;"
+    >
+      <div
+        style="position: relative; top: -48px;"
+      >
+        <div
+          style="height: 78px; overflow: hidden;"
+        >
+          <div>
+            T
+          </div>
+        </div>
+        <div
+          style="height: 72px; overflow: hidden; position: relative; top: -48px; left: 24px;"
+        >
+          <div
+            style="position: relative; top: -24px; width: 80.4px;"
+          >
+            o
+          </div>
+        </div>
+      </div>
+    </div>
+  </span>
+  <span
+    class="smallLogo"
+  >
+    <div
+      class="logo"
+      data-testid="Logo"
+      style="display: inline-block; height: 30px; overflow: hidden; width: 48px; font-family: \\"Courier New\\", Courier, monospace; font-size: 60px; line-height: 90px;"
+    >
+      <div
+        style="position: relative; top: -24px;"
+      >
+        <div
+          style="height: 39px; overflow: hidden;"
+        >
+          <div>
+            T
+          </div>
+        </div>
+        <div
+          style="height: 36px; overflow: hidden; position: relative; top: -24px; left: 12px;"
+        >
+          <div
+            style="position: relative; top: -12px; width: 40.2px;"
+          >
+            o
+          </div>
+        </div>
+      </div>
+    </div>
+  </span>
+  <div
+    class="navigationLogoText"
+  >
+    <div
+      class="navigationLogoTitle"
+    >
+      Part To
+    </div>
+    <div
+      class="navigationLogoDescription"
+    >
+      Interactive cookbook
+    </div>
+  </div>
+</div>
+`;

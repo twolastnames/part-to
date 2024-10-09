@@ -37,7 +37,7 @@ exports[`snapshot 1`] = `
           stroke-dashoffset="128.17698026646354"
           stroke-linecap="butt"
           stroke-width="12"
-          style="--curve-color: var(--mantine-color-indigo-filled);"
+          style="--curve-color: var(--secondary-color);"
         />
       </svg>
       <div

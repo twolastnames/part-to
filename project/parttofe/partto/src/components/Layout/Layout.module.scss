@@ -1,12 +1,46 @@
+@import "../../App.scss";
+
 .layout {
   display: flex;
   background-color: var(--background-color);
 }
 
 .itemSet {
-  height: 100vh;
   display: flex;
-  width: 100%;
   padding: var(--gap-large);
-  border-left: 1px solid var(--secondary-color);
 }
+
+@media #{$landscape} {
+  .itemSet {
+    height: 100vh;
+    width: 100%;
+    border-left: 1px solid var(--secondary-color);
+  }
+  .layout {
+    flex-direction: row;
+    width: 100vw;
+  }
+}
+
+@media #{$portrait} {
+  .itemSet {
+    width: 100vw;
+    height: 100%;
+    border-top: 1px solid var(--secondary-color);
+  }
+  .layout {
+    height: 100vh;
+    flex-direction: column;
+  }
+}
+
+/*
+@include mediaSet(
+  $selector: .itemSet,
+  $key: flex-direction,
+  $cell: column,
+  $portrait: row,
+  $tablet: row,
+  $laptop: row
+)
+*/

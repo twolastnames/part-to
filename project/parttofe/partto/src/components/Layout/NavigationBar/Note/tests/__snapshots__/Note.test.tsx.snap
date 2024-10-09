@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<div
+  class="note"
+  data-testid="Note"
+>
+  <div
+    class="heading"
+  >
+    Due North
+  </div>
+  <div
+    class="detail"
+  >
+    $500 for fancy cars, $20 if it looks like you're poor
+  </div>
+</div>
+`;
