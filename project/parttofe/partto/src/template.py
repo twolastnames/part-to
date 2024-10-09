@@ -111,6 +111,8 @@ export function {{name.title}} (props: {{ name.title }}Props) {
         Definition(
             filename="{{ name.title }}.module.scss",
             definition="""
+@import "{{ depthDots }}App.scss";
+
 .{{ name.camel }} {
 }
             """,
