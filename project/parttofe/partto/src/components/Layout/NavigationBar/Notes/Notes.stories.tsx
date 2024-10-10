@@ -2,7 +2,7 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Notes } from "./Notes";
-import { ShellProvider } from "../../../../ShellProvider";
+import { ShellProvider } from "../../../../providers/ShellProvider";
 
 const meta: Meta<typeof Notes> = {
   component: Notes,

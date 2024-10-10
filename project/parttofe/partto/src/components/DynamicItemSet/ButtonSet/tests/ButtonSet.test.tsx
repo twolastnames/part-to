@@ -3,7 +3,7 @@ import { expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { ButtonSet } from "../ButtonSet";
 import { Start } from "../../../Icon/Icon";
-import { ShellProvider } from "../../../../ShellProvider";
+import { ShellProvider } from "../../../../providers/ShellProvider";
 
 test("snapshot", () => {
   render(

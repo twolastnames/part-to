@@ -2,7 +2,7 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { DynamicItemSet } from "./DynamicItemSet";
-import { ShellProvider } from "../../ShellProvider";
+import { ShellProvider } from "../../providers/ShellProvider";
 import { Next, Start } from "../Icon/Icon";
 
 const meta: Meta<typeof DynamicItemSet> = {

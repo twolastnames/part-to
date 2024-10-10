@@ -2,7 +2,7 @@ import React from "react";
 import { expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { IterationProgress } from "../IterationProgress";
-import { ShellProvider } from "../../../../../ShellProvider";
+import { ShellProvider } from "../../../../../providers/ShellProvider";
 
 test("snapshot", () => {
   render(

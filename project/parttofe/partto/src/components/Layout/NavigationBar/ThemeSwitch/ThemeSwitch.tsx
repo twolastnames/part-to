@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import classes from "./ThemeSwitch.module.scss";
-import { Theme, changeTheme } from "../../../../ShellProvider";
+import { Theme, changeTheme } from "../../../../providers/ShellProvider";
 import { Checkbox } from "@mantine/core";
 
 export function ThemeSwitch() {

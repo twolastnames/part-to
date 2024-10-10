@@ -2,7 +2,7 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Button } from "./Button";
-import { ShellProvider } from "../../ShellProvider";
+import { ShellProvider } from "../../providers/ShellProvider";
 import { Next, Start } from "../Icon/Icon";
 
 const meta: Meta<typeof Button> = {

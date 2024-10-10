@@ -2,7 +2,7 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Layout } from "./Layout";
-import { ShellProvider } from "../../ShellProvider";
+import { ShellProvider } from "../../providers/ShellProvider";
 import { Next, Start } from "../Icon/Icon";
 import { Notes } from "./NavigationBar/Notes/Notes";
 

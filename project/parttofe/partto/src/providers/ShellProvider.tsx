@@ -3,7 +3,7 @@ import React, { MutableRefObject, useRef, useState } from "react";
 import { MantineProvider, createTheme } from "@mantine/core";
 import { PropsWithChildren } from "react";
 import "@mantine/core/styles.layer.css";
-import "./App.scss";
+import "../App.scss";
 
 const themes = {
   default: createTheme({

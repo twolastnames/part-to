@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { JobGet } from "./pages/JobGet/JobGet";
 import { JobPost } from "./pages/JobPost/JobPost";
-import { ShellProvider } from "./ShellProvider";
+import { ShellProvider } from "./providers/ShellProvider";
 
 function App() {
   return (

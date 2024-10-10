@@ -2,7 +2,7 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Icon, Next, Size } from "./Icon";
-import { ShellProvider } from "../../ShellProvider";
+import { ShellProvider } from "../../providers/ShellProvider";
 
 const meta: Meta<typeof Icon> = {
   component: Icon,

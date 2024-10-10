@@ -2,7 +2,7 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { MobileMenu } from "./MobileMenu";
-import { ShellProvider } from "../../../../ShellProvider";
+import { ShellProvider } from "../../../../providers/ShellProvider";
 
 const meta: Meta<typeof MobileMenu> = {
   component: MobileMenu,
