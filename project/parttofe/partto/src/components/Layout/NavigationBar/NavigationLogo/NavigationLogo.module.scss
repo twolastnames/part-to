@@ -31,16 +31,14 @@
 
 .logo {
   position: relative;
-//  top: var(--gap-small);
   @media #{$desktop} {
-  top: var(--gap-xsmall);
+    top: var(--gap-xsmall);
   }
   @media #{$tablet} {
-  top: var(--gap-xsmall);
+    top: var(--gap-xsmall);
   }
   @media #{$portrait} {
-//  top: var(--gap-xsmall);
-top: 1px;
+    top: 1px;
   }
 }
 

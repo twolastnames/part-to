@@ -417,7 +417,7 @@ exports[`snapshot 1`] = `
             >
               <input
                 class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
-                id="mantine-gxulefl3n"
+                id="mantine-biioi7sog"
                 type="checkbox"
               />
               <svg
@@ -440,7 +440,7 @@ exports[`snapshot 1`] = `
             >
               <label
                 class="m_8ee546b8 mantine-Checkbox-label"
-                for="mantine-gxulefl3n"
+                for="mantine-biioi7sog"
               >
                 Dark Theme
               </label>
