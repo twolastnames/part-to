@@ -155,6 +155,56 @@ test('snapshot', () => {
 }); """,
         ),
     ],
+
+    "pages": [
+        Definition(
+            filename="{{ name.title }}.tsx",
+            definition="""
+import React from "react";
+
+import classes from "./{{ name.title }}.module.scss";
+import { Layout } from "{{ depthDots }}components/Layout/Layout";
+import { Notes } from "{{ depthDots }}components/Layout/NavigationBar/Notes/Notes";
+
+
+export function {{name.title}} () {
+  return (
+    <Layout
+      pair={[
+        { items: [], setOperations: [], emptyPage: <>WIP: {{ name.title }} 1</> },
+        { items: [], setOperations: [], emptyPage: <>WIP: {{ name.title }} 2</> },
+      ]}
+      extra={<Notes notes={[]} />}
+    />
+  );
+}; """,
+        ),
+        Definition(
+            filename="{{ name.title }}.module.scss",
+            definition="""
+@import "{{ depthDots }}App.scss";
+
+.{{ name.camel }} {
+}
+            """,
+        ),
+        Definition(
+            filename=os.path.join(ForTestDirectory, ForTestFilename),
+            definition="""
+import React  from 'react';
+import {expect, test} from '@jest/globals';
+import { render, screen } from '@testing-library/react';
+import { ShellProvider } from "{{ depthDots }}../ShellProvider";
+import { {{ name.title }} } from '../{{ name.title }}';
+
+test('snapshot', () => {
+  render(<ShellProvider><{{name.title}}/></ShellProvider>)
+  const page = screen.getByTestId("Layout")
+  expect(page).toMatchSnapshot();
+}); """,
+        ),
+    ],
+
 }
 
 
