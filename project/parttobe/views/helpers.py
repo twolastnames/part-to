@@ -16,7 +16,7 @@ class CodeNotMatchingConfig(RuntimeError):
 
 def get_body_constructor(id_value, status):
     id = endpoints.OperationId(id_value)
-    filename = "./parttobe/openapiviews/{}.py".format(id.slug())
+    filename = "./parttobe/views/{}.py".format(id.slug())
     definition = "create{}Body".format(status)
     spec = importlib.util.spec_from_file_location(
         definition, filename

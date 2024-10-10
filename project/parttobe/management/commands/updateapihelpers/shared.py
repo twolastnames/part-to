@@ -1,5 +1,5 @@
 import os
-from parttobe.openapiviews.helpers import ResponseDescription
+from parttobe.views.helpers import ResponseDescription
 from parttobe.endpoints import (
     OperationId,
     operations,

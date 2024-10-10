@@ -6,7 +6,7 @@
 #  endpoints.openapi.yaml
 ############################################################
 
-import parttobe.openapiviews.helpers as helpers
+import parttobe.views.helpers as helpers
 import collections
 
 arguments = collections.namedtuple(

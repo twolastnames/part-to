@@ -69,7 +69,7 @@ def get_models_filename():
 def implementation_filename(operationId, extension=""):
     return os.path.join(
         self_directory,
-        "openapiviews",
+        "views",
         "{}{}{}.py".format(
             operationId.name(),
             operationId.variant(),
