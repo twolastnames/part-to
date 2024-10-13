@@ -234,17 +234,7 @@ GenerateWarning = Template(
 """
 )
 
-
-class OperationFileWriter:
-    def __init__(
-        self, operation, raw_operation, definitions, format_ids
-    ):
-        self.operation = operation
-        self.raw_operation = raw_operation
-        self.definitions = definitions
-        self.id = OperationId(operation["operationId"])
-        self.format_ids = format_ids
-
+class ContextedWriter:
     def context(self):
         raise NotImplementedError("please override this")
 
@@ -295,6 +285,16 @@ class OperationFileWriter:
         print("generated file '{}'".format(self.filename()))
 
 
+class OperationFileWriter(ContextedWriter):
+    def __init__(
+        self, operation, raw_operation, definitions, format_ids
+    ):
+        self.operation = operation
+        self.raw_operation = raw_operation
+        self.definitions = definitions
+        self.id = OperationId(operation["operationId"])
+        self.format_ids = format_ids
+
 class TypescriptFileWriter(OperationFileWriter):
     def base_directory(self):
         return typescript_base_directory()
@@ -306,7 +306,7 @@ class TypescriptFileWriter(OperationFileWriter):
         format_typescript_file(name)
 
 
-class PythonFileWriter(OperationFileWriter):
+class PythonFileWriter:
     def format_file(self, name):
         format_python_file(name)
 

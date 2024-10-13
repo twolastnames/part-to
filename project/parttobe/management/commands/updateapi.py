@@ -10,7 +10,11 @@ from parttobe.endpoints import (
 )
 
 from .updateapihelpers.pythonimplementationwriter import (
-    PythonImplementationFileWriter,
+    PythonImplementationWriter,
+)
+
+from .updateapihelpers.pythonmodelwriter import (
+    PythonModelWriter,
 )
 
 from .updateapihelpers.typescriptgetwriter import (
@@ -38,11 +42,13 @@ class Command(BaseCommand):
                 ]
             )
         )
+        for format in format_ids:
+            PythonModelWriter(format[:-2])()
         write_shared_definitions(definitions, format_ids)
         for operation in operations.values():
             id = OperationId(operation["operationId"])
             raw_operation = get_raw_operation(id.value)
-            PythonImplementationFileWriter(
+            PythonImplementationWriter(
                 operation, raw_operation, definitions, format_ids
             )()
             if id.variant() == "get":
