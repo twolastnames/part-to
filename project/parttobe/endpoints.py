@@ -62,10 +62,6 @@ openapi_filename = os.path.join(
 )
 
 
-def get_models_filename():
-    return os.path.join(self_directory, "models.py")
-
-
 def implementation_filename(operationId, extension=""):
     return os.path.join(
         self_directory,
