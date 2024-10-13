@@ -61,22 +61,17 @@ openapi_filename = os.path.join(
     self_directory, "endpoints.openapi.yaml"
 )
 
-def get_source_filename(type, name):
-    return os.path.join(
-        self_directory,
-        type,
-        "{}.py".format(name)
-    )
-
-def model_filename(name):
-    return get_source_filename('models', name)
 
 def implementation_filename(operationId, extension=""):
-    return get_source_filename("views", "{}{}{}".format(
+    return os.path.join(
+        self_directory,
+        "views",
+        "{}{}{}.py".format(
             operationId.name(),
             operationId.variant(),
             extension,
-        ))
+        ),
+    )
 
 
 def definition_filename(operationId):

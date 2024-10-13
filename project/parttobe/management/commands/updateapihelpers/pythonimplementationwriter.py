@@ -1,6 +1,5 @@
 from .shared import (
     PythonFileWriter,
-OperationFileWriter,
     response_definitions,
 )
 from parttobe.endpoints import (
@@ -18,7 +17,7 @@ def handle(arguments):
 """
 
 
-class PythonImplementationWriter(PythonFileWriter, OperationFileWriter):
+class PythonImplementationFileWriter(PythonFileWriter):
     def template(self):
         return Template
 
