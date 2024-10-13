@@ -6,7 +6,7 @@ from django.db import (
     transaction,
 )
 from . import models
-import duration_parser
+from pytimeparse.timeparse import timeparse
 import datetime
 import time
 import json

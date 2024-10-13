@@ -16,9 +16,9 @@ import {
   PartTo,
   TaskDefinition,
   RunState,
-  PartToId,
   RunStateId,
   TaskDefinitionId,
+  PartToId,
 } from "./sharedschemas";
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
@@ -39,12 +39,12 @@ interface WireBody {
 }
 
 export interface ParttoPost200Body {
-  id: PartToId;
+  partTo: PartToId;
   message: string;
 }
 
 interface Wire200Body {
-  id: PartToId;
+  partTo: PartToId;
   message: string;
 }
 
@@ -96,7 +96,7 @@ export const doParttoPost = async ({
     },
     {
       200: (body: Wire200Body) => ({
-        id: unmarshalers.required["PartToId"](body.id),
+        partTo: unmarshalers.required["PartToId"](body.partTo),
         message: unmarshalers.required["string"](body.message),
       }),
     },

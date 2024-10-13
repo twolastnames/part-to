@@ -16,9 +16,9 @@ import {
   PartTo,
   TaskDefinition,
   RunState,
-  PartToId,
   RunStateId,
   TaskDefinitionId,
+  PartToId,
 } from "./sharedschemas";
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
@@ -31,7 +31,7 @@ interface WireBody {
 }
 
 export interface RunPost200Body {
-  id: RunStateId;
+  runState: RunStateId;
   report: DateTime;
   complete: DateTime;
   duties: Array<TaskDefinitionId>;
@@ -39,7 +39,7 @@ export interface RunPost200Body {
 }
 
 interface Wire200Body {
-  id: RunStateId;
+  runState: RunStateId;
   report: string;
   complete: string;
   duties: Array<TaskDefinitionId>;
@@ -82,7 +82,7 @@ export const doRunPost = async ({
     },
     {
       200: (body: Wire200Body) => ({
-        id: unmarshalers.required["RunStateId"](body.id),
+        runState: unmarshalers.required["RunStateId"](body.runState),
         report: unmarshalers.required["date-time"](body.report),
         complete: unmarshalers.required["date-time"](body.complete),
         duties: body.duties.map((value) =>

@@ -15,9 +15,9 @@ import {
   PartTo,
   TaskDefinition,
   RunState,
-  PartToId,
   RunStateId,
   TaskDefinitionId,
+  PartToId,
 } from "./sharedschemas";
 
 /* eslint-enable @typescript-eslint/no-unused-vars */
@@ -33,7 +33,7 @@ interface Wire200Body {
 }
 
 export interface ParttoGetArguments {
-  id: PartToId;
+  partTo: PartToId;
 }
 
 interface ExternalMappers {
@@ -45,11 +45,16 @@ interface ExternalMappers {
 export type ParttoGetResult = Result<ParttoGet200Body>;
 
 export const useParttoGet: (args: ParttoGetArguments) => ParttoGetResult = ({
-  id,
+  partTo,
 }) =>
   useGet<Wire200Body, ParttoGet200Body, ExternalMappers>(
     "/api/partto/",
-    [{ name: "id", value: parameterMarshalers.required["PartToId"](id) }],
+    [
+      {
+        name: "partTo",
+        value: parameterMarshalers.required["PartToId"](partTo),
+      },
+    ],
     {
       200: (body: Wire200Body) => ({
         name: unmarshalers.required["string"](body.name),

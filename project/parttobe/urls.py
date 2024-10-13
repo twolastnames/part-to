@@ -14,18 +14,19 @@ def get_documented_paths():
     return [validation.path_from_operation_id(id) for id in ids]
 
 
-urlpatterns = [
-    path(
-        "hello-world/",
-        views.hello_world,
-        name="hello_world",
-    ),
-    path(
-        "ingredients/",
-        views.ingredients,
-        name="ingredients",
-    ),
-    path("tools/", views.tools, name="tools"),
-]
+#urlpatterns = [
+#    path(
+#        "hello-world/",
+#        views.hello_world,
+#        name="hello_world",
+#    ),
+#    path(
+#        "ingredients/",
+#        views.ingredients,
+#        name="ingredients",
+#    ),
+#    path("tools/", views.tools, name="tools"),
+#]
+urlpatterns = []
 
 urlpatterns.extend(get_documented_paths())

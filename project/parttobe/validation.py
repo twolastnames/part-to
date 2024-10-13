@@ -114,11 +114,11 @@ def map_value(value, schema):
 def have_marshaled_bodies(operation):
     return {
         status: lambda raw_body: Response(
-            map_tree(
+            json.dumps(map_tree(
                 map_value,
                 response["content"]["*"]["schema"],
                 raw_body,
-            ),
+            )),
             status,
         )
         for status, response in operation["responses"].items()
@@ -230,7 +230,6 @@ def get_model_uuid_constructor(name):
     def construct_model(wire_uuid):
         if name not in loaded_model_definitions:
             add_loadable_model_definition(name)
-        print("wire_uuid", wire_uuid)
         try:
             return loaded_model_definitions[name].objects.get(
                 uuid=recover_uuid(wire_uuid)
@@ -285,42 +284,45 @@ def unmarshal(request):
             raise ValidationError(
                 "Format of type {} not defined in schema".format(type)
             )
-        print("value", parameter, value)
         response[parameter["name"]] = unmarshal_parameter_handlers[
             type
         ](value)
     return response
 
 
-def is_parameter_correct(request, parameter):
-    if "default" in parameter:
-        value = request.GET.get(
-            parameter["name"],
-            parameter["default"],
-        )
-    else:
-        value = request.GET.get(parameter["name"])
-    type = parameter["schema"]["type"]
-    if type == "string":
-        return True
-    if type == "number":
-        try:
-            int(value)
-            return True
-        except ValueError:
-            return False
-    raise NotImplementedError("Parameter Type".format(type))
+def get_parameter_error(request):
+    def check(parameter):
+        if "default" in parameter:
+            value = request.GET.get(
+                parameter["name"],
+                parameter["default"],
+            )
+        else:
+            value = request.GET.get(parameter["name"])
+            if not value:
+                return "parameter {} missing".format(parameter["name"])
+        type = parameter["schema"]["type"]
+        if type == "string":
+            return
+        if type == "number":
+            try:
+                int(value)
+                return
+            except ValueError:
+                return "expected {} to be parsable to a number".format(parameter['name'])
+        raise NotImplementedError("Parameter Type".format(type))
+    return check
 
 
 def get_parameter_errors(request):
     definition = get_definition(request)
     if "parameters" not in definition:
         return []
-    errors = [
+    return [
         error
         for error in map(
-            is_parameter_correct,
-            definition["paramaters"],
+            get_parameter_error(request),
+            definition["parameters"],
         )
         if error
     ]
@@ -340,6 +342,8 @@ def is_valid_body(request):
         )
     except jsonschema.ValidationError as e:
         raise ValidationError(e.message)
+
+def is_valid_query(request):
     parameter_errors = get_parameter_errors(request)
     if len(parameter_errors) > 0:
         raise ValidationError(parameter_errors)
@@ -366,6 +370,7 @@ def unmarshaler(variants):
         argumentType = variants[request.method]["argumentType"]
         try:
             validation = is_valid_body(request)
+            is_valid_query(request)
             arguments = unmarshal(request)
         except (exceptions.ValidationError, ResourceError) as e:
             return Response(e.message, status=404)

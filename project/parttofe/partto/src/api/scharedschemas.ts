@@ -12,19 +12,19 @@ import {
 } from "./helpers";
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-export type PartToId = string;
-
 export type RunStateId = string;
 
 export type TaskDefinitionId = string;
 
+export type PartToId = string;
+
 export type ParameterMarshalers = BaseParameterMarshalers & {
   required: {
-    PartToId: MarshalMapper<PartToId, string>;
-
     RunStateId: MarshalMapper<RunStateId, string>;
 
     TaskDefinitionId: MarshalMapper<TaskDefinitionId, string>;
+
+    PartToId: MarshalMapper<PartToId, string>;
   };
 };
 
@@ -35,21 +35,21 @@ export const parameterMarshalers: ParameterMarshalers = {
   required: {
     ...baseParameterMarshalers.required,
 
-    PartToId: (value: PartToId) => value,
-
     RunStateId: (value: RunStateId) => value,
 
     TaskDefinitionId: (value: TaskDefinitionId) => value,
+
+    PartToId: (value: PartToId) => value,
   },
 };
 
 export type BodyMarshalers = BaseBodyMarshalers & {
   required: {
-    PartToId: MarshalMapper<PartToId, string>;
-
     RunStateId: MarshalMapper<RunStateId, string>;
 
     TaskDefinitionId: MarshalMapper<TaskDefinitionId, string>;
+
+    PartToId: MarshalMapper<PartToId, string>;
   };
 };
 
@@ -60,21 +60,21 @@ export const bodyMarshalers: BodyMarshalers = {
   required: {
     ...baseBodyMarshalers.required,
 
-    PartToId: (value: PartToId) => value,
-
     RunStateId: (value: RunStateId) => value,
 
     TaskDefinitionId: (value: TaskDefinitionId) => value,
+
+    PartToId: (value: PartToId) => value,
   },
 };
 
 export type Unmarshalers = BaseUnmarshalers & {
   required: {
-    PartToId: MarshalMapper<string, PartToId>;
-
     RunStateId: MarshalMapper<string, RunStateId>;
 
     TaskDefinitionId: MarshalMapper<string, TaskDefinitionId>;
+
+    PartToId: MarshalMapper<string, PartToId>;
   };
 };
 
@@ -85,11 +85,11 @@ export const unmarshalers: Unmarshalers = {
   required: {
     ...baseUnmarshalers.required,
 
-    PartToId: (value: string) => value,
-
     RunStateId: (value: string) => value,
 
     TaskDefinitionId: (value: string) => value,
+
+    PartToId: (value: string) => value,
   },
 };
 
@@ -107,7 +107,7 @@ export interface TaskDefinition {
 }
 
 export interface RunState {
-  id: RunStateId;
+  runState: RunStateId;
   report: DateTime;
   complete: DateTime;
   duties: Array<TaskDefinitionId>;

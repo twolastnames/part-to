@@ -55,6 +55,7 @@ ptyprocess==0.7.0
 pure-eval==0.2.2
 Pygments==2.18.0
 python-dateutil==2.9.0.post0
+pytimeparse==1.1.8
 PyYAML==6.0.2
 pyzmq==26.0.3
 referencing==0.35.1

@@ -14,7 +14,7 @@ paths:
       tags:
       - partto 
       parameters:
-      - name: id
+      - name: partTo
         in: query
         required: true
         schema:
@@ -94,10 +94,10 @@ paths:
               schema:
                 type: object
                 required:
-                - id
+                - partTo
                 - message
                 properties:
-                  id:
+                  partTo:
                     type: string
                     format: PartToId
                   message:
@@ -182,14 +182,14 @@ components:
           type: number
     RunState:
       required:
-      - id
+      - runState
       - report
       - complete
       - duties
       - tasks
       type: object
       properties:
-        id:
+        runState:
           type: string
           format: RunStateId
         report:

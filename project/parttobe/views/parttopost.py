@@ -200,18 +200,8 @@ def handle(argument):
     id = save_job(together, invert_depends(together))
     return argument.respond_200(
         {
-            "id": str(id),
+            "partTo": str(id),
             "message": "job insert successfull",
         }
     )
 
-
-#    return argument.respond_200(str(id))
-#    return argument.respond_200(str(id))
-
-
-# def create200Body(id):
-#    return {
-#        "id": id,
-#        "message": "job insert successfull",
-#    }

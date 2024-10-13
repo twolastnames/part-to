@@ -11,6 +11,8 @@ css_directory = os.path.join(
     self_directory, "partto", "build", "static", "css"
 )
 
+js_files = []
+css_files = []
 try:
     js_files = os.listdir(js_directory)
     css_files = os.listdir(css_directory)
