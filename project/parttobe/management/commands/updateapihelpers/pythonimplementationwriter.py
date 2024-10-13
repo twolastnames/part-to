@@ -14,12 +14,6 @@ Template = """
 def handle(arguments):
     ''' return body here '''
     return {}
-
-{% for title, status in responses %}
-def create{{status}}Body(*args, **kargs):
-    ''' return a body for this response with your defined custom inputs  '''
-    raise NotImplementedError('implement {{title}} body for {{status}}')
-{% endfor %}
 """
 
 
