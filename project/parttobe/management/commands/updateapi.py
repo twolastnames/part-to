@@ -38,6 +38,7 @@ class Command(BaseCommand):
                 ]
             )
         )
+        format_ids.sort()
         write_shared_definitions(definitions, format_ids)
         for operation in operations.values():
             id = OperationId(operation["operationId"])

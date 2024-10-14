@@ -48,7 +48,9 @@ interface Wire{{ body.status }}Body {{ body.wired_schema }}
 
 {% endfor %}
 
+{% if has_arguments %}
 export interface {{title}}Arguments { {{ typed_arguments }} }
+{% endif %}
 
 interface ExternalMappers {
   [status: string]:
@@ -69,10 +71,10 @@ export type {{ title }}Result = Result<
 >
 
 export const use{{ title }}: (
-    args: {{ title }}Arguments
-) => {{ title }}Result = ({
-  {{ arguments }}
-}) =>
+{% if has_arguments %} args: {{ title }}Arguments {% endif %}
+) => {{ title }}Result = (
+{% if has_arguments %}{ {{ arguments }} }{% endif %}
+) =>
   useGet<
     {% for body in bodies %}
     Wire{{ body.status }}Body, {{ title }}{{ body.status }}Body, 
@@ -103,6 +105,10 @@ class TypescriptGetWriter(TypescriptFileWriter):
 
     def context(self):
         bodies = []
+        if 'parameters' in self.operation:
+            safe_parameters = self.operation['parameters']
+        else:
+            safe_parameters = []
         for definition in response_definitions(id=self.id):
             if definition.status in global_status_codes:
                 continue
@@ -127,7 +133,7 @@ class TypescriptGetWriter(TypescriptFileWriter):
         arguments = ",".join(
             [
                 parameter["name"]
-                for parameter in self.operation["parameters"]
+                for parameter in safe_parameters
             ]
         )
         parameters = [
@@ -140,16 +146,18 @@ class TypescriptGetWriter(TypescriptFileWriter):
                     {},
                 ),
             }
-            for parameter in self.operation["parameters"]
+            for parameter in safe_parameters
         ]
+
         shared_types = list(self.definitions.keys())
         shared_types.extend(self.format_ids)
         returnable = {
+            "has_arguments": len(safe_parameters) > 0,
             "bodies": bodies,
             "shared_types": shared_types,
             "title": self.id.title(),
             "typed_arguments": parameters_to_schema(
-                self.operation["parameters"],
+                safe_parameters,
                 typed_schema_formatter,
             ),
             "parameters": parameters,
