@@ -1,5 +1,3 @@
-from parttobe import models
-
 
 def handle(arguments):
     return arguments.respond_200(
