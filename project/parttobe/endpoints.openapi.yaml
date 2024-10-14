@@ -7,6 +7,37 @@ info:
   license:
     name: MIT
 paths:
+  /api/parttos/:
+    get:
+      summary: list all part tos
+      operationId: parttos:get
+      responses:
+        '500':
+          description: a backend bug
+          content:
+            '*':
+              schema:
+                type: string
+        '400':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                type: array
+                items:
+                  type: string
+        '200':
+          description: Expected response to a valid request
+          content:
+            '*':
+              schema:
+                type: object
+                properties:
+                  partTos:
+                    type: array
+                    items:
+                      type: string
+                      format: PartToId
   /api/partto/:
     get:
       summary: Disclose a part to definition
