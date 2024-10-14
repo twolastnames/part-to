@@ -6,7 +6,6 @@ import { Menu } from "../Menu/Menu";
 
 export function MobileMenu() {
   const [opened, setOpened] = useState<boolean>(false);
-  console.log({ opened });
   return (
     <>
       <Burger
