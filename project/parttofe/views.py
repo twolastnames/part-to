@@ -4,12 +4,8 @@ import os
 import re
 
 self_directory = os.path.dirname(os.path.abspath(__file__))
-js_directory = os.path.join(
-    self_directory, "partto", "build", "static", "js"
-)
-css_directory = os.path.join(
-    self_directory, "partto", "build", "static", "css"
-)
+js_directory = os.path.join(self_directory, "partto", "build", "static", "js")
+css_directory = os.path.join(self_directory, "partto", "build", "static", "css")
 
 js_files = []
 css_files = []
@@ -23,15 +19,11 @@ except:
 
 try:
     shaed_js_files = {
-        re.sub(
-            "\.[a-f0-8]{8}", "", filename
-        ): "/static/static/js/{}".format(filename)
+        re.sub("\.[a-f0-8]{8}", "", filename): "/static/static/js/{}".format(filename)
         for filename in js_files
     }
     shaed_css_files = {
-        re.sub(
-            "\.[a-f0-8]{8}", "", filename
-        ): "/static/static/css/{}".format(filename)
+        re.sub("\.[a-f0-8]{8}", "", filename): "/static/static/css/{}".format(filename)
         for filename in css_files
     }
 except KeyError:

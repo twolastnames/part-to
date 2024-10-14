@@ -29,6 +29,7 @@ PATH_START = "api/"
 
 automatic_status_returns = ["500"]
 
+
 class ResourceError(RuntimeError):
     def __init__(self, message):
         self.message = message
@@ -43,9 +44,7 @@ letter_to_number = {}
 number_to_letter = {}
 
 for index, letter in enumerate(
-    "".join([str(number) for number in range(10)])
-    + ascii_lowercase
-    + ascii_uppercase
+    "".join([str(number) for number in range(10)]) + ascii_lowercase + ascii_uppercase
 ):
     letter_to_number[letter] = index
     number_to_letter[index] = letter
@@ -68,9 +67,7 @@ def recover_uuid(value):
         reversed_index = len(letter_to_number) - index
         if digit == "-":
             continue
-        current += (
-            len(letter_to_number) ** index * letter_to_number[digit]
-        )
+        current += len(letter_to_number) ** index * letter_to_number[digit]
     return UUID(int=current)
 
 
@@ -114,11 +111,13 @@ def map_value(value, schema):
 def have_marshaled_bodies(operation):
     return {
         status: lambda raw_body: Response(
-            json.dumps(map_tree(
-                map_value,
-                response["content"]["*"]["schema"],
-                raw_body,
-            )),
+            json.dumps(
+                map_tree(
+                    map_value,
+                    response["content"]["*"]["schema"],
+                    raw_body,
+                )
+            ),
             status,
         )
         for status, response in operation["responses"].items()
@@ -162,18 +161,14 @@ def path_from_operation_id(id):
                 operationId.variant(),
             )
             filename = implementation_filename(operationId)
-            if not (
-                os.path.isfile(filename)
-            ):
+            if not (os.path.isfile(filename)):
                 return path(
                     openapi_path.replace("/" + PATH_START, ""),
                     undefined_path,
                     name=id,
                 )
             if operationId.name() == id:
-                partial_path = openapi_path.replace(
-                    "/" + PATH_START, ""
-                )
+                partial_path = openapi_path.replace("/" + PATH_START, "")
                 variants[operationId.variant().upper()] = {
                     "handle": get_meta_definition(filename, "handle"),
                     "responders": have_marshaled_bodies(operation),
@@ -219,11 +214,7 @@ def add_loadable_model_definition(name):
     self_directory = os.path.dirname(os.path.abspath(__file__))
     model_filename = os.path.join(self_directory, "models.py")
     definition_name = re.sub(r"Id$", "", name)
-    exec(
-        "loaded_model_definitions[name] = models.{}".format(
-            definition_name
-        )
-    )
+    exec("loaded_model_definitions[name] = models.{}".format(definition_name))
 
 
 def get_model_uuid_constructor(name):
@@ -235,9 +226,7 @@ def get_model_uuid_constructor(name):
                 uuid=recover_uuid(wire_uuid)
             )
         except exceptions.ObjectDoesNotExist:
-            raise ResourceError(
-                "Id {} does not exist".format(wire_uuid)
-            )
+            raise ResourceError("Id {} does not exist".format(wire_uuid))
 
     return construct_model
 
@@ -284,9 +273,7 @@ def unmarshal(request):
             raise ValidationError(
                 "Format of type {} not defined in schema".format(type)
             )
-        response[parameter["name"]] = unmarshal_parameter_handlers[
-            type
-        ](value)
+        response[parameter["name"]] = unmarshal_parameter_handlers[type](value)
     return response
 
 
@@ -309,8 +296,11 @@ def get_parameter_error(request):
                 int(value)
                 return
             except ValueError:
-                return "expected {} to be parsable to a number".format(parameter['name'])
+                return "expected {} to be parsable to a number".format(
+                    parameter["name"]
+                )
         raise NotImplementedError("Parameter Type".format(type))
+
     return check
 
 
@@ -342,6 +332,7 @@ def is_valid_body(request):
         )
     except jsonschema.ValidationError as e:
         raise ValidationError(e.message)
+
 
 def is_valid_query(request):
     parameter_errors = get_parameter_errors(request)
@@ -381,9 +372,7 @@ def unmarshaler(variants):
                 message = [e.message]
             return Response(message, status=400)
         for status, responder in responders.items():
-            arguments["respond_{}".format(status)] = responders[
-                status
-            ]
+            arguments["respond_{}".format(status)] = responders[status]
         try:
             response = handle(argumentType(**arguments))
         except (exceptions.ValidationError, ResourceError) as e:

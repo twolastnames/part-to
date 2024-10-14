@@ -13,6 +13,7 @@ import re
 
 SHARED_UUID = "12345678-1234-4321-1234-123456789021"
 
+
 def use_shared_uuid(content):
     value_lengths = [8, 4, 4, 4, 12]
     expression = "-".join(
@@ -27,9 +28,10 @@ def use_shared_uuid(content):
     substituted = re.sub(expression, SHARED_UUID, text)
     return substituted
 
+
 def map_definition(key, value):
-    if 'duration' in value:
-        value['duration'] = timeparse(value['duration'])
+    if "duration" in value:
+        value["duration"] = timeparse(value["duration"])
     return value
 
 
@@ -38,6 +40,7 @@ def toml_to_body(toml):
     tasks = {k: map_definition(k, v) for (k, v) in toml.items() if k != "part_to"}
     body["tasks"] = [v1 | {"name": k1} for (k1, v1) in tasks.items()]
     return body
+
 
 def loadExamples():
     file_directory = os.path.dirname(__file__)
@@ -68,5 +71,5 @@ def loadExamples():
                 )
             )
         else:
-            ids.append(json.loads(response.data)['partTo'])
+            ids.append(json.loads(response.data)["partTo"])
     return ids

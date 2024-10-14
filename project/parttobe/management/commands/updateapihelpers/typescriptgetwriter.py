@@ -105,8 +105,8 @@ class TypescriptGetWriter(TypescriptFileWriter):
 
     def context(self):
         bodies = []
-        if 'parameters' in self.operation:
-            safe_parameters = self.operation['parameters']
+        if "parameters" in self.operation:
+            safe_parameters = self.operation["parameters"]
         else:
             safe_parameters = []
         for definition in response_definitions(id=self.id):
@@ -130,12 +130,7 @@ class TypescriptGetWriter(TypescriptFileWriter):
                     ),
                 }
             )
-        arguments = ",".join(
-            [
-                parameter["name"]
-                for parameter in safe_parameters
-            ]
-        )
+        arguments = ",".join([parameter["name"] for parameter in safe_parameters])
         parameters = [
             {
                 "name": parameter["name"],

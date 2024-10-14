@@ -1,4 +1,3 @@
-
 def handle(arguments):
     return arguments.respond_200(
         {
@@ -6,5 +5,3 @@ def handle(arguments):
             "tasks": arguments.partTo.task_definitions,
         }
     )
-
-

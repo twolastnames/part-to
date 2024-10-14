@@ -18,8 +18,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from parttofe.urls import get_frontend_routes
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("parttobe.urls")),
-    path("", include("parttofe.urls")),
 ]
+
+urlpatterns.extend(
+    [path(route, include("parttofe.urls")) for route in get_frontend_routes()]
+)

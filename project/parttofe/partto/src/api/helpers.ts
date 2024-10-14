@@ -93,18 +93,18 @@ export interface BaseBodyMarshalers {
 
 export const baseBodyMarshalers: BaseBodyMarshalers = {
   required: {
-    "date-time": (date: DateTime) => new Date(date.epoch()).toISOString(),
+    "date-time": (date: DateTime) => new Date(date.sinceEpoch()).toISOString(),
     number: (value: number) => value,
     string: (value: string) => value,
-    duration: (value: Duration) => value.inMilliseconds(),
+    duration: (value: Duration) => value.toMilliseconds(),
   },
   unrequired: {
     "date-time": (date: DateTime | undefined) =>
-      date ? new Date(date.epoch()).toISOString() : undefined,
+      date ? new Date(date.sinceEpoch()).toISOString() : undefined,
     number: (value: number | undefined) => value,
     string: (value: string | undefined) => value,
     duration: (value: Duration | undefined) =>
-      value ? value.inMilliseconds() : undefined,
+      value ? value.toMilliseconds() : undefined,
   },
 };
 

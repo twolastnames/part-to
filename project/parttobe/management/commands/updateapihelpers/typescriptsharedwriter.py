@@ -122,9 +122,7 @@ def write_shared_definitions(definitions, format_ids):
         set(
             [
                 id
-                for id in traverse_api(
-                    lambda value: value == "format"
-                )
+                for id in traverse_api(lambda value: value == "format")
                 if id.endswith("Id")
             ]
         )

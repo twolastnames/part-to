@@ -84,9 +84,7 @@ class EngagementSet:
         duration = earliest.duration * (earliest.engagement / 100.0)
         adjusted_engagements = []
         for engagement in engagements:
-            current_duration = (
-                engagement.duration * engagement.engagement / 100
-            )
+            current_duration = engagement.duration * engagement.engagement / 100
             duration += current_duration
             adjusted_engagements.append(
                 EngagementSet(
@@ -227,21 +225,15 @@ class TaskDefinition(models.Model):
 
     def duration_to(self):
         duration = datetime.timedelta(seconds=0)
-        tasks = reversed(
-            list(TaskDefinition.dependency_chain_from(self))
-        )
+        tasks = reversed(list(TaskDefinition.dependency_chain_from(self)))
         for task in tasks:
             duration += task.duration
         return duration
 
     def consume_duration(self, engagements):
-        earliest_duration_work = EngagementSet.earliest_duration_work(
-            engagements
-        )
+        earliest_duration_work = EngagementSet.earliest_duration_work(engagements)
         return (
-            EngagementSet.leftover_duration_engagements(
-                self.duration, engagements
-            )
+            EngagementSet.leftover_duration_engagements(self.duration, engagements)
             if earliest_duration_work > self.duration
             else EngagementSet.remove_earliest_engagement(engagements)
         )
@@ -332,9 +324,7 @@ class PartToRun(models.Model):
         )
 
     def unwaiting_definitions(self):
-        started = TaskStatus.objects.filter(
-            run=self.id, started__isnull=False
-        )
+        started = TaskStatus.objects.filter(run=self.id, started__isnull=False)
         return map(
             lambda task: task.definition,
             started,
@@ -364,11 +354,7 @@ class PartToRun(models.Model):
             task_sum += task.duration
         task_sum += duty.weight()
         until = task_sum - duty.duration
-        return (
-            until
-            if until > datetime.timedelta()
-            else datetime.timedelta()
-        )
+        return until if until > datetime.timedelta() else datetime.timedelta()
 
     def first_undones(self):
         lefts = self.left_definitions()
@@ -384,13 +370,8 @@ class PartToRun(models.Model):
     def __next__(self):
         next_duty_time = self.until_next_duty()
         duties = self.startable_duties()
-        if (
-            next_duty_time is not None
-            and next_duty_time <= datetime.timedelta()
-        ):
-            return TaskStatus.objects.create(
-                run=self, definition=duties[0]
-            )
+        if next_duty_time is not None and next_duty_time <= datetime.timedelta():
+            return TaskStatus.objects.create(run=self, definition=duties[0])
         left = list(
             filter(
                 lambda definition: definition.is_task(),
@@ -401,9 +382,7 @@ class PartToRun(models.Model):
             raise StopIteration
         left.sort()
         if left[0] in map(lambda task: task.depended, duties):
-            return TaskStatus.objects.create(
-                run=self, definition=duties[0]
-            )
+            return TaskStatus.objects.create(run=self, definition=duties[0])
         return TaskStatus.objects.create(run=self, definition=left[0])
 
 
