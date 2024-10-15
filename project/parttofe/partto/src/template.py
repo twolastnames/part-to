@@ -117,7 +117,7 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { {{ name.title }} } from "./{{ name.title }}";
-import { ShellProvider } from "{{ depthDots }}ShellProvider"
+import { ShellProvider } from "{{ depthDots }}providers/ShellProvider"
 
 const meta: Meta<typeof {{ name.title }}> = {
   component: {{ name.title }},
@@ -186,7 +186,7 @@ export function {{name.title}} () {
 import React  from 'react';
 import {expect, test} from '@jest/globals';
 import { render, screen } from '@testing-library/react';
-import { ShellProvider } from "{{ depthDots }}../ShellProvider";
+import { ShellProvider } from "{{ depthDots }}../providers/ShellProvider";
 import { {{ name.title }} } from '../providers/{{ name.title }}';
 
 test('snapshot', () => {

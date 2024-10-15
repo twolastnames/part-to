@@ -215,7 +215,11 @@ export function useGet<
         return;
       }
       const wiredResponse = await handleResponse<WIRED_RESPONSE_TYPE>(
-        await fetch(appendParameterString(url, parameters)),
+        await fetch(appendParameterString(url, parameters), {
+          headers: {
+            Accept: "application/json",
+          },
+        }),
       );
       const status = wiredResponse.status;
       if (status !== 200) {

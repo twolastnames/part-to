@@ -1,0 +1,49 @@
+[part_to]
+name = "Bavarian Pot Roast"
+notes = "leftover juices make a mean gravy without bay leaf"
+depends = ["Remove Meat"]
+
+['Put Oil in Dutch Oven']
+description = "put oil in dutch oven"
+duration = "30 seconds"
+tools = "dutch oven"
+ingredients = ["canola oil, 2 tbs"]
+
+['Heat Dutch Oven']
+description = "heat oil in dutch oven"
+duration = "2 minutes 30 seconds"
+engagement = 2
+depends = ["Put Oil in Dutch Oven"]
+
+['Brown Roast']
+description = "put roast meat in dutch oven and brown all sides"
+duration = "10 minutes"
+ingredients = ["beef chuck roast, boneless, 1 roast, about 3 lbs"]
+depends = ["Heat Dutch Oven"]
+
+['Chop Onion']
+description = "chop an onion and put it in 4ish cup bowl"
+duration = "2 minutes"
+ingredients = ["chopped onion, 1/2"]
+
+['Assemble Ingredients']
+description = "put the following in the bowl onion bowl: 1/2 tsp ground ginger, 1/2 tsp pepper, 1 bay leaf,  1 tsp ground cinnamon, 1 tsp salt, 2 tbs sugar, 1 tbs white vinegar, 8 oz tomato sauce, 3/4 cup beer or beef broth, 1 1/4 cup water"
+ingredients = ["ground ginger, 1/2 tsp", "pepper, 1/2 tsp", "bay leaf, 1", "cinnamon, ground, 1 tsp", "salt, 1 tsp", "sugar, 2 tbs", "white vinegar, 1 tbs", "tomato sauce, 8 oz", "beer or beef broth, 3/4 cup", "water, 1 1/4 cup",]
+duration = "3 minutes"
+depends = ["Chop Onion"]
+
+['Add Ingredients']
+description = "dump ingredients in dutch oven and stir"
+depends = ["Assemble Ingredients", "Brown Roast"]
+duration = "30 seconds"
+
+['Simmer']
+description = "reduce heat, cover, and simmer"
+depends = ["Add Ingredients"]
+duration = "2 hours 45 minutes"
+engagement = 1
+
+['Remove Meat']
+description = "remove meat and slice"
+duration = "2 minutes"
+depends = ["Simmer"]

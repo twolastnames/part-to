@@ -172,7 +172,7 @@ def validate(part_to=None, tasks=None):
 def handle(argument):
     validation = validate(argument.part_to, argument.tasks)
     if validation:
-        return validation
+        return argument.respond_400(validation[0]["messages"])
     together = {"part_to": argument.part_to} | {
         task["name"]: task for task in argument.tasks
     }

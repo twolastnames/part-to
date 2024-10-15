@@ -1,9 +1,9 @@
-import routeKeys from './routeKeys.json';
+import routeKeys from "./routeKeys.json";
 
 interface Routes {
-    [key :string] : string;
+  [key: string]: string;
 }
 
-const routes : Routes = routeKeys as Routes;
+const routes: Routes = routeKeys as Routes;
 
-export const getRoute = (key: string) => routes[key]
+export const getRoute = (key: string) => routes[key];

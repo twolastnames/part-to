@@ -1,0 +1,28 @@
+[part_to]
+name = "Frozen Green Beans"
+depends = ["Drain and Serve"]
+
+['Drain and Serve']
+tools = ["strainer"]
+description = "drain and serve beans"
+duration = "30 seconds"
+depends = ["Reboil Water"]
+
+['Reboil Water']
+description = "get water boiling again"
+duration = "2 minutes"
+engagement = 2
+depends = ["Boil Beans in Pot"]
+
+['Boil Water']
+tools = ["large pot"]
+description = "boil water in large pot"
+duration = "9 minutes"
+engagement = 2
+
+['Boil Beans in Pot']
+ingredients = ["frozen green beans"]
+description = "put and leave beans in boiling water"
+duration = "4 minutes"
+engagement = 5
+depends = ["Boil Water"]

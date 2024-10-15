@@ -108,18 +108,27 @@ def map_value(value, schema):
     return value
 
 
+def get_responder(response, status):
+    def two00_responder(body):
+        return Response(
+            map_tree(
+                map_value,
+                response["content"]["*"]["schema"],
+                body,
+            )
+        )
+
+    def general_responder(body):
+        return Response(body, status)
+
+    if status == "200":
+        return two00_responder
+    return general_responder
+
+
 def have_marshaled_bodies(operation):
     return {
-        status: lambda raw_body: Response(
-            json.dumps(
-                map_tree(
-                    map_value,
-                    response["content"]["*"]["schema"],
-                    raw_body,
-                )
-            ),
-            status,
-        )
+        status: get_responder(response, status)
         for status, response in operation["responses"].items()
         if status not in automatic_status_returns
     }

@@ -15,6 +15,7 @@ import {
   IconToolsKitchen,
   IconSettings,
   IconInfoSquareRounded,
+  IconMoodEmpty,
 } from "@tabler/icons-react";
 
 import classes from "./Icon.module.scss";
@@ -63,3 +64,4 @@ export const KitchenTools = IconToolsKitchen;
 export const Book = IconBook;
 export const Settings = IconSettings;
 export const Info = IconInfoSquareRounded;
+export const Empty = IconMoodEmpty;
