@@ -33,6 +33,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --silent",
+    "inspect": "DEBUG_PRINT_LIMIT=9999999 react-scripts test --silent",
     "eject": "react-scripts eject",
     "clean": "rm -rf node_mudules",
     "format": "eslint src && prettier --write src"

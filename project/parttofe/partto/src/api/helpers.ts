@@ -214,19 +214,29 @@ export function useGet<
       if ([Stage.Errored, Stage.Ok].includes(result.stage)) {
         return;
       }
-      const wiredResponse = await handleResponse<WIRED_RESPONSE_TYPE>(
-        await fetch(appendParameterString(url, parameters), {
-          headers: {
-            Accept: "application/json",
-          },
-        }),
-      );
+      let wiredResponse;
+      try {
+        wiredResponse = await handleResponse<WIRED_RESPONSE_TYPE>(
+          await fetch(appendParameterString(url, parameters), {
+            headers: {
+              Accept: "application/json",
+            },
+          }),
+        );
+      } catch {
+        setResult({
+          status: 0,
+          stage: Stage.Errored,
+        });
+        return;
+      }
       const status = wiredResponse.status;
       if (status !== 200) {
-        return {
+        setResult({
           status,
           stage: Stage.Errored,
-        };
+        });
+        return;
       }
       const response = {
         ...wiredResponse,

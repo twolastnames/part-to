@@ -9,6 +9,7 @@ export function ThemeSwitch() {
   return (
     <div className={classes.themeSwitch} data-testid="ThemeSwitch">
       <Checkbox
+        id="ThemeSwitch"
         checked={theme !== Theme.Default}
         onChange={() => {
           const changeTo = theme === Theme.Default ? Theme.Dark : Theme.Default;

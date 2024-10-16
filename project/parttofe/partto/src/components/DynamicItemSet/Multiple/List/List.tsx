@@ -15,12 +15,7 @@ interface ShellProps extends PropsWithChildren {
 }
 
 function Shell({ children, height, operations }: ShellProps) {
-  return (
-    <div style={{ height }}>
-      {children}
-      {operations[0].text}
-    </div>
-  );
+  return <div style={{ height }}>{children}</div>;
 }
 
 export function List({ items }: MultipleProps) {

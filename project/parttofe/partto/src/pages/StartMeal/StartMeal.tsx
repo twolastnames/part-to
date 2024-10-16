@@ -1,10 +1,11 @@
-import React from "react";
+import React, { ReactNode } from "react";
 // eslint-disable-next-line  @typescript-eslint/no-unused-vars
 import classes from "./StartMeal.module.scss";
 import { Layout } from "../../components/Layout/Layout";
 import { Notes } from "../../components/Layout/NavigationBar/Notes/Notes";
 import { useParttosGet } from "../../api/parttosget";
 import { EmptySimpleView } from "../../components/DynamicItemSet/EmptySimpleView/EmptySimpleView";
+import { Stage } from "../../api/helpers";
 
 export function StartMeal() {
   const allRecipes = useParttosGet();
@@ -13,29 +14,44 @@ export function StartMeal() {
     detailView: <>{id}</>,
     itemOperations: [],
   }));
+  const loading = "Loading...";
   const noRecipesMessage = [
     'Select "Enter Recipe" from the menu to',
     "put menus in the system.",
   ].join(" ");
-  const firstPairEmptyText = allRecipes?.data ? noRecipesMessage : "Loading...";
-  const secondPairEmptyText = allRecipes?.data
-    ? noRecipesMessage
-    : [
-        "Select recipes from the left with the arrow",
-        "button to put a meal together.",
-      ].join(" ");
+  const errorMessage: ReactNode | null =
+    allRecipes?.stage === Stage.Errored
+      ? `Page Load Error: ${allRecipes.status}`
+      : null;
+  const firstPairEmptyText =
+    allRecipes?.stage === Stage.Ok ? noRecipesMessage : loading;
+  const secondPairEmptyText =
+    allRecipes?.stage === Stage.Fetching
+      ? loading
+      : [
+          "Select recipes from the left with the arrow",
+          "button to put a meal together.",
+        ].join(" ");
   return (
     <Layout
       pair={[
         {
           items: firstPairItems,
           setOperations: [],
-          emptyPage: <EmptySimpleView content={firstPairEmptyText} />,
+          emptyPage: errorMessage ? (
+            <>{errorMessage}</>
+          ) : (
+            <EmptySimpleView content={firstPairEmptyText} />
+          ),
         },
         {
           items: [],
           setOperations: [],
-          emptyPage: <EmptySimpleView content={secondPairEmptyText} />,
+          emptyPage: errorMessage ? (
+            <>{errorMessage}</>
+          ) : (
+            <EmptySimpleView content={secondPairEmptyText} />
+          ),
         },
       ]}
       extra={<Notes notes={[]} />}

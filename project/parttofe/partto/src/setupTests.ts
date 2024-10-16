@@ -7,6 +7,8 @@ import "@testing-library/jest-dom";
 require("jest-fetch-mock").enableMocks();
 
 beforeEach(() => {
+  fetchMock.enableMocks();
+  fetchMock.doMock();
   Object.defineProperty(window, "matchMedia", {
     writable: true,
     value: jest.fn().mockImplementation((query) => ({
