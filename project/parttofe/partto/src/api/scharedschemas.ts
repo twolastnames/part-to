@@ -95,6 +95,8 @@ export const unmarshalers: Unmarshalers = {
 
 export interface PartTo {
   name: string;
+  workDuration?: Duration | undefined;
+  clockDuration?: Duration | undefined;
   tasks: Array<TaskDefinitionId>;
 }
 

@@ -26,5 +26,8 @@ urlpatterns = [
 ]
 
 urlpatterns.extend(
-    [path(route, include("parttofe.urls")) for route in get_frontend_routes()]
+    [
+        path(route, include("parttofe.urls"))
+        for route in get_frontend_routes()
+    ]
 )

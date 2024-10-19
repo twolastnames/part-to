@@ -50,12 +50,19 @@ def validate_parts(parts):
     if parts[0] not in definitions.keys():
         raise PathPartsValidationError(
             "this tool only knows how to template in the {} directorie(s)".format(
-                ", ".join(["src/{}".format(key) for key in definitions.keys()])
+                ", ".join(
+                    [
+                        "src/{}".format(key)
+                        for key in definitions.keys()
+                    ]
+                )
             )
         )
 
 
-Definition = collections.namedtuple("Definitions", "filename definition")
+Definition = collections.namedtuple(
+    "Definitions", "filename definition"
+)
 
 PreTemplate = ""
 PostTemplate = ""
@@ -244,20 +251,28 @@ def get_context(parts):
 def render_definition(context, definition):
     return Definition(
         filename=Template(definition.filename).render(context),
-        definition=Template(PreTemplate + definition.definition + PostTemplate).render(
-            context
-        ),
+        definition=Template(
+            PreTemplate + definition.definition + PostTemplate
+        ).render(context),
     )
 
 
 def execute_definition(context, target, definition):
     print(context, definition)
     rendered = render_definition(context, definition)
-    absolute_filename = os.path.normpath(os.sep.join([target, rendered.filename]))
-    pathlib.Path(os.path.dirname(absolute_filename)).mkdir(parents=True, exist_ok=True)
+    absolute_filename = os.path.normpath(
+        os.sep.join([target, rendered.filename])
+    )
+    pathlib.Path(os.path.dirname(absolute_filename)).mkdir(
+        parents=True, exist_ok=True
+    )
     print("Generating File: {}".format(absolute_filename))
     if os.path.isfile(absolute_filename):
-        print("Not generating file {} because it exists".format(absolute_filename))
+        print(
+            "Not generating file {} because it exists".format(
+                absolute_filename
+            )
+        )
         return
     with open(absolute_filename, "w") as handle:
         handle.write(rendered.definition)
@@ -272,7 +287,9 @@ def create(command):
             get_single_test_context(command.parts),
             command.target,
             Definition(
-                filename=os.path.join("..", "{{ filename.title }}.test.tsx"),
+                filename=os.path.join(
+                    "..", "{{ filename.title }}.test.tsx"
+                ),
                 definition=ForTestDefinition,
             ),
         )

@@ -145,10 +145,16 @@ class TypescriptPostWriter(TypescriptFileWriter):
                     ),
                 }
             )
-        input_schema = self.raw_operation["requestBody"]["content"]["*"]["schema"]
-        schema = self.operation["requestBody"]["content"]["*"]["schema"]
+        input_schema = self.raw_operation["requestBody"]["content"][
+            "*"
+        ]["schema"]
+        schema = self.operation["requestBody"]["content"]["*"][
+            "schema"
+        ]
         body_marshalling = (
-            map_body_to_typescript("bodyMarshalers", "body", schema, {}),
+            map_body_to_typescript(
+                "bodyMarshalers", "body", schema, {}
+            ),
         )
         shared_types = list(self.definitions.keys())
         shared_types.extend(self.format_ids)

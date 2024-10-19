@@ -46,13 +46,17 @@ def toml_to_body(toml):
 
 def job_body_from_key(key):
     file_directory = os.path.dirname(__file__)
-    raw = toml.load(file_directory + "/job_examples/{}.toml".format(key))
+    raw = toml.load(
+        file_directory + "/job_examples/{}.toml".format(key)
+    )
     return json.dumps(toml_to_body(raw))
 
 
 @mock.patch(
     "uuid.uuid4",
-    mock.MagicMock(return_value="12345678-1234-4321-1234-123456789021"),
+    mock.MagicMock(
+        return_value="12345678-1234-4321-1234-123456789021"
+    ),
 )
 def loadExamples():
     file_directory = os.path.dirname(__file__)
@@ -87,7 +91,9 @@ class UploadJobCase(TestCase):
     def test_missing_part_to(self):
         file_directory = os.path.dirname(__file__)
         client = Client()
-        data = toml.load(file_directory + "/job_examples/baked_beans.toml")
+        data = toml.load(
+            file_directory + "/job_examples/baked_beans.toml"
+        )
         del data["part_to"]
         response = client.post(
             "/api/job/",
@@ -103,7 +109,9 @@ class UploadJobCase(TestCase):
     def test_missing_part_to_name(self):
         file_directory = os.path.dirname(__file__)
         client = Client()
-        data = toml.load(file_directory + "/job_examples/baked_beans.toml")
+        data = toml.load(
+            file_directory + "/job_examples/baked_beans.toml"
+        )
         del data["part_to"]["name"]
         response = client.post(
             "/api/job/",
@@ -119,7 +127,9 @@ class UploadJobCase(TestCase):
     def test_missing_part_to_depends(self):
         file_directory = os.path.dirname(__file__)
         client = Client()
-        data = toml.load(file_directory + "/job_examples/baked_beans.toml")
+        data = toml.load(
+            file_directory + "/job_examples/baked_beans.toml"
+        )
         del data["part_to"]["depends"]
         response = client.post(
             "/api/job/",
@@ -135,7 +145,9 @@ class UploadJobCase(TestCase):
     def test_missing_duration(self):
         file_directory = os.path.dirname(__file__)
         client = Client()
-        data = toml.load(file_directory + "/job_examples/baked_beans.toml")
+        data = toml.load(
+            file_directory + "/job_examples/baked_beans.toml"
+        )
         del data["simmer_beans"]["duration"]
         response = client.post(
             "/api/job/",
@@ -151,7 +163,9 @@ class UploadJobCase(TestCase):
     def test_missing_task(self):
         file_directory = os.path.dirname(__file__)
         client = Client()
-        data = toml.load(file_directory + "/job_examples/baked_beans.toml")
+        data = toml.load(
+            file_directory + "/job_examples/baked_beans.toml"
+        )
         del data["simmer_beans"]
         response = client.post(
             "/api/job/",
@@ -167,7 +181,9 @@ class UploadJobCase(TestCase):
     def test_unused_task(self):
         file_directory = os.path.dirname(__file__)
         client = Client()
-        data = toml.load(file_directory + "/job_examples/baked_beans.toml")
+        data = toml.load(
+            file_directory + "/job_examples/baked_beans.toml"
+        )
         data["play_euchre"] = {
             "duration": "15 minutes",
             "description": "take a break and play a game of euchre with your family darn it",
@@ -193,7 +209,9 @@ class UploadJobCase(TestCase):
         )
         self.assertEqual(post_response.status_code, 200)
         body = json.loads(post_response.content)
-        get_response = client.get("/api/job/?id={}".format(body["id"]))
+        get_response = client.get(
+            "/api/job/?id={}".format(body["id"])
+        )
         self.assertEqual(get_response.status_code, 200)
         loaded_content = json.loads(get_response.content)
         self.assertEqual(loaded_content["id"], body["id"])
@@ -270,7 +288,9 @@ class ListToolsTestClass(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             json.loads(response.content),
-            {"message": 'Unknown Job Name(s): "Not a name", "Not a name2"'},
+            {
+                "message": 'Unknown Job Name(s): "Not a name", "Not a name2"'
+            },
         )
 
 
@@ -348,7 +368,9 @@ class ListIngredientsTestClass(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             json.loads(response.content),
-            {"message": 'Unknown Job Name(s): "Not a name", "Not a name2"'},
+            {
+                "message": 'Unknown Job Name(s): "Not a name", "Not a name2"'
+            },
         )
 
 
@@ -357,7 +379,9 @@ TEST_UUIDS = ["uuid_{}".format(i) for i in range(10000)]
 
 @mock.patch(
     "uuid.uuid4",
-    mock.MagicMock(return_value="12345678-1234-4321-1234-123456789021"),
+    mock.MagicMock(
+        return_value="12345678-1234-4321-1234-123456789021"
+    ),
 )
 class JobTestClass(TestCase):
     def setUp(self):

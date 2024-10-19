@@ -186,6 +186,12 @@ components:
       properties:
         name:
           type: string
+        workDuration:
+          type: number
+          format: duration
+        clockDuration:
+          type: number
+          format: duration
         tasks:
           type: array
           items:

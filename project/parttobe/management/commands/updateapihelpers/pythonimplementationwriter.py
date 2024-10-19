@@ -22,14 +22,7 @@ class PythonImplementationFileWriter(PythonFileWriter):
         return Template
 
     def context(self):
-        responses = [
-            (response.id.title(), response.status)
-            for response in response_definitions()
-            if response.id == self.id
-        ]
-        return {
-            "responses": responses,
-        }
+        return {}
 
     def filename(self):
         return implementation_filename(self.id)

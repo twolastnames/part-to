@@ -27,7 +27,9 @@ RequirementQuestien = namedtuple(
     ["symbol", "required", "formatter", "format"],
 )
 
-required_question = RequirementQuestien("", True, "required", lambda v: v)
+required_question = RequirementQuestien(
+    "", True, "required", lambda v: v
+)
 
 unrequired_question = RequirementQuestien(
     "?", False, "unrequired", lambda v: "{} | undefined".format(v)
@@ -111,7 +113,9 @@ def map_body_to_typescript(
         marshaller_name,
         question.formatter,
         format,
-        map_body_to_typescript(marshaller_name, variable, format, formatter, question),
+        map_body_to_typescript(
+            marshaller_name, variable, format, formatter, question
+        ),
     )
 
 
@@ -142,7 +146,9 @@ def schema_to_typescript(schema, formatter, last):
         return "{" + "".join(current) + "}"
     elif type == "array":
         return "Array< {} >".format(
-            schema_to_typescript(schema["items"], formatter, required_question)
+            schema_to_typescript(
+                schema["items"], formatter, required_question
+            )
         )
     elif format != "":
         return last.format(format)
@@ -159,7 +165,9 @@ def parameters_to_schema(parameters, formatter):
         result += "{}{}:{};".format(
             parameter["name"],
             question.symbol,
-            schema_to_typescript(parameter["schema"], formatter, question),
+            schema_to_typescript(
+                parameter["schema"], formatter, question
+            ),
         )
     return result
 
@@ -191,7 +199,9 @@ def format_python_file(filename):
 
 
 def typescript_base_directory():
-    return os.path.join(self_directory, "..", "..", "..", "..", "parttofe", "partto")
+    return os.path.join(
+        self_directory, "..", "..", "..", "..", "parttofe", "partto"
+    )
 
 
 def format_typescript_file(filename):
@@ -226,7 +236,9 @@ GenerateWarning = Template(
 
 
 class OperationFileWriter:
-    def __init__(self, operation, raw_operation, definitions, format_ids):
+    def __init__(
+        self, operation, raw_operation, definitions, format_ids
+    ):
         self.operation = operation
         self.raw_operation = raw_operation
         self.definitions = definitions
@@ -246,7 +258,9 @@ class OperationFileWriter:
         raise NotImplementedError("please override this")
 
     def __call__(self):
-        if not self.overwritable() and os.path.isfile(self.filename()):
+        if not self.overwritable() and os.path.isfile(
+            self.filename()
+        ):
             print(
                 "not generating file already existing file: '{}'".format(
                     self.filename()
@@ -273,7 +287,9 @@ class OperationFileWriter:
                     )
                 )
             )
-        file.write(Template(self.template()).render(Context(self.context())))
+        file.write(
+            Template(self.template()).render(Context(self.context()))
+        )
         file.close()
         self.format_file(self.filename())
         print("generated file '{}'".format(self.filename()))

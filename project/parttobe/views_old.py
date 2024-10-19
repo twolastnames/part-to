@@ -43,7 +43,9 @@ def get_run_state(run):
     next_duty = datetime.datetime.now() + run.until_next_duty()
     current = sorted(list(running_definitions))
     if len(current) > 0:
-        complete = datetime.datetime.now() + current[0].chain_duration()
+        complete = (
+            datetime.datetime.now() + current[0].chain_duration()
+        )
     else:
         complete = None
     return {
@@ -56,7 +58,9 @@ def get_run_state(run):
 
 
 def run_post(request):
-    part_tos = models.PartTo.objects.filter(name__in=request.data["jobs"])
+    part_tos = models.PartTo.objects.filter(
+        name__in=request.data["jobs"]
+    )
     run = models.start_run(part_tos)
     duties = []
     try:
@@ -65,14 +69,18 @@ def run_post(request):
             {
                 "id": task.uuid,
                 "description": task.definition.description,
-                "duration": int(task.definition.duration.total_seconds() * 1000),
+                "duration": int(
+                    task.definition.duration.total_seconds() * 1000
+                ),
             }
         )
     except StopIteration:
         pass
     running_definitions = run.running_definitions()
     next_duty = datetime.datetime.now() + run.until_next_duty()
-    complete = datetime.datetime.now() + task.definition.chain_duration()
+    complete = (
+        datetime.datetime.now() + task.definition.chain_duration()
+    )
     return Response(get_run_state(run))
 
 
@@ -101,7 +109,11 @@ def get_needs(request, need):
     )
     if len(missing_part_tos) > 0:
         return Response(
-            {"message": "Unknown Job Name(s): {}".format(missing_part_tos)},
+            {
+                "message": "Unknown Job Name(s): {}".format(
+                    missing_part_tos
+                )
+            },
             400,
         )
     payload = list(map(lambda a: a.name, needed))

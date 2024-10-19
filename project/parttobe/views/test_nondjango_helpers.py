@@ -11,7 +11,11 @@ def map_definition(key, value):
 def toml_to_body(toml):
     body = {"part_to": toml["part_to"]}
     print("body", body)
-    tasks = {k: map_definition(k, v) for (k, v) in toml.items() if k != "part_to"}
+    tasks = {
+        k: map_definition(k, v)
+        for (k, v) in toml.items()
+        if k != "part_to"
+    }
     body["tasks"] = [v1 | {"name": k1} for (k1, v1) in tasks.items()]
     return body
 

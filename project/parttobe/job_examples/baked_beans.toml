@@ -50,7 +50,7 @@ ingredients = ["butter, 2 tbs"]
 [heat_pan]
 duration = "2 minutes 30 seconds"
 description = "heat pan to medium heat"
-engagement = 0
+engagement = 1
 depends = ["get_pan"]
 
 [saute_veggies]
@@ -78,7 +78,7 @@ tools = ["3 qt baking pan"]
 [heat_oven]
 duration = "15 minutes"
 description = "Heat Oven to 325 degrees"
-engagement = 0
+engagement = 1
 
 
 

@@ -8,7 +8,9 @@ import urllib
 from unittest import mock
 import uuid
 import re
-from parttobe.views.test_nondjango_helpers import get_toml_recipe_as_json
+from parttobe.views.test_nondjango_helpers import (
+    get_toml_recipe_as_json,
+)
 
 
 SHARED_UUID = "12345678-1234-4321-1234-123456789021"
@@ -40,7 +42,9 @@ def loadExamples():
     ]
     ids = []
     for loadable in loadables:
-        data = get_toml_recipe_as_json(file_directory + "/../job_examples" + loadable)
+        data = get_toml_recipe_as_json(
+            file_directory + "/../job_examples" + loadable
+        )
         response = client.post(
             "http://testserver/api/partto/",
             json.dumps(data),
@@ -55,5 +59,5 @@ def loadExamples():
                 )
             )
         else:
-            ids.append(json.loads(response.data)["partTo"])
+            ids.append(response.data["partTo"])
     return ids

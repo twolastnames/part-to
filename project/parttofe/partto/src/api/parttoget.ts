@@ -24,11 +24,15 @@ import {
 
 export interface ParttoGet200Body {
   name: string;
+  workDuration?: Duration | undefined;
+  clockDuration?: Duration | undefined;
   tasks: Array<TaskDefinitionId>;
 }
 
 interface Wire200Body {
   name: string;
+  workDuration?: number | undefined;
+  clockDuration?: number | undefined;
   tasks: Array<TaskDefinitionId>;
 }
 
@@ -58,6 +62,8 @@ export const useParttoGet: (args: ParttoGetArguments) => ParttoGetResult = ({
     {
       200: (body: Wire200Body) => ({
         name: unmarshalers.required["string"](body.name),
+        workDuration: unmarshalers.unrequired["duration"](body.workDuration),
+        clockDuration: unmarshalers.unrequired["duration"](body.clockDuration),
         tasks: body.tasks.map((value) =>
           unmarshalers.required["TaskDefinitionId"](value),
         ),
