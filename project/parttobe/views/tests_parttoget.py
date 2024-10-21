@@ -4,6 +4,7 @@ from django.test import Client
 from freezegun import freeze_time
 from datetime import timedelta
 import json
+from datetime import timedelta
 
 
 class PartToTestClass(TestCase):
@@ -16,7 +17,6 @@ class PartToTestClass(TestCase):
             "/api/partto/?partTo={}".format(self.ids[0])
         )
         self.assertEqual(response.status_code, 200)
-        # payload = json.loads(response.data)
         payload = response.data
         self.assertEqual(payload["name"], "Baked Beans (Easy)")
         self.assertEqual(

@@ -6,12 +6,13 @@ import { Notes } from "../../components/Layout/NavigationBar/Notes/Notes";
 import { useParttosGet } from "../../api/parttosget";
 import { EmptySimpleView } from "../../components/DynamicItemSet/EmptySimpleView/EmptySimpleView";
 import { Stage } from "../../api/helpers";
+import { PartToIdFromer } from "../../components/PartTo/PartTo";
 
 export function StartMeal() {
   const allRecipes = useParttosGet();
   const firstPairItems = (allRecipes?.data?.partTos || []).map((id) => ({
     listView: <>{id}</>,
-    detailView: <>{id}</>,
+    detailView: <PartToIdFromer partTo={id} />,
     itemOperations: [],
   }));
   const loading = "Loading...";

@@ -101,10 +101,9 @@ export interface PartTo {
 }
 
 export interface TaskDefinition {
-  name: string;
   duration: Duration;
   description: string;
-  depends?: Array<string>;
+  depends?: Array<TaskDefinitionId>;
   engagement?: number | undefined;
 }
 

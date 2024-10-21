@@ -133,6 +133,40 @@ paths:
                     format: PartToId
                   message:
                     type: string
+  /api/task/:
+    get:
+      summary: Disclose a part to task
+      operationId: task:get
+      tags:
+      - partto 
+      parameters:
+      - name: task
+        in: query
+        required: true
+        schema:
+          type: string
+          format: TaskDefinitionId
+      responses:
+        '500':
+          description: a backend bug
+          content:
+            '*':
+              schema:
+                type: string
+        '400':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                type: array
+                items:
+                  type: string
+        '200':
+          description: Expected response to a valid request
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/TaskDefinition"
   /api/run/:
     post:
       summary: Start a run
@@ -199,9 +233,9 @@ components:
             format: TaskDefinitionId
     TaskDefinition:
       required:
+      - name
       - duration
       - description
-      - name
       type: object
       properties:
         name:
@@ -215,6 +249,7 @@ components:
           type: array
           items:
             type: string
+            format: TaskDefinitionId
         engagement:
           type: number
     RunState:

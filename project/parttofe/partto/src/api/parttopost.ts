@@ -30,10 +30,9 @@ export interface ParttoPostBody {
 interface WireBody {
   part_to: { name: string; depends: Array<string> };
   tasks: Array<{
-    name: string;
     duration: number;
     description: string;
-    depends?: Array<string>;
+    depends?: Array<TaskDefinitionId>;
     engagement?: number | undefined;
   }>;
 }
@@ -76,7 +75,7 @@ export const doParttoPost = async ({
     ExternalMappers,
     ExternalHandlers
   >(
-    "/api/partto/",
+    "/api/task/",
     {
       part_to: {
         name: bodyMarshalers.required["string"](body.part_to.name),
@@ -85,11 +84,10 @@ export const doParttoPost = async ({
         ),
       },
       tasks: body.tasks.map((value) => ({
-        name: bodyMarshalers.required["string"](value.name),
         duration: bodyMarshalers.required["duration"](value.duration),
         description: bodyMarshalers.required["string"](value.description),
         depends: value.depends?.map((value) =>
-          bodyMarshalers.required["string"](value),
+          bodyMarshalers.required["TaskDefinitionId"](value),
         ),
         engagement: bodyMarshalers.unrequired["number"](value.engagement),
       })),
