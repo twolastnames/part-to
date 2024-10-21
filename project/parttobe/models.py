@@ -28,6 +28,175 @@ class PartTo(models.Model):
         return self.id
 
 
+DependedInformation = collections.namedtuple(
+    "DepenededInformation", "part_to depended"
+)
+
+
+class Engagement(
+    collections.namedtuple(
+        "EngagementBase", "duty duration engagement"
+    )
+):
+    def __eq__(self, other):
+        return other.duration == other.duration
+
+    def __lt__(self, other):
+        return self.duration < other.duration
+
+    def subtract(self, duration):
+        return Engagement(
+            self.duty, self.duration - duration, self.engament
+        )
+
+
+class Engagements:
+    def __init__(self):
+        self.duties = []
+
+    def append_duty(self, duty):
+        self.duties.append(
+            Engagement(
+                duty, duty.duration.microseconds, duty.engagement
+            )
+        )
+
+    def empty(self):
+        """(completed_duties, work_left, time_consumed)"""
+        result = (
+            [Engagement.duty for engagement in self.duties],
+            0,
+            {duty.duty.part_to: datetime.timedelta(microseconds=duty.duration) for duty in self.duties}
+        )
+        self.duties = []
+        return result
+
+    def __len__(self):
+        return len(self.duties)
+
+    def finish_next_duty(self):
+        """(completed_duties, work_left, time_consumed)"""
+        time_consumed = {duty.duty.part_to: 0 for duty in self.duties}
+        self.duties.sort()
+        time_to_consume = self.duties[0].duration
+        completed_duties = [self.duties[0].duty]
+        self.duties = self.duties[1:]
+        time_consumed = {
+            key: datetime.timedelta(microseconds=value + time_to_consume)
+            for key, value in time_consumed.items()
+        }
+        return completed_duties, 0, time_consumed
+
+    def execute_task(self, task):
+        """(completed_duties, work_left, time_consumed)"""
+        time_consumed = {duty.duty.part_to: 0 for duty in self.duties}
+        completed_duties = []
+        active = (
+            sum([duty.engagement for duty in self.duties]) / 100.0
+        )
+        work = task.duration.microseconds
+        while work > 0 and len(self.duties) > 0:
+            self.duties.sort()
+            earliest = self.duties[0].duration
+            time_to_consume = work + work * active
+            if time_to_consume >= earliest:
+                completed_duties.append(self.duties.pop(0).duty)
+            if work >= time_to_consume:
+                subtractable = time_to_consume
+                work -= time_to_consume
+            else:
+                subtractable = work
+                work = 0
+            time_consumed = {
+                key: value + subtractable
+                for key, value in time_consumed.items()
+            }
+            self.duties = [
+                engagement.subtract(substractable)
+                for engangement in self.duties
+            ]
+        return (
+            completed_duties,
+            work,
+            {
+                duty.duty.part_to: datetime.timedelta(
+                    microseconds=duty.duration
+                )
+                for duty in self.duties
+            },
+        )
+
+
+def order_definitions(definitions):
+    time_consumed = {
+        task.part_to: datetime.timedelta(0) for task in definitions
+    }
+    left = [
+        definition
+        for definition in definitions
+        if definition.depended or definition.is_task()
+    ]
+    engagements = Engagements()
+    [
+        engagements.append_duty(definition)
+        for definition in definitions
+        if not definition.depended and not definition.is_task()
+    ]
+    result = []
+    for definition in definitions:
+        if definition.depended:
+            continue
+        completed_duties, work_left, consumed = (
+            engagements.execute_task(definition)
+        )
+        if definition in left:
+            left.remove(definition)
+        result.append(definition)
+        result.extend(completed_duties)
+        for id, count in consumed.items():
+            time_consumed[id] += count
+
+    def next():
+        done = set([task for task in result])
+        dependeds = [task for task in left if task.depended in done]
+        rankings = [
+            key
+            for key, value in sorted(
+                time_consumed.items(), key=lambda x: x[1]
+            )
+        ]
+        found = None
+        for ranking in rankings:
+            for task in dependeds:
+                if task.part_to == ranking:
+                    found = task
+        return found
+
+    while left or len(engagements) > 0:
+        definition = next()
+        if definition:
+            left.remove(definition)
+            if not definition.is_task():
+                engagements.append_duty(definition)
+                continue
+            completed_duties, work_left, consumed = (
+                engagements.execute_task(definition)
+            )
+            result.append(definition)
+        else:
+            completed_duties, work_left, consumed = (
+                engagements.finish_next_duty()
+            )
+        for id, count in consumed.items():
+            time_consumed[id] += count
+        result.extend(completed_duties)
+    completed_duties, work_left, consumed = engagements.empty()
+    for id, count in consumed.items():
+        time_consumed[id] += count
+    result.reverse()
+    return result
+
+
 class IngredientDefinition(models.Model):
     name = models.CharField(max_length=0x80)
     task = models.ForeignKey(

@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<div
+  class="partTo"
+  data-testid="PartTo"
+>
+  <div
+    class="name"
+  >
+    A simple part to
+  </div>
+  <div
+    class="workDuration"
+  />
+  <div
+    class="clockDuration"
+  />
+  <div
+    class="tasks"
+  >
+    <div
+      class="task"
+    >
+      more
+    </div>
+    <div
+      class="task"
+    >
+      things
+    </div>
+  </div>
+</div>
+`;

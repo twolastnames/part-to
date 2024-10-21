@@ -49,7 +49,7 @@ export function Carousel({ pages }: CarouselProps) {
   }, [showDuration, pages.length]);
   const operations = pages[selected]?.operations;
   return (
-    <div className={classes.multiple} data-testid="Carousel">
+    <div key={selected} className={classes.multiple} data-testid="Carousel">
       <div className={classes.carousel}>
         <div className={classes.carouselButton}>
           <Button

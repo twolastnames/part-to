@@ -3,6 +3,8 @@ import { expect, test } from "@jest/globals";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { ShellProvider } from "../../../providers/ShellProvider";
 import { StartMeal } from "../StartMeal";
+import task1 from "../../../mocks/task1.json";
+import partTo1 from "../../../mocks/partTo1.json";
 
 test("toggle to list", async () => {
   fetchMock.mockResponse((request: Request) => {
@@ -13,6 +15,12 @@ test("toggle to list", async () => {
         }),
       );
     }
+    if (request.url.includes("/api/partto/")) {
+      return Promise.resolve(JSON.stringify(partTo1));
+    }
+    if (request.url.includes("/api/task/")) {
+      return Promise.resolve(JSON.stringify(task1));
+    }
     return Promise.reject("");
   });
   render(
@@ -20,7 +28,6 @@ test("toggle to list", async () => {
       <StartMeal />
     </ShellProvider>,
   );
-  await screen.findByText("partTo1");
   const toggle = await screen.findByLabelText("See all 2 items in a list");
   await fireEvent.click(toggle);
   const component = await screen.findByTestId("Layout");
