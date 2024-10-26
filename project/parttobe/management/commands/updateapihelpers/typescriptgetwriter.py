@@ -41,15 +41,15 @@ import {
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 {% for body in bodies %}
-export interface {{title}}{{body.status}}Body {{ body.typed_schema }}
+export type {{title}}{{body.status}}Body = {{ body.typed_schema }}
 
 
-interface Wire{{ body.status }}Body {{ body.wired_schema }}
+type Wire{{ body.status }}Body = {{ body.wired_schema }}
 
 {% endfor %}
 
 {% if has_arguments %}
-export interface {{title}}Arguments { {{ typed_arguments }} }
+export type {{title}}Arguments = { {{ typed_arguments }} }
 {% endif %}
 
 interface ExternalMappers {

@@ -50,11 +50,19 @@ required: {
     {{ id }}: MarshalMapper<{{ id }}, string>;
 {% endfor %}
 }
+unrequired: {
+{% for id in ids %}
+    {{ id }}: MarshalMapper<{{ id }} | undefined, string | undefined>;
+{% endfor %}
+}
 }
 
 export const parameterMarshalers : ParameterMarshalers = {
     unrequired: {
         ...(baseParameterMarshalers.unrequired),
+        {% for id in ids %}
+            {{ id }}: (value?: {{ id }}) => value, 
+        {% endfor %}
     },
     required: {
         ...(baseParameterMarshalers.required),
@@ -70,11 +78,19 @@ required: {
     {{ id }}: MarshalMapper<{{ id }}, string>;
 {% endfor %}
 }
+unrequired: {
+{% for id in ids %}
+    {{ id }}: MarshalMapper<{{ id }} | undefined, string | undefined>;
+{% endfor %}
+}
 }
 
 export const bodyMarshalers : BodyMarshalers = {
     unrequired: {
         ...(baseBodyMarshalers.unrequired),
+        {% for id in ids %}
+            {{ id }}: (value?: {{ id }}) => value, 
+        {% endfor %}
     },
     required: {
         ...(baseBodyMarshalers.required),
@@ -90,11 +106,19 @@ required: {
     {{ id }}: MarshalMapper<string, {{ id }}>;
 {% endfor %}
 }
+unrequired: {
+{% for id in ids %}
+    {{ id }}: MarshalMapper<string | undefined, {{ id }} | undefined>;
+{% endfor %}
+}
 }
 
 export const unmarshalers : Unmarshalers = {
     unrequired: {
     ...(baseUnmarshalers.unrequired),
+        {% for id in ids %}
+            {{ id }}: (value?: string) => value, 
+        {% endfor %}
     },
     required: {
     ...(baseUnmarshalers.required),
@@ -116,7 +140,7 @@ export interface {{ definition.title }} {{ definition.schema }}
 
 def write_shared_definitions(definitions, format_ids):
     filename = os.path.join(
-        typescript_base_directory(), "src", "api", "scharedschemas.ts"
+        typescript_base_directory(), "src", "api", "sharedschemas.ts"
     )
     formatIds = list(
         set(
