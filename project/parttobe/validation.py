@@ -6,6 +6,7 @@ import jsonschema
 import json
 import importlib
 import collections
+import datetime
 import sys
 import os
 import re
@@ -141,21 +142,32 @@ def have_marshaled_bodies(operation):
 argument_types = {}
 
 
+def register_sanitized_argument_type(operationId, operation):
+    arguments = (
+        list(get_request_body_arguments(operation))
+        + list(get_parameter_arguments(operation))
+        + [
+            "respond_{}".format(status)
+            for status in operation["responses"].keys()
+            if status not in automatic_status_returns
+        ]
+    )
+    argument_type = collections.namedtuple(
+        "ArgumentType_{}".format(OperationId(operationId).slug()),
+        arguments,
+    )
+
+    def do_type_expansion(**args):
+        return argument_type(
+            **({key: args.get(key, None) for key in arguments})
+        )
+
+    argument_types[operationId] = do_type_expansion
+
+
 def populate_input_argument_types():
     for operationId, operation in operations.items():
-        arguments = (
-            list(get_request_body_arguments(operation))
-            + list(get_parameter_arguments(operation))
-            + [
-                "respond_{}".format(status)
-                for status in operation["responses"].keys()
-                if status not in automatic_status_returns
-            ]
-        )
-        argument_types[operationId] = collections.namedtuple(
-            "ArgumentType_{}".format(OperationId(operationId).slug()),
-            arguments,
-        )
+        register_sanitized_argument_type(operationId, operation)
 
 
 populate_input_argument_types()
@@ -256,6 +268,7 @@ def get_model_uuid_constructor(name):
 unmarshal_parameter_handlers = {
     "string": lambda value: value,
     "uuid": recover_uuid,
+    "duration": lambda value: datetime.timedelta(microseconds=value),
     "number": int,
     "date-time": lambda value: datetime.datetime.fromisoformat(value),
 } | {
@@ -270,13 +283,25 @@ unmarshal_parameter_handlers = {
 }
 
 
+def unmarshal_value(value, schema):
+    if "format" in schema:
+        type = schema["format"]
+    else:
+        type = schema["type"]
+    return unmarshal_parameter_handlers[type](value)
+
+
 def unmarshal(request):
     """the request has already been openapi validated"""
     definition = get_definition(request)
     response = {}
     if request.body:
         body = json.loads(request.body)
-        response |= body
+        response |= map_tree(
+            unmarshal_value,
+            definition["requestBody"]["content"]["*"]["schema"],
+            body,
+        )
     if "parameters" not in definition:
         return response
     for parameter in definition["parameters"]:
@@ -392,7 +417,7 @@ def unmarshaler(variants):
             is_valid_query(request)
             arguments = unmarshal(request)
         except (exceptions.ValidationError, ResourceError) as e:
-            return Response(e.message, status=404)
+            return Response({"messages": [e.message]}, status=404)
         except ValidationError as e:
             if isinstance(e.message, list):
                 message = e.message
@@ -406,7 +431,7 @@ def unmarshaler(variants):
         try:
             response = handle(argumentType(**arguments))
         except (exceptions.ValidationError, ResourceError) as e:
-            return Response(e.message, status=404)
+            return Response({"messages": [e.message]}, status=404)
         if type(response) is tuple:
             return Response(response)
         if isinstance(response, Response):

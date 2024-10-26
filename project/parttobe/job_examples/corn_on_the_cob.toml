@@ -5,18 +5,18 @@ depends = ["remove_from_heat"]
 [wash_corn]
 duration = "1 minutes"
 description = "wash the corn"
-ingredients = ["cobbed corn"]
+# ingredients = ["cobbed corn"]
 
 [half_cobs]
 duration = "2 minutes"
 description = "cut partially with kitchen shears to weaken cob middle to break in half"
-tools = ["kitchen shears"]
+# tools = ["kitchen shears"]
 depends = ["wash_corn"]
 
 [boil_water]
 duration = "8 minutes"
 description = "boil water in large pot"
-tools = ["large pot"]
+# tools = ["large pot"]
 engagement = 2
 
 [boil]

@@ -4,6 +4,7 @@ from parttobe import endpoints
 from rest_framework.response import Response
 from collections import namedtuple
 from uuid import uuid4
+from parttobe import models
 
 ResponseDescription = namedtuple(
     "ResponseDescription", ["status", "id", "description", "schema"]
@@ -30,12 +31,10 @@ def get_body_constructor(id_value, status):
         message = "method {} needs to be defined in {}".format(
             definition, filename
         )
-        # raise CodeNotMatchingConfig(message)
 
     def responder(*args, **kargs):
         body = creator(*args, **kargs)
         return {"body": body, "status": status}
-        # return Response(body, status)
 
     return responder
 
@@ -51,3 +50,13 @@ class ViewResponse:
 def get_response_definition(description):
     body_constructor = get_body_constructor(description)
     return ViewResponse(body_constructor, description)
+
+
+def handle_run_state(operation, definitions, runState):
+    args = (operation, definitions)
+    id = None
+    if runState:
+        new_state = runState.append_states(operation, definitions)
+    else:
+        new_state = models.append_states(operation, definitions)
+    return {"runState": new_state}

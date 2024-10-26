@@ -54,7 +54,7 @@ class RefInjector:
             return specification
 
 
-global_status_codes = ["400", "500"]
+global_status_codes = ["400", "404", "500"]
 
 self_directory = os.path.dirname(os.path.abspath(__file__))
 openapi_filename = os.path.join(

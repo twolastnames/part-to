@@ -46,7 +46,7 @@ class Engagement(
 
     def subtract(self, duration):
         return Engagement(
-            self.duty, self.duration - duration, self.engament
+            self.duty, self.duration - duration, self.engagement
         )
 
 
@@ -66,7 +66,12 @@ class Engagements:
         result = (
             [Engagement.duty for engagement in self.duties],
             0,
-            {duty.duty.part_to: datetime.timedelta(microseconds=duty.duration) for duty in self.duties}
+            {
+                duty.duty.part_to: datetime.timedelta(
+                    microseconds=duty.duration
+                )
+                for duty in self.duties
+            },
         )
         self.duties = []
         return result
@@ -82,7 +87,9 @@ class Engagements:
         completed_duties = [self.duties[0].duty]
         self.duties = self.duties[1:]
         time_consumed = {
-            key: datetime.timedelta(microseconds=value + time_to_consume)
+            key: datetime.timedelta(
+                microseconds=value + time_to_consume
+            )
             for key, value in time_consumed.items()
         }
         return completed_duties, 0, time_consumed
@@ -112,8 +119,8 @@ class Engagements:
                 for key, value in time_consumed.items()
             }
             self.duties = [
-                engagement.subtract(substractable)
-                for engangement in self.duties
+                engagement.subtract(subtractable)
+                for engagement in self.duties
             ]
         return (
             completed_duties,
@@ -152,7 +159,10 @@ def order_definitions(definitions):
         if definition in left:
             left.remove(definition)
         result.append(definition)
-        result.extend(completed_duties)
+        for completed in completed_duties:
+            if completed in result:
+                continue
+            result.append(completed)
         for id, count in consumed.items():
             time_consumed[id] += count
 
@@ -195,6 +205,39 @@ def order_definitions(definitions):
         time_consumed[id] += count
     result.reverse()
     return result
+
+
+def next_work(run_state):
+    full_state = run_state.full_state()
+    if (
+        len(
+            [
+                RunState.OPERATION_TEXTS[RunState.Operation.STAGED]
+            ]
+        )
+        < 1
+    ):
+        return run_state
+    started = full_state[
+        RunState.OPERATION_TEXTS[RunState.Operation.STARTED]
+    ]
+    if len([task for task in started if task.is_task()]) > 0:
+        return run_state
+    completed = full_state[
+        RunState.OPERATION_TEXTS[RunState.Operation.COMPLETED]
+    ]
+    possible = full_state[
+        RunState.OPERATION_TEXTS[RunState.Operation.STAGED]
+    ].pop(0)
+    left = full_state[
+        RunState.OPERATION_TEXTS[RunState.Operation.STAGED]
+    ]
+    for running in started:
+        if running.depended == possible:
+            return run_state
+    return run_state.append_states(
+        RunState.Operation.STARTED, [possible]
+    )
 
 
 class IngredientDefinition(models.Model):
@@ -427,6 +470,121 @@ class TaskDefinition(models.Model):
         raise SystemError("can't find way to connect self & other")
 
 
+class RunState(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+    created = models.DateTimeField(
+        auto_now_add=True, editable=False, null=False, blank=False
+    )
+
+    class Meta:
+        unique_together = [("uuid")]
+        indexes = [models.Index(fields=["uuid", "created"])]
+
+    class Operation(models.IntegerChoices):
+        STAGED = 1
+        STARTED = 2
+        COMPLETED = 3
+        VOIDED = 4
+        CREATED = 5
+
+    OPERATION_TEXTS = [
+        None,
+        "staged",
+        "started",
+        "completed",
+        "voided",
+        "created",
+    ]
+
+    operation = models.IntegerField(choices=Operation)
+
+    task = models.ForeignKey(
+        "TaskDefinition", on_delete=models.CASCADE
+    )
+
+    parent = models.ForeignKey(
+        "RunState", on_delete=models.CASCADE, null=True
+    )
+
+    def task_states(self):
+        return RunState.objects.raw(
+            """
+            WITH RECURSIVE States AS (
+                SELECT id , operation, task_id, parent_id
+                FROM parttobe_runstate
+                WHERE id = %s
+                UNION ALL
+                SELECT rs.id, rs.operation, rs.task_id, rs.parent_id
+                FROM parttobe_runstate rs
+                JOIN States ss ON ss.parent_id = rs.id
+            )
+            SELECT id, MAX(task_id), operation
+            FROM States
+            GROUP BY task_id
+            ORDER BY task_id;
+        """,
+            [self.id],
+        )
+
+    def full_chain(self):
+        return RunState.objects.raw(
+            """
+            WITH RECURSIVE States AS (
+                SELECT id , operation, task_id, parent_id
+                FROM parttobe_runstate
+                WHERE id = %s
+                UNION ALL
+                SELECT rs.id, rs.operation, rs.task_id, rs.parent_id
+                FROM parttobe_runstate rs
+                JOIN States ss ON ss.parent_id = rs.id
+            )
+            SELECT *
+            FROM States
+        """,
+            [self.id],
+        )
+
+    def full_state(self):
+        result = {
+            "runState": self,
+        } | {
+            RunState.OPERATION_TEXTS[index]: []
+            for index in range(1, len(RunState.OPERATION_TEXTS))
+        }
+        order = order_definitions(
+            [state.task for state in self.task_states()]
+        )
+        lookup = {
+            state.task: state.operation
+            for state in self.task_states()
+        }
+        for task in order:
+            operation = lookup[task]
+            result[RunState.OPERATION_TEXTS[operation]].append(task)
+        return result
+
+    def append_states(self, operation, tasks):
+        if len(tasks) < 1:
+            return self
+        result = []
+        parent = self
+        for task in tasks:
+            parent.save()
+            parent = RunState(
+                operation=operation, task=task, parent=parent
+            )
+            result.append(parent)
+        parent.save()
+        return parent
+
+
+def append_states(operation, tasks):
+    if len(tasks) < 1:
+        return
+    initial = RunState(operation=operation, task=tasks[0])
+    return initial.append_states(operation, tasks[1:])
+
+
 class PartToRun(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
 
@@ -571,13 +729,6 @@ class TaskStatus(models.Model):
 class RunPart(models.Model):
     part_to = models.ForeignKey("PartTo", on_delete=models.CASCADE)
     run = models.ForeignKey("PartToRun", on_delete=models.CASCADE)
-
-
-class RunState:
-    """This is an unimplemented place holder"""
-
-    def __init__(self, *args, **kargs):
-        pass
 
 
 def start_run(part_tos):

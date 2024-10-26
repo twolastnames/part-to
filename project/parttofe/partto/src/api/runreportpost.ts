@@ -13,6 +13,8 @@ import {
   parameterMarshalers,
   bodyMarshalers,
   unmarshalers,
+  Four04Reply,
+  RunOperationReply,
   RunOperation,
   PartTo,
   TaskDefinition,
@@ -23,41 +25,31 @@ import {
 } from "./sharedschemas";
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-export interface RunPostBody {
-  runState?: RunStateId | undefined;
-  operations?: Array<RunOperation>;
-}
+export type RunreportPostBody = { runState?: RunStateId | undefined };
 
-interface WireBody {
-  runState?: RunStateId | undefined;
-  operations?: Array<{ task: TaskDefinitionId; operation: string }>;
-}
+type WireBody = { runState?: RunStateId | undefined };
 
-export interface RunPost200Body {
-  runState: RunStateId;
-}
+export type RunreportPost200Body = { runState: RunStateId };
 
-interface Wire200Body {
-  runState: RunStateId;
-}
+type Wire200Body = { runState: RunStateId };
 
 interface ExternalMappers {
-  [status: string]: (arg: Wire200Body) => RunPost200Body;
+  [status: string]: (arg: Wire200Body) => RunreportPost200Body;
 
-  200: (arg: Wire200Body) => RunPost200Body;
+  200: (arg: Wire200Body) => RunreportPost200Body;
 }
 
 interface ExternalHandlers {
-  [status: string]: (arg: RunPost200Body) => void;
+  [status: string]: (arg: RunreportPost200Body) => void;
 
-  200: (arg: RunPost200Body) => void;
+  200: (arg: RunreportPost200Body) => void;
 }
 
-export interface JobPostArguments extends PostArgumentsBase<RunPostBody> {
-  on200: (arg: RunPost200Body) => void;
+export interface JobPostArguments extends PostArgumentsBase<RunreportPostBody> {
+  on200: (arg: RunreportPost200Body) => void;
 }
 
-export const doRunPost = async ({
+export const doRunreportPost = async ({
   body,
 
   on200,
@@ -65,18 +57,12 @@ export const doRunPost = async ({
   await doPost<
     WireBody,
     Wire200Body,
-    RunPost200Body,
+    RunreportPost200Body,
     ExternalMappers,
     ExternalHandlers
   >(
-    "/api/run/",
-    {
-      runState: bodyMarshalers.unrequired["RunStateId"](body.runState),
-      operations: body.operations?.map((value) => ({
-        task: bodyMarshalers.required["TaskDefinitionId"](value.task),
-        operation: bodyMarshalers.required["string"](value.operation),
-      })),
-    },
+    "/api/run/report",
+    { runState: bodyMarshalers.unrequired["RunStateId"](body.runState) },
     {
       200: (body: Wire200Body) => ({
         runState: unmarshalers.required["RunStateId"](body.runState),

@@ -12,6 +12,9 @@ import { Result, DateTime, Duration, useGet } from "./helpers";
 import {
   parameterMarshalers,
   unmarshalers,
+  Four04Reply,
+  RunOperationReply,
+  RunOperation,
   PartTo,
   TaskDefinition,
   RunState,
@@ -22,23 +25,21 @@ import {
 
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-export interface ParttoGet200Body {
+export type ParttoGet200Body = {
   name: string;
   workDuration?: Duration | undefined;
   clockDuration?: Duration | undefined;
   tasks: Array<TaskDefinitionId>;
-}
+};
 
-interface Wire200Body {
+type Wire200Body = {
   name: string;
   workDuration?: number | undefined;
   clockDuration?: number | undefined;
   tasks: Array<TaskDefinitionId>;
-}
+};
 
-export interface ParttoGetArguments {
-  partTo: PartToId;
-}
+export type ParttoGetArguments = { partTo: PartToId };
 
 interface ExternalMappers {
   [status: string]: (arg: Wire200Body) => ParttoGet200Body;

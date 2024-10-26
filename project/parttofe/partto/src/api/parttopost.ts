@@ -13,6 +13,9 @@ import {
   parameterMarshalers,
   bodyMarshalers,
   unmarshalers,
+  Four04Reply,
+  RunOperationReply,
+  RunOperation,
   PartTo,
   TaskDefinition,
   RunState,
@@ -22,30 +25,25 @@ import {
 } from "./sharedschemas";
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-export interface ParttoPostBody {
+export type ParttoPostBody = {
   part_to: { name: string; depends: Array<string> };
   tasks: Array<TaskDefinition>;
-}
+};
 
-interface WireBody {
+type WireBody = {
   part_to: { name: string; depends: Array<string> };
   tasks: Array<{
+    name: string;
     duration: number;
     description: string;
-    depends?: Array<TaskDefinitionId>;
+    depends?: Array<string>;
     engagement?: number | undefined;
   }>;
-}
+};
 
-export interface ParttoPost200Body {
-  partTo: PartToId;
-  message: string;
-}
+export type ParttoPost200Body = { partTo: PartToId; message: string };
 
-interface Wire200Body {
-  partTo: PartToId;
-  message: string;
-}
+type Wire200Body = { partTo: PartToId; message: string };
 
 interface ExternalMappers {
   [status: string]: (arg: Wire200Body) => ParttoPost200Body;
@@ -75,7 +73,7 @@ export const doParttoPost = async ({
     ExternalMappers,
     ExternalHandlers
   >(
-    "/api/task/",
+    "/api/partto/",
     {
       part_to: {
         name: bodyMarshalers.required["string"](body.part_to.name),
@@ -84,10 +82,11 @@ export const doParttoPost = async ({
         ),
       },
       tasks: body.tasks.map((value) => ({
+        name: bodyMarshalers.required["string"](value.name),
         duration: bodyMarshalers.required["duration"](value.duration),
         description: bodyMarshalers.required["string"](value.description),
         depends: value.depends?.map((value) =>
-          bodyMarshalers.required["TaskDefinitionId"](value),
+          bodyMarshalers.required["string"](value),
         ),
         engagement: bodyMarshalers.unrequired["number"](value.engagement),
       })),

@@ -13,6 +13,8 @@ import {
   parameterMarshalers,
   bodyMarshalers,
   unmarshalers,
+  Four04Reply,
+  RunOperationReply,
   RunOperation,
   PartTo,
   TaskDefinition,
@@ -23,41 +25,34 @@ import {
 } from "./sharedschemas";
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-export interface RunPostBody {
+export type RunvoidPostBody = RunOperation;
+
+type WireBody = {
   runState?: RunStateId | undefined;
-  operations?: Array<RunOperation>;
-}
+  definitions: Array<TaskDefinitionId>;
+};
 
-interface WireBody {
-  runState?: RunStateId | undefined;
-  operations?: Array<{ task: TaskDefinitionId; operation: string }>;
-}
+export type RunvoidPost200Body = { runState: RunStateId };
 
-export interface RunPost200Body {
-  runState: RunStateId;
-}
-
-interface Wire200Body {
-  runState: RunStateId;
-}
+type Wire200Body = { runState: RunStateId };
 
 interface ExternalMappers {
-  [status: string]: (arg: Wire200Body) => RunPost200Body;
+  [status: string]: (arg: Wire200Body) => RunvoidPost200Body;
 
-  200: (arg: Wire200Body) => RunPost200Body;
+  200: (arg: Wire200Body) => RunvoidPost200Body;
 }
 
 interface ExternalHandlers {
-  [status: string]: (arg: RunPost200Body) => void;
+  [status: string]: (arg: RunvoidPost200Body) => void;
 
-  200: (arg: RunPost200Body) => void;
+  200: (arg: RunvoidPost200Body) => void;
 }
 
-export interface JobPostArguments extends PostArgumentsBase<RunPostBody> {
-  on200: (arg: RunPost200Body) => void;
+export interface JobPostArguments extends PostArgumentsBase<RunvoidPostBody> {
+  on200: (arg: RunvoidPost200Body) => void;
 }
 
-export const doRunPost = async ({
+export const doRunvoidPost = async ({
   body,
 
   on200,
@@ -65,17 +60,16 @@ export const doRunPost = async ({
   await doPost<
     WireBody,
     Wire200Body,
-    RunPost200Body,
+    RunvoidPost200Body,
     ExternalMappers,
     ExternalHandlers
   >(
-    "/api/run/",
+    "/api/run/void",
     {
       runState: bodyMarshalers.unrequired["RunStateId"](body.runState),
-      operations: body.operations?.map((value) => ({
-        task: bodyMarshalers.required["TaskDefinitionId"](value.task),
-        operation: bodyMarshalers.required["string"](value.operation),
-      })),
+      definitions: body.definitions.map((value) =>
+        bodyMarshalers.required["TaskDefinitionId"](value),
+      ),
     },
     {
       200: (body: Wire200Body) => ({

@@ -26,11 +26,27 @@ export type ParameterMarshalers = BaseParameterMarshalers & {
 
     TaskDefinitionId: MarshalMapper<TaskDefinitionId, string>;
   };
+  unrequired: {
+    PartToId: MarshalMapper<PartToId | undefined, string | undefined>;
+
+    RunStateId: MarshalMapper<RunStateId | undefined, string | undefined>;
+
+    TaskDefinitionId: MarshalMapper<
+      TaskDefinitionId | undefined,
+      string | undefined
+    >;
+  };
 };
 
 export const parameterMarshalers: ParameterMarshalers = {
   unrequired: {
     ...baseParameterMarshalers.unrequired,
+
+    PartToId: (value?: PartToId) => value,
+
+    RunStateId: (value?: RunStateId) => value,
+
+    TaskDefinitionId: (value?: TaskDefinitionId) => value,
   },
   required: {
     ...baseParameterMarshalers.required,
@@ -51,11 +67,27 @@ export type BodyMarshalers = BaseBodyMarshalers & {
 
     TaskDefinitionId: MarshalMapper<TaskDefinitionId, string>;
   };
+  unrequired: {
+    PartToId: MarshalMapper<PartToId | undefined, string | undefined>;
+
+    RunStateId: MarshalMapper<RunStateId | undefined, string | undefined>;
+
+    TaskDefinitionId: MarshalMapper<
+      TaskDefinitionId | undefined,
+      string | undefined
+    >;
+  };
 };
 
 export const bodyMarshalers: BodyMarshalers = {
   unrequired: {
     ...baseBodyMarshalers.unrequired,
+
+    PartToId: (value?: PartToId) => value,
+
+    RunStateId: (value?: RunStateId) => value,
+
+    TaskDefinitionId: (value?: TaskDefinitionId) => value,
   },
   required: {
     ...baseBodyMarshalers.required,
@@ -76,11 +108,27 @@ export type Unmarshalers = BaseUnmarshalers & {
 
     TaskDefinitionId: MarshalMapper<string, TaskDefinitionId>;
   };
+  unrequired: {
+    PartToId: MarshalMapper<string | undefined, PartToId | undefined>;
+
+    RunStateId: MarshalMapper<string | undefined, RunStateId | undefined>;
+
+    TaskDefinitionId: MarshalMapper<
+      string | undefined,
+      TaskDefinitionId | undefined
+    >;
+  };
 };
 
 export const unmarshalers: Unmarshalers = {
   unrequired: {
     ...baseUnmarshalers.unrequired,
+
+    PartToId: (value?: string) => value,
+
+    RunStateId: (value?: string) => value,
+
+    TaskDefinitionId: (value?: string) => value,
   },
   required: {
     ...baseUnmarshalers.required,
@@ -93,8 +141,23 @@ export const unmarshalers: Unmarshalers = {
   },
 };
 
+export interface Four04Reply {
+  messages?: Array<string>;
+}
+
+export interface RunOperationReply {
+  runState: RunStateId;
+}
+
+export interface RunOperation {
+  runState?: RunStateId | undefined;
+  definitions: Array<TaskDefinitionId>;
+}
+
 export interface PartTo {
   name: string;
+  workDuration?: Duration | undefined;
+  clockDuration?: Duration | undefined;
   tasks: Array<TaskDefinitionId>;
 }
 
@@ -107,9 +170,12 @@ export interface TaskDefinition {
 }
 
 export interface RunState {
-  id: RunStateId;
-  report: DateTime;
-  complete: DateTime;
-  duties: Array<TaskDefinitionId>;
-  tasks: Array<TaskDefinitionId>;
+  runState: RunStateId;
+  report?: DateTime | undefined;
+  complete?: DateTime | undefined;
+  staged: Array<TaskDefinitionId>;
+  started: Array<TaskDefinitionId>;
+  created: Array<TaskDefinitionId>;
+  voided: Array<TaskDefinitionId>;
+  completed: Array<TaskDefinitionId>;
 }

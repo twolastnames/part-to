@@ -12,6 +12,12 @@ paths:
       summary: list all part tos
       operationId: parttos:get
       responses:
+        '404':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/Four04Reply"
         '500':
           description: a backend bug
           content:
@@ -52,6 +58,12 @@ paths:
           type: string
           format: PartToId
       responses:
+        '404':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/Four04Reply"
         '500':
           description: a backend bug
           content:
@@ -104,6 +116,12 @@ paths:
                   items:
                     $ref: "#/components/schemas/TaskDefinition"
       responses:
+        '404':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/Four04Reply"
         '500':
           description: a backend bug
           content:
@@ -147,6 +165,12 @@ paths:
           type: string
           format: TaskDefinitionId
       responses:
+        '404':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/Four04Reply"
         '500':
           description: a backend bug
           content:
@@ -168,28 +192,25 @@ paths:
               schema:
                 $ref: "#/components/schemas/TaskDefinition"
   /api/run/:
-    post:
-      summary: Start a run
-      operationId: run:post
+    get:
+      summary: read a run state
+      operationId: run:get
       tags:
-      - run
-      requestBody:
-        description: List of unique part to titles to run
+      - runState
+      parameters:
+      - name: runState
+        in: query
         required: true
-        content:
-          '*':
-            schema:
-              type: object
-              required:
-                - partTo
-              properties:
-                partTo:
-                  type: array
-                  items:
-                    type: string
-                    format: PartToId
-                  minItems: 1
+        schema:
+          type: string
+          format: RunStateId
       responses:
+        '404':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/Four04Reply"
         '500':
           description: a backend bug
           content:
@@ -210,8 +231,251 @@ paths:
             '*':
               schema:
                 $ref: "#/components/schemas/RunState"
+
+  /api/run/start:
+    post:
+      summary: start a set of definitions
+      operationId: runstart:post
+      tags:
+      - run
+      requestBody:
+        description: List of unique part to titles to run
+        required: true
+        content:
+          '*':
+            schema:
+              type: object
+              properties:
+                runState:
+                  type: string
+                  format: RunStateId
+      responses:
+        '404':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/Four04Reply"
+        '500':
+          description: a backend bug
+          content:
+            '*':
+              schema:
+                type: string
+        '400':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                type: array
+                items:
+                  type: string
+        '200':
+          description: Expected response to a valid request
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/RunOperationReply"
+
+  /api/run/report:
+    post:
+      summary: start a set of definitions
+      operationId: runreport:post
+      tags:
+      - run
+      requestBody:
+        description: List of unique part to titles to run
+        required: true
+        content:
+          '*':
+            schema:
+              type: object
+              properties:
+                runState:
+                  type: string
+                  format: RunStateId
+      responses:
+        '404':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/Four04Reply"
+        '500':
+          description: a backend bug
+          content:
+            '*':
+              schema:
+                type: string
+        '400':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                type: array
+                items:
+                  type: string
+        '200':
+          description: Expected response to a valid request
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/RunOperationReply"
+
+  /api/run/complete:
+    post:
+      summary: complete a set of definitions
+      operationId: runcomplete:post
+      tags:
+      - run
+      requestBody:
+        description: List of unique part to titles to run
+        required: true
+        content:
+          '*':
+            schema:
+                $ref: "#/components/schemas/RunOperation"
+      responses:
+        '404':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/Four04Reply"
+        '500':
+          description: a backend bug
+          content:
+            '*':
+              schema:
+                type: string
+        '400':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                type: array
+                items:
+                  type: string
+        '200':
+          description: Expected response to a valid request
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/RunOperationReply"
+
+  /api/run/void:
+    post:
+      summary: void a set of definitions
+      operationId: runvoid:post
+      tags:
+      - run
+      requestBody:
+        description: List of unique part to titles to run
+        required: true
+        content:
+          '*':
+            schema:
+                $ref: "#/components/schemas/RunOperation"
+      responses:
+        '404':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/Four04Reply"
+        '500':
+          description: a backend bug
+          content:
+            '*':
+              schema:
+                type: string
+        '400':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                type: array
+                items:
+                  type: string
+        '200':
+          description: Expected response to a valid request
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/RunOperationReply"
+
+  /api/run/stage:
+    post:
+      summary: stage a set of definitions
+      operationId: runstage:post
+      tags:
+      - run
+      requestBody:
+        description: List of unique part to titles to run
+        required: true
+        content:
+          '*':
+            schema:
+                $ref: "#/components/schemas/RunOperation"
+      responses:
+        '404':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/Four04Reply"
+        '500':
+          description: a backend bug
+          content:
+            '*':
+              schema:
+                type: string
+        '400':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                type: array
+                items:
+                  type: string
+        '200':
+          description: Expected response to a valid request
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/RunOperationReply"
+
 components:
   schemas:
+    Four04Reply:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            type: string
+    RunOperationReply:
+      type: object
+      required:
+      - runState
+      properties:
+        runState:
+          type: string
+          format: RunStateId
+    RunOperation:
+      type: object
+      required:
+        - definitions
+      properties:
+        runState:
+          type: string
+          format: RunStateId
+        definitions:
+          type: array
+          items:
+            type: string
+            format: TaskDefinitionId
+          minItems: 1
     PartTo:
       type: object
       required:
@@ -249,16 +513,16 @@ components:
           type: array
           items:
             type: string
-            format: TaskDefinitionId
         engagement:
           type: number
     RunState:
       required:
       - runState
-      - report
-      - complete
-      - duties
-      - tasks
+      - staged
+      - started
+      - created
+      - voided
+      - completed
       type: object
       properties:
         runState:
@@ -270,12 +534,27 @@ components:
         complete:
           type: string
           format: date-time
-        duties:
+        staged:
           type: array
           items:
             type: string
             format: TaskDefinitionId
-        tasks:
+        started:
+          type: array
+          items:
+            type: string
+            format: TaskDefinitionId
+        created:
+          type: array
+          items:
+            type: string
+            format: TaskDefinitionId
+        voided:
+          type: array
+          items:
+            type: string
+            format: TaskDefinitionId
+        completed:
           type: array
           items:
             type: string

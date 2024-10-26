@@ -12,6 +12,9 @@ import { Result, DateTime, Duration, useGet } from "./helpers";
 import {
   parameterMarshalers,
   unmarshalers,
+  Four04Reply,
+  RunOperationReply,
+  RunOperation,
   PartTo,
   TaskDefinition,
   RunState,
@@ -22,23 +25,23 @@ import {
 
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-export interface TaskGet200Body {
+export type TaskGet200Body = {
+  name: string;
   duration: Duration;
   description: string;
-  depends?: Array<TaskDefinitionId>;
+  depends?: Array<string>;
   engagement?: number | undefined;
-}
+};
 
-interface Wire200Body {
+type Wire200Body = {
+  name: string;
   duration: number;
   description: string;
-  depends?: Array<TaskDefinitionId>;
+  depends?: Array<string>;
   engagement?: number | undefined;
-}
+};
 
-export interface TaskGetArguments {
-  task: TaskDefinitionId;
-}
+export type TaskGetArguments = { task: TaskDefinitionId };
 
 interface ExternalMappers {
   [status: string]: (arg: Wire200Body) => TaskGet200Body;
@@ -61,10 +64,11 @@ export const useTaskGet: (args: TaskGetArguments) => TaskGetResult = ({
     ],
     {
       200: (body: Wire200Body) => ({
+        name: unmarshalers.required["string"](body.name),
         duration: unmarshalers.required["duration"](body.duration),
         description: unmarshalers.required["string"](body.description),
         depends: body.depends?.map((value) =>
-          unmarshalers.required["TaskDefinitionId"](value),
+          unmarshalers.required["string"](value),
         ),
         engagement: unmarshalers.unrequired["number"](body.engagement),
       }),
