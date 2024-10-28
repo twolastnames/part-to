@@ -1,6 +1,6 @@
 import React from "react";
 import { expect, test } from "@jest/globals";
-import { getAllByTestId, render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { StartMeal } from "../StartMeal";
 import { ShellProvider } from "../../../providers/ShellProvider";
 import fetchMock from "jest-fetch-mock";
@@ -29,8 +29,10 @@ test("snapshot", async () => {
       <StartMeal />
     </ShellProvider>,
   );
-  const {findAllByTestId} = within(await waitFor(async () => (await screen.getAllByTestId('PartTo'))[0]))
-  await findAllByTestId("Definition")
+  const { findAllByTestId } = within(
+    await waitFor(async () => screen.getAllByTestId("PartTo")[0]),
+  );
+  await findAllByTestId("Definition");
   const page = screen.getByTestId("Layout");
   expect(page).toMatchSnapshot();
 });

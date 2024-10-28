@@ -1,10 +1,13 @@
 import { ApplicationRouter } from "./Router";
 import { ShellProvider } from "./providers/ShellProvider";
+import classes from "./App.module.scss";
 
 function App() {
   return (
     <ShellProvider>
-      <ApplicationRouter />
+      <div className={classes.shell}>
+        <ApplicationRouter />
+      </div>
     </ShellProvider>
   );
 }

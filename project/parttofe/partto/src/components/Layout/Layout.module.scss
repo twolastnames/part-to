@@ -1,7 +1,6 @@
 @import "../../App.scss";
 
 .layout {
-  display: flex;
   background-color: var(--background-color);
 }
 
@@ -12,11 +11,13 @@
 
 @media #{$landscape} {
   .itemSet {
+  flex: 1 1 0;
     height: 100vh;
     width: 100%;
     border-left: 1px solid var(--secondary-color);
   }
   .layout {
+  display: flex;
     flex-direction: row;
     width: 100vw;
   }
@@ -25,12 +26,11 @@
 @media #{$portrait} {
   .itemSet {
     width: 100vw;
-    height: 100%;
+    height: calc((100vh - var(--navigation-height)) / 2);
     border-top: 1px solid var(--secondary-color);
   }
   .layout {
-    height: 100vh;
-    flex-direction: column;
+    height: calc(100vh - var(--navigation-height));
   }
 }
 

@@ -4,26 +4,11 @@ import { render, screen } from "@testing-library/react";
 import { ShellProvider } from "../../../providers/ShellProvider";
 import { Layout } from "../Layout";
 import { Next, Start } from "../../Icon/Icon";
-import { Notes } from "../NavigationBar/Notes/Notes";
 
 test("snapshot", () => {
   render(
     <ShellProvider>
       <Layout
-        extra={
-          <Notes
-            notes={[
-              {
-                heading: "Something",
-                detail: "wicked this way comes and it should be longer",
-              },
-              {
-                heading: "Something Else",
-                detail: "is fine",
-              },
-            ]}
-          />
-        }
         pair={[
           {
             items: [],

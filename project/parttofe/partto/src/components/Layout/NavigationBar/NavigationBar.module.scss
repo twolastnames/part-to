@@ -12,7 +12,7 @@
   @media #{$portrait} {
     width: 100vw;
     flex-direction: row;
-    height: 48px;
+    height: var(--navigation-height);
   }
 }
 

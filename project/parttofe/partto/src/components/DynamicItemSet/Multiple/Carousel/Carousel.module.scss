@@ -18,6 +18,8 @@
 
 .content {
   flex: 1 1 auto;
+  overflow-x: wrap;
+  overflow-y: hidden;
 }
 
 .slide {

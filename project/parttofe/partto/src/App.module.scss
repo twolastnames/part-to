@@ -1,0 +1,17 @@
+@import "./App.scss";
+
+.shell {
+  display: flex;
+}
+
+@media #{$landscape} {
+  .shell {
+    width: 100vw;
+  }
+}
+@media #{$portrait} {
+  .shell {
+    height: 100vh;
+    flex-direction: column;
+  }
+}

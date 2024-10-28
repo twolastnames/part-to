@@ -2,7 +2,6 @@ import React, { ReactNode } from "react";
 // eslint-disable-next-line  @typescript-eslint/no-unused-vars
 import classes from "./StartMeal.module.scss";
 import { Layout } from "../../components/Layout/Layout";
-import { Notes } from "../../components/Layout/NavigationBar/Notes/Notes";
 import { useParttosGet } from "../../api/parttosget";
 import { EmptySimpleView } from "../../components/DynamicItemSet/EmptySimpleView/EmptySimpleView";
 import { Stage } from "../../api/helpers";
@@ -55,7 +54,6 @@ export function StartMeal() {
           ),
         },
       ]}
-      extra={<Notes notes={[]} />}
     />
   );
 }

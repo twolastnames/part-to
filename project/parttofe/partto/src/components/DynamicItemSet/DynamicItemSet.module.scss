@@ -1,8 +1,15 @@
+@import "../../App.scss";
+
 .dynamicItemSet {
   display: flex;
   width: 100%;
-  //  height: calc(100vh - 50px)
   height: 100%;
+}
+
+@media #{$portrait} {
+.dynamicItemSet {
+  height: calc((100vh - var(--navigation-height) - 1) / 2 )px;
+}
 }
 
 @mixin innerContent {

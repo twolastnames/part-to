@@ -1,11 +1,11 @@
-import React, { ReactNode } from "react";
+import React, { PropsWithChildren, ReactNode } from "react";
 
 import classes from "./NavigationBar.module.scss";
 import { NavigationLogo } from "./NavigationLogo/NavigationLogo";
 import { Menu } from "./Menu/Menu";
 import { MobileMenu } from "./MobileMenu/MobileMenu";
 
-export interface NavigationBarProps {
+export interface NavigationBarProps extends PropsWithChildren {
   extra: ReactNode;
 }
 

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { getRoute } from "./routes";
 import { StartMeal } from "./pages/StartMeal/StartMeal";
+import { NavigationBar } from "./components/Layout/NavigationBar/NavigationBar";
 
 const BaseRedirect = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const BaseRedirect = () => {
 export function ApplicationRouter() {
   return (
     <BrowserRouter>
+      <NavigationBar extra={<></>} />
       <Routes>
         <Route path={getRoute("StartMeal")} element={<StartMeal />} />
         <Route path="/" element={<BaseRedirect />} />

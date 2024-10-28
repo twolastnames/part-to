@@ -7,7 +7,7 @@ import { NavigationBar } from "../NavigationBar";
 test("snapshot", () => {
   render(
     <ShellProvider>
-      <NavigationBar extra="hello world" />
+      <NavigationBar extra="hello world">Hello</NavigationBar>
     </ShellProvider>,
   );
   const component = screen.getByTestId("NavigationBar");

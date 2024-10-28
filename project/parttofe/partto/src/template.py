@@ -173,7 +173,6 @@ export function {{name.title}} () {
         { items: [], setOperations: [], emptyPage: <>WIP: {{ name.title }} 1</> },
         { items: [], setOperations: [], emptyPage: <>WIP: {{ name.title }} 2</> },
       ]}
-      extra={<Notes notes={[]} />}
     />
   );
 }; """,
