@@ -14,6 +14,10 @@ class RunStageTestClass(TestCase):
             "/api/partto/?partTo={}".format(self.ids[2])
         )
         self.assertEqual(get_response.status_code, 200)
+        self.assertEqual(
+            get_response["Cache-Control"],
+            "public, max-age=31536000, immutable",
+        )
         data = json.dumps({"definitions": get_response.data["tasks"]})
         client = Client()
         response = client.post(

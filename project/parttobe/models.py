@@ -209,14 +209,7 @@ def order_definitions(definitions):
 
 def next_work(run_state):
     full_state = run_state.full_state()
-    if (
-        len(
-            [
-                RunState.OPERATION_TEXTS[RunState.Operation.STAGED]
-            ]
-        )
-        < 1
-    ):
+    if len([RunState.OPERATION_TEXTS[RunState.Operation.STAGED]]) < 1:
         return run_state
     started = full_state[
         RunState.OPERATION_TEXTS[RunState.Operation.STARTED]
