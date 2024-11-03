@@ -6,4 +6,12 @@ interface Routes {
 
 const routes: Routes = routeKeys as Routes;
 
-export const getRoute = (key: string) => routes[key];
+interface Substitutions {
+  [arg: string]: string;
+}
+
+export const getRoute = (key: string, substitutions?: Substitutions) =>
+  `/${Object.entries(substitutions || {}).reduce(
+    (current, [key, value]) => current.replace(`{${key}}`, value),
+    routes[key],
+  )}`;

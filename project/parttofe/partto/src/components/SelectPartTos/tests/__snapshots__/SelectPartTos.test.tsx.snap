@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<div
+  class="dynamicItemSet"
+  data-testid="DynamicItemSet"
+>
+  <div
+    class="buttonSet"
+    data-testid="ButtonSet"
+  />
+  <div
+    class="empty"
+    data-testid="Empty"
+  >
+    <div
+      class="emptySimpleView"
+      data-testid="EmptySimpleView"
+    >
+      <div
+        class="icon"
+      >
+        <svg
+          class="tabler-icon tabler-icon-mood-empty "
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"
+          />
+          <path
+            d="M9 10l.01 0"
+          />
+          <path
+            d="M15 10l.01 0"
+          />
+          <path
+            d="M9 15l6 0"
+          />
+        </svg>
+      </div>
+      <div
+        class="content"
+      >
+        Loading...
+      </div>
+    </div>
+  </div>
+</div>
+`;

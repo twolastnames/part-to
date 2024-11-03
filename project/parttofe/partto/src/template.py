@@ -169,9 +169,10 @@ import { Notes } from "{{ depthDots }}components/Layout/NavigationBar/Notes/Note
 export function {{name.title}} () {
   return (
     <Layout
+      className={ classes.{{ name.camel }} }
       pair={[
-        { items: [], setOperations: [], emptyPage: <>WIP: {{ name.title }} 1</> },
-        { items: [], setOperations: [], emptyPage: <>WIP: {{ name.title }} 2</> },
+        <div>WIP: Put first here</div>,
+        <div>WIP: Put second here</div>,
       ]}
     />
   );

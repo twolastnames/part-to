@@ -4,15 +4,16 @@ import { render, screen } from "@testing-library/react";
 import { ShellProvider } from "../../../providers/ShellProvider";
 import { Layout } from "../Layout";
 import { Next, Start } from "../../Icon/Icon";
+import { DynamicItemSet } from "../../DynamicItemSet/DynamicItemSet";
 
 test("snapshot", () => {
   render(
     <ShellProvider>
       <Layout
         pair={[
-          {
-            items: [],
-            setOperations: [
+          <DynamicItemSet
+            items={[]}
+            setOperations={[
               {
                 icon: Start,
                 text: "start cooking",
@@ -23,12 +24,12 @@ test("snapshot", () => {
                 text: "mark complete",
                 onClick: () => console.log("clicked"),
               },
-            ],
-            emptyPage: <div>Empty Yo</div>,
-          },
-          {
-            items: [],
-            setOperations: [
+            ]}
+            emptyPage={<div>Empty Yo</div>}
+          />,
+          <DynamicItemSet
+            items={[]}
+            setOperations={[
               {
                 icon: Start,
                 text: "start cooking",
@@ -39,9 +40,9 @@ test("snapshot", () => {
                 text: "mark complete",
                 onClick: () => console.log("clicked"),
               },
-            ],
-            emptyPage: <div>Empty Yo</div>,
-          },
+            ]}
+            emptyPage={<div>Empty Yo</div>}
+          />,
         ]}
       />
     </ShellProvider>,

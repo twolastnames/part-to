@@ -4,6 +4,11 @@
 // learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom";
 
+jest.mock("react-router-dom", () => ({
+  ...(jest.requireActual("react-router-dom") as any),
+  useNavigate: () => jest.fn(),
+}));
+
 require("jest-fetch-mock").enableMocks();
 
 beforeEach(() => {

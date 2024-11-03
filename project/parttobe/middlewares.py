@@ -9,7 +9,7 @@ class Headers:
 
     def __call__(self, request):
         response = self.get_response(request)
-        if not request.path.startswith('/api/'):
+        if not request.path.startswith("/api/"):
             return response
         if request.method.lower() != "get":
             return response

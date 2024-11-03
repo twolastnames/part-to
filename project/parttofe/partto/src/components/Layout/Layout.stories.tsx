@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Layout } from "./Layout";
 import { ShellProvider } from "../../providers/ShellProvider";
 import { Next, Start } from "../Icon/Icon";
+import { DynamicItemSet } from "../DynamicItemSet/DynamicItemSet";
 
 const meta: Meta<typeof Layout> = {
   component: Layout,
@@ -20,9 +21,9 @@ type Story = StoryObj<typeof Layout>;
 export const Simple: Story = {
   args: {
     pair: [
-      {
-        items: [],
-        setOperations: [
+      <DynamicItemSet
+        items={[]}
+        setOperations={[
           {
             icon: Start,
             text: "start cooking",
@@ -33,12 +34,12 @@ export const Simple: Story = {
             text: "mark complete",
             onClick: () => console.log("clicked"),
           },
-        ],
-        emptyPage: <div>Empty Yo</div>,
-      },
-      {
-        items: [],
-        setOperations: [
+        ]}
+        emptyPage={<div>Empty Yo</div>}
+      />,
+      <DynamicItemSet
+        items={[]}
+        setOperations={[
           {
             icon: Start,
             text: "start cooking",
@@ -49,9 +50,9 @@ export const Simple: Story = {
             text: "mark complete",
             onClick: () => console.log("clicked"),
           },
-        ],
-        emptyPage: <div>Empty Yo</div>,
-      },
+        ]}
+        emptyPage={<div>Empty Yo</div>}
+      />,
     ],
   },
 };

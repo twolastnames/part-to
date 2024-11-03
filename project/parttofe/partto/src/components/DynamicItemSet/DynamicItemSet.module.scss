@@ -7,9 +7,9 @@
 }
 
 @media #{$portrait} {
-.dynamicItemSet {
-  height: calc((100vh - var(--navigation-height) - 1) / 2 )px;
-}
+  .dynamicItemSet {
+    height: calc((100vh - var(--navigation-height) - 1) / 2) px;
+  }
 }
 
 @mixin innerContent {

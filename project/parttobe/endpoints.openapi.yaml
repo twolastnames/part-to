@@ -416,7 +416,18 @@ paths:
         content:
           '*':
             schema:
-                $ref: "#/components/schemas/RunOperation"
+              required:
+              - partTos
+              type: object
+              properties:
+                runState:
+                  type: string
+                  format: RunStateId
+                partTos:
+                  type: array
+                  items:
+                    type: string
+                    format: PartToId
       responses:
         '404':
           description: a frontend bug

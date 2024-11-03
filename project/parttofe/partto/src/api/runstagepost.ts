@@ -25,12 +25,12 @@ import {
 } from "./sharedschemas";
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-export type RunstagePostBody = RunOperation;
-
-type WireBody = {
+export type RunstagePostBody = {
   runState?: RunStateId | undefined;
-  definitions: Array<TaskDefinitionId>;
+  partTos: Array<PartToId>;
 };
+
+type WireBody = { runState?: RunStateId | undefined; partTos: Array<PartToId> };
 
 export type RunstagePost200Body = { runState: RunStateId };
 
@@ -67,8 +67,8 @@ export const doRunstagePost = async ({
     "/api/run/stage",
     {
       runState: bodyMarshalers.unrequired["RunStateId"](body.runState),
-      definitions: body.definitions.map((value) =>
-        bodyMarshalers.required["TaskDefinitionId"](value),
+      partTos: body.partTos.map((value) =>
+        bodyMarshalers.required["PartToId"](value),
       ),
     },
     {
