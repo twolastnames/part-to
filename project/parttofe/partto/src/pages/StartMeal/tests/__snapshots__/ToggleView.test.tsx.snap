@@ -164,33 +164,34 @@ exports[`toggle to list 1`] = `
                     <div
                       class="m_b32e4812 mantine-RingProgress-root"
                       data-testid="Progress"
-                      style="--rp-size: calc(4.5rem * var(--mantine-scale)); --rp-label-offset: calc(1.5rem * var(--mantine-scale));"
+                      style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
+                      title="Pause"
                     >
                       <svg
                         class="m_d43b5134 mantine-RingProgress-svg"
                       >
                         <circle
                           class="m_b1ca1fbf mantine-RingProgress-curve"
-                          cx="36"
-                          cy="36"
+                          cx="28"
+                          cy="28"
                           fill="none"
-                          r="20.4"
-                          stroke-dasharray="128.17698026646354, 1.2817698026646354e-15"
+                          r="17.2"
+                          stroke-dasharray="108.043769586668, 0.027017696820872225"
                           stroke-dashoffset="0"
                           stroke-linecap="butt"
-                          stroke-width="12"
-                          transform="scale(1, -1) translate(0, -72)"
+                          stroke-width="8"
+                          transform="scale(1, -1) translate(0, -56)"
                         />
                         <circle
                           class="m_b1ca1fbf mantine-RingProgress-curve"
-                          cx="36"
-                          cy="36"
+                          cx="28"
+                          cy="28"
                           fill="none"
-                          r="20.4"
-                          stroke-dasharray="1.2817698026646354e-15, 128.17698026646354"
-                          stroke-dashoffset="128.17698026646354"
+                          r="17.2"
+                          stroke-dasharray="0.027017696820872225, 108.043769586668"
+                          stroke-dashoffset="108.07078728348888"
                           stroke-linecap="butt"
-                          stroke-width="12"
+                          stroke-width="8"
                           style="--curve-color: var(--secondary-color);"
                         />
                       </svg>
@@ -219,33 +220,34 @@ exports[`toggle to list 1`] = `
                     <div
                       class="m_b32e4812 mantine-RingProgress-root"
                       data-testid="Progress"
-                      style="--rp-size: calc(4.5rem * var(--mantine-scale)); --rp-label-offset: calc(1.5rem * var(--mantine-scale));"
+                      style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
+                      title="8 Seconds"
                     >
                       <svg
                         class="m_d43b5134 mantine-RingProgress-svg"
                       >
                         <circle
                           class="m_b1ca1fbf mantine-RingProgress-curve"
-                          cx="36"
-                          cy="36"
+                          cx="28"
+                          cy="28"
                           fill="none"
-                          r="20.4"
-                          stroke-dasharray="64.08849013323177, 64.08849013323177"
+                          r="17.2"
+                          stroke-dasharray="54.03539364174444, 54.03539364174444"
                           stroke-dashoffset="0"
                           stroke-linecap="butt"
-                          stroke-width="12"
-                          transform="scale(1, -1) translate(0, -72)"
+                          stroke-width="8"
+                          transform="scale(1, -1) translate(0, -56)"
                         />
                         <circle
                           class="m_b1ca1fbf mantine-RingProgress-curve"
-                          cx="36"
-                          cy="36"
+                          cx="28"
+                          cy="28"
                           fill="none"
-                          r="20.4"
-                          stroke-dasharray="64.08849013323177, 64.08849013323177"
-                          stroke-dashoffset="128.17698026646354"
+                          r="17.2"
+                          stroke-dasharray="54.03539364174444, 54.03539364174444"
+                          stroke-dashoffset="108.07078728348888"
                           stroke-linecap="butt"
-                          stroke-width="12"
+                          stroke-width="8"
                           style="--curve-color: var(--secondary-color);"
                         />
                       </svg>
@@ -261,131 +263,6 @@ exports[`toggle to list 1`] = `
                     </div>
                   </span>
                 </span>
-              </span>
-              <span
-                class="slider"
-              >
-                <div
-                  class="m_dd36362e mantine-Slider-root"
-                  style="--slider-radius: var(--mantine-radius-xl); --slider-thumb-size: calc(var(--slider-size) * 2);"
-                  tabindex="-1"
-                >
-                  <div
-                    class="m_a8645c2 mantine-Slider-trackContainer"
-                  >
-                    <div
-                      class="m_c9ade57f mantine-Slider-track"
-                    >
-                      <div
-                        class="m_38aeed47 mantine-Slider-bar"
-                        style="--slider-bar-width: calc(40% + var(--slider-size)); --slider-bar-offset: calc(0% - var(--slider-size));"
-                      />
-                      <div
-                        aria-label=""
-                        aria-valuemax="5"
-                        aria-valuemin="0"
-                        aria-valuenow="2"
-                        class="mantine-focus-auto m_c9a9a60a mantine-Slider-thumb"
-                        role="slider"
-                        style="--slider-thumb-offset: 40%;"
-                        tabindex="0"
-                      />
-                      <div>
-                        <div
-                          class="m_b7b0423a mantine-Slider-markWrapper"
-                          style="--mark-offset: 0%;"
-                        >
-                          <div
-                            class="m_dd33bc19 mantine-Slider-mark"
-                            data-filled="true"
-                          />
-                          <div
-                            class="m_68c77a5b mantine-Slider-markLabel"
-                            style="display: none;"
-                          >
-                            1 seconds
-                          </div>
-                        </div>
-                        <div
-                          class="m_b7b0423a mantine-Slider-markWrapper"
-                          style="--mark-offset: 20%;"
-                        >
-                          <div
-                            class="m_dd33bc19 mantine-Slider-mark"
-                            data-filled="true"
-                          />
-                          <div
-                            class="m_68c77a5b mantine-Slider-markLabel"
-                            style="display: none;"
-                          >
-                            2 seconds
-                          </div>
-                        </div>
-                        <div
-                          class="m_b7b0423a mantine-Slider-markWrapper"
-                          style="--mark-offset: 40%;"
-                        >
-                          <div
-                            class="m_dd33bc19 mantine-Slider-mark"
-                            data-filled="true"
-                          />
-                          <div
-                            class="m_68c77a5b mantine-Slider-markLabel"
-                            style="display: none;"
-                          >
-                            4 seconds
-                          </div>
-                        </div>
-                        <div
-                          class="m_b7b0423a mantine-Slider-markWrapper"
-                          style="--mark-offset: 60%;"
-                        >
-                          <div
-                            class="m_dd33bc19 mantine-Slider-mark"
-                          />
-                          <div
-                            class="m_68c77a5b mantine-Slider-markLabel"
-                            style="display: none;"
-                          >
-                            8 seconds
-                          </div>
-                        </div>
-                        <div
-                          class="m_b7b0423a mantine-Slider-markWrapper"
-                          style="--mark-offset: 80%;"
-                        >
-                          <div
-                            class="m_dd33bc19 mantine-Slider-mark"
-                          />
-                          <div
-                            class="m_68c77a5b mantine-Slider-markLabel"
-                            style="display: none;"
-                          >
-                            16 seconds
-                          </div>
-                        </div>
-                        <div
-                          class="m_b7b0423a mantine-Slider-markWrapper"
-                          style="--mark-offset: 100%;"
-                        >
-                          <div
-                            class="m_dd33bc19 mantine-Slider-mark"
-                          />
-                          <div
-                            class="m_68c77a5b mantine-Slider-markLabel"
-                            style="display: none;"
-                          >
-                            Paused
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <input
-                    type="hidden"
-                    value="2"
-                  />
-                </div>
               </span>
             </div>
             <div

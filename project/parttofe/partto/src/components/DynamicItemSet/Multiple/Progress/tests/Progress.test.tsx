@@ -7,7 +7,13 @@ import { Progress } from "../Progress";
 test("snapshot", () => {
   render(
     <ShellProvider>
-      <Progress on={5} total={7} label={"11"} />
+      <Progress
+        onClick={() => {}}
+        title="Hello"
+        on={5}
+        total={7}
+        label={"11"}
+      />
     </ShellProvider>,
   );
   const component = screen.getByTestId("LocalProgress");

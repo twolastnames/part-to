@@ -5,12 +5,20 @@ import { Progress } from "../Progress/Progress";
 export interface CountProps {
   on: number;
   total: number;
+  title: string;
+  onClick: () => void;
 }
 
-export function Count({ on, total }: CountProps) {
+export function Count({ on, total, title, onClick }: CountProps) {
   return (
     <span data-testid="Count">
-      <Progress on={on} total={total} label={total.toString()} />
+      <Progress
+        onClick={onClick}
+        title={title}
+        on={on}
+        total={total}
+        label={total.toString()}
+      />
     </span>
   );
 }

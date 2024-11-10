@@ -1,24 +1,25 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 import classes from "./IterationProgress.module.scss";
 import { Count } from "../Count/Count";
 import { Timer } from "../Timer/Timer";
 import { getDateTime, getDuration } from "../../../../api/helpers";
-import { Slider } from "@mantine/core";
 
 export interface IterationProgressProps {
+  setPaused: (arg: boolean) => void;
+  paused: boolean;
   showDuration: number;
   total: number;
   setShowDuration: (arg: number) => void;
   on: number;
 }
 
-export const marks = [
-  { label: "1 seconds", duration: getDuration(1000) },
-  { label: "2 seconds", duration: getDuration(2000) },
-  { label: "4 seconds", duration: getDuration(4000) },
-  { label: "8 seconds", duration: getDuration(8000) },
-  { label: "16 seconds", duration: getDuration(16000) },
+export const speeds = [
+  { label: "1 Seconds", duration: getDuration(1000) },
+  { label: "2 Seconds", duration: getDuration(2000) },
+  { label: "4 Seconds", duration: getDuration(4000) },
+  { label: "8 Seconds", duration: getDuration(8000) },
+  { label: "16 Seconds", duration: getDuration(16000) },
   { label: "Paused", duration: getDuration(99999999999999999) },
 ].map(({ label, duration }, value) => ({ value, label, duration }));
 
@@ -26,37 +27,42 @@ export function IterationProgress({
   total,
   showDuration,
   setShowDuration,
+  paused,
+  setPaused,
   on,
 }: IterationProgressProps) {
+  const lastDuration = useRef<number>(showDuration);
+  useEffect(() => {
+    if (showDuration !== speeds.length - 1) {
+      lastDuration.current = showDuration;
+    }
+  }, [showDuration]);
+  const timerDuration = (
+    paused ? speeds[speeds.length - 1] : speeds[showDuration]
+  ).duration;
+  const countTitle = speeds[(showDuration + 1) % (speeds.length - 1)].label;
   return (
     <div className={classes.iterationProgress} data-testid="IterationProgress">
       <span>
         <Timer
           key={on}
           start={getDateTime()}
-          duration={marks[showDuration].duration}
+          duration={timerDuration}
           label={(on + 1).toString()}
+          title={paused ? "Unpause" : "Pause"}
+          onClick={() => {
+            setPaused(!paused);
+          }}
         />
       </span>
       <span className={classes.count}>
-        <Count total={total} on={on} />
-      </span>
-      <span className={classes.slider}>
-        <Slider
-          label={(value) =>
-            (
-              marks.find((mark) => mark.value === value) || {
-                label: "undefined",
-              }
-            ).label
-          }
-          defaultValue={marks[2].value}
-          min={0}
-          max={5}
-          step={1}
-          marks={marks}
-          styles={{ markLabel: { display: "none" } }}
-          onChangeEnd={setShowDuration}
+        <Count
+          onClick={() => {
+            setShowDuration((lastDuration.current + 1) % (speeds.length - 1));
+          }}
+          title={countTitle}
+          total={total}
+          on={on}
         />
       </span>
     </div>

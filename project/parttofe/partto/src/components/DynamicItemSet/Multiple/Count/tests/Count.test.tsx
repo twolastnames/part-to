@@ -7,7 +7,7 @@ import { Count } from "../Count";
 test("snapshot", () => {
   render(
     <ShellProvider>
-      <Count on={2} total={3} />
+      <Count onClick={() => undefined} title="hello" on={2} total={3} />
     </ShellProvider>,
   );
   const component = screen.getByTestId("Count");

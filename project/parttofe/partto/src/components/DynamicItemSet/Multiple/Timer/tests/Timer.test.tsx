@@ -9,6 +9,8 @@ test("snapshot", () => {
   render(
     <ShellProvider>
       <Timer
+        onClick={() => {}}
+        title="world"
         start={getDateTime()}
         duration={getDuration(5000)}
         label="helllo"

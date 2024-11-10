@@ -7,9 +7,11 @@ export interface TimerProps {
   start: DateTime;
   duration: Duration;
   label: string;
+  title: string;
+  onClick: () => void;
 }
 
-export function Timer({ start, duration, label }: TimerProps) {
+export function Timer({ start, duration, label, title, onClick }: TimerProps) {
   const [on, setOn] = useState<number>(0);
   useEffect(() => {
     const id = setInterval(() => {
@@ -23,7 +25,8 @@ export function Timer({ start, duration, label }: TimerProps) {
   return (
     <span data-testid="Timer">
       <Progress
-        key={on}
+        onClick={onClick}
+        title={title}
         label={label}
         on={on}
         total={duration.toMilliseconds()}

@@ -10,33 +10,34 @@ exports[`snapshot 1`] = `
     <div
       class="m_b32e4812 mantine-RingProgress-root"
       data-testid="Progress"
-      style="--rp-size: calc(4.5rem * var(--mantine-scale)); --rp-label-offset: calc(1.5rem * var(--mantine-scale));"
+      style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
+      title="hello"
     >
       <svg
         class="m_d43b5134 mantine-RingProgress-svg"
       >
         <circle
           class="m_b1ca1fbf mantine-RingProgress-curve"
-          cx="36"
-          cy="36"
+          cx="28"
+          cy="28"
           fill="none"
-          r="20.4"
-          stroke-dasharray="0, 128.17698026646354"
+          r="17.2"
+          stroke-dasharray="0, 108.07078728348888"
           stroke-dashoffset="0"
           stroke-linecap="butt"
-          stroke-width="12"
-          transform="scale(1, -1) translate(0, -72)"
+          stroke-width="8"
+          transform="scale(1, -1) translate(0, -56)"
         />
         <circle
           class="m_b1ca1fbf mantine-RingProgress-curve"
-          cx="36"
-          cy="36"
+          cx="28"
+          cy="28"
           fill="none"
-          r="20.4"
-          stroke-dasharray="128.17698026646354, 0"
-          stroke-dashoffset="128.17698026646354"
+          r="17.2"
+          stroke-dasharray="108.07078728348888, 0"
+          stroke-dashoffset="108.07078728348888"
           stroke-linecap="butt"
-          stroke-width="12"
+          stroke-width="8"
           style="--curve-color: var(--secondary-color);"
         />
       </svg>

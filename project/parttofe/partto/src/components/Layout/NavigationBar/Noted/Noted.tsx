@@ -1,6 +1,5 @@
 import React, { MutableRefObject, ReactNode, useState } from "react";
 
-import classes from "./Noted.module.scss";
 import { NoteProps } from "../Note/Note";
 import { NavigationBar } from "../NavigationBar";
 import { Notes } from "../Notes/Notes";

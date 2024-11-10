@@ -6,7 +6,7 @@ import { Down, Up } from "../../../Icon/Icon";
 import { ButtonSet } from "../../ButtonSet/ButtonSet";
 import {
   IterationProgress,
-  marks,
+  speeds,
 } from "../IterationProgress/IterationProgress";
 import { MultipleProps } from "../Multiple";
 import { Item } from "../../DynamicItemSet";
@@ -22,7 +22,7 @@ const goBack: GoADirection = (length, setSelected) => {
   setSelected((last: number) => (last <= 0 ? length - 1 : last - 1));
 };
 const goForward: GoADirection = (length, setSelected) => {
-  setSelected((last) => (last >= length - 1 ? 0 : last + 1));
+  setSelected((last: number) => (last >= length - 1 ? 0 : last + 1));
 };
 
 function getPages(current: Array<Item>) {
@@ -34,30 +34,35 @@ function getPages(current: Array<Item>) {
 }
 
 export function Carousel({ items }: MultipleProps) {
-  const [showDuration, setShowDuration] = useState<number>(5);
+  const [showDuration, setShowDuration] = useState<number>(2);
   const [selected, setSelected] = useState<number>(0);
+  const [paused, setPaused] = useState<boolean>(false);
   const [pages, setPages] = useState<Array<CarouselPage & { key: string }>>(
     getPages(items),
   );
 
+  const itemsLength = items.length;
   useEffect(() => {
-    if (marks[showDuration]?.duration == null) {
+    if (paused || speeds[showDuration]?.duration == null) {
       return;
     }
     const id = setInterval(
       () => {
-        goForward(items.length, setSelected);
+        goForward(itemsLength, setSelected);
       },
-      (marks[showDuration] == null
-        ? marks[2]
-        : marks[showDuration]
+      (speeds[showDuration] == null
+        ? speeds[2]
+        : speeds[showDuration]
       ).duration.toMilliseconds(),
     );
-    setPages(getPages(items));
     return () => {
       clearInterval(id);
     };
-  }, [showDuration, items]);
+  }, [showDuration, itemsLength, paused, selected]);
+
+  useEffect(() => {
+    setPages(getPages(items));
+  }, [items]);
 
   const operations = pages[selected]?.operations;
   return (
@@ -96,6 +101,8 @@ export function Carousel({ items }: MultipleProps) {
         on={selected}
         total={pages.length}
         showDuration={showDuration}
+        setPaused={setPaused}
+        paused={paused}
       />
       {operations ? (
         <div className={classes.buttonSet}>

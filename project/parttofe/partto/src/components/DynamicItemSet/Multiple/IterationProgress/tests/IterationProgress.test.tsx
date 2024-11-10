@@ -8,6 +8,8 @@ test("snapshot", () => {
   render(
     <ShellProvider>
       <IterationProgress
+        setPaused={(arg) => undefined}
+        paused={false}
         showDuration={2}
         total={5}
         on={2}
