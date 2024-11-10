@@ -1,7 +1,8 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 import os
 import json
+import re
 
 
 def get_frontend_routes():
@@ -17,5 +18,11 @@ def get_frontend_routes():
 
 
 urlpatterns = [
-    path(route, views.index) for route in get_frontend_routes()
+    path(route, views.index)
+    for route in get_frontend_routes()
+    if ":" not in route
+] + [
+    re_path(re.sub(r":\w+", "\\\w+", route), views.index)
+    for route in get_frontend_routes()
+    if ":" in route
 ]

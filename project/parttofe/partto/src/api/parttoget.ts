@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Result, DateTime, Duration, useGet } from "./helpers";
+import { Result, DateTime, Duration, Options, useGet } from "./helpers";
 
 import {
   parameterMarshalers,
@@ -49,9 +49,10 @@ interface ExternalMappers {
 
 export type ParttoGetResult = Result<ParttoGet200Body>;
 
-export const useParttoGet: (args: ParttoGetArguments) => ParttoGetResult = ({
-  partTo,
-}) =>
+export const useParttoGet: (
+  args: ParttoGetArguments,
+  options?: Options,
+) => ParttoGetResult = ({ partTo }, options) =>
   useGet<Wire200Body, ParttoGet200Body, ExternalMappers>(
     "/api/partto/",
     [
@@ -70,4 +71,5 @@ export const useParttoGet: (args: ParttoGetArguments) => ParttoGetResult = ({
         ),
       }),
     },
+    options,
   );

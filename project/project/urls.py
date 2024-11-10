@@ -16,7 +16,8 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+import re
 
 from parttofe.urls import get_frontend_routes
 
@@ -29,5 +30,16 @@ urlpatterns.extend(
     [
         path(route, include("parttofe.urls"))
         for route in get_frontend_routes()
+        if ":" not in route
+    ]
+)
+
+urlpatterns.extend(
+    [
+        re_path(
+            re.sub(r":\w+", "\\\w+", route), include("parttofe.urls")
+        )
+        for route in get_frontend_routes()
+        if ":" in route
     ]
 )

@@ -42,6 +42,7 @@ export const Single: Story = {
   args: {
     items: [
       {
+        key: "5",
         listView: <div>Should never see this</div>,
         detailView: <div>This is a detail view</div>,
         itemOperations: [
@@ -78,6 +79,7 @@ export const Multiple: Story = {
   args: {
     items: [
       {
+        key: "6",
         listView: <div>Should see this first</div>,
         detailView: <div>This is a detail view 1</div>,
         itemOperations: [
@@ -94,6 +96,7 @@ export const Multiple: Story = {
         ],
       },
       {
+        key: "7",
         listView: <div>Should see this second</div>,
         detailView: <div>This is a detail view 2</div>,
         itemOperations: [
@@ -129,6 +132,7 @@ export const Multiple: Story = {
 export const MultiPageList: Story = {
   args: {
     items: new Array(17).fill(1).map((_, index) => ({
+      key: "9",
       listView: <div>Should see this {index}st</div>,
       detailView: <div>This is a detail view {index}</div>,
       itemOperations: [

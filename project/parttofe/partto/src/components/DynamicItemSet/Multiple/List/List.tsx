@@ -69,7 +69,7 @@ export function List({ items }: MultipleProps) {
 
   return (
     <div data-testid="List" style={{ height: "100%" }} ref={domRef}>
-      {pages.length > 0 ? <Carousel pages={pages} /> : null}
+      {items.length > 0 ? <Carousel items={items} /> : null}
     </div>
   );
 }

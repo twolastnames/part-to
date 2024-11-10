@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Result, DateTime, Duration, useGet } from "./helpers";
+import { Result, DateTime, Duration, Options, useGet } from "./helpers";
 
 import {
   parameterMarshalers,
@@ -29,6 +29,7 @@ export type RunGet200Body = {
   runState: RunStateId;
   report?: DateTime | undefined;
   complete?: DateTime | undefined;
+  activePartTos?: Array<PartToId>;
   staged: Array<TaskDefinitionId>;
   started: Array<TaskDefinitionId>;
   created: Array<TaskDefinitionId>;
@@ -40,6 +41,7 @@ type Wire200Body = {
   runState: RunStateId;
   report?: string | undefined;
   complete?: string | undefined;
+  activePartTos?: Array<PartToId>;
   staged: Array<TaskDefinitionId>;
   started: Array<TaskDefinitionId>;
   created: Array<TaskDefinitionId>;
@@ -57,9 +59,10 @@ interface ExternalMappers {
 
 export type RunGetResult = Result<RunGet200Body>;
 
-export const useRunGet: (args: RunGetArguments) => RunGetResult = ({
-  runState,
-}) =>
+export const useRunGet: (
+  args: RunGetArguments,
+  options?: Options,
+) => RunGetResult = ({ runState }, options) =>
   useGet<Wire200Body, RunGet200Body, ExternalMappers>(
     "/api/run/",
     [
@@ -73,6 +76,9 @@ export const useRunGet: (args: RunGetArguments) => RunGetResult = ({
         runState: unmarshalers.required["RunStateId"](body.runState),
         report: unmarshalers.unrequired["date-time"](body.report),
         complete: unmarshalers.unrequired["date-time"](body.complete),
+        activePartTos: body.activePartTos?.map((value) =>
+          unmarshalers.required["PartToId"](value),
+        ),
         staged: body.staged.map((value) =>
           unmarshalers.required["TaskDefinitionId"](value),
         ),
@@ -90,4 +96,5 @@ export const useRunGet: (args: RunGetArguments) => RunGetResult = ({
         ),
       }),
     },
+    options,
   );

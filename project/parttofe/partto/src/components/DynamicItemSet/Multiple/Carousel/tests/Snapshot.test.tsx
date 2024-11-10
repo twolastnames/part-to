@@ -8,12 +8,18 @@ test("snapshot", () => {
   render(
     <ShellProvider>
       <Carousel
-        pages={[
+        items={[
           {
-            view: <div>hello</div>,
+            key: "9",
+            detailView: <div>hello</div>,
+            listView: <div>world</div>,
+            itemOperations: [],
           },
           {
-            view: <div>world</div>,
+            key: "7",
+            detailView: <div>world</div>,
+            listView: <div>world</div>,
+            itemOperations: [],
           },
         ]}
       />

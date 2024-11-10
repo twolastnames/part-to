@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Result, DateTime, Duration, useGet } from "./helpers";
+import { Result, DateTime, Duration, Options, useGet } from "./helpers";
 
 import {
   parameterMarshalers,
@@ -37,11 +37,18 @@ interface ExternalMappers {
 
 export type ParttosGetResult = Result<ParttosGet200Body>;
 
-export const useParttosGet: () => ParttosGetResult = () =>
-  useGet<Wire200Body, ParttosGet200Body, ExternalMappers>("/api/parttos/", [], {
-    200: (body: Wire200Body) => ({
-      partTos: body.partTos?.map((value) =>
-        unmarshalers.required["PartToId"](value),
-      ),
-    }),
-  });
+export const useParttosGet: (options?: Options) => ParttosGetResult = (
+  options,
+) =>
+  useGet<Wire200Body, ParttosGet200Body, ExternalMappers>(
+    "/api/parttos/",
+    [],
+    {
+      200: (body: Wire200Body) => ({
+        partTos: body.partTos?.map((value) =>
+          unmarshalers.required["PartToId"](value),
+        ),
+      }),
+    },
+    options,
+  );

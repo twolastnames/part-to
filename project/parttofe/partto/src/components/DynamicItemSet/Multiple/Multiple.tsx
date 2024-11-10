@@ -13,7 +13,7 @@ export interface MultipleProps {
 
 interface View {
   toOther: ButtonProps;
-  visible: ReactElement;
+  visible: (arg: Array<Item>) => ReactElement;
 }
 
 export function Multiple({ items }: MultipleProps) {
@@ -25,7 +25,7 @@ export function Multiple({ items }: MultipleProps) {
         setView(detail);
       },
     },
-    visible: <List items={items} />,
+    visible: (items) => <List items={items} />,
   };
   const detail: View = {
     toOther: {
@@ -35,7 +35,7 @@ export function Multiple({ items }: MultipleProps) {
         setView(list);
       },
     },
-    visible: <Detail items={items} />,
+    visible: (items) => <Detail items={items} />,
   };
   const [{ visible, toOther }, setView] = useState<View>(detail);
 
@@ -44,7 +44,7 @@ export function Multiple({ items }: MultipleProps) {
       <div className={classes.switchButton}>
         <Button {...toOther} />
       </div>
-      {visible}
+      {visible(items)}
     </div>
   );
 }

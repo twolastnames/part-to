@@ -83,7 +83,9 @@ class Engagements:
         """(completed_duties, work_left, time_consumed)"""
         time_consumed = {duty.duty.part_to: 0 for duty in self.duties}
         self.duties.sort()
-        time_to_consume = self.duties[0].duration
+        time_to_consume = self.duties[
+            0
+        ].duration  # TODO: 500s here without duties
         completed_duties = [self.duties[0].duty]
         self.duties = self.duties[1:]
         time_consumed = {
@@ -554,6 +556,11 @@ class RunState(models.Model):
         for task in order:
             operation = lookup[task]
             result[RunState.OPERATION_TEXTS[operation]].append(task)
+        active_tasks = result["staged"] + result["started"]
+        seen_part_tos = set()
+        for task in active_tasks:
+            seen_part_tos.add(task.part_to)
+        result["activePartTos"] = list(seen_part_tos)
         return result
 
     def append_states(self, operation, tasks):

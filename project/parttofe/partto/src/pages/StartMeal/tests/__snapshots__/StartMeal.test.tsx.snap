@@ -258,6 +258,7 @@ exports[`snapshot 1`] = `
         class="empty"
         data-testid="Empty"
       >
+         
         <div
           class="emptySimpleView"
           data-testid="EmptySimpleView"
@@ -297,6 +298,7 @@ exports[`snapshot 1`] = `
             Select recipes from the left with the arrow button to put a meal together.
           </div>
         </div>
+         
       </div>
     </div>
   </div>

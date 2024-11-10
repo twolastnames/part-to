@@ -10,11 +10,13 @@ test("snapshot", () => {
       <Multiple
         items={[
           {
+            key: "9",
             listView: <div>first list view</div>,
             detailView: <div>first detail view</div>,
             itemOperations: [],
           },
           {
+            key: "4",
             listView: <div>second list view</div>,
             detailView: <div>second detail view</div>,
             itemOperations: [],

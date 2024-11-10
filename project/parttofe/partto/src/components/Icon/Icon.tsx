@@ -17,6 +17,7 @@ import {
   IconInfoSquareRounded,
   IconMoodEmpty,
   IconPlus,
+  IconCancel,
 } from "@tabler/icons-react";
 
 import classes from "./Icon.module.scss";
@@ -67,3 +68,4 @@ export const Settings = IconSettings;
 export const Info = IconInfoSquareRounded;
 export const Empty = IconMoodEmpty;
 export const Plus = IconPlus;
+export const Cancel = IconCancel;

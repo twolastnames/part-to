@@ -545,6 +545,11 @@ components:
         complete:
           type: string
           format: date-time
+        activePartTos:
+          type: array
+          items:
+            type: string
+            format: PartToId
         staged:
           type: array
           items:

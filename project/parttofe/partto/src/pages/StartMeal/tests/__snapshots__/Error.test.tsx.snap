@@ -39,7 +39,12 @@ exports[`error 1`] = `
         class="empty"
         data-testid="Empty"
       >
-        Page Load Error: 0
+        <div
+          class="error"
+          data-testid="Spinner"
+        >
+          Page Load Error: 0
+        </div>
       </div>
     </div>
   </div>

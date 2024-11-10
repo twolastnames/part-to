@@ -11,6 +11,7 @@ test("snapshot", async () => {
       <List
         items={[
           {
+            key: "9",
             listView: <div>hello</div>,
             detailView: <div>goodbye</div>,
             itemOperations: [
@@ -18,6 +19,7 @@ test("snapshot", async () => {
             ],
           },
           {
+            key: "7",
             listView: <div>hello</div>,
             detailView: <div>goodbye</div>,
             itemOperations: [

@@ -18,6 +18,7 @@ export function DefinitionIdFromer({ task }: { task: TaskDefinitionId }) {
   const { description, duration } = response.data;
   return (
     <Definition
+      key={task}
       description={description}
       duration={duration.toMilliseconds().toString() || ""}
     />

@@ -5,12 +5,11 @@
   "dependencies": {
     "@mantine/carousel": "^7.12.2",
     "@mantine/core": "^7.12.2",
-    "@storybook/preset-create-react-app": "^8.2.9",
-    "@storybook/react": "^8.2.9",
     "@tabler/icons-react": "^3.19.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/react-test-renderer": "^18.3.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.106",
     "@types/react": "^18.3.4",
@@ -31,12 +30,13 @@
   },
   "scripts": {
     "storybook": "storybook dev -p 9009",
-    "start": "react-scripts start",
+    "start": "FAST_REFRESH=false react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --silent",
     "inspect": "DEBUG_PRINT_LIMIT=9999999 react-scripts test --silent",
     "eject": "react-scripts eject",
     "clean": "rm -rf node_mudules",
+    "veryclean": "rm -rf node_mudules package-lock.json build",
     "format": "eslint src && prettier --write src"
   },
   "eslintConfig": {
@@ -58,11 +58,12 @@
     ]
   },
   "devDependencies": {
+    "@storybook/preset-create-react-app": "^8.2.9",
+    "@storybook/react": "^8.2.9",
     "@babel/core": "^7.25.2",
     "@babel/plugin-transform-private-property-in-object": "^7.25.9",
     "@chromatic-com/storybook": "^1.9.0",
     "@storybook/react-webpack5": "^8.2.9",
-    "@types/react-test-renderer": "^18.3.0",
     "babel-loader": "^9.1.3"
   }
 }

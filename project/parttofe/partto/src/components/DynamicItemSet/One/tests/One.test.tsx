@@ -7,6 +7,7 @@ test("snapshot", () => {
   render(
     <One
       item={{
+        key: "9",
         listView: <div>invisible</div>,
         detailView: <div>shown</div>,
         itemOperations: [],

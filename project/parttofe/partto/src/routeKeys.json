@@ -1,4 +1,4 @@
 {
-  "StageMeal": "start/{runState}",
+  "StageMeal": "start/:runState",
   "StartMeal": "start/"
 }

@@ -7,7 +7,10 @@ import { ReviewStagedPartTos } from "../ReviewStagedPartTos";
 test("snapshot", () => {
   render(
     <ShellProvider>
-      <ReviewStagedPartTos runState="Hello" />
+      <ReviewStagedPartTos
+        taskDefinitions={["Hello", "World"]}
+        runState={{ current: "Goodbye" }}
+      />
     </ShellProvider>,
   );
   const component = screen.getByTestId("DynamicItemSet");

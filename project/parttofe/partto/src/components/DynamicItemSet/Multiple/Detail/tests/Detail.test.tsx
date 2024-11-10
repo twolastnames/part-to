@@ -10,11 +10,13 @@ test("snapshot", () => {
       <Detail
         items={[
           {
+            key: "9",
             listView: <div>hello</div>,
             detailView: <div>hello</div>,
             itemOperations: [],
           },
           {
+            key: "6",
             listView: <div>hello</div>,
             detailView: <div>hello</div>,
             itemOperations: [],

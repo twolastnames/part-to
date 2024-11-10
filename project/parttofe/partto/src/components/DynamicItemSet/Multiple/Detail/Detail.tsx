@@ -6,12 +6,7 @@ import { Carousel } from "../Carousel/Carousel";
 export function Detail({ items }: MultipleProps) {
   return (
     <span data-testid="Detail">
-      <Carousel
-        pages={items.map(({ detailView, itemOperations }) => ({
-          view: detailView,
-          operations: itemOperations,
-        }))}
-      />
+      <Carousel items={items} />
     </span>
   );
 }

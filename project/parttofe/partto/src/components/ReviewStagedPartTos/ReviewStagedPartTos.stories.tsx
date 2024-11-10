@@ -18,6 +18,6 @@ type Story = StoryObj<typeof ReviewStagedPartTos>;
 
 export const Simple: Story = {
   args: {
-    runState: "hello",
+    runState: { current: "hello" },
   },
 };

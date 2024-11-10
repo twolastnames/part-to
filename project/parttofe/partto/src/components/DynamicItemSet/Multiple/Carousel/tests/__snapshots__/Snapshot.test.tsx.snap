@@ -117,7 +117,7 @@ exports[`snapshot 1`] = `
                 cy="36"
                 fill="none"
                 r="20.4"
-                stroke-dasharray="128.14493602139692, 0.032044245066615885"
+                stroke-dasharray="128.17698026646354, 1.2817698026646354e-15"
                 stroke-dashoffset="0"
                 stroke-linecap="butt"
                 stroke-width="12"
@@ -129,7 +129,7 @@ exports[`snapshot 1`] = `
                 cy="36"
                 fill="none"
                 r="20.4"
-                stroke-dasharray="0.032044245066615885, 128.14493602139692"
+                stroke-dasharray="1.2817698026646354e-15, 128.17698026646354"
                 stroke-dashoffset="128.17698026646354"
                 stroke-linecap="butt"
                 stroke-width="12"
@@ -329,6 +329,18 @@ exports[`snapshot 1`] = `
         />
       </div>
     </span>
+  </div>
+  <div
+    class="buttonSet"
+  >
+    <div
+      class="buttons"
+    >
+      <div
+        class="buttonSet"
+        data-testid="ButtonSet"
+      />
+    </div>
   </div>
 </div>
 `;

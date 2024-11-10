@@ -12,6 +12,6 @@ interface Substitutions {
 
 export const getRoute = (key: string, substitutions?: Substitutions) =>
   `/${Object.entries(substitutions || {}).reduce(
-    (current, [key, value]) => current.replace(`{${key}}`, value),
+    (current, [key, value]) => current.replace(`:${key}`, value),
     routes[key],
   )}`;

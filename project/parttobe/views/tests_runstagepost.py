@@ -10,15 +10,6 @@ class RunStageTestClass(TestCase):
 
     def test_can_start_run(self):
         client = Client()
-        # get_response = client.get(
-        #    "/api/partto/?partTo={}".format(self.ids[2])
-        # )
-        # self.assertEqual(get_response.status_code, 200)
-        # self.assertEqual(
-        #    get_response["Cache-Control"],
-        #    "public, max-age=31536000, immutable",
-        # )
-        # data = json.dumps({"definitions": get_response.data["tasks"]})
         data = json.dumps({"partTos": [self.ids[2]]})
         client = Client()
         response = client.post(
@@ -49,3 +40,6 @@ class RunStageTestClass(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["started"], [startable])
+        self.assertEqual(
+            response.data["activePartTos"], [self.ids[2]]
+        )

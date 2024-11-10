@@ -27,6 +27,7 @@ import {
   Result,
   DateTime,
   Duration,
+  Options,
   useGet,
 } from "./helpers";
 
@@ -71,9 +72,9 @@ export type {{ title }}Result = Result<
 >
 
 export const use{{ title }}: (
-{% if has_arguments %} args: {{ title }}Arguments {% endif %}
-) => {{ title }}Result = (
-{% if has_arguments %}{ {{ arguments }} }{% endif %}
+{% if has_arguments %} args: {{ title }}Arguments ,{% endif %}
+ options?: Options) => {{ title }}Result = (
+   {% if has_arguments %}{ {{ arguments }} },{% endif %}  options
 ) =>
   useGet<
     {% for body in bodies %}
@@ -93,6 +94,7 @@ export const use{{ title }}: (
       ),
     {% endfor %}
     },
+    options
   );
 {% endautoescape %}
 

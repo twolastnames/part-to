@@ -1,3 +1,12 @@
+from parttobe import models
+from parttobe.views.helpers import handle_run_state
+
+
 def handle(arguments):
-    """TODO: return body here"""
-    return {}
+    return arguments.respond_200(
+        handle_run_state(
+            models.RunState.Operation.VOIDED,
+            arguments.definitions,
+            arguments.runState,
+        )
+    )

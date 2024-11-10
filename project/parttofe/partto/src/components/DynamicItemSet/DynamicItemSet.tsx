@@ -14,6 +14,7 @@ export interface Operation {
 }
 
 export interface Item {
+  key: string;
   listView: React.ReactElement;
   detailView: React.ReactElement;
   itemOperations: Array<Operation>;

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { addErrorNote } from "../components/Layout/NavigationBar/Noted/Noted";
+
+const partToApiBase = process.env.PART_TO_API_BASE || "http://localhost:8000/";
 
 export enum Stage {
-  Setup,
-  Ready,
+  Skipped,
   Fetching,
   Errored,
   Ok,
@@ -32,17 +34,16 @@ export const getDateTime: (date?: Date) => DateTime = (inDate) => {
   };
 };
 
-interface DefaultErrorHandlers {
-  [index: string]: () => void;
-}
-
-const defaultErrorHandlers: DefaultErrorHandlers = {
-  400: () => console.error("400"),
-  404: () => console.error("404"),
-  500: () => console.error("500"),
+const defaultErrorHandler = async (response: Response) => {
+  const heading = `Backend Error: ${response.status}`;
+  const detail = await response.text();
+  addErrorNote({ heading, detail });
 };
-const defaultErrorHandler = () => {
-  console.log("unknown error");
+
+const defaultExceptionHandler = async (message: string) => {
+  const heading = `Backend Connection Exception`;
+  const detail = message;
+  addErrorNote({ heading, detail });
 };
 
 export type UUID = string; // base 32 string number
@@ -167,12 +168,7 @@ async function handleResponse<RESPONSE_TYPE>(
   response: Response,
 ): Promise<Result<RESPONSE_TYPE>> {
   if (!response.ok) {
-    const status: string = response.status.toString();
-    if (defaultErrorHandlers[status]) {
-      defaultErrorHandlers[status]();
-    } else {
-      defaultErrorHandler();
-    }
+    defaultErrorHandler(response);
     return {
       status: response.status,
       stage: Stage.Errored,
@@ -199,31 +195,45 @@ const appendParameterString = (url: string, parameters: Parameters) => {
   return parameterString ? `${url}?${parameterString}` : url;
 };
 
+export interface Options {
+  shouldSkip?: () => boolean;
+}
+
 export function useGet<
   WIRED_RESPONSE_TYPE,
   RESPONSE_TYPE,
   EXTERNAL_MAPPERS extends {
     [status: string]: (wired: WIRED_RESPONSE_TYPE) => RESPONSE_TYPE;
   },
->(url: string, parameters: Parameters, unmarshaler: EXTERNAL_MAPPERS) {
+>(
+  url: string,
+  parameters: Parameters,
+  unmarshaler: EXTERNAL_MAPPERS,
+  options?: Options,
+) {
   const [result, setResult] = useState<Result<RESPONSE_TYPE>>({
     stage: Stage.Fetching,
   });
   useEffect(() => {
     (async () => {
-      if ([Stage.Errored, Stage.Ok].includes(result.stage)) {
+      if ((options?.shouldSkip || (() => false))()) {
+        setResult({
+          status: 0,
+          stage: Stage.Skipped,
+        });
         return;
       }
       let wiredResponse;
       try {
         wiredResponse = await handleResponse<WIRED_RESPONSE_TYPE>(
-          await fetch(appendParameterString(url, parameters), {
+          await fetch(partToApiBase + appendParameterString(url, parameters), {
             headers: {
               Accept: "application/json",
             },
           }),
         );
-      } catch {
+      } catch (e) {
+        defaultExceptionHandler(e?.toString() || "unknown error");
         setResult({
           status: 0,
           stage: Stage.Errored,
@@ -246,7 +256,8 @@ export function useGet<
       };
       setResult(response);
     })();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url, JSON.stringify(parameters)]);
   return result;
 }
 
@@ -264,15 +275,24 @@ export async function doPost<
   externalMappers: EXTERNAL_MAPPERS,
   externalHandlers: EXTERNAL_HANDLERS,
 ) {
-  const response = await fetch(url, {
-    method: "post",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
+  let response;
+  try {
+    response = await fetch(partToApiBase + url, {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (e) {
+    defaultExceptionHandler(e?.toString() || "unknown error");
+    return;
+  }
   const status = response.status.toString();
+  if (status !== "200") {
+    defaultErrorHandler(response);
+  }
   if (
     !Object.keys(externalHandlers).includes(status) ||
     !Object.keys(externalMappers).includes(status)

@@ -1,6 +1,6 @@
 import React from "react";
 import { expect, test } from "@jest/globals";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { ShellProvider } from "../../../providers/ShellProvider";
 import { StartMeal } from "../StartMeal";
 
@@ -13,8 +13,10 @@ test("error", async () => {
       <StartMeal />
     </ShellProvider>,
   );
-  const found = await screen.findAllByText("Page Load Error: 0");
-  expect(found.length).toEqual(2);
+  await waitFor(() => {
+    const found = screen.getAllByText("Page Load Error: 0");
+    expect(found.length).toEqual(2);
+  });
   const page = screen.getByTestId("Layout");
   expect(page).toMatchSnapshot();
 });

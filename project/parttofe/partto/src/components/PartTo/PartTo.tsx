@@ -22,11 +22,12 @@ export function PartToIdFromer({ partTo }: { partTo: PartToId }) {
 
   return (
     <PartTo
+      key={partTo}
       name={name}
       workDuration={workDuration}
       clockDuration={clockDuration}
       tasks={tasks.map((task: TaskDefinitionId) => (
-        <DefinitionIdFromer task={task} />
+        <DefinitionIdFromer key={task} task={task} />
       ))}
     />
   );
@@ -49,7 +50,9 @@ export function PartTo({
       </div>
       <div className={classes.tasks}>
         {tasks.map((task) => (
-          <div className={classes.task}>{task}</div>
+          <div key={Math.random()} className={classes.task}>
+            {task}
+          </div>
         ))}
       </div>
     </div>
