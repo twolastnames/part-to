@@ -20,6 +20,7 @@ function getFirstPairItems(
   navigate: (arg: string) => void,
   partTos: Array<PartToId>,
   ommittablePartTos: Array<PartToId>,
+  runState?: RunStateId,
 ) {
   return partTos
     .filter((partTo) => !(ommittablePartTos || []).includes(partTo))
@@ -33,7 +34,10 @@ function getFirstPairItems(
           icon: Plus,
           onClick: () =>
             doRunstagePost({
-              body: { partTos: [partTo] },
+              body: {
+                ...(runState ? { runState } : {}),
+                partTos: [partTo],
+              },
               on200: ({ runState }) =>
                 navigate(getRoute("StageMeal", { runState })),
             }),
@@ -68,6 +72,7 @@ export function SelectPartTos({ runState }: SelectPartTosProps) {
         navigate,
         allRecipes?.data?.partTos || [],
         run?.data?.activePartTos || [],
+        runState?.current,
       )}
       setOperations={[]}
       emptyPage={

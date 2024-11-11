@@ -2,7 +2,7 @@ import React from "react";
 import { expect, test } from "@jest/globals";
 import { render, screen, waitFor } from "@testing-library/react";
 import { ShellProvider } from "../../../providers/ShellProvider";
-import { StartMeal } from "../StartMeal";
+import { StageMeal } from "../StageMeal";
 import task1 from "../../../mocks/task1.json";
 import partTo1 from "../../../mocks/partTo1.json";
 
@@ -10,9 +10,10 @@ const mockedUsedNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
   ...(jest.requireActual("react-router-dom") as any),
   useNavigate: () => mockedUsedNavigate,
+  useParams: () => ({ runState: "ourRunState" }),
 }));
 
-test("can stage tasks", async () => {
+test("snapshot", async () => {
   fetchMock.mockResponse((request: Request) => {
     if (request.url.includes("/api/parttos/")) {
       return Promise.resolve(
@@ -34,14 +35,9 @@ test("can stage tasks", async () => {
   });
   render(
     <ShellProvider>
-      <StartMeal />
+      <StageMeal />
     </ShellProvider>,
   );
-  expect(
-    await screen.findByText(
-      "Select recipes from the left with the arrow button to put a meal together.",
-    ),
-  ).toBeTruthy();
   const adder = await waitFor(() => screen.findByLabelText("Add to Meal"));
   adder.click();
   expect(fetchMock.mock.calls.at(-1)).toBeTruthy();
@@ -50,7 +46,7 @@ test("can stage tasks", async () => {
       ?.method,
   ).toEqual("post");
   expect(fetchMock.mock.calls.at(-1)?.[1]?.body || "").toEqual(
-    '{"partTos":["partTo1"]}',
+    '{"runState":"ourRunState","partTos":["partTo1"]}',
   );
   await waitFor(() =>
     expect(mockedUsedNavigate.mock.calls).toEqual([["/start/someId"]]),
