@@ -163,7 +163,6 @@ import React from "react";
 
 import classes from "./{{ name.title }}.module.scss";
 import { Layout } from "{{ depthDots }}components/Layout/Layout";
-import { Notes } from "{{ depthDots }}components/Layout/NavigationBar/Notes/Notes";
 
 
 export function {{name.title}} () {

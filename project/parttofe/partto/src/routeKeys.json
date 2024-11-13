@@ -1,4 +1,5 @@
 {
+  "CookMeal": "cook/:runState",
   "StageMeal": "start/:runState",
   "StartMeal": "start/"
 }

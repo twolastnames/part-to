@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { addErrorNote } from "../components/Layout/NavigationBar/Noted/Noted";
 
-const partToApiBase = process.env.PART_TO_API_BASE || "http://localhost:8000/";
+const partToApiBase = process.env.PART_TO_API_BASE || "http://localhost:8000";
 
 export enum Stage {
   Skipped,

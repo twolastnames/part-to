@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<div
+  class="layout"
+  data-testid="Layout"
+>
+  <div
+    class="itemSet"
+  >
+    <div>
+      WIP: Put first here
+    </div>
+  </div>
+  <div
+    class="itemSet"
+  >
+    <div>
+      WIP: Put second here
+    </div>
+  </div>
+</div>
+`;

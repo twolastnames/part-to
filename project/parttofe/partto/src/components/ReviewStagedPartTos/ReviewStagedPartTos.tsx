@@ -9,6 +9,8 @@ import { Cancel } from "../Icon/Icon";
 import { doRunvoidPost } from "../../api/runvoidpost";
 import { useNavigate } from "react-router-dom";
 import { getRoute } from "../../routes";
+import { IconCooker } from "@tabler/icons-react";
+import { doRunstartPost } from "../../api/runstartpost";
 
 export interface ReviewStagedPartTosProps {
   taskDefinitions: Array<TaskDefinitionId>;
@@ -68,7 +70,20 @@ export function ReviewStagedPartTos({
   return (
     <DynamicItemSet
       items={items}
-      setOperations={[]}
+      setOperations={[
+        {
+          text: "Start Cooking",
+          icon: IconCooker,
+          onClick: () => {
+            doRunstartPost({
+              body: { runState: runState.current },
+              on200: ({ runState }) => {
+                navigate(getRoute("CookMeal", { runState }));
+              },
+            });
+          },
+        },
+      ]}
       emptyPage={
         <>
           {[

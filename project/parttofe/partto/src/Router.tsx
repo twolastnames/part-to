@@ -21,6 +21,7 @@ export function ApplicationRouter() {
         <Route path={getRoute("StageMeal")} element={<StageMeal />} />
         <Route path={getRoute("StartMeal")} element={<StartMeal />} />
         <Route path="/" element={<BaseRedirect />} />
+        <Route path="*" element={<>404</>} />
       </Routes>
     </BrowserRouter>
   );
