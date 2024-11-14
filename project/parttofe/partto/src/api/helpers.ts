@@ -164,6 +164,21 @@ export interface PostArgumentsBase<POST_BODY> {
   body: POST_BODY;
 }
 
+export const requestStateListeners: Set<(calling: boolean) => void> = new Set();
+
+let requestSemephore = 0;
+const moveSemephore = (increment: boolean) => {
+  const startState = requestSemephore > 0;
+  requestSemephore += increment ? 1 : -1;
+  const currentState = requestSemephore > 0;
+  if (currentState === startState) {
+    return;
+  }
+  Array.from(requestStateListeners).forEach((listener) => {
+    listener(currentState);
+  });
+};
+
 async function handleResponse<RESPONSE_TYPE>(
   response: Response,
 ): Promise<Result<RESPONSE_TYPE>> {
@@ -225,6 +240,7 @@ export function useGet<
       }
       let wiredResponse;
       try {
+        moveSemephore(true);
         wiredResponse = await handleResponse<WIRED_RESPONSE_TYPE>(
           await fetch(partToApiBase + appendParameterString(url, parameters), {
             headers: {
@@ -239,6 +255,8 @@ export function useGet<
           stage: Stage.Errored,
         });
         return;
+      } finally {
+        moveSemephore(false);
       }
       const status = wiredResponse.status;
       if (status !== 200) {
@@ -277,6 +295,7 @@ export async function doPost<
 ) {
   let response;
   try {
+    moveSemephore(true);
     response = await fetch(partToApiBase + url, {
       method: "post",
       headers: {
@@ -288,6 +307,8 @@ export async function doPost<
   } catch (e) {
     defaultExceptionHandler(e?.toString() || "unknown error");
     return;
+  } finally {
+    moveSemephore(false);
   }
   const status = response.status.toString();
   if (status !== "200") {
