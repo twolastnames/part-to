@@ -3,12 +3,15 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { ReviewStagedPartTos } from "./ReviewStagedPartTos";
 import { ShellProvider } from "../../providers/ShellProvider";
+import { MemoryRouter } from "react-router-dom";
 
 const meta: Meta<typeof ReviewStagedPartTos> = {
   component: ReviewStagedPartTos,
   decorators: (Story) => (
     <ShellProvider>
-      <Story />
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
     </ShellProvider>
   ),
 };
@@ -19,5 +22,6 @@ type Story = StoryObj<typeof ReviewStagedPartTos>;
 export const Simple: Story = {
   args: {
     runState: { current: "hello" },
+    taskDefinitions: [],
   },
 };

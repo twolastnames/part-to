@@ -28,19 +28,20 @@ export function Spinner<RESPONSE_TYPE>({
   responses,
   children,
 }: SpinnerProps<RESPONSE_TYPE>) {
-  if (willError(responses)) {
+  if (willError(responses || [])) {
     return (
       <div className={classes.error} data-testid="Spinner">
         <Error
           code={Number(
-            responses.find((response) => response?.stage === Stage.Errored)
-              ?.status || 0,
+            (responses || []).find(
+              (response) => response?.stage === Stage.Errored,
+            )?.status || 0,
           )}
         />
       </div>
     );
   }
-  if (willHold(responses)) {
+  if (willHold(responses || [])) {
     return (
       <div className={classes.error} data-testid="Spinner">
         Loading...

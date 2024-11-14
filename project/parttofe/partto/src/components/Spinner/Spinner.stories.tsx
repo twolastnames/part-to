@@ -17,5 +17,8 @@ export default meta;
 type Story = StoryObj<typeof Spinner>;
 
 export const Simple: Story = {
-  args: {},
+  args: {
+    responses: [],
+    children: <>Hello</>,
+  },
 };
