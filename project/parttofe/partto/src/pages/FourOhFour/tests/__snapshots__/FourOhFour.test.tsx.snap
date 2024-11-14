@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<div
+  class="layout"
+  data-testid="Layout"
+>
+  <div
+    class="itemSet"
+  >
+    <div
+      class="error"
+      data-testid="Error"
+    >
+      <div
+        class="code"
+      >
+        404
+      </div>
+      <div
+        class="description"
+      >
+        This is bad. There is nothing here. You and your family could starve if you expected to cook dinner here. They could be saved by navigating to some place more useful in the site navigation menu.
+      </div>
+    </div>
+  </div>
+  <div
+    class="itemSet"
+  >
+    <div
+      class="page"
+    >
+      <div>
+        Part
+      </div>
+      <div>
+        Fore
+      </div>
+      <div>
+        ,
+      </div>
+      <div>
+        Owe
+      </div>
+      <div>
+        Fore
+      </div>
+    </div>
+  </div>
+</div>
+`;

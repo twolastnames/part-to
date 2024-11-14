@@ -292,12 +292,14 @@ export async function doPost<
   const status = response.status.toString();
   if (status !== "200") {
     defaultErrorHandler(response);
+    return;
   }
   if (
     !Object.keys(externalHandlers).includes(status) ||
     !Object.keys(externalMappers).includes(status)
   ) {
-    throw new Error("handlable error code");
+    defaultExceptionHandler(`handlable error code in post to ${url}`);
+    return;
   }
   externalHandlers[status](externalMappers[status](await response.json()));
 }

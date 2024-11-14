@@ -5,6 +5,20 @@ exports[`snapshot 1`] = `
   class="error"
   data-testid="Spinner"
 >
-  Page Load Error: undefined
+  <div
+    class="error"
+    data-testid="Error"
+  >
+    <div
+      class="code"
+    >
+      0
+    </div>
+    <div
+      class="description"
+    >
+      This is bad. There is nothing here. You and your family could starve if you expected to cook dinner here. They could be saved by navigating to some place more useful in the site navigation menu.
+    </div>
+  </div>
 </div>
 `;

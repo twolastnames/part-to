@@ -2,6 +2,7 @@ import React, { PropsWithChildren } from "react";
 
 import classes from "./Spinner.module.scss";
 import { Result, Stage } from "../../api/helpers";
+import { Error } from "../Error/Error";
 
 export interface SpinnerProps<RESPONSE_TYPE> extends PropsWithChildren {
   responses: Array<Result<RESPONSE_TYPE>>;
@@ -30,10 +31,12 @@ export function Spinner<RESPONSE_TYPE>({
   if (willError(responses)) {
     return (
       <div className={classes.error} data-testid="Spinner">
-        {`Page Load Error: ${
-          responses.find((response) => response?.stage === Stage.Errored)
-            ?.status
-        }`}
+        <Error
+          code={Number(
+            responses.find((response) => response?.stage === Stage.Errored)
+              ?.status || 0,
+          )}
+        />
       </div>
     );
   }

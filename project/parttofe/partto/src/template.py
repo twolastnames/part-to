@@ -101,13 +101,19 @@ export function use{{ name.title }} () {
 import React from "react";
 
 import classes from "./{{ name.title }}.module.scss";
-
-export interface {{ name.title }}Props {}
+import { {{ name.title }}Props } from "./{{ name.title }}Types";
 
 export function {{name.title}} (props: {{ name.title }}Props) {
     return <div className={ classes.{{ name.camel }} } data-testid="{{ name.title }}" ></div>
 }; """,
         ),
+        Definition(
+            filename="{{ name.title }}Types.ts",
+            definition="""
+
+export interface {{ name.title }}Props {} """,
+        ),
+
         Definition(
             filename="{{ name.title }}.module.scss",
             definition="""

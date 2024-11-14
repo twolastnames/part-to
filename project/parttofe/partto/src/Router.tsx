@@ -4,6 +4,7 @@ import { getRoute } from "./routes";
 import { StartMeal } from "./pages/StartMeal/StartMeal";
 import { StageMeal } from "./pages/StageMeal/StageMeal";
 import { Noted } from "./components/Layout/NavigationBar/Noted/Noted";
+import { FourOhFour } from "./pages/FourOhFour/FourOhFour";
 
 const BaseRedirect = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export function ApplicationRouter() {
         <Route path={getRoute("StageMeal")} element={<StageMeal />} />
         <Route path={getRoute("StartMeal")} element={<StartMeal />} />
         <Route path="/" element={<BaseRedirect />} />
-        <Route path="*" element={<>404</>} />
+        <Route path="*" element={<FourOhFour />} />
       </Routes>
     </BrowserRouter>
   );

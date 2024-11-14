@@ -12,6 +12,9 @@
 }
 
 @mixin themeFonts {
+  --font-strong-xxxlarge: 600 48px/60px Verdana, sans-serif;
+  --font-strong-xxlarge: 600 36px/48px Verdana, sans-serif;
+  --font-strong-xlarge: 600 24px/36px Verdana, sans-serif;
   --font-strong-large: 600 16px/18px Verdana, sans-serif;
   --font-strong-medium: 600 12px/14px Verdana, sans-serif;
   --font-strong-small: 600 10px/12px Verdana, sans-serif;

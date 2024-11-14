@@ -14,8 +14,17 @@ test("error", async () => {
     </ShellProvider>,
   );
   await waitFor(() => {
-    const found = screen.getAllByText("Page Load Error: 0");
-    expect(found.length).toEqual(2);
+    const found = screen.getByText("Page Load Error: 0");
+    expect(found).toBeTruthy();
+  });
+  await waitFor(() => {
+    const found = screen.getByText(
+      "This is bad. There is nothing here. You and your" +
+        " family could starve if you expected to cook dinner" +
+        " here. They could be saved by navigating to some" +
+        " place more useful in the site navigation menu.",
+    );
+    expect(found).toBeTruthy();
   });
   const page = screen.getByTestId("Layout");
   expect(page).toMatchSnapshot();
