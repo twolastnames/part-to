@@ -1,10 +1,7 @@
 import React from "react";
 
 import classes from "./Layout.module.scss";
-
-export interface LayoutProps {
-  pair: [React.ReactNode, React.ReactNode];
-}
+import { LayoutProps } from "./LayoutTypes";
 
 export function Layout({ pair }: LayoutProps) {
   return (

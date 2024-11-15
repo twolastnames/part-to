@@ -1,14 +1,9 @@
 import React, { MutableRefObject, ReactNode, useState } from "react";
 
-import { NoteProps } from "../Note/Note";
 import { NavigationBar } from "../NavigationBar";
 import { Notes } from "../Notes/Notes";
-
-export interface NotedProps {}
-
-interface StoredNote extends NoteProps {
-  key: number;
-}
+import { NoteProps } from "../Note/NoteTypes";
+import { StoredNote } from "./NotedTypes";
 
 let notePassRef: MutableRefObject<(arg: NoteProps) => void> = {
   current: (arg: NoteProps) => undefined,

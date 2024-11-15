@@ -5,9 +5,9 @@ import React, {
   useState,
 } from "react";
 
-import { MultipleProps } from "../Multiple";
 import { Carousel } from "../Carousel/Carousel";
-import { ButtonProps } from "../../../Button/Button";
+import { ButtonProps } from "../../../Button/ButtonTypes";
+import { MultipleProps } from "../MultipleTypes";
 
 interface ShellProps extends PropsWithChildren {
   height: number;

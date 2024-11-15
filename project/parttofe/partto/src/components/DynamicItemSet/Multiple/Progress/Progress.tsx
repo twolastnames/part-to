@@ -2,14 +2,7 @@ import React from "react";
 
 import classes from "./Progress.module.scss";
 import { RingProgress } from "@mantine/core";
-
-export interface ProgressProps {
-  on: number;
-  total: number;
-  label: string;
-  title: string;
-  onClick: () => void;
-}
+import { ProgressProps } from "./ProgressTypes";
 
 export function Progress({ on, total, label, title, onClick }: ProgressProps) {
   return (

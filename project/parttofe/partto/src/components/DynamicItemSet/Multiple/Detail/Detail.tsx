@@ -1,7 +1,7 @@
 import React from "react";
 
-import { MultipleProps } from "../Multiple";
 import { Carousel } from "../Carousel/Carousel";
+import { MultipleProps } from "../MultipleTypes";
 
 export function Detail({ items }: MultipleProps) {
   return (

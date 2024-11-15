@@ -1,13 +1,7 @@
 import React from "react";
 
 import { Progress } from "../Progress/Progress";
-
-export interface CountProps {
-  on: number;
-  total: number;
-  title: string;
-  onClick: () => void;
-}
+import { CountProps } from "./CountTypes";
 
 export function Count({ on, total, title, onClick }: CountProps) {
   return (

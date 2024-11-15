@@ -1,12 +1,9 @@
 import React from "react";
 
 import classes from "./ButtonSet.module.scss";
-import { Operation } from "../DynamicItemSet";
-import { Button, ButtonProps } from "../../Button/Button";
-
-export interface ButtonSetProps {
-  operations: Array<ButtonProps>;
-}
+import { Button } from "../../Button/Button";
+import { ButtonSetProps } from "./ButtonSetTypes";
+import { Operation } from "../DynamicItemSetTypes";
 
 export function ButtonSet(props: ButtonSetProps) {
   return (

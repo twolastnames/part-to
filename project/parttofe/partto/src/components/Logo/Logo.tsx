@@ -1,16 +1,7 @@
 import React from "react";
 
 import classes from "./Logo.module.scss";
-
-export enum Size {
-  Small = 60,
-  Medium = 120,
-  Large = 240,
-}
-
-export interface LogoProps {
-  size?: Size;
-}
+import { LogoProps, Size } from "./LogoTypes";
 
 export function Logo({ size: rawSize }: LogoProps) {
   const size = rawSize || Size.Medium;

@@ -1,17 +1,11 @@
-import React, { ReactNode } from "react";
+import React from "react";
 
 import classes from "./PartTo.module.scss";
 import { PartToId, TaskDefinitionId } from "../../api/sharedschemas";
 import { useParttoGet } from "../../api/parttoget";
-import { Duration, Stage } from "../../api/helpers";
+import { Stage } from "../../api/helpers";
 import { DefinitionIdFromer } from "./Definition/Definition";
-
-export interface PartToProps {
-  name: string;
-  workDuration?: Duration;
-  clockDuration?: Duration;
-  tasks: Array<ReactNode>;
-}
+import { PartToProps } from "./PartToTypes";
 
 export function PartToIdFromer({ partTo }: { partTo: PartToId }) {
   const response = useParttoGet({ partTo });

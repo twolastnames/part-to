@@ -1,10 +1,7 @@
 import React from "react";
 
 import classes from "./Empty.module.scss";
-
-export interface EmptyProps {
-  content: React.ReactElement;
-}
+import { EmptyProps } from "./EmptyTypes";
 
 export function Empty({ content }: EmptyProps) {
   return (

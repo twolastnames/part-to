@@ -1,12 +1,7 @@
-import React, { ReactNode } from "react";
+import React from "react";
 
 import classes from "./Note.module.scss";
-
-export interface NoteProps {
-  heading: ReactNode;
-  detail: ReactNode;
-}
-
+import { NoteProps } from "./NoteTypes";
 export function Note({ heading, detail }: NoteProps) {
   return (
     <div className={classes.note} data-testid="Note">

@@ -1,12 +1,9 @@
-import React, { ReactNode } from "react";
+import React from "react";
 
 import classes from "./EmptySimpleView.module.scss";
 import { Empty, Icon } from "../../Icon/Icon";
-import { Size } from "../../Icon/Icon";
-
-export interface EmptySimpleViewProps {
-  content: ReactNode;
-}
+import { EmptySimpleViewProps } from "./EmptySimpleViewTypes";
+import { Size } from "../../Icon/IconTypes";
 
 export function EmptySimpleView({ content }: EmptySimpleViewProps) {
   return (

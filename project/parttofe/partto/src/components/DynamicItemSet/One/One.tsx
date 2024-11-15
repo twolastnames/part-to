@@ -1,12 +1,8 @@
 import React from "react";
 
 import classes from "./One.module.scss";
-import { Item } from "../DynamicItemSet";
 import { ButtonSet } from "../ButtonSet/ButtonSet";
-
-export interface OneProps {
-  item: Item;
-}
+import { OneProps } from "./OneTypes";
 
 export function One({ item }: OneProps) {
   return (

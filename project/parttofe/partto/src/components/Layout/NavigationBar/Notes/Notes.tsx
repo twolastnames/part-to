@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 import classes from "./Notes.module.scss";
-import { Note, NoteProps } from "../Note/Note";
-
-export interface NotesProps {
-  notes: Array<NoteProps>;
-}
+import { Note } from "../Note/Note";
+import { NotesProps } from "./NotesTypes";
 
 export function Notes({ notes }: NotesProps) {
   const [active, setActive] = useState<number>(0);

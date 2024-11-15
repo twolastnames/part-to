@@ -1,13 +1,10 @@
-import React, { PropsWithChildren, ReactNode } from "react";
+import React from "react";
 
 import classes from "./NavigationBar.module.scss";
 import { NavigationLogo } from "./NavigationLogo/NavigationLogo";
 import { Menu } from "./Menu/Menu";
 import { MobileMenu } from "./MobileMenu/MobileMenu";
-
-export interface NavigationBarProps extends PropsWithChildren {
-  extra: ReactNode;
-}
+import { NavigationBarProps } from "./NavigationBarTypes";
 
 export function NavigationBar({ extra }: NavigationBarProps) {
   return (

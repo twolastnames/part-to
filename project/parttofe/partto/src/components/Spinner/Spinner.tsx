@@ -1,12 +1,9 @@
-import React, { PropsWithChildren } from "react";
+import React from "react";
 
 import classes from "./Spinner.module.scss";
 import { Result, Stage } from "../../api/helpers";
 import { Error } from "../Error/Error";
-
-export interface SpinnerProps<RESPONSE_TYPE> extends PropsWithChildren {
-  responses: Array<Result<RESPONSE_TYPE>>;
-}
+import { SpinnerProps } from "./SpinnerTypes";
 
 export function willError<RESPONSE_TYPE>(
   responses: Array<Result<RESPONSE_TYPE>>,

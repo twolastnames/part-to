@@ -4,15 +4,7 @@ import classes from "./IterationProgress.module.scss";
 import { Count } from "../Count/Count";
 import { Timer } from "../Timer/Timer";
 import { getDateTime, getDuration } from "../../../../api/helpers";
-
-export interface IterationProgressProps {
-  setPaused: (arg: boolean) => void;
-  paused: boolean;
-  showDuration: number;
-  total: number;
-  setShowDuration: (arg: number) => void;
-  on: number;
-}
+import { IterationProgressProps } from "./IterationProgressTypes";
 
 export const speeds = [
   { label: "1 Seconds", duration: getDuration(1000) },

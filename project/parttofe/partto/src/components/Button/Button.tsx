@@ -2,15 +2,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ActionIcon as MantineButton, Tooltip } from "@mantine/core";
 
 import classes from "./Button.module.scss";
-import { IconType, Icon, Size as IconSize } from "../Icon/Icon";
+import { Icon } from "../Icon/Icon";
 import { requestStateListeners } from "../../api/helpers";
 import { debounce } from "lodash";
-
-export interface ButtonProps {
-  text: string;
-  icon: IconType;
-  onClick: () => void;
-}
+import { ButtonProps } from "./ButtonTypes";
+import { Size } from "../Icon/IconTypes";
 
 export const Button = ({ onClick, icon, text }: ButtonProps) => {
   const [disabled, setDisabled] = useState<boolean>(false);
@@ -41,7 +37,7 @@ export const Button = ({ onClick, icon, text }: ButtonProps) => {
             className={classes.button}
             disabled={disabled}
           >
-            <Icon definition={icon} size={IconSize.Small} />
+            <Icon definition={icon} size={Size.Small} />
           </MantineButton>
         </div>
       </Tooltip>

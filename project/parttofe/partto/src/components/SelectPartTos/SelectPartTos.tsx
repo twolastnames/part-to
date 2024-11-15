@@ -1,4 +1,4 @@
-import React, { MutableRefObject, ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 import { Stage } from "../../api/helpers";
 import { useParttosGet } from "../../api/parttosget";
@@ -11,10 +11,7 @@ import { getRoute } from "../../routes";
 import { doRunstagePost } from "../../api/runstagepost";
 import { PartToId, RunStateId } from "../../api/sharedschemas";
 import { useRunGet } from "../../api/runget";
-
-export interface SelectPartTosProps {
-  runState?: MutableRefObject<RunStateId>;
-}
+import { SelectPartTosProps } from "./SelectPartTosTypes";
 
 function getFirstPairItems(
   navigate: (arg: string) => void,

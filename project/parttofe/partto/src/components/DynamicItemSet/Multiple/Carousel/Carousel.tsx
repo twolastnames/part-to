@@ -1,17 +1,16 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import classes from "./Carousel.module.scss";
-import { Button, ButtonProps } from "../../../Button/Button";
+import { Button } from "../../../Button/Button";
 import { Down, Up } from "../../../Icon/Icon";
 import { ButtonSet } from "../../ButtonSet/ButtonSet";
 import {
   IterationProgress,
   speeds,
 } from "../IterationProgress/IterationProgress";
-import { MultipleProps } from "../Multiple";
-import { Item } from "../../DynamicItemSet";
-
-export type CarouselPage = { view: ReactNode; operations?: Array<ButtonProps> };
+import { Item } from "../../DynamicItemSetTypes";
+import { MultipleProps } from "../MultipleTypes";
+import { CarouselPage } from "./CarouselTypes";
 
 type GoADirection = (
   totalPages: number,

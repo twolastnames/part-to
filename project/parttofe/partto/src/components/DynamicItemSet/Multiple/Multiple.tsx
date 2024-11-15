@@ -1,15 +1,13 @@
 import React, { ReactElement, useState } from "react";
 
 import classes from "./Multiple.module.scss";
-import { Item } from "../DynamicItemSet";
 import { File, List as ListIcon } from "../../Icon/Icon";
-import { Button, ButtonProps } from "../../Button/Button";
+import { Button } from "../../Button/Button";
 import { List } from "./List/List";
 import { Detail } from "./Detail/Detail";
-
-export interface MultipleProps {
-  items: Array<Item>;
-}
+import { MultipleProps } from "./MultipleTypes";
+import { ButtonProps } from "../../Button/ButtonTypes";
+import { Item } from "../DynamicItemSetTypes";
 
 interface View {
   toOther: ButtonProps;

@@ -11,11 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { getRoute } from "../../routes";
 import { IconCooker } from "@tabler/icons-react";
 import { doRunstartPost } from "../../api/runstartpost";
-
-export interface ReviewStagedPartTosProps {
-  taskDefinitions: Array<TaskDefinitionId>;
-  runState: MutableRefObject<RunStateId>;
-}
+import { ReviewStagedPartTosProps } from "./ReviewStagedPartTosTypes";
 
 export function ReviewStagedPartTosIdFromer({
   runState,

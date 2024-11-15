@@ -1,8 +1,6 @@
-import React, { ForwardRefExoticComponent, RefAttributes } from "react";
+import React from "react";
 import { rem } from "@mantine/core";
 import {
-  Icon as TablerIcon,
-  IconProps as TablerIconProps,
   IconPlayerTrackNext,
   IconPlayerPlay,
   IconList,
@@ -21,23 +19,7 @@ import {
 } from "@tabler/icons-react";
 
 import classes from "./Icon.module.scss";
-
-export type IconType = ForwardRefExoticComponent<
-  TablerIconProps & RefAttributes<TablerIcon>
->;
-
-export enum Size {
-  Small = 20,
-  Medium = 30,
-  Large = 50,
-  ExtraLarge = 80,
-}
-
-export interface IconProps {
-  definition: IconType;
-  size?: Size;
-  onClick?: () => void;
-}
+import { IconProps, Size } from "./IconTypes";
 
 export function Icon({ onClick, definition, size }: IconProps) {
   return React.createElement(definition, {

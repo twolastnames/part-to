@@ -1,7 +1,8 @@
 import React from "react";
 
 import classes from "./NavigationLogo.module.scss";
-import { Logo, Size } from "../../../Logo/Logo";
+import { Logo } from "../../../Logo/Logo";
+import { Size } from "../../../Logo/LogoTypes";
 
 export function NavigationLogo() {
   return (

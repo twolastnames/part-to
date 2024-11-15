@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-import { DateTime, Duration, getDateTime } from "../../../../api/helpers";
+import { getDateTime } from "../../../../api/helpers";
 import { Progress } from "../Progress/Progress";
-
-export interface TimerProps {
-  start: DateTime;
-  duration: Duration;
-  label: string;
-  title: string;
-  onClick: () => void;
-}
+import { TimerProps } from "./TimerTypes";
 
 export function Timer({ start, duration, label, title, onClick }: TimerProps) {
   const [on, setOn] = useState<number>(0);
