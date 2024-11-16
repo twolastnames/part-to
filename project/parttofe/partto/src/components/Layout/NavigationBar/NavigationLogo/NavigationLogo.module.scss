@@ -4,6 +4,10 @@
   display: flex;
   border: 1px solid var(--background-color);
   margin: var(--gap-medium);
+  @media #{$mobile} {
+    padding-top: var(--gap-small);
+    width: 96px;
+  }
   @media #{$tablet} {
     padding-top: var(--gap-small);
     width: 96px;
