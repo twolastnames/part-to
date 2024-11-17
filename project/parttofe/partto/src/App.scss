@@ -37,18 +37,22 @@
 .defaultTheme {
   @include themeSpacing;
   @include themeFonts;
+  --primary-color: rgb(250, 82, 82);
   --secondary-color: #dfb30e;
   --background-color: #fafcf8;
   --detail-color: black;
+  --highlight-color: rgb(233, 236, 239);
   color: var(--detail-color);
 }
 
 .darkTheme {
   @include themeSpacing;
   @include themeFonts;
+  --primary-color: rgb(250, 82, 82);
   --secondary-color: #7b4020;
   --background-color: #1a1e1c;
   --detail-color: white;
+  --highlight-color: rgb(233, 236, 239);
   color: var(--detail-color);
 }
 
