@@ -85,6 +85,29 @@ test('snapshot', () => {
 }); """
 
 definitions = {
+    "shared": [
+        Definition(
+            filename=os.path.join("..", "{{ name.camel }}.ts"),
+            definition="""
+export interface {{ name.title }} {
+
+}
+
+export function get{{ name.title }}() : {{name.title}} {
+
+}
+            """,
+        ),
+        Definition(
+            filename=os.path.join("..", "{{ name.camel }}.test.ts"),
+            definition="""
+import {expect, test} from '@jest/globals';
+
+test('snapshot', () => {
+  expect(false).toBeTruthy();
+}); """,
+        ),
+    ],
     "hooks": [
         Definition(
             filename=os.path.join("..", "{{ name.camel }}.ts"),

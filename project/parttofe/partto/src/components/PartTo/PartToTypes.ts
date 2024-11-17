@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Duration } from "../../api/helpers";
+import { Duration } from "../../shared/duration";
 
 export interface PartToProps {
   name: string;

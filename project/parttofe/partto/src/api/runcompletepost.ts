@@ -7,7 +7,9 @@
 ////////////////////////////////////////////////////////////
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { PostArgumentsBase, DateTime, Duration, doPost } from "./helpers";
+import { PostArgumentsBase, doPost } from "./helpers";
+import { DateTime } from "../shared/dateTime";
+import { Duration } from "../shared/duration";
 
 import {
   parameterMarshalers,

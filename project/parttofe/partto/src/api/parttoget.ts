@@ -7,7 +7,9 @@
 ////////////////////////////////////////////////////////////
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Result, DateTime, Duration, Options, useGet } from "./helpers";
+import { Result, Options, useGet } from "./helpers";
+import { DateTime } from "../shared/dateTime";
+import { Duration } from "../shared/duration";
 
 import {
   parameterMarshalers,

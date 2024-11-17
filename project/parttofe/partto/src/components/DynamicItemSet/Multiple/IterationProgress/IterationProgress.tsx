@@ -3,8 +3,9 @@ import React, { useEffect, useRef } from "react";
 import classes from "./IterationProgress.module.scss";
 import { Count } from "../Count/Count";
 import { Timer } from "../Timer/Timer";
-import { getDateTime, getDuration } from "../../../../api/helpers";
 import { IterationProgressProps } from "./IterationProgressTypes";
+import { getDuration } from "../../../../shared/duration";
+import { getDateTime } from "../../../../shared/dateTime";
 
 export const speeds = [
   { label: "1 Seconds", duration: getDuration(1000) },

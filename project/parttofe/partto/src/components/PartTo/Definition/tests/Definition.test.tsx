@@ -3,7 +3,7 @@ import { expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { ShellProvider } from "../../../../providers/ShellProvider";
 import { Definition } from "../Definition";
-import { getDuration } from "../../../../api/helpers";
+import { getDuration } from "../../../../shared/duration";
 
 test("snapshot", () => {
   render(

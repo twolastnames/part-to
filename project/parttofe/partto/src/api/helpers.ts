@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { addErrorNote } from "../components/Layout/NavigationBar/Noted/Noted";
+import { DateTime, getDateTime } from "../shared/dateTime";
+import { Duration, getDuration } from "../shared/duration";
 
 const partToApiBase = process.env.PART_TO_API_BASE || "http://localhost:8000";
 
@@ -9,30 +11,6 @@ export enum Stage {
   Errored,
   Ok,
 }
-
-export interface DateTime {
-  sinceEpoch: () => number;
-  toISOString: () => string;
-  add: (arg: Duration) => DateTime;
-  subtract: (arg: DateTime) => Duration;
-}
-
-export interface Duration {
-  toMilliseconds: () => number;
-}
-
-export const getDateTime: (date?: Date) => DateTime = (inDate) => {
-  const date = inDate || new Date();
-
-  return {
-    sinceEpoch: () => date.getTime(),
-    toISOString: () => date.toISOString(),
-    add: (duration: Duration) =>
-      getDateTime(new Date(date.getTime() + duration.toMilliseconds())),
-    subtract: (subtrahend: DateTime) =>
-      getDuration(date.getTime() - subtrahend.sinceEpoch()),
-  };
-};
 
 const defaultErrorHandler = async (response: Response) => {
   const heading = `Backend Error: ${response.status}`;
@@ -123,10 +101,6 @@ export interface BaseUnmarshalers {
     duration: MarshalMapper<number | undefined, Duration | undefined>;
   };
 }
-
-export const getDuration: (arg: number) => Duration = (value) => ({
-  toMilliseconds: () => value,
-});
 
 export const baseUnmarshalers: BaseUnmarshalers = {
   unrequired: {

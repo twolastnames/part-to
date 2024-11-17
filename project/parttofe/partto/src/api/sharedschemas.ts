@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  DateTime,
-  Duration,
   MarshalMapper,
   baseParameterMarshalers,
   BaseParameterMarshalers,
@@ -10,6 +8,8 @@ import {
   baseUnmarshalers,
   BaseUnmarshalers,
 } from "./helpers";
+import { DateTime } from "../shared/dateTime";
+import { Duration } from "../shared/duration";
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 export type PartToId = string;

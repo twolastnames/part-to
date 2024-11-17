@@ -2,8 +2,9 @@ import React from "react";
 import { expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { Timer } from "../Timer";
-import { getDateTime, getDuration } from "../../../../../api/helpers";
 import { ShellProvider } from "../../../../../providers/ShellProvider";
+import { getDateTime } from "../../../../../shared/dateTime";
+import { getDuration } from "../../../../../shared/duration";
 
 test("snapshot", () => {
   render(

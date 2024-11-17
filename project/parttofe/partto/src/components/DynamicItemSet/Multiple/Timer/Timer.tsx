@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-import { getDateTime } from "../../../../api/helpers";
 import { Progress } from "../Progress/Progress";
 import { TimerProps } from "./TimerTypes";
+import { getDateTime } from "../../../../shared/dateTime";
 
 export function Timer({ start, duration, label, title, onClick }: TimerProps) {
   const [on, setOn] = useState<number>(0);

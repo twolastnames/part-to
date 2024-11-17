@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { Definition } from "./Definition";
 import { ShellProvider } from "../../../providers/ShellProvider";
-import { getDuration } from "../../../api/helpers";
+import { getDuration } from "../../../shared/duration";
 
 const meta: Meta<typeof Definition> = {
   component: Definition,

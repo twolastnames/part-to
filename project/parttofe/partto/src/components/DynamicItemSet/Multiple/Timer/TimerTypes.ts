@@ -1,4 +1,5 @@
-import { DateTime, Duration } from "../../../../api/helpers";
+import { DateTime } from "../../../../shared/dateTime";
+import { Duration } from "../../../../shared/duration";
 
 export interface TimerProps {
   start: DateTime;
