@@ -11,6 +11,7 @@ exports[`Icon snapshot 1`] = `
   strokeWidth={2}
   style={
     Object {
+      "color": "var(--detail-color)",
       "height": "calc(1.875rem * var(--mantine-scale))",
       "width": "calc(1.875rem * var(--mantine-scale))",
     }

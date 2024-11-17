@@ -32,6 +32,7 @@ export function Icon({ onClick, definition, size }: IconProps) {
     style: {
       width: rem((size || Size.Medium) as number),
       height: rem((size || Size.Medium) as number),
+      color: "var(--detail-color)",
     },
   });
 }
