@@ -473,7 +473,7 @@ class RunState(models.Model):
 
     class Meta:
         unique_together = [("uuid")]
-        indexes = [models.Index(fields=["uuid", "created"])]
+        indexes = [models.Index(fields=["uuid", "created", "task"])]
 
     class Operation(models.IntegerChoices):
         STAGED = 1
