@@ -136,7 +136,6 @@ export function {{name.title}} (props: {{ name.title }}Props) {
 
 export interface {{ name.title }}Props {} """,
         ),
-
         Definition(
             filename="{{ name.title }}.module.scss",
             definition="""
