@@ -1,6 +1,26 @@
 from .endpoints import operation_paths
+from re import search
 
-VOLATILE_OPERATIONS = ["parttos:get"]
+
+cache_for_path = {}
+
+
+def set_cache_for_paths(expressions, cache):
+    for expression in expressions:
+        for path, operationId in operation_paths.items():
+            if not search(expression, operationId):
+                continue
+            cache_for_path[path.strip("/")] = cache
+
+
+# keep for duration of use
+set_cache_for_paths(["metric:get$"], "max-age=10800, must-revalidate")
+
+# keep forever
+set_cache_for_paths(
+    ["^partto:get$", "^task:get$", "^run.*:get$"],
+    "public, max-age=31536000, immutable",
+)
 
 
 class Headers:
@@ -13,11 +33,8 @@ class Headers:
             return response
         if request.method.lower() != "get":
             return response
-        for operation in VOLATILE_OPERATIONS:
-            path = operation_paths[operation]
-            if request.path.strip("/") == path.strip("/"):
-                return response
-        response["Cache-Control"] = (
-            "public, max-age=31536000, immutable"
-        )
+        if request.path.strip("/") in cache_for_path:
+            response["Cache-Control"] = cache_for_path[
+                request.path.strip("/")
+            ]
         return response
