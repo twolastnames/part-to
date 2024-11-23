@@ -456,6 +456,77 @@ paths:
               schema:
                 $ref: "#/components/schemas/RunOperationReply"
 
+  /api/metric/task:
+    get:
+      summary: read a task metrics
+      operationId: taskdurationmetric:get
+      tags:
+      - partTo
+      parameters:
+      - name: task
+        in: query
+        required: true
+        schema:
+          type: string
+          format: TaskDefinitionId
+      responses:
+        '404':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/Four04Reply"
+        '500':
+          description: a backend bug
+          content:
+            '*':
+              schema:
+                type: string
+        '400':
+          description: a frontend bug
+          content:
+            '*':
+              schema:
+                type: array
+                items:
+                  type: string
+        '200':
+          description: Expected response to a valid request
+          content:
+            '*':
+              schema:
+                type: object
+                required:
+                - estimatedDuration
+                - from
+                properties:
+                  estimatedDuration:
+                    type: number
+                    format: Duration
+                  initialEstimation:
+                    type: object
+                    required:
+                    - duration
+                    - usedInCalculation
+                    properties:
+                      duration:
+                        type: number
+                        format: Duration
+                      usedInCalculation:
+                        type: boolean
+                  from:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        start:
+                          type: string
+                          format: DateTime
+                        end:
+                          type: string
+                          format: DateTime
+
+
 components:
   schemas:
     Four04Reply:
