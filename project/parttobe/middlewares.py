@@ -7,7 +7,7 @@ cache_for_path = {}
 
 def set_cache_for_paths(expressions, cache):
     for expression in expressions:
-        for path, operationId in operation_paths.items():
+        for operationId, path in operation_paths.items():
             if not search(expression, operationId):
                 continue
             cache_for_path[path.strip("/")] = cache
