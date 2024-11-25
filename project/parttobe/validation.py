@@ -269,6 +269,7 @@ unmarshal_parameter_handlers = {
     "string": lambda value: value,
     "uuid": recover_uuid,
     "duration": lambda value: datetime.timedelta(microseconds=value),
+    "boolean": lambda value: value,
     "number": int,
     "date-time": lambda value: datetime.datetime.fromisoformat(value),
 } | {

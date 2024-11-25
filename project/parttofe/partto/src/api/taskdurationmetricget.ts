@@ -29,14 +29,14 @@ import {
 
 export type TaskdurationmetricGet200Body = {
   estimatedDuration: Duration;
-  initialEstimation?: { duration: Duration; usedInCalculation: boolean };
+  initialEstimation: { duration: Duration; usedInCalculation: boolean };
   from: Array<{ start?: DateTime | undefined; end?: DateTime | undefined }>;
 };
 
 type Wire200Body = {
-  estimatedDuration: Duration;
-  initialEstimation?: { duration: Duration; usedInCalculation: boolean };
-  from: Array<{ start?: DateTime | undefined; end?: DateTime | undefined }>;
+  estimatedDuration: number;
+  initialEstimation: { duration: number; usedInCalculation: boolean };
+  from: Array<{ start?: string | undefined; end?: string | undefined }>;
 };
 
 export type TaskdurationmetricGetArguments = { task: TaskDefinitionId };
@@ -63,11 +63,11 @@ export const useTaskdurationmetricGet: (
     ],
     {
       200: (body: Wire200Body) => ({
-        estimatedDuration: unmarshalers.required["Duration"](
+        estimatedDuration: unmarshalers.required["duration"](
           body.estimatedDuration,
         ),
         initialEstimation: {
-          duration: unmarshalers.required["Duration"](
+          duration: unmarshalers.required["duration"](
             body.initialEstimation.duration,
           ),
           usedInCalculation: unmarshalers.required["boolean"](
@@ -75,8 +75,8 @@ export const useTaskdurationmetricGet: (
           ),
         },
         from: body.from.map((value) => ({
-          start: unmarshalers.unrequired["DateTime"](value.start),
-          end: unmarshalers.unrequired["DateTime"](value.end),
+          start: unmarshalers.unrequired["date-time"](value.start),
+          end: unmarshalers.unrequired["date-time"](value.end),
         })),
       }),
     },

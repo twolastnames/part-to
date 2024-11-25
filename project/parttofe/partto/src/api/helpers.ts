@@ -33,11 +33,13 @@ export interface BaseParameterMarshalers {
     "date-time": MarshalMapper<DateTime, string>;
     number: MarshalMapper<number, string>;
     string: MarshalMapper<string, string>;
+    duration: MarshalMapper<Duration, string>;
   };
   unrequired: {
     "date-time": MarshalMapper<DateTime | undefined, string | undefined>;
     number: MarshalMapper<number | undefined, string | undefined>;
     string: MarshalMapper<string | undefined, string | undefined>;
+    duration: MarshalMapper<Duration | undefined, string | undefined>;
   };
 }
 
@@ -46,12 +48,15 @@ export const baseParameterMarshalers: BaseParameterMarshalers = {
     "date-time": (date: DateTime) => date.toISOString(),
     number: (value: number) => Number(value).toString(),
     string: (value: string) => value,
+    duration: (value: Duration) => value.toMilliseconds().toString(),
   },
   unrequired: {
     "date-time": (date: DateTime | undefined) => date?.toISOString(),
     number: (value: number | undefined) =>
       value ? Number(value).toString() : undefined,
     string: (value: string | undefined) => value,
+    duration: (value: Duration | undefined) =>
+      value === undefined ? value : value.toMilliseconds().toString(),
   },
 };
 
@@ -93,12 +98,14 @@ export interface BaseUnmarshalers {
     number: MarshalMapper<number, number>;
     string: MarshalMapper<string, string>;
     duration: MarshalMapper<number, Duration>;
+    boolean: MarshalMapper<boolean, boolean>;
   };
   unrequired: {
     "date-time": MarshalMapper<string | undefined, DateTime | undefined>;
     number: MarshalMapper<number | undefined, number | undefined>;
     string: MarshalMapper<string | undefined, string | undefined>;
     duration: MarshalMapper<number | undefined, Duration | undefined>;
+    boolean: MarshalMapper<boolean | undefined, boolean | undefined>;
   };
 }
 
@@ -109,12 +116,14 @@ export const baseUnmarshalers: BaseUnmarshalers = {
     duration: (value: number | undefined) =>
       value ? getDuration(value) : undefined,
     number: (value: number | undefined) => value,
+    boolean: (value: boolean | undefined) => value,
     string: (value: string | undefined) => value,
   },
   required: {
     "date-time": (value: string) => getDateTime(new Date(value)),
     duration: (value: number) => getDuration(value),
     number: (value: number) => value,
+    boolean: (value: boolean) => value,
     string: (value: string) => value,
   },
 };
