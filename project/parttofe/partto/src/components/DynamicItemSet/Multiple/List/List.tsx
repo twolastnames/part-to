@@ -18,7 +18,7 @@ function Shell({ children, height, operations }: ShellProps) {
   return <div style={{ height }}>{children}</div>;
 }
 
-export function List({ items }: MultipleProps) {
+export function List({ items, context }: MultipleProps) {
   const minimumHeight = 120;
   const domRef = useRef<HTMLDivElement>(null);
   const [{ height, perPage }, setCalculated] = useState<{
@@ -69,7 +69,7 @@ export function List({ items }: MultipleProps) {
 
   return (
     <div data-testid="List" style={{ height: "100%" }} ref={domRef}>
-      {items.length > 0 ? <Carousel items={items} /> : null}
+      {items.length > 0 ? <Carousel context={context} items={items} /> : null}
     </div>
   );
 }

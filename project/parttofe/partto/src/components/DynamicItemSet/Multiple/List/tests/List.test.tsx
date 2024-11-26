@@ -4,11 +4,13 @@ import { render, screen } from "@testing-library/react";
 import { ShellProvider } from "../../../../../providers/ShellProvider";
 import { List } from "../List";
 import { Next } from "../../../../Icon/Icon";
+import { LeftContext } from "../../../../../providers/DynamicItemSetPair";
 
 test("snapshot", async () => {
   render(
     <ShellProvider>
       <List
+        context={LeftContext}
         items={[
           {
             key: "9",

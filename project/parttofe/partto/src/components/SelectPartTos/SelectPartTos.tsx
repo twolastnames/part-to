@@ -12,6 +12,7 @@ import { doRunstagePost } from "../../api/runstagepost";
 import { PartToId, RunStateId } from "../../api/sharedschemas";
 import { useRunGet } from "../../api/runget";
 import { SelectPartTosProps } from "./SelectPartTosTypes";
+import { LeftContext } from "../../providers/DynamicItemSetPair";
 
 function getFirstPairItems(
   navigate: (arg: string) => void,
@@ -71,6 +72,7 @@ export function SelectPartTos({ runState }: SelectPartTosProps) {
         run?.data?.activePartTos || [],
         runState?.current,
       )}
+      context={LeftContext}
       setOperations={[]}
       emptyPage={
         errorMessage ? (

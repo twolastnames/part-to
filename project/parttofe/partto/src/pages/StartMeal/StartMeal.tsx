@@ -5,6 +5,7 @@ import { EmptySimpleView } from "../../components/DynamicItemSet/EmptySimpleView
 import { DynamicItemSet } from "../../components/DynamicItemSet/DynamicItemSet";
 import { SelectPartTos } from "../../components/SelectPartTos/SelectPartTos";
 import { Spinner } from "../../components/Spinner/Spinner";
+import { RightContext } from "../../providers/DynamicItemSetPair";
 
 const secondPairEmptyText = [
   "Select recipes from the left with the arrow",
@@ -19,6 +20,7 @@ export function StartMeal() {
         <SelectPartTos />,
         <DynamicItemSet
           items={[]}
+          context={RightContext}
           setOperations={[]}
           emptyPage={
             <Spinner responses={[allRecipes]}>

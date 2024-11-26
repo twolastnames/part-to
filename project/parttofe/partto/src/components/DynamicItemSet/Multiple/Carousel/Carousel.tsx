@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import classes from "./Carousel.module.scss";
 import { Button } from "../../../Button/Button";
@@ -11,18 +11,7 @@ import {
 import { Item } from "../../DynamicItemSetTypes";
 import { MultipleProps } from "../MultipleTypes";
 import { CarouselPage } from "./CarouselTypes";
-
-type GoADirection = (
-  totalPages: number,
-  setSelected: (mutator: (arg: number) => number) => void,
-) => void;
-
-const goBack: GoADirection = (length, setSelected) => {
-  setSelected((last: number) => (last <= 0 ? length - 1 : last - 1));
-};
-const goForward: GoADirection = (length, setSelected) => {
-  setSelected((last: number) => (last >= length - 1 ? 0 : last + 1));
-};
+import { UndefinedDynamicItemSetPair } from "../../../../providers/DynamicItemSetPair";
 
 function getPages(current: Array<Item>) {
   return current.map(({ key, detailView, itemOperations }) => ({
@@ -32,22 +21,24 @@ function getPages(current: Array<Item>) {
   }));
 }
 
-export function Carousel({ items }: MultipleProps) {
+export function Carousel({ items, context }: MultipleProps) {
   const [showDuration, setShowDuration] = useState<number>(2);
-  const [selected, setSelected] = useState<number>(0);
+  const { selected, goForward, goBack } =
+    useContext(context.context) || UndefinedDynamicItemSetPair;
   const [paused, setPaused] = useState<boolean>(false);
   const [pages, setPages] = useState<Array<CarouselPage & { key: string }>>(
     getPages(items),
   );
 
   const itemsLength = items.length;
+  context.setCount(itemsLength);
   useEffect(() => {
     if (paused || speeds[showDuration]?.duration == null) {
       return;
     }
     const id = setInterval(
       () => {
-        goForward(itemsLength, setSelected);
+        goForward();
       },
       (speeds[showDuration] == null
         ? speeds[2]
@@ -57,7 +48,7 @@ export function Carousel({ items }: MultipleProps) {
     return () => {
       clearInterval(id);
     };
-  }, [showDuration, itemsLength, paused, selected]);
+  }, [showDuration, itemsLength, paused, selected, goForward]);
 
   useEffect(() => {
     setPages(getPages(items));
@@ -76,7 +67,7 @@ export function Carousel({ items }: MultipleProps) {
             icon={Up}
             text="Back One"
             onClick={() => {
-              goBack(pages.length, setSelected);
+              goBack();
             }}
           />
         </div>
@@ -90,7 +81,7 @@ export function Carousel({ items }: MultipleProps) {
             icon={Down}
             text="Forward One"
             onClick={() => {
-              goForward(pages.length, setSelected);
+              goForward();
             }}
           />
         </div>

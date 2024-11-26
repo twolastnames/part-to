@@ -5,6 +5,10 @@ import { ShellProvider } from "../../../providers/ShellProvider";
 import { Layout } from "../Layout";
 import { Next, Start } from "../../Icon/Icon";
 import { DynamicItemSet } from "../../DynamicItemSet/DynamicItemSet";
+import {
+  LeftContext,
+  RightContext,
+} from "../../../providers/DynamicItemSetPair";
 
 test("snapshot", () => {
   render(
@@ -13,6 +17,7 @@ test("snapshot", () => {
         pair={[
           <DynamicItemSet
             items={[]}
+            context={LeftContext}
             setOperations={[
               {
                 icon: Start,
@@ -29,6 +34,7 @@ test("snapshot", () => {
           />,
           <DynamicItemSet
             items={[]}
+            context={RightContext}
             setOperations={[
               {
                 icon: Start,

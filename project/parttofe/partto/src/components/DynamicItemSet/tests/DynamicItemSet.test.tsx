@@ -2,6 +2,7 @@ import React from "react";
 import { describe, expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { DynamicItemSet } from "../DynamicItemSet";
+import { LeftContext } from "../../../providers/DynamicItemSetPair";
 
 describe("DynamicItemSet", () => {
   beforeAll(() => {});
@@ -10,6 +11,7 @@ describe("DynamicItemSet", () => {
     render(
       <DynamicItemSet
         items={[]}
+        context={LeftContext}
         setOperations={[]}
         emptyPage={<div>still empty</div>}
       />,

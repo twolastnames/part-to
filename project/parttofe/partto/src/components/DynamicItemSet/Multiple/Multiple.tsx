@@ -14,7 +14,7 @@ interface View {
   visible: (arg: Array<Item>) => ReactElement;
 }
 
-export function Multiple({ items }: MultipleProps) {
+export function Multiple({ context, items }: MultipleProps) {
   const list: View = {
     toOther: {
       icon: File,
@@ -23,7 +23,7 @@ export function Multiple({ items }: MultipleProps) {
         setView(detail);
       },
     },
-    visible: (items) => <List items={items} />,
+    visible: (items) => <List context={context} items={items} />,
   };
   const detail: View = {
     toOther: {
@@ -33,7 +33,7 @@ export function Multiple({ items }: MultipleProps) {
         setView(list);
       },
     },
-    visible: (items) => <Detail items={items} />,
+    visible: (items) => <Detail context={context} items={items} />,
   };
   const [{ visible, toOther }, setView] = useState<View>(detail);
 

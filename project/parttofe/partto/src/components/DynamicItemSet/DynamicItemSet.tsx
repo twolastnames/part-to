@@ -11,7 +11,9 @@ export function DynamicItemSet({
   setOperations,
   items,
   emptyPage,
+  context,
 }: DynamicItemSetProps) {
+  context.setCount(items.length);
   return (
     <div className={classes.dynamicItemSet} data-testid="DynamicItemSet">
       <ButtonSet operations={setOperations} />
@@ -20,7 +22,7 @@ export function DynamicItemSet({
       ) : items.length === 1 ? (
         <One item={items[0]} />
       ) : (
-        <Multiple items={items} />
+        <Multiple context={context} items={items} />
       )}
     </div>
   );

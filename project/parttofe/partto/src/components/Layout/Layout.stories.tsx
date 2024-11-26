@@ -5,6 +5,7 @@ import { Layout } from "./Layout";
 import { ShellProvider } from "../../providers/ShellProvider";
 import { Next, Start } from "../Icon/Icon";
 import { DynamicItemSet } from "../DynamicItemSet/DynamicItemSet";
+import { LeftContext, RightContext } from "../../providers/DynamicItemSetPair";
 
 const meta: Meta<typeof Layout> = {
   component: Layout,
@@ -23,6 +24,7 @@ export const Simple: Story = {
     pair: [
       <DynamicItemSet
         items={[]}
+        context={LeftContext}
         setOperations={[
           {
             icon: Start,
@@ -39,6 +41,7 @@ export const Simple: Story = {
       />,
       <DynamicItemSet
         items={[]}
+        context={RightContext}
         setOperations={[
           {
             icon: Start,

@@ -12,6 +12,7 @@ import { getRoute } from "../../routes";
 import { IconCooker } from "@tabler/icons-react";
 import { doRunstartPost } from "../../api/runstartpost";
 import { ReviewStagedPartTosProps } from "./ReviewStagedPartTosTypes";
+import { RightContext } from "../../providers/DynamicItemSetPair";
 
 export function ReviewStagedPartTosIdFromer({
   runState,
@@ -66,6 +67,7 @@ export function ReviewStagedPartTos({
   return (
     <DynamicItemSet
       items={items}
+      context={RightContext}
       setOperations={[
         {
           text: "Start Cooking",

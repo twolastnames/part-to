@@ -3,12 +3,14 @@ import { expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { ShellProvider } from "../../../../../providers/ShellProvider";
 import { Carousel } from "../Carousel";
+import { RightContext } from "../../../../../providers/DynamicItemSetPair";
 
 test("snapshot", async () => {
   jest.useFakeTimers();
   render(
     <ShellProvider>
       <Carousel
+        context={RightContext}
         items={[
           {
             key: "9",

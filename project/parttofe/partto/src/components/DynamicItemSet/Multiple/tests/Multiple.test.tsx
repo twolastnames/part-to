@@ -3,11 +3,13 @@ import { expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { ShellProvider } from "../../../../providers/ShellProvider";
 import { Multiple } from "../Multiple";
+import { LeftContext } from "../../../../providers/DynamicItemSetPair";
 
 test("snapshot", () => {
   render(
     <ShellProvider>
       <Multiple
+        context={LeftContext}
         items={[
           {
             key: "9",

@@ -1,0 +1,985 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<div
+  class="dynamicItemSet"
+  data-testid="DynamicItemSet"
+>
+  <div
+    class="buttonSet"
+    data-testid="ButtonSet"
+  />
+  <div
+    class="multiple"
+    data-testid="Multiple"
+  >
+    <div
+      class="switchButton"
+    >
+      <div
+        class="container"
+      >
+        <button
+          aria-label="See all 9 items in a list"
+          class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+          data-testid="Button"
+          style="--ai-color: var(--mantine-color-white);"
+          type="button"
+        >
+          <span
+            class="m_8d3afb97 mantine-ActionIcon-icon"
+          >
+            <svg
+              class="tabler-icon tabler-icon-list "
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 6l11 0"
+              />
+              <path
+                d="M9 12l11 0"
+              />
+              <path
+                d="M9 18l11 0"
+              />
+              <path
+                d="M5 6l0 .01"
+              />
+              <path
+                d="M5 12l0 .01"
+              />
+              <path
+                d="M5 18l0 .01"
+              />
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+    <span
+      data-testid="Detail"
+    >
+      <div
+        class="multiple"
+        data-testid="Carousel"
+      >
+        <div
+          class="carousel"
+        >
+          <div
+            class="carouselButton"
+          >
+            <div
+              class="container"
+            >
+              <button
+                aria-label="Back One"
+                class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                data-testid="Button"
+                style="--ai-color: var(--mantine-color-white);"
+                type="button"
+              >
+                <span
+                  class="m_8d3afb97 mantine-ActionIcon-icon"
+                >
+                  <svg
+                    class="tabler-icon tabler-icon-caret-up "
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M18 14l-6 -6l-6 6h12"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="content"
+          >
+            <div
+              class="listView"
+            >
+              <div>
+                Detail View 
+                0
+              </div>
+            </div>
+          </div>
+          <div
+            class="carouselButton"
+          >
+            <div
+              class="container"
+            >
+              <button
+                aria-label="Forward One"
+                class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                data-testid="Button"
+                style="--ai-color: var(--mantine-color-white);"
+                type="button"
+              >
+                <span
+                  class="m_8d3afb97 mantine-ActionIcon-icon"
+                >
+                  <svg
+                    class="tabler-icon tabler-icon-caret-down "
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6 10l6 6l6 -6h-12"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="iterationProgress"
+          data-testid="IterationProgress"
+        >
+          <span>
+            <span
+              data-testid="Timer"
+            >
+              <span
+                data-testid="LocalProgress"
+              >
+                <div
+                  class="m_b32e4812 mantine-RingProgress-root"
+                  data-testid="Progress"
+                  style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
+                  title="Pause"
+                >
+                  <svg
+                    class="m_d43b5134 mantine-RingProgress-svg"
+                  >
+                    <circle
+                      class="m_b1ca1fbf mantine-RingProgress-curve"
+                      cx="28"
+                      cy="28"
+                      fill="none"
+                      r="17.2"
+                      stroke-dasharray="108.043769586668, 0.027017696820872225"
+                      stroke-dashoffset="0"
+                      stroke-linecap="butt"
+                      stroke-width="8"
+                      transform="scale(1, -1) translate(0, -56)"
+                    />
+                    <circle
+                      class="m_b1ca1fbf mantine-RingProgress-curve"
+                      cx="28"
+                      cy="28"
+                      fill="none"
+                      r="17.2"
+                      stroke-dasharray="0.027017696820872225, 108.043769586668"
+                      stroke-dashoffset="108.07078728348888"
+                      stroke-linecap="butt"
+                      stroke-width="8"
+                      style="--curve-color: var(--secondary-color);"
+                    />
+                  </svg>
+                  <div
+                    class="m_b23f9dc4 mantine-RingProgress-label"
+                  >
+                    <div
+                      class="label"
+                    >
+                      1
+                    </div>
+                  </div>
+                </div>
+              </span>
+            </span>
+          </span>
+          <span
+            class="count"
+          >
+            <span
+              data-testid="Count"
+            >
+              <span
+                data-testid="LocalProgress"
+              >
+                <div
+                  class="m_b32e4812 mantine-RingProgress-root"
+                  data-testid="Progress"
+                  style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
+                  title="8 Seconds"
+                >
+                  <svg
+                    class="m_d43b5134 mantine-RingProgress-svg"
+                  >
+                    <circle
+                      class="m_b1ca1fbf mantine-RingProgress-curve"
+                      cx="28"
+                      cy="28"
+                      fill="none"
+                      r="17.2"
+                      stroke-dasharray="96.0629220297679, 12.007865253720988"
+                      stroke-dashoffset="0"
+                      stroke-linecap="butt"
+                      stroke-width="8"
+                      transform="scale(1, -1) translate(0, -56)"
+                    />
+                    <circle
+                      class="m_b1ca1fbf mantine-RingProgress-curve"
+                      cx="28"
+                      cy="28"
+                      fill="none"
+                      r="17.2"
+                      stroke-dasharray="12.007865253720988, 96.0629220297679"
+                      stroke-dashoffset="108.07078728348888"
+                      stroke-linecap="butt"
+                      stroke-width="8"
+                      style="--curve-color: var(--secondary-color);"
+                    />
+                  </svg>
+                  <div
+                    class="m_b23f9dc4 mantine-RingProgress-label"
+                  >
+                    <div
+                      class="label"
+                    >
+                      9
+                    </div>
+                  </div>
+                </div>
+              </span>
+            </span>
+          </span>
+        </div>
+        <div
+          class="buttonSet"
+        >
+          <div
+            class="buttons"
+          >
+            <div
+              class="buttonSet"
+              data-testid="ButtonSet"
+            >
+              <div
+                class="container"
+              >
+                <button
+                  aria-label="Delete Item 0"
+                  class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-testid="Button"
+                  style="--ai-color: var(--mantine-color-white);"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="tabler-icon tabler-icon-chef-hat "
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 3c1.918 0 3.52 1.35 3.91 3.151a4 4 0 0 1 2.09 7.723l0 7.126h-12v-7.126a4 4 0 1 1 2.092 -7.723a4 4 0 0 1 3.908 -3.151z"
+                      />
+                      <path
+                        d="M6.161 17.009l11.839 -.009"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`snapshot 2`] = `
+<div
+  class="dynamicItemSet"
+  data-testid="DynamicItemSet"
+>
+  <div
+    class="buttonSet"
+    data-testid="ButtonSet"
+  />
+  <div
+    class="multiple"
+    data-testid="Multiple"
+  >
+    <div
+      class="switchButton"
+    >
+      <div
+        class="container"
+      >
+        <button
+          aria-label="See all 9 items in a list"
+          class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+          data-testid="Button"
+          style="--ai-color: var(--mantine-color-white);"
+          type="button"
+        >
+          <span
+            class="m_8d3afb97 mantine-ActionIcon-icon"
+          >
+            <svg
+              class="tabler-icon tabler-icon-list "
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 6l11 0"
+              />
+              <path
+                d="M9 12l11 0"
+              />
+              <path
+                d="M9 18l11 0"
+              />
+              <path
+                d="M5 6l0 .01"
+              />
+              <path
+                d="M5 12l0 .01"
+              />
+              <path
+                d="M5 18l0 .01"
+              />
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+    <span
+      data-testid="Detail"
+    >
+      <div
+        class="multiple"
+        data-testid="Carousel"
+      >
+        <div
+          class="carousel"
+        >
+          <div
+            class="carouselButton"
+          >
+            <div
+              class="container"
+            >
+              <button
+                aria-label="Back One"
+                class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                data-testid="Button"
+                style="--ai-color: var(--mantine-color-white);"
+                type="button"
+              >
+                <span
+                  class="m_8d3afb97 mantine-ActionIcon-icon"
+                >
+                  <svg
+                    class="tabler-icon tabler-icon-caret-up "
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M18 14l-6 -6l-6 6h12"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="content"
+          >
+            <div
+              class="listView"
+            >
+              <div>
+                Detail View 
+                5
+              </div>
+            </div>
+          </div>
+          <div
+            class="carouselButton"
+          >
+            <div
+              class="container"
+            >
+              <button
+                aria-label="Forward One"
+                class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                data-testid="Button"
+                style="--ai-color: var(--mantine-color-white);"
+                type="button"
+              >
+                <span
+                  class="m_8d3afb97 mantine-ActionIcon-icon"
+                >
+                  <svg
+                    class="tabler-icon tabler-icon-caret-down "
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6 10l6 6l6 -6h-12"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="iterationProgress"
+          data-testid="IterationProgress"
+        >
+          <span>
+            <span
+              data-testid="Timer"
+            >
+              <span
+                data-testid="LocalProgress"
+              >
+                <div
+                  class="m_b32e4812 mantine-RingProgress-root"
+                  data-testid="Progress"
+                  style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
+                  title="Pause"
+                >
+                  <svg
+                    class="m_d43b5134 mantine-RingProgress-svg"
+                  >
+                    <circle
+                      class="m_b1ca1fbf mantine-RingProgress-curve"
+                      cx="28"
+                      cy="28"
+                      fill="none"
+                      r="17.2"
+                      stroke-dasharray="108.043769586668, 0.027017696820872225"
+                      stroke-dashoffset="0"
+                      stroke-linecap="butt"
+                      stroke-width="8"
+                      transform="scale(1, -1) translate(0, -56)"
+                    />
+                    <circle
+                      class="m_b1ca1fbf mantine-RingProgress-curve"
+                      cx="28"
+                      cy="28"
+                      fill="none"
+                      r="17.2"
+                      stroke-dasharray="0.027017696820872225, 108.043769586668"
+                      stroke-dashoffset="108.07078728348888"
+                      stroke-linecap="butt"
+                      stroke-width="8"
+                      style="--curve-color: var(--secondary-color);"
+                    />
+                  </svg>
+                  <div
+                    class="m_b23f9dc4 mantine-RingProgress-label"
+                  >
+                    <div
+                      class="label"
+                    >
+                      6
+                    </div>
+                  </div>
+                </div>
+              </span>
+            </span>
+          </span>
+          <span
+            class="count"
+          >
+            <span
+              data-testid="Count"
+            >
+              <span
+                data-testid="LocalProgress"
+              >
+                <div
+                  class="m_b32e4812 mantine-RingProgress-root"
+                  data-testid="Progress"
+                  style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
+                  title="8 Seconds"
+                >
+                  <svg
+                    class="m_d43b5134 mantine-RingProgress-svg"
+                  >
+                    <circle
+                      class="m_b1ca1fbf mantine-RingProgress-curve"
+                      cx="28"
+                      cy="28"
+                      fill="none"
+                      r="17.2"
+                      stroke-dasharray="36.02359576116297, 72.04719152232592"
+                      stroke-dashoffset="0"
+                      stroke-linecap="butt"
+                      stroke-width="8"
+                      transform="scale(1, -1) translate(0, -56)"
+                    />
+                    <circle
+                      class="m_b1ca1fbf mantine-RingProgress-curve"
+                      cx="28"
+                      cy="28"
+                      fill="none"
+                      r="17.2"
+                      stroke-dasharray="72.04719152232592, 36.02359576116297"
+                      stroke-dashoffset="108.07078728348888"
+                      stroke-linecap="butt"
+                      stroke-width="8"
+                      style="--curve-color: var(--secondary-color);"
+                    />
+                  </svg>
+                  <div
+                    class="m_b23f9dc4 mantine-RingProgress-label"
+                  >
+                    <div
+                      class="label"
+                    >
+                      9
+                    </div>
+                  </div>
+                </div>
+              </span>
+            </span>
+          </span>
+        </div>
+        <div
+          class="buttonSet"
+        >
+          <div
+            class="buttons"
+          >
+            <div
+              class="buttonSet"
+              data-testid="ButtonSet"
+            >
+              <div
+                class="container"
+              >
+                <button
+                  aria-label="Delete Item 5"
+                  class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-testid="Button"
+                  style="--ai-color: var(--mantine-color-white);"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="tabler-icon tabler-icon-chef-hat "
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 3c1.918 0 3.52 1.35 3.91 3.151a4 4 0 0 1 2.09 7.723l0 7.126h-12v-7.126a4 4 0 1 1 2.092 -7.723a4 4 0 0 1 3.908 -3.151z"
+                      />
+                      <path
+                        d="M6.161 17.009l11.839 -.009"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`snapshot 3`] = `
+<div
+  class="dynamicItemSet"
+  data-testid="DynamicItemSet"
+>
+  <div
+    class="buttonSet"
+    data-testid="ButtonSet"
+  />
+  <div
+    class="multiple"
+    data-testid="Multiple"
+  >
+    <div
+      class="switchButton"
+    >
+      <div
+        class="container"
+      >
+        <button
+          aria-label="See all 8 items in a list"
+          class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+          data-testid="Button"
+          style="--ai-color: var(--mantine-color-white);"
+          type="button"
+        >
+          <span
+            class="m_8d3afb97 mantine-ActionIcon-icon"
+          >
+            <svg
+              class="tabler-icon tabler-icon-list "
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 6l11 0"
+              />
+              <path
+                d="M9 12l11 0"
+              />
+              <path
+                d="M9 18l11 0"
+              />
+              <path
+                d="M5 6l0 .01"
+              />
+              <path
+                d="M5 12l0 .01"
+              />
+              <path
+                d="M5 18l0 .01"
+              />
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+    <span
+      data-testid="Detail"
+    >
+      <div
+        class="multiple"
+        data-testid="Carousel"
+      >
+        <div
+          class="carousel"
+        >
+          <div
+            class="carouselButton"
+          >
+            <div
+              class="container"
+            >
+              <button
+                aria-label="Back One"
+                class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                data-testid="Button"
+                style="--ai-color: var(--mantine-color-white);"
+                type="button"
+              >
+                <span
+                  class="m_8d3afb97 mantine-ActionIcon-icon"
+                >
+                  <svg
+                    class="tabler-icon tabler-icon-caret-up "
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M18 14l-6 -6l-6 6h12"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="content"
+          >
+            <div
+              class="listView"
+            >
+              <div>
+                Detail View 
+                6
+              </div>
+            </div>
+          </div>
+          <div
+            class="carouselButton"
+          >
+            <div
+              class="container"
+            >
+              <button
+                aria-label="Forward One"
+                class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                data-testid="Button"
+                style="--ai-color: var(--mantine-color-white);"
+                type="button"
+              >
+                <span
+                  class="m_8d3afb97 mantine-ActionIcon-icon"
+                >
+                  <svg
+                    class="tabler-icon tabler-icon-caret-down "
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6 10l6 6l6 -6h-12"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="iterationProgress"
+          data-testid="IterationProgress"
+        >
+          <span>
+            <span
+              data-testid="Timer"
+            >
+              <span
+                data-testid="LocalProgress"
+              >
+                <div
+                  class="m_b32e4812 mantine-RingProgress-root"
+                  data-testid="Progress"
+                  style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
+                  title="Pause"
+                >
+                  <svg
+                    class="m_d43b5134 mantine-RingProgress-svg"
+                  >
+                    <circle
+                      class="m_b1ca1fbf mantine-RingProgress-curve"
+                      cx="28"
+                      cy="28"
+                      fill="none"
+                      r="17.2"
+                      stroke-dasharray="108.043769586668, 0.027017696820872225"
+                      stroke-dashoffset="0"
+                      stroke-linecap="butt"
+                      stroke-width="8"
+                      transform="scale(1, -1) translate(0, -56)"
+                    />
+                    <circle
+                      class="m_b1ca1fbf mantine-RingProgress-curve"
+                      cx="28"
+                      cy="28"
+                      fill="none"
+                      r="17.2"
+                      stroke-dasharray="0.027017696820872225, 108.043769586668"
+                      stroke-dashoffset="108.07078728348888"
+                      stroke-linecap="butt"
+                      stroke-width="8"
+                      style="--curve-color: var(--secondary-color);"
+                    />
+                  </svg>
+                  <div
+                    class="m_b23f9dc4 mantine-RingProgress-label"
+                  >
+                    <div
+                      class="label"
+                    >
+                      6
+                    </div>
+                  </div>
+                </div>
+              </span>
+            </span>
+          </span>
+          <span
+            class="count"
+          >
+            <span
+              data-testid="Count"
+            >
+              <span
+                data-testid="LocalProgress"
+              >
+                <div
+                  class="m_b32e4812 mantine-RingProgress-root"
+                  data-testid="Progress"
+                  style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
+                  title="8 Seconds"
+                >
+                  <svg
+                    class="m_d43b5134 mantine-RingProgress-svg"
+                  >
+                    <circle
+                      class="m_b1ca1fbf mantine-RingProgress-curve"
+                      cx="28"
+                      cy="28"
+                      fill="none"
+                      r="17.2"
+                      stroke-dasharray="27.01769682087222, 81.05309046261667"
+                      stroke-dashoffset="0"
+                      stroke-linecap="butt"
+                      stroke-width="8"
+                      transform="scale(1, -1) translate(0, -56)"
+                    />
+                    <circle
+                      class="m_b1ca1fbf mantine-RingProgress-curve"
+                      cx="28"
+                      cy="28"
+                      fill="none"
+                      r="17.2"
+                      stroke-dasharray="81.05309046261667, 27.01769682087222"
+                      stroke-dashoffset="108.07078728348888"
+                      stroke-linecap="butt"
+                      stroke-width="8"
+                      style="--curve-color: var(--secondary-color);"
+                    />
+                  </svg>
+                  <div
+                    class="m_b23f9dc4 mantine-RingProgress-label"
+                  >
+                    <div
+                      class="label"
+                    >
+                      8
+                    </div>
+                  </div>
+                </div>
+              </span>
+            </span>
+          </span>
+        </div>
+        <div
+          class="buttonSet"
+        >
+          <div
+            class="buttons"
+          >
+            <div
+              class="buttonSet"
+              data-testid="ButtonSet"
+            >
+              <div
+                class="container"
+              >
+                <button
+                  aria-label="Delete Item 6"
+                  class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-testid="Button"
+                  style="--ai-color: var(--mantine-color-white);"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="tabler-icon tabler-icon-chef-hat "
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 3c1.918 0 3.52 1.35 3.91 3.151a4 4 0 0 1 2.09 7.723l0 7.126h-12v-7.126a4 4 0 1 1 2.092 -7.723a4 4 0 0 1 3.908 -3.151z"
+                      />
+                      <path
+                        d="M6.161 17.009l11.839 -.009"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+`;

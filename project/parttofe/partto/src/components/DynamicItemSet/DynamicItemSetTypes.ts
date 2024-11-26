@@ -1,3 +1,4 @@
+import { ContextDescription } from "../../providers/DynamicItemSetPair";
 import { IconType } from "../Icon/IconTypes";
 
 export interface Operation {
@@ -17,4 +18,5 @@ export interface DynamicItemSetProps {
   items: Array<Item>;
   setOperations: Array<Operation>;
   emptyPage: React.ReactElement;
+  context: ContextDescription;
 }
