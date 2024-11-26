@@ -3,18 +3,12 @@ import { expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { IterationProgress } from "../IterationProgress";
 import { ShellProvider } from "../../../../../providers/ShellProvider";
+import { RightContext } from "../../../../../providers/DynamicItemSetPair";
 
 test("snapshot", () => {
   render(
     <ShellProvider>
-      <IterationProgress
-        setPaused={(arg) => undefined}
-        paused={false}
-        showDuration={2}
-        total={5}
-        on={2}
-        setShowDuration={(arg: number) => undefined}
-      />
+      <IterationProgress context={RightContext} />
     </ShellProvider>,
   );
   const component = screen.getByTestId("IterationProgress");

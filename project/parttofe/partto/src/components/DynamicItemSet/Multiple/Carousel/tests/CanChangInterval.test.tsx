@@ -27,9 +27,9 @@ test("snapshot", async () => {
       />
     </ShellProvider>,
   );
-  const slow = screen.getByTitle("8 Seconds");
+  const slow = screen.getByTitle("4 seconds");
   await slow.click();
   jest.advanceTimersByTime(1000);
-  const slower = screen.getByTitle("16 Seconds");
+  const slower = screen.getByTitle("8 seconds");
   expect(slower).toBeTruthy();
 });

@@ -1,17 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import classes from "./Carousel.module.scss";
 import { Button } from "../../../Button/Button";
 import { Down, Up } from "../../../Icon/Icon";
 import { ButtonSet } from "../../ButtonSet/ButtonSet";
-import {
-  IterationProgress,
-  speeds,
-} from "../IterationProgress/IterationProgress";
+import { IterationProgress } from "../IterationProgress/IterationProgress";
 import { Item } from "../../DynamicItemSetTypes";
 import { MultipleProps } from "../MultipleTypes";
 import { CarouselPage } from "./CarouselTypes";
-import { UndefinedDynamicItemSetPair } from "../../../../providers/DynamicItemSetPair";
+import { useSingleOfPair } from "../../../../providers/DynamicItemSetPair";
 
 function getPages(current: Array<Item>) {
   return current.map(({ key, detailView, itemOperations }) => ({
@@ -22,10 +19,8 @@ function getPages(current: Array<Item>) {
 }
 
 export function Carousel({ items, context }: MultipleProps) {
-  const [showDuration, setShowDuration] = useState<number>(2);
-  const { selected, goForward, goBack } =
-    useContext(context.context) || UndefinedDynamicItemSetPair;
-  const [paused, setPaused] = useState<boolean>(false);
+  const { paused, selected, goForward, goBack, showDuration } =
+    useSingleOfPair(context);
   const [pages, setPages] = useState<Array<CarouselPage & { key: string }>>(
     getPages(items),
   );
@@ -33,22 +28,16 @@ export function Carousel({ items, context }: MultipleProps) {
   const itemsLength = items.length;
   context.setCount(itemsLength);
   useEffect(() => {
-    if (paused || speeds[showDuration]?.duration == null) {
+    if (paused) {
       return;
     }
-    const id = setInterval(
-      () => {
-        goForward();
-      },
-      (speeds[showDuration] == null
-        ? speeds[2]
-        : speeds[showDuration]
-      ).duration.toMilliseconds(),
-    );
+    const id = setInterval(() => {
+      goForward();
+    }, showDuration.toMilliseconds());
     return () => {
       clearInterval(id);
     };
-  }, [showDuration, itemsLength, paused, selected, goForward]);
+  }, [showDuration, paused, goForward]);
 
   useEffect(() => {
     setPages(getPages(items));
@@ -86,14 +75,7 @@ export function Carousel({ items, context }: MultipleProps) {
           />
         </div>
       </div>
-      <IterationProgress
-        setShowDuration={setShowDuration}
-        on={selected}
-        total={pages.length}
-        showDuration={showDuration}
-        setPaused={setPaused}
-        paused={paused}
-      />
+      <IterationProgress context={context} />
       {operations ? (
         <div className={classes.buttonSet}>
           <div className={classes.buttons}>

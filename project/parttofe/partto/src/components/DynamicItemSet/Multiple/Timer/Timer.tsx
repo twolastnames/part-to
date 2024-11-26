@@ -7,6 +7,10 @@ import { getDateTime } from "../../../../shared/dateTime";
 export function Timer({ start, duration, label, title, onClick }: TimerProps) {
   const [on, setOn] = useState<number>(0);
   useEffect(() => {
+    if (duration == null) {
+      setOn(0);
+      return;
+    }
     const id = setInterval(() => {
       const now = getDateTime();
       setOn(now.subtract(start).toMilliseconds());
@@ -14,7 +18,7 @@ export function Timer({ start, duration, label, title, onClick }: TimerProps) {
     return () => {
       clearInterval(id);
     };
-  }, [start]);
+  }, [start, duration]);
   return (
     <span data-testid="Timer">
       <Progress
@@ -22,7 +26,7 @@ export function Timer({ start, duration, label, title, onClick }: TimerProps) {
         title={title}
         label={label}
         on={on}
-        total={duration.toMilliseconds()}
+        total={duration?.toMilliseconds() || Infinity}
       />
     </span>
   );

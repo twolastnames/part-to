@@ -174,7 +174,7 @@ exports[`snapshot 1`] = `
                   class="m_b32e4812 mantine-RingProgress-root"
                   data-testid="Progress"
                   style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
-                  title="Pause"
+                  title="Unpaused"
                 >
                   <svg
                     class="m_d43b5134 mantine-RingProgress-svg"
@@ -230,7 +230,7 @@ exports[`snapshot 1`] = `
                   class="m_b32e4812 mantine-RingProgress-root"
                   data-testid="Progress"
                   style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
-                  title="8 Seconds"
+                  title="4 seconds"
                 >
                   <svg
                     class="m_d43b5134 mantine-RingProgress-svg"
@@ -502,7 +502,7 @@ exports[`snapshot 2`] = `
                   class="m_b32e4812 mantine-RingProgress-root"
                   data-testid="Progress"
                   style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
-                  title="Pause"
+                  title="Unpaused"
                 >
                   <svg
                     class="m_d43b5134 mantine-RingProgress-svg"
@@ -558,7 +558,7 @@ exports[`snapshot 2`] = `
                   class="m_b32e4812 mantine-RingProgress-root"
                   data-testid="Progress"
                   style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
-                  title="8 Seconds"
+                  title="4 seconds"
                 >
                   <svg
                     class="m_d43b5134 mantine-RingProgress-svg"
@@ -830,7 +830,7 @@ exports[`snapshot 3`] = `
                   class="m_b32e4812 mantine-RingProgress-root"
                   data-testid="Progress"
                   style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
-                  title="Pause"
+                  title="Unpaused"
                 >
                   <svg
                     class="m_d43b5134 mantine-RingProgress-svg"
@@ -886,7 +886,7 @@ exports[`snapshot 3`] = `
                   class="m_b32e4812 mantine-RingProgress-root"
                   data-testid="Progress"
                   style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
-                  title="8 Seconds"
+                  title="4 seconds"
                 >
                   <svg
                     class="m_d43b5134 mantine-RingProgress-svg"

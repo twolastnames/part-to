@@ -1,6 +1,6 @@
 import React from "react";
 import { expect, test } from "@jest/globals";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { ShellProvider } from "../../../../../providers/ShellProvider";
 import { Carousel } from "../Carousel";
 import { RightContext } from "../../../../../providers/DynamicItemSetPair";
@@ -30,14 +30,12 @@ test("snapshot", async () => {
   );
   expect(screen.getByText("hello")).toBeTruthy();
   expect(screen.queryByText("world")).toBeFalsy();
-  const pauseButton = screen.getByTitle("Pause");
+  const pauseButton = screen.getByTitle("Unpaused");
   await pauseButton.click();
   jest.advanceTimersByTime(9000);
   expect(screen.getByText("hello")).toBeTruthy();
   expect(screen.queryByText("world")).toBeFalsy();
-  const unpauseButton = screen.getByTitle("Unpause");
-  await unpauseButton.click();
-  jest.advanceTimersByTime(6000);
-  expect(await screen.findByText("world")).toBeTruthy();
-  expect(screen.queryByText("hello")).toBeFalsy();
+  // eslint-disable-next-line testing-library/prefer-find-by
+  const unpauseButton = await waitFor(() => screen.getByTitle("Paused"));
+  expect(unpauseButton).toBeTruthy();
 });

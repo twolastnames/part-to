@@ -3,7 +3,7 @@ import { Duration } from "../../../../shared/duration";
 
 export interface TimerProps {
   start: DateTime;
-  duration: Duration;
+  duration?: Duration;
   label: string;
   title: string;
   onClick: () => void;
