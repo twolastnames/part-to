@@ -117,6 +117,25 @@ export function use{{ name.title }} () {
             """,
         ),
     ],
+    "providers": [
+        Definition(
+            filename=os.path.join("..", "{{ name.title }}.tsx"),
+            definition="""
+import React, { createContext } from "react";
+import { PropsWithChildren } from "react";
+
+export type {{ name.title }}Type = {}
+
+export const {{ name.title }}Context = createContext<undefined | {{ name.title}}Type>(undefined)
+
+export function {{ name.title }}Provider ({children} : PropsWithChildren) {
+    return <{{ name.title }}Context.Provider value={undefined}>
+        { children }
+    </{{ name.title }}Context.Provider>
+}
+""",
+        ),
+    ],
     "components": [
         Definition(
             filename="{{ name.title }}.tsx",
