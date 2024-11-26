@@ -4,6 +4,10 @@ import { MantineProvider, createTheme } from "@mantine/core";
 import { PropsWithChildren } from "react";
 import "@mantine/core/styles.layer.css";
 import "../App.scss";
+import {
+  LeftDynamicItemSetPairProvider,
+  RightDynamicItemSetPairProvider,
+} from "./DynamicItemSetPair";
 
 const themes = {
   default: createTheme({
@@ -36,7 +40,11 @@ export const ShellProvider = ({ children }: PropsWithChildren) => {
   themeChangeRef = useRef(setTheme);
   return (
     <div id="theme" className="defaultTheme">
-      <MantineProvider theme={themes[theme]}>{children}</MantineProvider>
+      <LeftDynamicItemSetPairProvider>
+        <RightDynamicItemSetPairProvider>
+          <MantineProvider theme={themes[theme]}>{children}</MantineProvider>
+        </RightDynamicItemSetPairProvider>
+      </LeftDynamicItemSetPairProvider>
     </div>
   );
 };
