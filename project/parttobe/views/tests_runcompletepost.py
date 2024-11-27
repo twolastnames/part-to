@@ -64,6 +64,8 @@ class RunCompleteTestClass(TestCase):
         runStateId = response.data["runState"]
         self.assertEqual(response.status_code, 200)
         completable = response.data["started"][0]
+        task = response.data["duties"][0]
+        self.assertEqual(task, completable)
         complete_body = json.dumps(
             {
                 "runState": runStateId,

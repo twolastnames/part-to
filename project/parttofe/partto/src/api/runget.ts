@@ -32,6 +32,8 @@ export type RunGet200Body = {
   report?: DateTime | undefined;
   complete?: DateTime | undefined;
   activePartTos?: Array<PartToId>;
+  tasks: Array<TaskDefinitionId>;
+  duties: Array<TaskDefinitionId>;
   staged: Array<TaskDefinitionId>;
   started: Array<TaskDefinitionId>;
   created: Array<TaskDefinitionId>;
@@ -44,6 +46,8 @@ type Wire200Body = {
   report?: string | undefined;
   complete?: string | undefined;
   activePartTos?: Array<PartToId>;
+  tasks: Array<TaskDefinitionId>;
+  duties: Array<TaskDefinitionId>;
   staged: Array<TaskDefinitionId>;
   started: Array<TaskDefinitionId>;
   created: Array<TaskDefinitionId>;
@@ -80,6 +84,12 @@ export const useRunGet: (
         complete: unmarshalers.unrequired["date-time"](body.complete),
         activePartTos: body.activePartTos?.map((value) =>
           unmarshalers.required["PartToId"](value),
+        ),
+        tasks: body.tasks.map((value) =>
+          unmarshalers.required["TaskDefinitionId"](value),
+        ),
+        duties: body.duties.map((value) =>
+          unmarshalers.required["TaskDefinitionId"](value),
         ),
         staged: body.staged.map((value) =>
           unmarshalers.required["TaskDefinitionId"](value),

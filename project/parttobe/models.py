@@ -561,6 +561,12 @@ class RunState(models.Model):
         for task in active_tasks:
             seen_part_tos.add(task.part_to)
         result["activePartTos"] = list(seen_part_tos)
+        result["tasks"] = [
+            task for task in result["started"] if task.is_task()
+        ]
+        result["duties"] = [
+            task for task in result["started"] if not task.is_task()
+        ]
         return result
 
     def append_states(self, operation, tasks):

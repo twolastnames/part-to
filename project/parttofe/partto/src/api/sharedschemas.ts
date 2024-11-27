@@ -174,6 +174,8 @@ export interface RunState {
   report?: DateTime | undefined;
   complete?: DateTime | undefined;
   activePartTos?: Array<PartToId>;
+  tasks: Array<TaskDefinitionId>;
+  duties: Array<TaskDefinitionId>;
   staged: Array<TaskDefinitionId>;
   started: Array<TaskDefinitionId>;
   created: Array<TaskDefinitionId>;

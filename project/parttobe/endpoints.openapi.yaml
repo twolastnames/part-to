@@ -603,6 +603,8 @@ components:
       - runState
       - staged
       - started
+      - tasks
+      - duties
       - created
       - voided
       - completed
@@ -622,6 +624,16 @@ components:
           items:
             type: string
             format: PartToId
+        tasks:
+          type: array
+          items:
+            type: string
+            format: TaskDefinitionId
+        duties:
+          type: array
+          items:
+            type: string
+            format: TaskDefinitionId
         staged:
           type: array
           items:
