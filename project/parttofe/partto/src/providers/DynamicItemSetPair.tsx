@@ -5,11 +5,11 @@ import React, {
   MutableRefObject,
   createRef,
   useContext,
-  useCallback,
+  SetStateAction,
 } from "react";
 import { PropsWithChildren } from "react";
 import { Duration, getDuration } from "../shared/duration";
-import { debounce } from "lodash";
+import { debounce, DebouncedFunc } from "lodash";
 
 export type DynamicItemSetPairType = {
   selected: number;
@@ -131,9 +131,13 @@ type ProviderState = {
 function useProvider({
   count,
   getSettingKey,
+  togglePauseClickSlower,
 }: {
   getSettingKey: () => string;
   count: MutableRefObject<number | null>;
+  togglePauseClickSlower: DebouncedFunc<
+    (setState: (arg: SetStateAction<ProviderState>) => void) => void
+  >;
 }) {
   const durations = getDurations(getSettingKey());
   const [state, setState] = useState<ProviderState>({
@@ -142,19 +146,15 @@ function useProvider({
     paused: false,
   });
 
-  const togglePauseClickSlower: () => void = useCallback(
-    () =>
-      debounce(() => {
-        setState((previous) => ({ ...previous, paused: !previous.paused }));
-      }, 100)(),
-    [],
-  );
-
-  if (state.selected < 0) {
+  if (
+    state.selected !== 0 &&
+    (state.selected < 0 ||
+      count.current == null ||
+      state.selected >= count.current)
+  ) {
     setState((current) => ({ ...current, selected: 0 }));
-  } else if (count.current && state.selected >= count.current) {
-    setState((current) => ({ ...current, selected: (count.current || 1) - 1 }));
   }
+
   const duration = durations[state.showDuration];
   return {
     selected: state.selected,
@@ -168,7 +168,7 @@ function useProvider({
     paused: state.paused,
     getTotal: () => count.current || 0,
     togglePause: () => {
-      togglePauseClickSlower();
+      togglePauseClickSlower(setState);
     },
     nextShowDuration: () => {
       const next = state.showDuration + 1;
@@ -180,6 +180,13 @@ function useProvider({
   };
 }
 
+const leftTogglePauseClickSlower = debounce(
+  (setState: (arg: SetStateAction<ProviderState>) => void) => {
+    setState((previous) => ({ ...previous, paused: !previous.paused }));
+  },
+  100,
+);
+
 export function LeftDynamicItemSetPairProvider({
   children,
 }: PropsWithChildren) {
@@ -188,12 +195,20 @@ export function LeftDynamicItemSetPairProvider({
       value={useProvider({
         count: leftCount,
         getSettingKey: getLeftSettingKey,
+        togglePauseClickSlower: leftTogglePauseClickSlower,
       })}
     >
       {children}
     </LeftDynamicItemSetPairContext.Provider>
   );
 }
+
+const rightTogglePauseClickSlower = debounce(
+  (setState: (arg: SetStateAction<ProviderState>) => void) => {
+    setState((previous) => ({ ...previous, paused: !previous.paused }));
+  },
+  100,
+);
 
 export function RightDynamicItemSetPairProvider({
   children,
@@ -203,6 +218,7 @@ export function RightDynamicItemSetPairProvider({
       value={useProvider({
         count: rightCount,
         getSettingKey: getRightSettingKey,
+        togglePauseClickSlower: rightTogglePauseClickSlower,
       })}
     >
       {children}

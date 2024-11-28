@@ -8,6 +8,7 @@ import {
   LeftDynamicItemSetPairProvider,
   RightDynamicItemSetPairProvider,
 } from "./DynamicItemSetPair";
+import { TimerProvider } from "./Timer";
 
 const themes = {
   default: createTheme({
@@ -42,7 +43,9 @@ export const ShellProvider = ({ children }: PropsWithChildren) => {
     <div id="theme" className="defaultTheme">
       <LeftDynamicItemSetPairProvider>
         <RightDynamicItemSetPairProvider>
-          <MantineProvider theme={themes[theme]}>{children}</MantineProvider>
+          <TimerProvider>
+            <MantineProvider theme={themes[theme]}>{children}</MantineProvider>
+          </TimerProvider>
         </RightDynamicItemSetPairProvider>
       </LeftDynamicItemSetPairProvider>
     </div>

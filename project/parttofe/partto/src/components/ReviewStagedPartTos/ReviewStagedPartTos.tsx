@@ -12,7 +12,8 @@ import { getRoute } from "../../routes";
 import { IconCooker } from "@tabler/icons-react";
 import { doRunstartPost } from "../../api/runstartpost";
 import { ReviewStagedPartTosProps } from "./ReviewStagedPartTosTypes";
-import { RightContext } from "../../providers/DynamicItemSetPair";
+import { LeftContext, RightContext } from "../../providers/DynamicItemSetPair";
+import { clearTimers } from "../../providers/Timer";
 
 export function ReviewStagedPartTosIdFromer({
   runState,
@@ -49,8 +50,10 @@ function getItems(
               runState: runState.current,
               definitions: [taskDefinitionId],
             },
-            on200: ({ runState }) =>
-              navigate(getRoute("StageMeal", { runState: runState })),
+            on200: ({ runState }) => {
+              clearTimers();
+              navigate(getRoute("StageMeal", { runState: runState }));
+            },
           });
         },
       },
@@ -76,6 +79,10 @@ export function ReviewStagedPartTos({
             doRunstartPost({
               body: { runState: runState.current },
               on200: ({ runState }) => {
+                LeftContext.setCount(0);
+                LeftContext.setSettingKey("duties");
+                RightContext.setCount(0);
+                RightContext.setSettingKey("tasks");
                 navigate(getRoute("CookMeal", { runState }));
               },
             });

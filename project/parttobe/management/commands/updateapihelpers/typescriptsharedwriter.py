@@ -8,6 +8,7 @@ from .shared import (
     self_directory,
     format_typescript_file,
     required_question,
+    GenerateWarning,
 )
 from parttobe.endpoints import (
     operations,
@@ -167,6 +168,20 @@ def write_shared_definitions(definitions, format_ids):
     }
     print("generating file: '{}'".format(filename))
     file = open(filename, "w")
+    comment_prefix = "//"
+    seperator = comment_prefix
+    while len(seperator) < 60:
+        seperator += comment_prefix
+    file.write(
+        GenerateWarning.render(
+            Context(
+                {
+                    "prefix": comment_prefix,
+                    "seperator": seperator,
+                }
+            )
+        )
+    )
     file.write(ConstructedTemplate.render(Context(context)))
     file.close()
     print("generated file: '{}'".format(filename))

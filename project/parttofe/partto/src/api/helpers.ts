@@ -48,7 +48,7 @@ export const baseParameterMarshalers: BaseParameterMarshalers = {
     "date-time": (date: DateTime) => date.toISOString(),
     number: (value: number) => Number(value).toString(),
     string: (value: string) => value,
-    duration: (value: Duration) => value.toMilliseconds().toString(),
+    duration: (value: Duration) => (value.toMilliseconds() / 1000).toString(),
   },
   unrequired: {
     "date-time": (date: DateTime | undefined) => date?.toISOString(),
@@ -56,7 +56,7 @@ export const baseParameterMarshalers: BaseParameterMarshalers = {
       value ? Number(value).toString() : undefined,
     string: (value: string | undefined) => value,
     duration: (value: Duration | undefined) =>
-      value === undefined ? value : value.toMilliseconds().toString(),
+      value === undefined ? value : (value.toMilliseconds() / 1000).toString(),
   },
 };
 
@@ -80,7 +80,7 @@ export const baseBodyMarshalers: BaseBodyMarshalers = {
     "date-time": (date: DateTime) => new Date(date.sinceEpoch()).toISOString(),
     number: (value: number) => value,
     string: (value: string) => value,
-    duration: (value: Duration) => value.toMilliseconds(),
+    duration: (value: Duration) => value.toMilliseconds() / 1000,
   },
   unrequired: {
     "date-time": (date: DateTime | undefined) =>
@@ -88,7 +88,7 @@ export const baseBodyMarshalers: BaseBodyMarshalers = {
     number: (value: number | undefined) => value,
     string: (value: string | undefined) => value,
     duration: (value: Duration | undefined) =>
-      value ? value.toMilliseconds() : undefined,
+      value ? value.toMilliseconds() / 1000 : undefined,
   },
 };
 
@@ -114,14 +114,14 @@ export const baseUnmarshalers: BaseUnmarshalers = {
     "date-time": (value: string | undefined) =>
       value ? getDateTime(new Date(value)) : undefined,
     duration: (value: number | undefined) =>
-      value ? getDuration(value) : undefined,
+      value ? getDuration(value * 1000) : undefined,
     number: (value: number | undefined) => value,
     boolean: (value: boolean | undefined) => value,
     string: (value: string | undefined) => value,
   },
   required: {
     "date-time": (value: string) => getDateTime(new Date(value)),
-    duration: (value: number) => getDuration(value),
+    duration: (value: number) => getDuration(value * 1000),
     number: (value: number) => value,
     boolean: (value: boolean) => value,
     string: (value: string) => value,

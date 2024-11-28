@@ -133,6 +133,10 @@ export function {{ name.title }}Provider ({children} : PropsWithChildren) {
         { children }
     </{{ name.title }}Context.Provider>
 }
+
+export function use{{ name.title }}Provider() {
+  return useContext({{ name.title }}Context) || ({})
+}
 """,
         ),
     ],

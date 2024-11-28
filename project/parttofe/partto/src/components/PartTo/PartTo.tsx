@@ -6,6 +6,7 @@ import { useParttoGet } from "../../api/parttoget";
 import { Stage } from "../../api/helpers";
 import { DefinitionIdFromer } from "./Definition/Definition";
 import { PartToProps } from "./PartToTypes";
+import { DurationFormat } from "../../shared/duration";
 
 export function PartToIdFromer({ partTo }: { partTo: PartToId }) {
   const response = useParttoGet({ partTo });
@@ -37,10 +38,10 @@ export function PartTo({
     <div className={classes.partTo} data-testid="PartTo">
       <div className={classes.name}>{name}</div>
       <div className={classes.workDuration}>
-        {workDuration?.toMilliseconds() || ""}
+        {workDuration?.format(DurationFormat.LONG) || ""}
       </div>
       <div className={classes.clockDuration}>
-        {clockDuration?.toMilliseconds() || ""}
+        {clockDuration?.format(DurationFormat.LONG) || ""}
       </div>
       <div className={classes.tasks}>
         {tasks.map((task) => (

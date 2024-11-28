@@ -505,11 +505,11 @@ class RunState(models.Model):
         return RunState.objects.raw(
             """
             WITH RECURSIVE States AS (
-                SELECT id , operation, task_id, parent_id
+                SELECT id , operation, task_id, parent_id, created
                 FROM parttobe_runstate
                 WHERE id = %s
                 UNION ALL
-                SELECT rs.id, rs.operation, rs.task_id, rs.parent_id
+                SELECT rs.id, rs.operation, rs.task_id, rs.parent_id, rs.created
                 FROM parttobe_runstate rs
                 JOIN States ss ON ss.parent_id = rs.id
             )
@@ -546,13 +546,16 @@ class RunState(models.Model):
             RunState.OPERATION_TEXTS[index]: []
             for index in range(1, len(RunState.OPERATION_TEXTS))
         }
+        taskStates = self.task_states()
         order = order_definitions(
-            [state.task for state in self.task_states()]
+            [state.task for state in taskStates]
         )
-        lookup = {
-            state.task: state.operation
-            for state in self.task_states()
-        }
+        lookup = {state.task: state.operation for state in taskStates}
+        result["startTimes"] = [
+            {"task": state.task, "started": state.created}
+            for state in taskStates
+            if RunState.OPERATION_TEXTS[state.operation] == "started"
+        ]
         for task in order:
             operation = lookup[task]
             result[RunState.OPERATION_TEXTS[operation]].append(task)
@@ -567,6 +570,7 @@ class RunState(models.Model):
         result["duties"] = [
             task for task in result["started"] if not task.is_task()
         ]
+        result["timestamp"] = self.created
         return result
 
     def append_states(self, operation, tasks):

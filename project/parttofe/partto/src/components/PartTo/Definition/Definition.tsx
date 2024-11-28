@@ -4,6 +4,7 @@ import classes from "./Definition.module.scss";
 import { TaskDefinitionId } from "../../../api/sharedschemas";
 import { useTaskGet } from "../../../api/taskget";
 import { Stage } from "../../../api/helpers";
+import { DurationFormat } from "../../../shared/duration";
 
 export interface DefinitionProps {
   description: string;
@@ -20,7 +21,7 @@ export function DefinitionIdFromer({ task }: { task: TaskDefinitionId }) {
     <Definition
       key={task}
       description={description}
-      duration={duration.toMilliseconds().toString() || ""}
+      duration={duration.format(DurationFormat.LONG) || ""}
     />
   );
 }

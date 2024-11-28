@@ -2,12 +2,12 @@ import React from "react";
 import { expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { ShellProvider } from "../../../providers/ShellProvider";
-import { Cook } from "../Cook";
+import { CookMeal } from "../CookMeal";
 
 test("snapshot", () => {
   render(
     <ShellProvider>
-      <Cook />
+      <CookMeal />
     </ShellProvider>,
   );
   const page = screen.getByTestId("Layout");

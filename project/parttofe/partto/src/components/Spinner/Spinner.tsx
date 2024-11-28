@@ -1,30 +1,21 @@
 import React from "react";
 
 import classes from "./Spinner.module.scss";
-import { Result, Stage } from "../../api/helpers";
+import { Stage } from "../../api/helpers";
 import { Error } from "../Error/Error";
-import { SpinnerProps } from "./SpinnerTypes";
+import { ResponseStatusCheckable, SpinnerProps } from "./SpinnerTypes";
 
-export function willError<RESPONSE_TYPE>(
-  responses: Array<Result<RESPONSE_TYPE>>,
-) {
+export function willError(responses: Array<ResponseStatusCheckable>) {
   return !!responses.some((response) => response.stage === Stage.Errored);
 }
 
-export function willHold<RESPONSE_TYPE>(
-  responses: Array<Result<RESPONSE_TYPE>>,
-) {
-  return (
-    !!responses.some((response) =>
-      [Stage.Errored, Stage.Fetching, Stage.Skipped].includes(response.stage),
-    ) || responses.some((response) => !response?.data)
+export function willHold(responses: Array<ResponseStatusCheckable>) {
+  return !!responses.some((response) =>
+    [Stage.Errored, Stage.Fetching, Stage.Skipped].includes(response.stage),
   );
 }
 
-export function Spinner<RESPONSE_TYPE>({
-  responses,
-  children,
-}: SpinnerProps<RESPONSE_TYPE>) {
+export function Spinner({ responses, children }: SpinnerProps) {
   if (willError(responses || [])) {
     return (
       <div className={classes.error} data-testid="Spinner">

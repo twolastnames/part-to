@@ -8,15 +8,21 @@ exports[`snapshot 1`] = `
   <div
     class="itemSet"
   >
-    <div>
-      WIP: Put first here
+    <div
+      class="error"
+      data-testid="Spinner"
+    >
+      Loading...
     </div>
   </div>
   <div
     class="itemSet"
   >
-    <div>
-      WIP: Put second here
+    <div
+      class="error"
+      data-testid="Spinner"
+    >
+      Loading...
     </div>
   </div>
 </div>

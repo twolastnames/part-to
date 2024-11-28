@@ -29,6 +29,8 @@ import {
 
 export type RunGet200Body = {
   runState: RunStateId;
+  timestamp: DateTime;
+  startTimes: Array<{ task: TaskDefinitionId; started: DateTime }>;
   report?: DateTime | undefined;
   complete?: DateTime | undefined;
   activePartTos?: Array<PartToId>;
@@ -43,6 +45,8 @@ export type RunGet200Body = {
 
 type Wire200Body = {
   runState: RunStateId;
+  timestamp: string;
+  startTimes: Array<{ task: TaskDefinitionId; started: string }>;
   report?: string | undefined;
   complete?: string | undefined;
   activePartTos?: Array<PartToId>;
@@ -80,6 +84,11 @@ export const useRunGet: (
     {
       200: (body: Wire200Body) => ({
         runState: unmarshalers.required["RunStateId"](body.runState),
+        timestamp: unmarshalers.required["date-time"](body.timestamp),
+        startTimes: body.startTimes.map((value) => ({
+          task: unmarshalers.required["TaskDefinitionId"](value.task),
+          started: unmarshalers.required["date-time"](value.started),
+        })),
         report: unmarshalers.unrequired["date-time"](body.report),
         complete: unmarshalers.unrequired["date-time"](body.complete),
         activePartTos: body.activePartTos?.map((value) =>

@@ -16,6 +16,7 @@ import {
   IconMoodEmpty,
   IconPlus,
   IconCancel,
+  IconCheck,
 } from "@tabler/icons-react";
 
 import classes from "./Icon.module.scss";
@@ -52,3 +53,4 @@ export const Info = IconInfoSquareRounded;
 export const Empty = IconMoodEmpty;
 export const Plus = IconPlus;
 export const Cancel = IconCancel;
+export const Check = IconCheck;

@@ -1,11 +1,11 @@
 import React from "react";
 import { expect, test } from "@jest/globals";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { ShellProvider } from "../../../providers/ShellProvider";
 import { Spinner } from "../Spinner";
 import { Stage } from "../../../api/helpers";
 
-test("snapshot", () => {
+test("snapshot", async () => {
   render(
     <ShellProvider>
       <Spinner
@@ -19,6 +19,8 @@ test("snapshot", () => {
       </Spinner>
     </ShellProvider>,
   );
-  const component = screen.getByTestId("Spinner");
+  const component = await waitFor(() =>
+    expect(screen.queryByTestId("Spinner")).toBeFalsy(),
+  );
   expect(component).toMatchSnapshot();
 });

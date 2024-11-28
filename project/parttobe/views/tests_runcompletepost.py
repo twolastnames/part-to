@@ -80,4 +80,5 @@ class RunCompleteTestClass(TestCase):
             "/api/run/?runState={}".format(response.data["runState"])
         )
         self.assertEqual(response.status_code, 200)
+        self.assertTrue("startTimes" in response.data)
         self.assertEqual(response.data["completed"], [completable])
