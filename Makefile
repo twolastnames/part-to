@@ -15,7 +15,10 @@ NODE_BUILD=$(NODE_BASE)/build
 WITH_VENV=. $(VENV) &&
 WITH_ENV=$(WITH_VENV) . $(NENV) &&
 
+GIT_HOOKS_PATH=githooks
+
 $(VENV):
+	git config core.hooksPath $(GIT_HOOKS_PATH)
 	python3 -m pip install virtualenv
 	virtualenv $(VENV_BASE)
 	$(WITH_VENV) python3 -m pip install -r requirements.txt
