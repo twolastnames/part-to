@@ -25,7 +25,7 @@ class SemanticPrefix:
         raise SemanticPrefixUnknown()
 
     def __str__(self):
-        return "{:<11}: {}".format(self.name, self.description)
+        return "{:<9} {}".format("{}:".format(self.name), self.description)
 
 
 semanticPrefixes = [
