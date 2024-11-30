@@ -41,3 +41,8 @@ runback: $(VENV) $(NENV) $(NODE_BUILD)
 runfront: $(VENV) $(NENV) $(NODE_BUILD)
 	$(WITH_ENV) cd $(NODE_SOURCE) && npm run start
 
+testfront: $(NENV)
+	$(WITH_ENV) cd $(NODE_SOURCE) && npm run test -- --watchAll=false
+
+
+
