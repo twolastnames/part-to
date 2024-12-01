@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.test import Client
 from freezegun import freeze_time
+from parttobe import models
 import json
 import toml
 import os
@@ -32,6 +33,7 @@ def use_shared_uuid(content):
 
 
 def loadExamples():
+    models.get_task_definitions.cache_clear()
     file_directory = os.path.dirname(__file__)
     client = Client()
     loadables = [
@@ -42,9 +44,7 @@ def loadExamples():
     ]
     ids = []
     for loadable in loadables:
-        data = get_toml_recipe_as_json(
-            file_directory + "/../job_examples" + loadable
-        )
+        data = get_toml_recipe_as_json(file_directory + "/../mocks_partto" + loadable)
         response = client.post(
             "http://testserver/api/partto/",
             json.dumps(data),

@@ -36,9 +36,7 @@ urlpatterns.extend(
 
 urlpatterns.extend(
     [
-        re_path(
-            re.sub(r":\w+", "\\\w+", route), include("parttofe.urls")
-        )
+        re_path(re.sub(r":\w+", "\\\w+", route), include("parttofe.urls"))
         for route in get_frontend_routes()
         if ":" in route
     ]

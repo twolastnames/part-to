@@ -24,9 +24,7 @@ class OperationId:
         return self.value == other.value
 
     def title(self):
-        return "{}{}".format(
-            self.name().title(), self.variant().title()
-        )
+        return "{}{}".format(self.name().title(), self.variant().title())
 
 
 class RefInjector:
@@ -57,9 +55,7 @@ class RefInjector:
 global_status_codes = ["400", "404", "500"]
 
 self_directory = os.path.dirname(os.path.abspath(__file__))
-openapi_filename = os.path.join(
-    self_directory, "endpoints.openapi.yaml"
-)
+openapi_filename = os.path.join(self_directory, "endpoints.openapi.yaml")
 
 
 def implementation_filename(operationId, extension=""):
@@ -75,9 +71,7 @@ def implementation_filename(operationId, extension=""):
 
 
 def definition_filename(operationId):
-    return implementation_filename(
-        operationId, extension="definition"
-    )
+    return implementation_filename(operationId, extension="definition")
 
 
 OpenAPI.from_file_path(openapi_filename)
@@ -120,7 +114,7 @@ for path, method in openapi["paths"].items():
 
 
 def map_tree(mapper, schema, data):
-    if not data:
+    if data is None:
         return data
     elif isinstance(data, dict):
         return {
@@ -128,9 +122,7 @@ def map_tree(mapper, schema, data):
             for key, value in data.items()
         }
     elif isinstance(data, list) or isinstance(data, set):
-        return [
-            map_tree(mapper, schema["items"], value) for value in data
-        ]
+        return [map_tree(mapper, schema["items"], value) for value in data]
     else:
         return mapper(data, schema)
 
@@ -151,17 +143,13 @@ def response_definitions(operations=operations, id=None):
 
 def get_request_body_arguments(operation):
     try:
-        return operation["requestBody"]["content"]["*"]["schema"][
-            "properties"
-        ].keys()
+        return operation["requestBody"]["content"]["*"]["schema"]["properties"].keys()
     except KeyError:
         return []
 
 
 def get_parameter_arguments(operation):
     try:
-        return [
-            parameter["name"] for parameter in operation["parameters"]
-        ]
+        return [parameter["name"] for parameter in operation["parameters"]]
     except KeyError:
         return []

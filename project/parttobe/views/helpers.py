@@ -19,18 +19,14 @@ def get_body_constructor(id_value, status):
     id = endpoints.OperationId(id_value)
     filename = "./parttobe/views/{}.py".format(id.slug())
     definition = "create{}Body".format(status)
-    spec = importlib.util.spec_from_file_location(
-        definition, filename
-    )
+    spec = importlib.util.spec_from_file_location(definition, filename)
     module = importlib.util.module_from_spec(spec)
     sys.modules[definition] = module
     loaded = spec.loader.exec_module(module)
     try:
         creator = getattr(module, definition)
     except (KeyError, AttributeError):
-        message = "method {} needs to be defined in {}".format(
-            definition, filename
-        )
+        message = "method {} needs to be defined in {}".format(definition, filename)
 
     def responder(*args, **kargs):
         body = creator(*args, **kargs)

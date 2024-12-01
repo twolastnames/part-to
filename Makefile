@@ -44,5 +44,7 @@ runfront: $(VENV) $(NENV) $(NODE_BUILD)
 testfront: $(NENV)
 	$(WITH_ENV) cd $(NODE_SOURCE) && npm run test -- --watchAll=false
 
+testback: $(NENV)
+	$(WITH_ENV) cd $(PROJECT) && python3 manage.py test parttobe
 
 

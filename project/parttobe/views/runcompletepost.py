@@ -4,16 +4,17 @@ from parttobe.views.helpers import handle_run_state
 
 def handle(arguments):
     unstarted = []
+    starteds = set(
+        [
+            state.task
+            for state in arguments.runState.task_states()
+            if state.operation == models.RunState.Operation.STARTED
+        ]
+    )
     for definition in arguments.definitions:
-        for state in arguments.runState.task_states():
-            if state.task != definition:
-                continue
-            if state.operation != models.RunState.Operation.STARTED:
-                unstarted.append(
-                    "task {} is not in a started state".format(
-                        definition.uuid
-                    )
-                )
+        if definition in starteds:
+            continue
+        unstarted.append("task {} is not in a started state".format(definition.uuid))
     if len(unstarted) > 0:
         return arguments.respond_400(unstarted)
 

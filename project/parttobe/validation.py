@@ -45,9 +45,7 @@ letter_to_number = {}
 number_to_letter = {}
 
 for index, letter in enumerate(
-    "".join([str(number) for number in range(10)])
-    + ascii_lowercase
-    + ascii_uppercase
+    "".join([str(number) for number in range(10)]) + ascii_lowercase + ascii_uppercase
 ):
     letter_to_number[letter] = index
     number_to_letter[index] = letter
@@ -70,9 +68,7 @@ def recover_uuid(value):
         reversed_index = len(letter_to_number) - index
         if digit == "-":
             continue
-        current += (
-            len(letter_to_number) ** index * letter_to_number[digit]
-        )
+        current += len(letter_to_number) ** index * letter_to_number[digit]
     return UUID(int=current)
 
 
@@ -108,6 +104,8 @@ def map_value(value, schema):
         type = schema["type"]
     if type == "date-time":
         return value.isoformat()
+    elif type == "duration":
+        return value.total_seconds()
     elif type == "uuid":
         return shorten_uuid(value)
     return value
@@ -158,9 +156,7 @@ def register_sanitized_argument_type(operationId, operation):
     )
 
     def do_type_expansion(**args):
-        return argument_type(
-            **({key: args.get(key, None) for key in arguments})
-        )
+        return argument_type(**({key: args.get(key, None) for key in arguments}))
 
     argument_types[operationId] = do_type_expansion
 
@@ -194,9 +190,7 @@ def path_from_operation_id(id):
                     name=id,
                 )
             if operationId.name() == id:
-                partial_path = openapi_path.replace(
-                    "/" + PATH_START, ""
-                )
+                partial_path = openapi_path.replace("/" + PATH_START, "")
                 variants[operationId.variant().upper()] = {
                     "handle": get_meta_definition(filename, "handle"),
                     "responders": have_marshaled_bodies(operation),
@@ -242,11 +236,7 @@ def add_loadable_model_definition(name):
     self_directory = os.path.dirname(os.path.abspath(__file__))
     model_filename = os.path.join(self_directory, "models.py")
     definition_name = re.sub(r"Id$", "", name)
-    exec(
-        "loaded_model_definitions[name] = models.{}".format(
-            definition_name
-        )
-    )
+    exec("loaded_model_definitions[name] = models.{}".format(definition_name))
 
 
 def get_model_uuid_constructor(name):
@@ -258,9 +248,7 @@ def get_model_uuid_constructor(name):
                 uuid=recover_uuid(wire_uuid)
             )
         except exceptions.ObjectDoesNotExist:
-            raise ResourceError(
-                "Id {} does not exist".format(wire_uuid)
-            )
+            raise ResourceError("Id {} does not exist".format(wire_uuid))
 
     return construct_model
 
@@ -321,9 +309,7 @@ def unmarshal(request):
             raise ValidationError(
                 "Format of type {} not defined in schema".format(type)
             )
-        response[parameter["name"]] = unmarshal_parameter_handlers[
-            type
-        ](value)
+        response[parameter["name"]] = unmarshal_parameter_handlers[type](value)
     return response
 
 
@@ -337,9 +323,7 @@ def get_parameter_error(request):
         else:
             value = request.GET.get(parameter["name"])
             if not value:
-                return "parameter {} missing".format(
-                    parameter["name"]
-                )
+                return "parameter {} missing".format(parameter["name"])
         type = parameter["schema"]["type"]
         if type == "string":
             return
@@ -348,10 +332,8 @@ def get_parameter_error(request):
                 int(value)
                 return
             except ValueError:
-                return (
-                    "expected {} to be parsable to a number".format(
-                        parameter["name"]
-                    )
+                return "expected {} to be parsable to a number".format(
+                    parameter["name"]
                 )
         raise NotImplementedError("Parameter Type".format(type))
 
@@ -426,9 +408,7 @@ def unmarshaler(variants):
                 message = [e.message]
             return Response(message, status=400)
         for status, responder in responders.items():
-            arguments["respond_{}".format(status)] = responders[
-                status
-            ]
+            arguments["respond_{}".format(status)] = responders[status]
         try:
             response = handle(argumentType(**arguments))
         except (exceptions.ValidationError, ResourceError) as e:

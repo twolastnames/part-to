@@ -13,9 +13,7 @@ class PartToTestClass(TestCase):
 
     def test_can_fetch_partto(self):
         client = Client()
-        response = client.get(
-            "/api/partto/?partTo={}".format(self.ids[0])
-        )
+        response = client.get("/api/partto/?partTo={}".format(self.ids[0]))
         self.assertEqual(response.status_code, 200)
         payload = response.data
         self.assertEqual(payload["name"], "Baked Beans (Easy)")
@@ -35,16 +33,12 @@ class PartToTestClass(TestCase):
 
     def test_200s_unknown_parameter(self):
         client = Client()
-        response = client.get(
-            "/api/partto/?unknownOne=1&partTo={}".format(self.ids[0])
-        )
+        response = client.get("/api/partto/?unknownOne=1&partTo={}".format(self.ids[0]))
         self.assertEqual(response.status_code, 200)
 
     def test_404s_unknown_id(self):
         client = Client()
-        response = client.get(
-            "/api/partto/?partTo={}".format("oakeuxexbe")
-        )
+        response = client.get("/api/partto/?partTo={}".format("oakeuxexbe"))
         self.assertEqual(response.status_code, 404)
         self.assertEqual(
             response.data,

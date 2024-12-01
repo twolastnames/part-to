@@ -29,12 +29,11 @@ class Headers:
 
     def __call__(self, request):
         response = self.get_response(request)
+        return response
         if not request.path.startswith("/api/"):
             return response
         if request.method.lower() != "get":
             return response
         if request.path.strip("/") in cache_for_path:
-            response["Cache-Control"] = cache_for_path[
-                request.path.strip("/")
-            ]
+            response["Cache-Control"] = cache_for_path[request.path.strip("/")]
         return response

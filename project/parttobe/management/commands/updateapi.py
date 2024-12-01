@@ -35,9 +35,7 @@ class Command(BaseCommand):
             set(
                 [
                     id
-                    for id in traverse_api(
-                        lambda value: value == "format"
-                    )
+                    for id in traverse_api(lambda value: value == "format")
                     if id.endswith("Id")
                 ]
             )
@@ -51,9 +49,7 @@ class Command(BaseCommand):
                 operation, raw_operation, definitions, format_ids
             )()
             if id.variant() == "get":
-                TypescriptGetWriter(
-                    operation, raw_operation, definitions, format_ids
-                )()
+                TypescriptGetWriter(operation, raw_operation, definitions, format_ids)()
             if id.variant() == "post":
                 TypescriptPostWriter(
                     operation, raw_operation, definitions, format_ids

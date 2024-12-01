@@ -132,9 +132,7 @@ class TypescriptGetWriter(TypescriptFileWriter):
                     ),
                 }
             )
-        arguments = ",".join(
-            [parameter["name"] for parameter in safe_parameters]
-        )
+        arguments = ",".join([parameter["name"] for parameter in safe_parameters])
         parameters = [
             {
                 "name": parameter["name"],
