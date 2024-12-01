@@ -39,6 +39,7 @@
     "eject": "react-scripts eject",
     "clean": "rm -rf node_mudules",
     "veryclean": "rm -rf node_mudules package-lock.json build",
+    "checkformat": "eslint src && prettier -c src",
     "format": "eslint src && prettier --write src"
   },
   "eslintConfig": {

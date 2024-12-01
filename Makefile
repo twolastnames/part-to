@@ -47,4 +47,11 @@ testfront: $(NENV)
 testback: $(NENV)
 	$(WITH_ENV) cd $(PROJECT) && python3 manage.py test parttobe
 
+checkformat:
+	$(WITH_ENV) black --check . && cd $(NODE_SOURCE) && npm run checkformat
+
+format:
+	$(WITH_ENV) black . && cd $(NODE_SOURCE) && npm run format
+
+test: testfront testback
 
