@@ -35,7 +35,7 @@ build: $(VENV) $(NENV) $(NODE_BUILD)
 clean:
 	rm -rf $(NODE_BUILD) $(NENV_BASE) $(VENV_BASE)
 
-runback: $(VENV) $(NENV) $(NODE_BUILD)
+runback: $(VENV) $(NENV) $(NODE_BUILD) migrate
 	$(WITH_ENV) cd project && python3 manage.py runserver
 
 runfront: $(VENV) $(NENV) $(NODE_BUILD)
@@ -50,8 +50,11 @@ testback: $(NENV)
 checkformat:
 	$(WITH_ENV) black --check . && cd $(NODE_SOURCE) && npm run checkformat
 
-format:
+format: $(NENV)
 	$(WITH_ENV) black . && cd $(NODE_SOURCE) && npm run format
+
+migrate: $(NENV)
+	$(WITH_ENV) python3 project/manage.py migrate
 
 test: testfront testback
 
