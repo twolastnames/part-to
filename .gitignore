@@ -1,4 +1,6 @@
 venv
 nenv
-githooks/__pycache__
+project/db.sqlite3
+**__pycache__**
+
 
