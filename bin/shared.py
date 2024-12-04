@@ -1,18 +1,37 @@
+import functools
+
+
 class VersionMutator:
-    def __init__(self, name):
+    def __init__(self, name, branch_starts):
         self.name = name
+        self.branch_starts = branch_starts
+
+    def is_allowed_branch(self, branch):
+        return branch.startswith(tuple(self.branch_starts))
+
+    def __call__(self, version):
+        version[self.name] = version[self.name] + 1
 
 
-minorVersionMutator = VersionMutator("Minor")
-fixVersionMutator = VersionMutator("Fix")
-buildVersionMutator = VersionMutator("Build")
-errorVersionMutator = VersionMutator("Error")
+minorVersionMutator = VersionMutator("minor", ["master"])
+fixVersionMutator = VersionMutator("fix", ["release", "master"])
+buildVersionMutator = VersionMutator("build", ["release", "master"])
+errorVersionMutator = VersionMutator("error", [])
 
 
 class SemanticPrefixUnknown(RuntimeError):
     pass
 
 
+MutatorSeverities = {
+    "error": 0,
+    "minor": 1,
+    "fix": 2,
+    "build": 3,
+}
+
+
+@functools.total_ordering
 class SemanticPrefix:
     def __init__(self, name, description, mutator):
         self.name = name
@@ -23,6 +42,14 @@ class SemanticPrefix:
         if message.startswith("{}:".format(self.name)):
             return
         raise SemanticPrefixUnknown()
+
+    def __eq__(self, other):
+        return self.mutator.name == self.mutator.name
+
+    def __lt__(self, other):
+        return (
+            MutatorSeverities[other.mutator.name] < MutatorSeverities[self.mutator.name]
+        )
 
     def __str__(self):
         return "{:<9} {}".format("{}:".format(self.name), self.description)

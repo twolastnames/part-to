@@ -56,5 +56,8 @@ format: $(NENV)
 migrate: $(NENV)
 	$(WITH_ENV) python3 project/manage.py migrate
 
+release: $(NENV)
+	$(WITH_ENV) ./bin/release.py
+
 test: testfront testback
 

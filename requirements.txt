@@ -18,6 +18,8 @@ duration-parser==1.0.1
 executing==2.0.1
 fastjsonschema==2.19.1
 freezegun==1.5.1
+gitdb==4.0.11
+GitPython==3.1.43
 idna==3.7
 ipython==8.12.3
 isodate==0.6.1
@@ -65,6 +67,7 @@ requests==2.31.0
 rfc3339-validator==0.1.4
 rpds-py==0.18.1
 six==1.16.0
+smmap==5.0.1
 soupsieve==2.5
 sqlparse==0.4.4
 stack-data==0.6.3
