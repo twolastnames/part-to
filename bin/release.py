@@ -81,22 +81,6 @@ class Release:
         self.notes_filename = notes_filename
         self.start_branch = self.repo.active_branch.name
 
-    def _tag(self, version):
-        self.repo.create_tag(
-            "release_{major}.{minor}.{fix}.{build}-{variant}".format(**version)
-        )
-
-    def _handle_a_feat(self, version):
-        push_branch = "release_{major}.{minor}".format(**version)
-        self.repo.git.checkout("-b", push_branch)
-        self._tag(version)
-        self.repo.remote("origin").push("--set-upstream", "origin", push_branch)
-        self.repo.git.checkout(TRUNK_BRANCH)
-
-    def _handle_a_non_feat(self, version):
-        self._tag(version)
-        self.repo.remote("origin").push("origin", self.start_branch)
-
     def __call__(self):
         version_file = VersionFile(self.version_filename)
         version = version_file.read()["version"]
@@ -147,9 +131,10 @@ class Release:
             "release: {major}.{minor}.{fix}.{build}-alpha".format(**version)
         )
         if largest_prefix.name == "feat":
-            self._handle_a_feat(version)
-        else:
-            self._handle_a_non_feat(version)
+            self.repo.git.checkout("-b", "release_{major}.{minor}".format(**version))
+        self.repo.create_tag(
+            "release_{major}.{minor}.{fix}.{build}-{variant}".format(**version)
+        )
 
 
 if __name__ == "__main__":

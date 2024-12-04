@@ -22,9 +22,6 @@ class ReleaseTestClass(unittest.TestCase):
         self.repo = MagicMock()
         self.repo.bare = False
         self.repo.index = MagicMock()
-        self.remote = MagicMock()
-        self.remote.push = MagicMock()
-        self.repo.remote = MagicMock(return_value=self.remote)
         self.repo.create_tag = MagicMock()
         self.repo.index.add = MagicMock()
         self.repo.index.commit = MagicMock()
@@ -279,14 +276,8 @@ timestamp="2023-11-30T15:30:00.000Z"
         Release(self.repo, self.error, VERSION_FILENAME, NOTES_FILENAME)()
         self.repo.index.add.assert_called_with([VERSION_FILENAME, NOTES_FILENAME])
         self.repo.index.commit.assert_called_once_with("release: 2.18.1.2-alpha")
-        self.repo.git.checkout.assert_has_calls(
-            [call("-b", "release_2.18"), call("master")]
-        )
+        self.repo.git.checkout.assert_called_once_with("-b", "release_2.18")
         self.repo.create_tag.assert_called_once_with("release_2.18.1.2-alpha")
-        self.repo.remote.assert_called_once_with("origin")
-        self.remote.push.assert_called_once_with(
-            "--set-upstream", "origin", "release_2.18"
-        )
         with open(NOTES_FILENAME, "r") as file:
             self.assertEqual(
                 file.read(),
@@ -332,8 +323,6 @@ timestamp="2024-03-21T01:23:45+00:00"
         self.repo.index.commit.assert_called_with("release: 2.17.2.2-alpha")
         self.repo.git.checkout.assert_not_called()
         self.repo.create_tag.assert_called_once_with("release_2.17.2.2-alpha")
-        self.repo.remote.assert_called_once_with("origin")
-        self.remote.push.assert_called_once_with("origin", "release_2.17")
         with open(NOTES_FILENAME, "r") as file:
             self.assertEqual(
                 file.read(),
@@ -377,8 +366,6 @@ timestamp="2024-03-21T01:23:45+00:00"
         self.repo.index.commit.assert_called_with("release: 2.17.1.3-alpha")
         self.repo.git.checkout.assert_not_called()
         self.repo.create_tag.assert_called_once_with("release_2.17.1.3-alpha")
-        self.repo.remote.assert_called_once_with("origin")
-        self.remote.push.assert_called_once_with("origin", "master")
         with open(NOTES_FILENAME, "r") as file:
             self.assertEqual(
                 file.read(),
