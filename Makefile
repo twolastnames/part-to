@@ -56,6 +56,9 @@ format: $(NENV)
 migrate: $(NENV)
 	$(WITH_ENV) python3 project/manage.py migrate
 
+updateapi: $(NENV)
+	$(WITH_ENV) python3 project/manage.py updateapi
+
 release: $(NENV)
 	$(WITH_ENV) ./bin/release.py
 
