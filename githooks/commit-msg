@@ -1,9 +1,14 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 set -e
 
-pwd
+SCRIPT_DIRECTORY=$(dirname "$0")
 
-bin/validate_commit.py $1
+
+cd $SCRIPT_DIRECTORY/..
+
+./bin/validate_commit.py $1
+
+make test
 
 
