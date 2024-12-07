@@ -43,7 +43,7 @@ class ReleaseTestClass(unittest.TestCase):
 ##################################################
 
 [version]
-major=2
+major=1
 minor=17
 fix=1
 build=2
@@ -71,7 +71,7 @@ timestamp="2023-11-30T15:30:00.000Z"
 ##################################################
 
 [version]
-major=2
+major=1
 minor=17
 fix=1
 build=2
@@ -99,7 +99,7 @@ timestamp="2023-11-30T15:30:00.000Z"
 ##################################################
 
 [version]
-major=2
+major=1
 minor=17
 fix=1
 build=2
@@ -129,7 +129,7 @@ timestamp="2023-11-30T15:30:00.000Z"
 ##################################################
 
 [version]
-major=2
+major=1
 minor=17
 fix=1
 build=2
@@ -159,7 +159,7 @@ timestamp="2023-11-30T15:30:00.000Z"
 ##################################################
 
 [version]
-major=2
+major=1
 minor=17
 fix=1
 build=2
@@ -169,7 +169,7 @@ timestamp="2023-11-30T15:30:00.000Z"
             )
 
     def test_error_with_wip_prefix_on_release_branch(self):
-        self.repo.active_branch.name = "release_2.2"
+        self.repo.active_branch.name = "release_1.2"
         self.repo.iter_commits = lambda: [Commit("docs: big"), Commit("wip: it good")]
         with self.assertRaises(ReleaseTestError):
             Release(self.repo, self.error, VERSION_FILENAME, NOTES_FILENAME)()
@@ -190,7 +190,7 @@ timestamp="2023-11-30T15:30:00.000Z"
 ##################################################
 
 [version]
-major=2
+major=1
 minor=17
 fix=1
 build=2
@@ -224,7 +224,7 @@ timestamp="2023-11-30T15:30:00.000Z"
 ##################################################
 
 [version]
-major=2
+major=1
 minor=17
 fix=1
 build=2
@@ -256,7 +256,7 @@ timestamp="2023-11-30T15:30:00.000Z"
 ##################################################
 
 [version]
-major=2
+major=1
 minor=17
 fix=1
 build=2
@@ -271,17 +271,17 @@ timestamp="2023-11-30T15:30:00.000Z"
             Commit("feat: boom!"),
             Commit("docs: big"),
             Commit("fix: it good"),
-            Commit("release: 2.3.4.5-alpha"),
+            Commit("release: 1.3.4.5-alpha"),
         ]
         Release(self.repo, self.error, VERSION_FILENAME, NOTES_FILENAME)()
         self.repo.index.add.assert_called_with([VERSION_FILENAME, NOTES_FILENAME])
-        self.repo.index.commit.assert_called_once_with("release: 2.18.1.2-alpha")
-        self.repo.git.checkout.assert_called_once_with("-b", "release_2.18")
-        self.repo.create_tag.assert_called_once_with("release_2.18.1.2-alpha")
+        self.repo.index.commit.assert_called_once_with("release: 1.18.1.2-alpha")
+        self.repo.git.checkout.assert_called_once_with("-b", "release_1.18")
+        self.repo.create_tag.assert_called_once_with("release_1.18.1.2-alpha")
         with open(NOTES_FILENAME, "r") as file:
             self.assertEqual(
                 file.read(),
-                """## 2.18.1.2-alpha
+                """## 1.18.1.2-alpha
 *released: Mar 21, 2024 01:23 AM UTC*
 - boom! *(feat)*
 - big *(docs)*
@@ -301,7 +301,7 @@ previous notes
 ##################################################
 
 [version]
-major=2
+major=1
 minor=18
 fix=1
 build=2
@@ -312,21 +312,21 @@ timestamp="2024-03-21T01:23:45+00:00"
 
     @freeze_time("2024-03-21 01:23:45")
     def test_will_increment_a_fix_on_release_branch(self):
-        self.repo.active_branch.name = "release_2.17"
+        self.repo.active_branch.name = "release_1.17"
         self.repo.iter_commits = lambda: [
             Commit("docs: big"),
             Commit("fix: it good"),
-            Commit("release: 2.10.2.2-alpha"),
+            Commit("release: 1.10.2.2-alpha"),
         ]
         Release(self.repo, self.error, VERSION_FILENAME, NOTES_FILENAME)()
         self.repo.index.add.assert_called_with([VERSION_FILENAME, NOTES_FILENAME])
-        self.repo.index.commit.assert_called_with("release: 2.17.2.2-alpha")
+        self.repo.index.commit.assert_called_with("release: 1.17.2.2-alpha")
         self.repo.git.checkout.assert_not_called()
-        self.repo.create_tag.assert_called_once_with("release_2.17.2.2-alpha")
+        self.repo.create_tag.assert_called_once_with("release_1.17.2.2-alpha")
         with open(NOTES_FILENAME, "r") as file:
             self.assertEqual(
                 file.read(),
-                """## 2.17.2.2-alpha
+                """## 1.17.2.2-alpha
 *released: Mar 21, 2024 01:23 AM UTC*
 - big *(docs)*
 - it good *(fix)*
@@ -345,7 +345,7 @@ previous notes
 ##################################################
 
 [version]
-major=2
+major=1
 minor=17
 fix=2
 build=2
@@ -358,18 +358,18 @@ timestamp="2024-03-21T01:23:45+00:00"
     def test_will_not_error_on_wip_after_release(self):
         self.repo.iter_commits = lambda: [
             Commit("docs: big"),
-            Commit("release: 2.3.4.5-alpha"),
+            Commit("release: 1.3.4.5-alpha"),
             Commit("wip: it good"),
         ]
         Release(self.repo, self.error, VERSION_FILENAME, NOTES_FILENAME)()
         self.repo.index.add.assert_called_with([VERSION_FILENAME, NOTES_FILENAME])
-        self.repo.index.commit.assert_called_with("release: 2.17.1.3-alpha")
+        self.repo.index.commit.assert_called_with("release: 1.17.1.3-alpha")
         self.repo.git.checkout.assert_not_called()
-        self.repo.create_tag.assert_called_once_with("release_2.17.1.3-alpha")
+        self.repo.create_tag.assert_called_once_with("release_1.17.1.3-alpha")
         with open(NOTES_FILENAME, "r") as file:
             self.assertEqual(
                 file.read(),
-                """## 2.17.1.3-alpha
+                """## 1.17.1.3-alpha
 *released: Mar 21, 2024 01:23 AM UTC*
 - big *(docs)*
 
@@ -387,7 +387,7 @@ previous notes
 ##################################################
 
 [version]
-major=2
+major=1
 minor=17
 fix=1
 build=3
@@ -397,7 +397,7 @@ timestamp="2024-03-21T01:23:45+00:00"
             )
 
     def test_error_when_feature_is_put_on_a_release_branch(self):
-        self.repo.active_branch.name = "release_2.4"
+        self.repo.active_branch.name = "release_1.4"
         self.repo.iter_commits = lambda: [Commit("fix: it good"), Commit("feat: big")]
         with self.assertRaises(ReleaseTestError):
             Release(self.repo, self.error, VERSION_FILENAME, NOTES_FILENAME)()
@@ -418,7 +418,7 @@ timestamp="2024-03-21T01:23:45+00:00"
 ##################################################
 
 [version]
-major=2
+major=1
 minor=17
 fix=1
 build=2

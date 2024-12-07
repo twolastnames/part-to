@@ -16,7 +16,7 @@ VersionFileTemplate = """
 ##################################################
 
 [version]
-major=2
+major=1
 minor={{ minor }}
 fix={{ fix }}
 build={{ build }}
