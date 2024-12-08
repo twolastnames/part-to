@@ -18,9 +18,7 @@ def get_command_line():
 def insert_recipe(origin, filename):
     dump = get_toml_recipe_as_json(filename)
     response = post("{}/api/partto/".format(origin), json=dump)
-    if response.status_code == 200:
-        print("recipe inserted successfully")
-    print("Post Error:", response.status_code, response.text)
+    print("Post Response:", response.status_code, response.text)
 
 
 if __name__ == "__main__":
@@ -42,4 +40,3 @@ if __name__ == "__main__":
         exit(1)
     for filename in arguments.filenames:
         insert_recipe(origin, filename)
-
