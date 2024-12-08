@@ -28,24 +28,24 @@ engagement = 3
 [put_bacon_in_oven]
 duration = "2 minutes"
 description = "put 10 slices of bacon on pan and put in oven"
-# tools = ["flatish baking pan"]
-# ingredients = ["bacon, 10 slices"]
+tools = ["flatish baking pan"]
+ingredients = ["bacon, 10 slices"]
 depends = ["heat_oven"]
 
 [gather_ingredients]
 description = "gather and combine 54 oz canned pork and beans, 2 tsp dry mustard, 2/3 cup brown sugar, 1/4 cup cider vinegar, 4 tbs ketchup, & 1/4 cup molasses"
-# ingredients = ["pork and beans, 54 oz canned", "dry mustard, 2 tsp", "brown sugar, 2/3 cup", "cider vinegar, 1/4 cup", "ketchup, 4 tbs", "molasses, 1/4 cup"]
+ingredients = ["pork and beans, 54 oz canned", "dry mustard, 2 tsp", "brown sugar, 2/3 cup", "cider vinegar, 1/4 cup", "ketchup, 4 tbs", "molasses, 1/4 cup"]
 duration = "3 minutes"
 
 [dice_veggies]
 duration = "2 minute"
 description = "dice half of a green pepper and a whole yellow onion and combine aside"
-# ingredients = ["green pepper, 1/2", "yellow onion, 1"]
+ingredients = ["green pepper, 1/2", "yellow onion, 1"]
 
 [get_pan]
 duration = "1 minute"
 description = "get pan and put 2 tbs butter in it"
-# ingredients = ["butter, 2 tbs"]
+ingredients = ["butter, 2 tbs"]
 
 [heat_pan]
 duration = "2 minutes 30 seconds"
@@ -73,7 +73,7 @@ depends = ["grease_bean_pan", "cook_bacon", "simmer_beans"]
 [grease_bean_pan]
 duration = "45 seconds"
 description = "grease 3 quart baking pan"
-# tools = ["3 qt baking pan"]
+tools = ["3 qt baking pan"]
 
 [heat_oven]
 duration = "15 minutes"

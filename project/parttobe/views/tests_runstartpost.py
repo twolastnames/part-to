@@ -4,7 +4,7 @@ from django.test import Client
 
 
 class RunstartPostTestClass(TestCase):
-    """ This is heavily used in other tests.
-        Keeping this here to satisfy api generation"""
-    pass
+    """This is heavily used in other tests.
+    Keeping this here to satisfy api generation"""
 
+    pass

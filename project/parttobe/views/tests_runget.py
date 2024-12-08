@@ -4,6 +4,7 @@ from django.test import Client
 
 
 class RunGetTestClass(TestCase):
-    """ This is heavily used in other tests.
-        Keeping this here to satisfy api generation"""
+    """This is heavily used in other tests.
+    Keeping this here to satisfy api generation"""
+
     pass

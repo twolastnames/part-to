@@ -592,6 +592,14 @@ components:
           format: duration
         description:
           type: string
+        ingredients:
+          type: array
+          items:
+            type: string
+        tools:
+          type: array
+          items:
+            type: string
         depends:
           type: array
           items:

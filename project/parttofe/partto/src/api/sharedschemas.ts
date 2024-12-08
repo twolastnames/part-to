@@ -173,6 +173,8 @@ export interface TaskDefinition {
   name: string;
   duration: Duration;
   description: string;
+  ingredients?: Array<string>;
+  tools?: Array<string>;
   depends?: Array<string>;
   engagement?: number | undefined;
 }

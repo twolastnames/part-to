@@ -3,7 +3,7 @@ name = "Frozen Green Beans"
 depends = ["drain_and_serve"]
 
 [drain_and_serve]
-# tools = ["strainer"]
+tools = ["strainer"]
 description = "drain and serve beans"
 duration = "30 seconds"
 depends = ["re_boil_water"]
@@ -15,13 +15,13 @@ engagement = 2
 depends = ["boil_beans_in_pot"]
 
 [boil_water]
-# tools = ["large pot"]
+tools = ["large pot"]
 description = "boil water in large pot"
 duration = "9 minutes"
 engagement = 2
 
 [boil_beans_in_pot]
-# ingredients = ["frozen green beans"]
+ingredients = ["frozen green beans"]
 description = "put and leave beans in boiling water"
 duration = "4 minutes"
 engagement = 5

@@ -25,10 +25,13 @@ class TaskTestClass(TestCase):
         response = client.get("/api/task/?task={}".format(payload1["tasks"][0]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual("boil water in large pot", response.data["description"])
+        self.assertEqual([], response.data["ingredients"])
+        self.assertEqual(["large pot"], response.data["tools"])
 
         response = client.get("/api/task/?task={}".format(payload1["tasks"][1]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual("wash the corn", response.data["description"])
+        self.assertEqual(["cobbed corn"], response.data["ingredients"])
 
         response = client.get("/api/task/?task={}".format(payload1["tasks"][2]))
         self.assertEqual(response.status_code, 200)

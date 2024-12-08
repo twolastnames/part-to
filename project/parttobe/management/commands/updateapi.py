@@ -48,9 +48,7 @@ class Command(BaseCommand):
             PythonImplementationFileWriter(
                 operation, raw_operation, definitions, format_ids
             )()
-            PythonTestsFileWriter(
-                operation, raw_operation, definitions, format_ids
-            )()
+            PythonTestsFileWriter(operation, raw_operation, definitions, format_ids)()
             if id.variant() == "get":
                 TypescriptGetWriter(operation, raw_operation, definitions, format_ids)()
             if id.variant() == "post":

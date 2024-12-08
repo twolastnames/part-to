@@ -31,6 +31,8 @@ export type TaskGet200Body = {
   name: string;
   duration: Duration;
   description: string;
+  ingredients?: Array<string>;
+  tools?: Array<string>;
   depends?: Array<string>;
   engagement?: number | undefined;
 };
@@ -39,6 +41,8 @@ type Wire200Body = {
   name: string;
   duration: number;
   description: string;
+  ingredients?: Array<string>;
+  tools?: Array<string>;
   depends?: Array<string>;
   engagement?: number | undefined;
 };
@@ -70,6 +74,12 @@ export const useTaskGet: (
         name: unmarshalers.required["string"](body.name),
         duration: unmarshalers.required["duration"](body.duration),
         description: unmarshalers.required["string"](body.description),
+        ingredients: body.ingredients?.map((value) =>
+          unmarshalers.required["string"](value),
+        ),
+        tools: body.tools?.map((value) =>
+          unmarshalers.required["string"](value),
+        ),
         depends: body.depends?.map((value) =>
           unmarshalers.required["string"](value),
         ),
