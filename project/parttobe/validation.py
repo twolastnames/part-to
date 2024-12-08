@@ -6,6 +6,7 @@ import jsonschema
 import json
 import importlib
 import collections
+import duration_parser
 import datetime
 import sys
 import os
@@ -256,7 +257,7 @@ def get_model_uuid_constructor(name):
 unmarshal_parameter_handlers = {
     "string": lambda value: value,
     "uuid": recover_uuid,
-    "duration": lambda value: datetime.timedelta(microseconds=value),
+    "duration": lambda value: datetime.timedelta(seconds=value),
     "boolean": lambda value: value,
     "number": int,
     "date-time": lambda value: datetime.datetime.fromisoformat(value),

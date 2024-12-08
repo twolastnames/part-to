@@ -126,8 +126,8 @@ class PartToPostTestClass(TestCase):
                 "name": "Play Euchre",
                 "duration": 25 * 60,
                 "description": "take a break and play a game of euchre with your family darn it",
-                "ingredients" : [],
-                "tools" : [],
+                "ingredients": [],
+                "tools": [],
             }
         )
         response = client.post(
@@ -161,8 +161,8 @@ class PartToPostTestClass(TestCase):
         self.assertEqual(
             taskless,
             {
-                "workDuration": 0.0,
-                "clockDuration": 0.010175,
+                "workDuration": 926.0,
+                "clockDuration": 9248.5,
                 "name": "Baked Beans (Easy)",
             },
         )
