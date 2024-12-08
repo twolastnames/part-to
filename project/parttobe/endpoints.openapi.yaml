@@ -583,6 +583,8 @@ components:
       - name
       - duration
       - description
+      - ingredients
+      - tools
       type: object
       properties:
         name:

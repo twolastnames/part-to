@@ -14,14 +14,8 @@ from parttobe.views.test_helpers import (
 )
 from parttobe.views.test_nondjango_helpers import (
     get_toml_recipe_as_json,
+    toml_to_body,
 )
-
-
-def toml_to_body(toml):
-    body = {"part_to": toml["part_to"]}
-    tasks = {k: v for (k, v) in toml.items() if k != "part_to"}
-    body["tasks"] = [v1 | {"name": k1} for (k1, v1) in tasks.items()]
-    return body
 
 
 class PartToPostTestClass(TestCase):
@@ -132,6 +126,8 @@ class PartToPostTestClass(TestCase):
                 "name": "Play Euchre",
                 "duration": 25 * 60,
                 "description": "take a break and play a game of euchre with your family darn it",
+                "ingredients" : [],
+                "tools" : [],
             }
         )
         response = client.post(
