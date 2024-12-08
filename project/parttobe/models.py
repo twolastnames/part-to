@@ -168,7 +168,7 @@ def order_definitions(definitions):
             completed_duties, work_left, consumed = engagements.finish_next_duty()
         for id, count in consumed.items():
             time_consumed[id] += count
-        result.extend(completed_duties)
+        result.extend([duty for duty in completed_duties if duty not in result])
     completed_duties, work_left, consumed = engagements.empty()
     for id, count in consumed.items():
         time_consumed[id] += count
