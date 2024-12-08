@@ -1,12 +1,11 @@
 [part_to]
 name = "Bavarian Pot Roast"
-notes = "leftover juices make a mean gravy without bay leaf"
 depends = ["Remove Meat"]
 
 ['Put Oil in Dutch Oven']
 description = "put oil in dutch oven"
 duration = "30 seconds"
-tools = "dutch oven"
+tools = ["dutch oven"]
 ingredients = ["canola oil, 2 tbs"]
 
 ['Heat Dutch Oven']
