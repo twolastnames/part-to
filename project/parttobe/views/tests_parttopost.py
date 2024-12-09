@@ -162,7 +162,7 @@ class PartToPostTestClass(TestCase):
             taskless,
             {
                 "workDuration": 926.0,
-                "clockDuration": 9248.5,
+                "clockDuration": 10175.0,
                 "name": "Baked Beans (Easy)",
             },
         )

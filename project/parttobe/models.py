@@ -47,9 +47,7 @@ class Engagements:
         self.duties = []
 
     def append_duty(self, duty):
-        self.duties.append(
-            Engagement(duty, duty.duration.microseconds, duty.engagement)
-        )
+        self.duties.append(Engagement(duty, duty.duration.seconds, duty.engagement))
 
     def empty(self):
         """(completed_duties, work_left, time_consumed)"""
@@ -57,9 +55,10 @@ class Engagements:
             [Engagement.duty for engagement in self.duties],
             0,
             {
-                duty.duty.part_to: datetime.timedelta(microseconds=duty.duration)
+                duty.duty.part_to: datetime.timedelta(seconds=duty.duration)
                 for duty in self.duties
             },
+            datetime.timedelta(0),
         )
         self.duties = []
         return result
@@ -75,17 +74,18 @@ class Engagements:
         completed_duties = [self.duties[0].duty]
         self.duties = self.duties[1:]
         time_consumed = {
-            key: datetime.timedelta(microseconds=value + time_to_consume)
+            key: datetime.timedelta(seconds=value + time_to_consume)
             for key, value in time_consumed.items()
         }
-        return completed_duties, 0, time_consumed
+        return completed_duties, 0, time_consumed, completed_duties[0].duration
 
     def execute_task(self, task):
         """(completed_duties, work_left, time_consumed)"""
+        total_consumption = datetime.timedelta(0)
         time_consumed = {duty.duty.part_to: 0 for duty in self.duties}
         completed_duties = []
         active = sum([duty.engagement for duty in self.duties]) / 100.0
-        work = task.duration.microseconds
+        work = task.duration.seconds
         while work > 0 and len(self.duties) > 0:
             self.duties.sort()
             earliest = self.duties[0].duration
@@ -104,18 +104,48 @@ class Engagements:
             self.duties = [
                 engagement.subtract(subtractable) for engagement in self.duties
             ]
+            total_consumption += datetime.timedelta(seconds=subtractable)
         return (
             completed_duties,
             work,
             {
-                duty.duty.part_to: datetime.timedelta(microseconds=duty.duration)
+                duty.duty.part_to: datetime.timedelta(seconds=duty.duration)
                 for duty in self.duties
             },
+            total_consumption,
         )
 
 
-def order_definitions(definitions):
+class CompletionResult:
+    class DefinitionInfo:
+        def __init__(self, parent, definition, duration_to_end):
+            self._definition = definition
+            self.duration_to_end = duration_to_end
+            self.parent = parent
+
+        def definition(self):
+            return self._definition
+
+        def till(self):
+            return self.parent._total_duration - self.duration_to_end
+
+    def __init__(self, result, total_duration):
+        self._actions = [
+            CompletionResult.DefinitionInfo(self, change["definition"], change["time"])
+            for change in result
+        ]
+        self._total_duration = total_duration
+
+    def actions(self):
+        return self._actions
+
+    def duration(self):
+        return self.total_duration
+
+
+def calculate_completion(definitions):
     time_consumed = {task.part_to: datetime.timedelta(0) for task in definitions}
+    on_time = datetime.timedelta()
     left = [
         definition
         for definition in definitions
@@ -131,19 +161,22 @@ def order_definitions(definitions):
     for definition in definitions:
         if definition.depended:
             continue
-        completed_duties, work_left, consumed = engagements.execute_task(definition)
+        completed_duties, work_left, consumed, time_later = engagements.execute_task(
+            definition
+        )
+        on_time += time_later
         if definition in left:
             left.remove(definition)
-        result.append(definition)
+        result.append({"definition": definition, "time": on_time})
         for completed in completed_duties:
-            if completed in result:
+            if completed in [entry["definition"] for entry in result]:
                 continue
-            result.append(completed)
+            result.append({"definition": completed, "time": on_time})
         for id, count in consumed.items():
             time_consumed[id] += count
 
     def next():
-        done = set([task for task in result])
+        done = set([task["definition"] for task in result])
         dependeds = [task for task in left if task.depended in done]
         rankings = [
             key for key, value in sorted(time_consumed.items(), key=lambda x: x[1])
@@ -162,18 +195,38 @@ def order_definitions(definitions):
             if not definition.is_task():
                 engagements.append_duty(definition)
                 continue
-            completed_duties, work_left, consumed = engagements.execute_task(definition)
-            result.append(definition)
+            completed_duties, work_left, consumed, time_taken = (
+                engagements.execute_task(definition)
+            )
+            on_time += time_taken
+            result.append({"definition": definition, "time": on_time})
         else:
-            completed_duties, work_left, consumed = engagements.finish_next_duty()
+            completed_duties, work_left, consumed, time_taken = (
+                engagements.finish_next_duty()
+            )
+            on_time += time_taken
         for id, count in consumed.items():
             time_consumed[id] += count
-        result.extend([duty for duty in completed_duties if duty not in result])
-    completed_duties, work_left, consumed = engagements.empty()
+        result.extend(
+            [
+                {"definition": duty, "time": on_time}
+                for duty in completed_duties
+                if duty not in [action["definition"] for action in result]
+            ]
+        )
+    completed_duties, work_left, consumed, time_taken = engagements.empty()
+    on_time += time_taken
     for id, count in consumed.items():
         time_consumed[id] += count
     result.reverse()
-    return result
+    return CompletionResult(result, on_time)
+
+
+def order_definitions(definitions):
+    return [
+        information.definition()
+        for information in calculate_completion(definitions).actions()
+    ]
 
 
 def next_work(run_state):
