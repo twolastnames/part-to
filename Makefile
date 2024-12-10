@@ -42,10 +42,10 @@ runfront: $(VENV) $(NENV) $(NODE_BUILD)
 	$(WITH_ENV) cd $(NODE_SOURCE) && npm run start
 
 testfront: $(NENV)
-	$(WITH_ENV) cd $(NODE_SOURCE) && npm run test -- --watchAll=false
+	$(WITH_ENV) cd $(NODE_SOURCE) && npm run test -- --watchAll=false $(TEST_ARGUMENTS)
 
 testback: $(NENV)
-	$(WITH_ENV) cd $(PROJECT) && python3 manage.py test parttobe$(TESTBACK_ARGUMENT)
+	$(WITH_ENV) cd $(PROJECT) && python3 manage.py test parttobe$(TEST_ARGUMENTS)
 
 checkformat:
 	$(WITH_ENV) black --check . && cd $(NODE_SOURCE) && npm run checkformat
