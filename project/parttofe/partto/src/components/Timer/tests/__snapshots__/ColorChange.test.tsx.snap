@@ -7,45 +7,45 @@ exports[`color change will change 1`] = `
 >
   <div
     class="m_b32e4812 mantine-RingProgress-root"
-    style="--rp-size: calc(Infinityrem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
+    style="--rp-size: calc(0.0625rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
   >
     <svg
       class="m_d43b5134 mantine-RingProgress-svg"
     >
       <circle
         class="m_b1ca1fbf mantine-RingProgress-curve"
-        cx="Infinity"
-        cy="Infinity"
+        cx="0.5"
+        cy="0.5"
         fill="none"
-        r="Infinity"
-        stroke-dasharray="NaN, Infinity"
+        r="0.2"
+        stroke-dasharray="0, 1.2566370614359172"
         stroke-dashoffset="0"
         stroke-linecap="butt"
-        stroke-width="8"
-        transform="scale(1, -1) translate(0, -Infinity)"
+        stroke-width="0.25"
+        transform="scale(1, -1) translate(0, -1)"
       />
       <circle
         class="m_b1ca1fbf mantine-RingProgress-curve"
-        cx="Infinity"
-        cy="Infinity"
+        cx="0.5"
+        cy="0.5"
         fill="none"
-        r="Infinity"
-        stroke-dasharray="NaN, Infinity"
-        stroke-dashoffset="Infinity"
+        r="0.2"
+        stroke-dasharray="0, 1.2566370614359172"
+        stroke-dashoffset="1.2566370614359172"
         stroke-linecap="butt"
-        stroke-width="8"
+        stroke-width="0.25"
         style="--curve-color: var(--secondary-color);"
       />
       <circle
         class="m_b1ca1fbf mantine-RingProgress-curve"
-        cx="Infinity"
-        cy="Infinity"
+        cx="0.5"
+        cy="0.5"
         fill="none"
-        r="Infinity"
-        stroke-dasharray="Infinity, NaN"
-        stroke-dashoffset="0"
+        r="0.2"
+        stroke-dasharray="1.2566370614359172, 0"
+        stroke-dashoffset="1.2566370614359172"
         stroke-linecap="butt"
-        stroke-width="8"
+        stroke-width="0.25"
         style="--curve-color: var(--highlight-color);"
       />
     </svg>

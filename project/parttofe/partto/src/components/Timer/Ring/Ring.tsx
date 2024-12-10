@@ -23,7 +23,8 @@ export function Ring({ magnitude, label }: RingProps) {
       ringRef.current?.offsetWidth || Infinity,
     );
     if (currentSize !== size) {
-      setSize(currentSize);
+      //TODO: Fix rerendering issue here
+      //setSize(currentSize);
     }
   }, [height, width, size]);
 
