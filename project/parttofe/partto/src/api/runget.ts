@@ -31,7 +31,7 @@ export type RunGet200Body = {
   runState: RunStateId;
   timestamp: DateTime;
   startTimes: Array<{ task: TaskDefinitionId; started: DateTime }>;
-  report?: DateTime | undefined;
+  imminent: Array<{ till: Duration; duty: TaskDefinitionId }>;
   complete?: DateTime | undefined;
   activePartTos?: Array<PartToId>;
   tasks: Array<TaskDefinitionId>;
@@ -47,7 +47,7 @@ type Wire200Body = {
   runState: RunStateId;
   timestamp: string;
   startTimes: Array<{ task: TaskDefinitionId; started: string }>;
-  report?: string | undefined;
+  imminent: Array<{ till: number; duty: TaskDefinitionId }>;
   complete?: string | undefined;
   activePartTos?: Array<PartToId>;
   tasks: Array<TaskDefinitionId>;
@@ -89,7 +89,10 @@ export const useRunGet: (
           task: unmarshalers.required["TaskDefinitionId"](value.task),
           started: unmarshalers.required["date-time"](value.started),
         })),
-        report: unmarshalers.unrequired["date-time"](body.report),
+        imminent: body.imminent.map((value) => ({
+          till: unmarshalers.required["duration"](value.till),
+          duty: unmarshalers.required["TaskDefinitionId"](value.duty),
+        })),
         complete: unmarshalers.unrequired["date-time"](body.complete),
         activePartTos: body.activePartTos?.map((value) =>
           unmarshalers.required["PartToId"](value),

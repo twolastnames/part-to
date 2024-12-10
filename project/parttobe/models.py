@@ -566,6 +566,9 @@ class RunState(models.Model):
         result["tasks"] = [task for task in result["started"] if task.is_task()]
         result["duties"] = [task for task in result["started"] if not task.is_task()]
         result["timestamp"] = self.created
+        # completion = calculate_completion(result["started"] + result["staged"])
+        # TODO: put "report" on here:
+        # the "till" of the first duty with dependencies met
         return result
 
     def append_states(self, operation, tasks):

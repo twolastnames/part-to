@@ -183,7 +183,7 @@ export interface RunState {
   runState: RunStateId;
   timestamp: DateTime;
   startTimes: Array<{ task: TaskDefinitionId; started: DateTime }>;
-  report?: DateTime | undefined;
+  imminent: Array<{ till: Duration; duty: TaskDefinitionId }>;
   complete?: DateTime | undefined;
   activePartTos?: Array<PartToId>;
   tasks: Array<TaskDefinitionId>;

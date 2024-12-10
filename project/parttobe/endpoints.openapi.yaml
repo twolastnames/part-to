@@ -620,6 +620,7 @@ components:
       - completed
       - timestamp
       - startTimes
+      - imminent
       type: object
       properties:
         runState:
@@ -642,9 +643,20 @@ components:
               started:
                 type: string
                 format: date-time
-        report:
-          type: string
-          format: date-time
+        imminent:
+          type: array
+          items:
+            type: object
+            required:
+            - till
+            - duty
+            properties:
+              till:
+                type: string
+                format: duration
+              duty:
+                type: string
+                format: TaskDefinitionId
         complete:
           type: string
           format: date-time
