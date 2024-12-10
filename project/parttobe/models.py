@@ -70,18 +70,24 @@ class Engagements:
         """(completed_duties, work_left, time_consumed)"""
         time_consumed = {duty.duty.part_to: 0 for duty in self.duties}
         self.duties.sort()
-        time_to_consume = self.duties[0].duration  # TODO: 500s here without duties
+        if not self.duties:
+            return [], 0, {}, datetime.timedelta(seconds=0)
+        time_to_consume = self.duties[0].duration
         completed_duties = [self.duties[0].duty]
         self.duties = self.duties[1:]
         time_consumed = {
             key: datetime.timedelta(seconds=value + time_to_consume)
             for key, value in time_consumed.items()
         }
-        return completed_duties, 0, time_consumed, completed_duties[0].duration
+        return (
+            completed_duties,
+            0,
+            time_consumed,
+            datetime.timedelta(seconds=time_to_consume),
+        )
 
     def execute_task(self, task):
         """(completed_duties, work_left, time_consumed)"""
-        total_consumption = datetime.timedelta(0)
         time_consumed = {duty.duty.part_to: 0 for duty in self.duties}
         completed_duties = []
         active = sum([duty.engagement for duty in self.duties]) / 100.0
@@ -104,7 +110,6 @@ class Engagements:
             self.duties = [
                 engagement.subtract(subtractable) for engagement in self.duties
             ]
-            total_consumption += datetime.timedelta(seconds=subtractable)
         return (
             completed_duties,
             work,
@@ -112,7 +117,7 @@ class Engagements:
                 duty.duty.part_to: datetime.timedelta(seconds=duty.duration)
                 for duty in self.duties
             },
-            total_consumption,
+            task.duration,
         )
 
 
@@ -176,8 +181,12 @@ def calculate_completion(definitions):
             time_consumed[id] += count
 
     def next():
-        done = set([task["definition"] for task in result])
-        dependeds = [task for task in left if task.depended in done]
+        dependeds = [
+            task
+            for task in left
+            if task.depended not in left
+            and task.depended not in [duty.duty for duty in engagements.duties]
+        ]
         rankings = [
             key for key, value in sorted(time_consumed.items(), key=lambda x: x[1])
         ]
@@ -231,18 +240,24 @@ def order_definitions(definitions):
 
 def next_work(run_state):
     full_state = run_state.full_state()
-    if len([RunState.OPERATION_TEXTS[RunState.Operation.STAGED]]) < 1:
+    if len(full_state[RunState.OPERATION_TEXTS[RunState.Operation.STAGED]]) < 1:
         return run_state
-    started = full_state[RunState.OPERATION_TEXTS[RunState.Operation.STARTED]]
+    started = full_state[RunState.OPERATION_TEXTS[RunState.Operation.STARTED]].copy()
+    started.sort()
+    staged = full_state[RunState.OPERATION_TEXTS[RunState.Operation.STAGED]].copy()
+    staged.sort()
     if len([task for task in started if task.is_task()]) > 0:
         return run_state
-    completed = full_state[RunState.OPERATION_TEXTS[RunState.Operation.COMPLETED]]
-    possible = full_state[RunState.OPERATION_TEXTS[RunState.Operation.STAGED]].pop(0)
-    left = full_state[RunState.OPERATION_TEXTS[RunState.Operation.STAGED]]
-    for running in started:
-        if running.depended == possible:
-            return run_state
-    return run_state.append_states(RunState.Operation.STARTED, [possible])
+    result = calculate_completion(staged + started)
+    imminent = [
+        action.definition()
+        for action in result.actions()
+        if action.definition() not in started
+        and action.till() <= datetime.timedelta(seconds=2)
+    ]
+    if not imminent:
+        return run_state
+    return run_state.append_states(RunState.Operation.STARTED, imminent)
 
 
 class IngredientDefinition(models.Model):
@@ -566,11 +581,14 @@ class RunState(models.Model):
         return parent
 
 
-def append_states(operation, tasks):
+def append_states(operation, tasks, run_state=None):
     if len(tasks) < 1:
         return
-    initial = RunState(operation=operation, task=tasks[0])
-    return initial.append_states(operation, tasks[1:])
+    if run_state:
+        return run_state.append_states(operation, tasks)
+    return RunState(operation=operation, task=tasks[0]).append_states(
+        operation, tasks[1:]
+    )
 
 
 class PartToRun(models.Model):

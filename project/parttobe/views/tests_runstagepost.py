@@ -22,12 +22,10 @@ class RunStageTestClass(TestCase):
         startable = state_response.data["staged"][0]
         response = client.post(
             "/api/run/start",
-            json.dumps(
-                {
-                    "runState": runState,
-                }
-            ),
-            content_type="*",
+            {
+                "runState": runState,
+            },
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 200)
         runStateId = response.data["runState"]

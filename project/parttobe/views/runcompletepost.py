@@ -19,9 +19,13 @@ def handle(arguments):
         return arguments.respond_400(unstarted)
 
     return arguments.respond_200(
-        handle_run_state(
-            models.RunState.Operation.COMPLETED,
-            [definition for definition in arguments.definitions],
-            arguments.runState,
-        )
+        {
+            "runState": models.next_work(
+                models.append_states(
+                    models.RunState.Operation.COMPLETED,
+                    arguments.definitions,
+                    arguments.runState,
+                )
+            )
+        }
     )

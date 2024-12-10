@@ -4,7 +4,7 @@ from django.test import Client
 import json
 
 
-class RunStageTestClass(TestCase):
+class RunVoidTestClass(TestCase):
     def setUp(self):
         self.ids = helpers.loadExamples()
 
