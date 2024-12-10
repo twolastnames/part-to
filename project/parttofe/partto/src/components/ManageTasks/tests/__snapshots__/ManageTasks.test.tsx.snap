@@ -25,8 +25,10 @@ exports[`snapshot 1`] = `
         >
           <button
             aria-label="See all 3 items in a list"
-            class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+            class="mantine-focus-auto button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+            data-disabled="true"
             data-testid="Button"
+            disabled=""
             style="--ai-color: var(--mantine-color-white);"
             type="button"
           >
@@ -86,8 +88,10 @@ exports[`snapshot 1`] = `
               >
                 <button
                   aria-label="Back One"
-                  class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  class="mantine-focus-auto button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-disabled="true"
                   data-testid="Button"
+                  disabled=""
                   style="--ai-color: var(--mantine-color-white);"
                   type="button"
                 >
