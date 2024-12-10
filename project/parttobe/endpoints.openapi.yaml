@@ -190,7 +190,30 @@ paths:
           content:
             '*':
               schema:
-                $ref: "#/components/schemas/TaskDefinition"
+                type: object
+                required:
+                - duration
+                - description
+                - partTo
+                - ingredients
+                - tools
+                properties:
+                  duration:
+                    type: string
+                    format: duration
+                  description:
+                    type: string
+                  partTo:
+                    type: string
+                    format: PartToId
+                  ingredients:
+                    type: array
+                    items:
+                      type: string
+                  tools:
+                    type: array
+                    items:
+                      type: string
   /api/run/:
     get:
       summary: read a run state

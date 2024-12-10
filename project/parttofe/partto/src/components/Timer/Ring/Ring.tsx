@@ -7,7 +7,7 @@ import { useWindowResize } from "../../../hooks/windowResize";
 
 export function Ring({ magnitude, label }: RingProps) {
   const { height, width } = useWindowResize();
-  const [size, setSize] = useState<number>(1);
+  const [size /* TODO: reimplment here */] = useState<number>(1);
   const ringRef = useRef<HTMLDivElement | null>(null);
 
   const color1 =

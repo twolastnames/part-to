@@ -8,9 +8,14 @@ import { Spinner } from "../../Spinner/Spinner";
 import { Timer } from "../../Timer/Timer";
 import { useTaskdurationmetricGet } from "../../../api/taskdurationmetricget";
 import { getDuration } from "../../../shared/duration";
+import { useParttoGet } from "../../../api/parttoget";
 
 export function Detail({ task, runState }: DetailProps) {
   const taskResponse = useTaskGet({ task });
+  const partToResponse = useParttoGet(
+    { partTo: taskResponse?.data?.partTo || "" },
+    { shouldSkip: () => !taskResponse.data },
+  );
   const runStateResponse = useRunGet({ runState });
   const metricResponse = useTaskdurationmetricGet({ task });
   return (
@@ -27,6 +32,9 @@ export function Detail({ task, runState }: DetailProps) {
         <div className={classes.description}>
           {taskResponse.data?.description}
         </div>
+        {partToResponse.data && (
+          <div>For Recipe: {partToResponse.data?.name}</div>
+        )}
       </div>
     </Spinner>
   );
