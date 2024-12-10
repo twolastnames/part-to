@@ -38,8 +38,8 @@ type WireBody = {
     name: string;
     duration: number;
     description: string;
-    ingredients?: Array<string>;
-    tools?: Array<string>;
+    ingredients: Array<string>;
+    tools: Array<string>;
     depends?: Array<string>;
     engagement?: number | undefined;
   }>;
@@ -89,10 +89,10 @@ export const doParttoPost = async ({
         name: bodyMarshalers.required["string"](value.name),
         duration: bodyMarshalers.required["duration"](value.duration),
         description: bodyMarshalers.required["string"](value.description),
-        ingredients: value.ingredients?.map((value) =>
+        ingredients: value.ingredients.map((value) =>
           bodyMarshalers.required["string"](value),
         ),
-        tools: value.tools?.map((value) =>
+        tools: value.tools.map((value) =>
           bodyMarshalers.required["string"](value),
         ),
         depends: value.depends?.map((value) =>
