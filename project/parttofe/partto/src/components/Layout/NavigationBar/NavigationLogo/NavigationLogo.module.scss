@@ -4,6 +4,7 @@
   display: flex;
   border: 1px solid var(--background-color);
   margin: var(--gap-medium);
+  cursor: pointer;
   @media #{$mobile} {
     padding-top: var(--gap-small);
     width: 96px;
