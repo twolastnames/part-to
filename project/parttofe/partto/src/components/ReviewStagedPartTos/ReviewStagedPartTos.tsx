@@ -5,11 +5,10 @@ import { DynamicItemSet } from "../DynamicItemSet/DynamicItemSet";
 import { useRunGet } from "../../api/runget";
 import { Spinner } from "../Spinner/Spinner";
 import { DefinitionIdFromer } from "../PartTo/Definition/Definition";
-import { Cancel } from "../Icon/Icon";
+import { Cancel, Oven } from "../Icon/Icon";
 import { doRunvoidPost } from "../../api/runvoidpost";
 import { useNavigate } from "react-router-dom";
 import { getRoute } from "../../routes";
-import { IconCooker } from "@tabler/icons-react";
 import { doRunstartPost } from "../../api/runstartpost";
 import { ReviewStagedPartTosProps } from "./ReviewStagedPartTosTypes";
 import { LeftContext, RightContext } from "../../providers/DynamicItemSetPair";
@@ -74,7 +73,7 @@ export function ReviewStagedPartTos({
       setOperations={[
         {
           text: "Start Cooking",
-          icon: IconCooker,
+          icon: Oven,
           onClick: () => {
             doRunstartPost({
               body: { runState: runState.current },
