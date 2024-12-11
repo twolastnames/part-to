@@ -23,6 +23,9 @@ class TaskTestClass(TestCase):
 
         response = client.get("/api/task/?task={}".format(payload1["tasks"][0]))
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.headers["Cache-Control"], "public, max-age=31536000, immutable"
+        )
         self.assertEqual("boil water in large pot", response.data["description"])
         self.assertEqual([], response.data["ingredients"])
         self.assertEqual(["large pot"], response.data["tools"])

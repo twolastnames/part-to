@@ -15,6 +15,9 @@ class PartToTestClass(TestCase):
         client = Client()
         response = client.get("/api/partto/?partTo={}".format(self.ids[0]))
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.headers["Cache-Control"], "public, max-age=31536000, immutable"
+        )
         payload = response.data
         self.assertEqual(payload["name"], "Baked Beans (Easy)")
         # TODO: get these working
