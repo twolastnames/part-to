@@ -566,10 +566,37 @@ class RunState(models.Model):
         result["tasks"] = [task for task in result["started"] if task.is_task()]
         result["duties"] = [task for task in result["started"] if not task.is_task()]
         result["timestamp"] = self.created
-        # completion = calculate_completion(result["started"] + result["staged"])
-        # TODO: put "report" on here:
-        # the "till" of the first duty with dependencies met
+        result["imminent"] = self._imminent(result["started"] + result["staged"])
         return result
+
+    def _imminent(self, active):
+        completion = calculate_completion(active)
+        dependendents = set(
+            [
+                action.definition().depended
+                for action in completion.actions()
+                if action.definition().depended
+            ]
+        )
+        ready_duties = [
+            action
+            for action in completion.actions()
+            if action.definition() not in dependendents
+            and action.definition().engagement
+            and action.till() != datetime.timedelta(seconds=0)
+            and action.till() < datetime.timedelta(seconds=30 * 60)
+        ]
+        ready_duties.sort(key=lambda action: action.till())
+        return (
+            [
+                {
+                    "duty": ready_duties[0].definition(),
+                    "till": ready_duties[0].till(),
+                }
+            ]
+            if ready_duties
+            else []
+        )
 
     def append_states(self, operation, tasks):
         if len(tasks) < 1:
