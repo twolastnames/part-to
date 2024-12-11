@@ -1,0 +1,21 @@
+@import "../../../../App.scss";
+
+.list {
+  overflow-y: scroll;
+}
+
+.item {
+  border-top: var(--detail-color) 1px solid;
+  border-bottom: var(--detail-color) 1px solid;
+  width: 100%;
+}
+
+.spacer {
+  width: 40px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  height: 15%;
+}

@@ -13,6 +13,7 @@ import { debounce, DebouncedFunc } from "lodash";
 
 export type DynamicItemSetPairType = {
   selected: number;
+  setSelected: (selected: number) => void;
   getTotal: () => number;
   goBack: () => void;
   goForward: () => void;
@@ -24,6 +25,7 @@ export type DynamicItemSetPairType = {
 
 export const UndefinedDynamicItemSetPair = {
   selected: 0,
+  setSelected: (_: number) => undefined,
   goBack: () => undefined,
   goForward: () => undefined,
   getTotal: () => 0,
@@ -158,6 +160,9 @@ function useProvider({
   const duration = durations[state.showDuration];
   return {
     selected: state.selected,
+    setSelected: (selected: number) => {
+      setState((current) => ({ ...current, selected }));
+    },
     goBack: () => {
       count.current && goBack(count.current, setState);
     },

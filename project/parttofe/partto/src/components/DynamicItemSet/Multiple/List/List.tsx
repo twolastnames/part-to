@@ -1,75 +1,27 @@
-import React, {
-  PropsWithChildren,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React from "react";
 
-import { Carousel } from "../Carousel/Carousel";
-import { ButtonProps } from "../../../Button/ButtonTypes";
-import { MultipleProps } from "../MultipleTypes";
+import classes from "./List.module.scss";
+import { useSingleOfPair } from "../../../../providers/DynamicItemSetPair";
+import { ListProps } from "./ListTypes";
 
-interface ShellProps extends PropsWithChildren {
-  height: number;
-  operations: Array<ButtonProps>;
-}
-
-function Shell({ children, height, operations }: ShellProps) {
-  return <div style={{ height }}>{children}</div>;
-}
-
-export function List({ items, context }: MultipleProps) {
-  const minimumHeight = 120;
-  const domRef = useRef<HTMLDivElement>(null);
-  const [{ height, perPage }, setCalculated] = useState<{
-    height: number;
-    perPage: number;
-  }>({ height: 0, perPage: 0 });
-
-  const calculateHeight = () => {
-    if (!domRef.current) {
-      return;
-    }
-    const { height: rectangleHeight } =
-      domRef?.current?.getBoundingClientRect();
-    const screenHeight = rectangleHeight;
-    const count = Math.floor(screenHeight / minimumHeight);
-    const height = Math.floor(screenHeight / count);
-
-    setCalculated({
-      height,
-      perPage: count === 0 ? 1 : count,
-    });
-  };
-
-  useLayoutEffect(() => {
-    calculateHeight();
-  }, [domRef]);
-
-  const pages = [];
-  if (height > 0) {
-    for (let index = 0; index < items.length; index += perPage) {
-      pages.push({
-        view: (
-          <div key={index}>
-            {items.slice(index, index + perPage).map((item, key) => (
-              <Shell
-                key={`${index}-${key}`}
-                height={height}
-                operations={item.itemOperations}
-              >
-                {item.listView}
-              </Shell>
-            ))}
-          </div>
-        ),
-      });
-    }
-  }
-
+export function List({ items, context, onSelectionChanged }: ListProps) {
+  const { setSelected } = useSingleOfPair(context);
   return (
-    <div data-testid="List" style={{ height: "100%" }} ref={domRef}>
-      {items.length > 0 ? <Carousel context={context} items={items} /> : null}
+    <div className={classes.list} data-testid="List" style={{ height: "100%" }}>
+      {items.map(({ listView }, index: number) => (
+        <div className={classes.row}>
+          <div
+            onClick={() => {
+              setSelected(index);
+              onSelectionChanged();
+            }}
+            className={classes.item}
+          >
+            {listView}
+          </div>
+          <div className={classes.spacer} />
+        </div>
+      ))}
     </div>
   );
 }

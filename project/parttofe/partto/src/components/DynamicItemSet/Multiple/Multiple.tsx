@@ -23,7 +23,15 @@ export function Multiple({ context, items }: MultipleProps) {
         setView(detail);
       },
     },
-    visible: (items) => <List context={context} items={items} />,
+    visible: (items) => (
+      <List
+        onSelectionChanged={() => {
+          setView(detail);
+        }}
+        context={context}
+        items={items}
+      />
+    ),
   };
   const detail: View = {
     toOther: {
