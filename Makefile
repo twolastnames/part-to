@@ -41,6 +41,9 @@ runback: $(VENV) $(NENV) $(NODE_BUILD) migrate
 runfront: $(VENV) $(NENV) $(NODE_BUILD)
 	$(WITH_ENV) cd $(NODE_SOURCE) && npm run start
 
+runstorybook: $(VENV) $(NENV) $(NODE_BUILD)
+	$(WITH_ENV) cd $(NODE_SOURCE) && npm run storybook
+
 testfront: $(NENV)
 	$(WITH_ENV) cd $(NODE_SOURCE) && npm run test -- --watchAll=false $(TEST_ARGUMENTS)
 
