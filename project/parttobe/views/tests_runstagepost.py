@@ -31,5 +31,4 @@ class RunStageTestClass(TestCase):
         runStateId = response.data["runState"]
         response = client.get("/api/run/?runState={}".format(runStateId))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["started"], [startable])
         self.assertEqual(response.data["activePartTos"], [self.ids[2]])

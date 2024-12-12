@@ -4,6 +4,7 @@ import { Layout } from "../../components/Layout/Layout";
 import { ManageTasksIdFromer } from "../../components/ManageTasks/ManageTasks";
 import { useParams } from "react-router-dom";
 import { LeftContext, RightContext } from "../../providers/DynamicItemSetPair";
+import { getImminentItems } from "../../components/ManageTasks/Imminent/Imminent";
 
 type Entity = {
   name: string;
@@ -30,6 +31,7 @@ export function CookMeal() {
             { name: "duties", side: "first" },
             { name: "tasks", side: "second" },
           )}
+          getPrependedItems={getImminentItems}
         />,
         <ManageTasksIdFromer
           runState={runState}

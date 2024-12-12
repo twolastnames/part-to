@@ -161,8 +161,8 @@ class PartToPostTestClass(TestCase):
         self.assertEqual(
             taskless,
             {
-                "workDuration": 926.0,
-                "clockDuration": 10175.0,
+                "workDuration": 962.0,
+                "clockDuration": 10211.0,
                 "name": "Baked Beans (Easy)",
             },
         )

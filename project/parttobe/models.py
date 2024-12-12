@@ -88,10 +88,12 @@ class Engagements:
 
     def execute_task(self, task):
         """(completed_duties, work_left, time_consumed)"""
+        if not task.is_task():
+            raise SystemError("Expected a TaskDefinition without engagement")
         time_consumed = {duty.duty.part_to: 0 for duty in self.duties}
         completed_duties = []
         active = sum([duty.engagement for duty in self.duties]) / 100.0
-        work = task.duration.seconds
+        work = task.duration.total_seconds()
         while work > 0 and len(self.duties) > 0:
             self.duties.sort()
             earliest = self.duties[0].duration
@@ -114,8 +116,8 @@ class Engagements:
             completed_duties,
             work,
             {
-                duty.duty.part_to: datetime.timedelta(seconds=duty.duration)
-                for duty in self.duties
+                id: datetime.timedelta(seconds=count)
+                for id, count in time_consumed.items()
             },
             task.duration,
         )
@@ -147,6 +149,14 @@ class CompletionResult:
     def duration(self):
         return self.total_duration
 
+    def ready_tasks(self):
+        dependeds = [action.definition().depended for action in self._actions]
+        return [
+            action.definition()
+            for action in self._actions
+            if action.definition().is_task() and action.definition() not in dependeds
+        ]
+
 
 def calculate_completion(definitions):
     time_consumed = {task.part_to: datetime.timedelta(0) for task in definitions}
@@ -164,12 +174,13 @@ def calculate_completion(definitions):
     ]
     result = []
     for definition in definitions:
-        if definition.depended:
+        if definition.depended or not definition.is_task():
             continue
         completed_duties, work_left, consumed, time_later = engagements.execute_task(
             definition
         )
         on_time += time_later
+
         if definition in left:
             left.remove(definition)
         result.append({"definition": definition, "time": on_time})
@@ -249,15 +260,16 @@ def next_work(run_state):
     if len([task for task in started if task.is_task()]) > 0:
         return run_state
     result = calculate_completion(staged + started)
-    imminent = [
-        action.definition()
-        for action in result.actions()
-        if action.definition() not in started
-        and action.till() <= datetime.timedelta(seconds=2)
-    ]
-    if not imminent:
+    ready_tasks = result.ready_tasks()
+    to_add = []
+    if (
+        not [definition for definition in started if definition.is_task()]
+        and ready_tasks
+    ):
+        to_add.append(ready_tasks[0])
+    if not to_add:
         return run_state
-    return run_state.append_states(RunState.Operation.STARTED, imminent)
+    return run_state.append_states(RunState.Operation.STARTED, to_add)
 
 
 class IngredientDefinition(models.Model):
@@ -441,7 +453,7 @@ class TaskDefinition(models.Model):
         )
 
     def is_task(self):
-        return not self.engagement
+        return self.engagement is None
 
     def __eq__(self, other):
         if not other:
@@ -566,12 +578,13 @@ class RunState(models.Model):
         result["tasks"] = [task for task in result["started"] if task.is_task()]
         result["duties"] = [task for task in result["started"] if not task.is_task()]
         result["timestamp"] = self.created
-        result["imminent"] = self._imminent(result["started"] + result["staged"])
+        result["imminent"] = self._imminent(result["staged"], result["started"])
         return result
 
-    def _imminent(self, active):
+    def _imminent(self, staged, started):
+        active = staged + started
         completion = calculate_completion(active)
-        dependendents = set(
+        dependeds = set(
             [
                 action.definition().depended
                 for action in completion.actions()
@@ -581,22 +594,18 @@ class RunState(models.Model):
         ready_duties = [
             action
             for action in completion.actions()
-            if action.definition() not in dependendents
-            and action.definition().engagement
-            and action.till() != datetime.timedelta(seconds=0)
-            and action.till() < datetime.timedelta(seconds=30 * 60)
+            if action.definition() not in dependeds
+            and not action.definition().is_task()
+            and action.definition() not in started
         ]
         ready_duties.sort(key=lambda action: action.till())
-        return (
-            [
-                {
-                    "duty": ready_duties[0].definition(),
-                    "till": ready_duties[0].till(),
-                }
-            ]
-            if ready_duties
-            else []
-        )
+        return [
+            {
+                "duty": duty.definition(),
+                "till": duty.till(),
+            }
+            for duty in ready_duties
+        ]
 
     def append_states(self, operation, tasks):
         if len(tasks) < 1:

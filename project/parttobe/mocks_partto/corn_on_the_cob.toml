@@ -15,7 +15,7 @@ depends = ["wash_corn"]
 
 [boil_water]
 duration = "8 minutes"
-description = "boil water in large pot"
+description = "boil water in large pot for corn"
 tools = ["large pot"]
 engagement = 2
 

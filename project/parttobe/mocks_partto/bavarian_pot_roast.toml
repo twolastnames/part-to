@@ -18,6 +18,7 @@ depends = ["put_oil_in_dutch_oven"]
 [brown_roast]
 description = "put roast meat in dutch oven and brown all sides"
 duration = "10 minutes"
+engagement = 10
 ingredients = ["beef chuck roast, boneless, 1 roast, about 3 lbs"]
 depends = ["heat_dutch_oven"]
 

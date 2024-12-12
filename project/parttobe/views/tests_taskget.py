@@ -26,7 +26,9 @@ class TaskTestClass(TestCase):
         self.assertEqual(
             response.headers["Cache-Control"], "public, max-age=31536000, immutable"
         )
-        self.assertEqual("boil water in large pot", response.data["description"])
+        self.assertEqual(
+            "boil water in large pot for corn", response.data["description"]
+        )
         self.assertEqual([], response.data["ingredients"])
         self.assertEqual(["large pot"], response.data["tools"])
 

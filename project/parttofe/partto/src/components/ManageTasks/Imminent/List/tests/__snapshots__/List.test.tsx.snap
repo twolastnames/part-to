@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<div
+  class="list"
+  data-testid="List"
+>
+  "Duty Start Time:"
+  <span>
+    3 seconds
+  </span>
+  to "saute diced green peppers and onion"
+</div>
+`;

@@ -1,7 +1,7 @@
 import React from "react";
 
 import classes from "./ManageTasks.module.scss";
-import { ManageTasksProps } from "./ManageTasksTypes";
+import { ManageTasksProps, RunStateItemGetter } from "./ManageTasksTypes";
 import { RunStateId, TaskDefinitionId } from "../../api/sharedschemas";
 import { useRunGet } from "../../api/runget";
 import { Spinner } from "../Spinner/Spinner";
@@ -20,11 +20,13 @@ export function ManageTasksIdFromer({
   typeKey,
   emptyText,
   context,
+  getPrependedItems,
 }: {
   typeKey: "duties" | "tasks";
   runState: RunStateId;
   emptyText: string;
   context: ContextDescription;
+  getPrependedItems?: RunStateItemGetter;
 }) {
   const response = useRunGet({ runState });
   return (
@@ -34,6 +36,7 @@ export function ManageTasksIdFromer({
         emptyText={emptyText}
         tasks={response.data?.[typeKey] || []}
         runState={runState}
+        getPrependedItems={getPrependedItems}
       />
     </Spinner>
   );
@@ -86,13 +89,19 @@ export function ManageTasks({
   tasks,
   runState,
   emptyText,
+  getPrependedItems,
 }: ManageTasksProps) {
   const navigate = useNavigate();
+  const runStateData = useRunGet({ runState });
+
   return (
     <div className={classes.manageTasks} data-testid="ManageTasks">
       <DynamicItemSet
         context={context}
-        items={getItems(navigate, runState, tasks)}
+        items={(getPrependedItems && runStateData.data
+          ? getPrependedItems(navigate, runStateData.data)
+          : []
+        ).concat(getItems(navigate, runState, tasks))}
         setOperations={[]}
         emptyPage={<EmptySimpleView content={emptyText} />}
       />

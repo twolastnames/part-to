@@ -272,6 +272,11 @@ paths:
                 runState:
                   type: string
                   format: RunStateId
+                definitions:
+                  type: array
+                  items:
+                    type: string
+                    format: TaskDefinitionId
       responses:
         '404':
           description: a frontend bug
