@@ -8,12 +8,14 @@ import { LeftContext } from "../../../providers/DynamicItemSetPair";
 test("snapshot", () => {
   render(
     <ShellProvider>
-      <ManageTasks
-        context={LeftContext}
-        emptyText="Empty Yo"
-        tasks={["a", "task", "list"]}
-        runState="aRunState"
-      />
+      <div data-testid="ManageTasks">
+        <ManageTasks
+          context={LeftContext}
+          emptyText="Empty Yo"
+          tasks={["a", "task", "list"]}
+          runState="aRunState"
+        />{" "}
+      </div>
     </ShellProvider>,
   );
   const component = screen.getByTestId("ManageTasks");

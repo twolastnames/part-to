@@ -1,6 +1,5 @@
 import React from "react";
 
-import classes from "./ManageTasks.module.scss";
 import { ManageTasksProps, RunStateItemGetter } from "./ManageTasksTypes";
 import { RunStateId, TaskDefinitionId } from "../../api/sharedschemas";
 import { useRunGet } from "../../api/runget";
@@ -95,16 +94,14 @@ export function ManageTasks({
   const runStateData = useRunGet({ runState });
 
   return (
-    <div className={classes.manageTasks} data-testid="ManageTasks">
-      <DynamicItemSet
-        context={context}
-        items={(getPrependedItems && runStateData.data
-          ? getPrependedItems(navigate, runStateData.data)
-          : []
-        ).concat(getItems(navigate, runState, tasks))}
-        setOperations={[]}
-        emptyPage={<EmptySimpleView content={emptyText} />}
-      />
-    </div>
+    <DynamicItemSet
+      context={context}
+      items={(getPrependedItems && runStateData.data
+        ? getPrependedItems(navigate, runStateData.data)
+        : []
+      ).concat(getItems(navigate, runState, tasks))}
+      setOperations={[]}
+      emptyPage={<EmptySimpleView content={emptyText} />}
+    />
   );
 }

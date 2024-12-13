@@ -2,7 +2,6 @@
 
 exports[`snapshot 1`] = `
 <div
-  class="manageTasks"
   data-testid="ManageTasks"
 >
   <div
@@ -368,5 +367,6 @@ exports[`snapshot 1`] = `
       </span>
     </div>
   </div>
+   
 </div>
 `;
