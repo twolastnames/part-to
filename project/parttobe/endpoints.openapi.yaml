@@ -7,6 +7,51 @@ info:
   license:
     name: MIT
 paths:
+  /api/applicationVersion/:
+    get:
+      summary: supply Part To application version
+      operationId: version:get
+      responses:
+        '404':
+          description: version file is missing
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/Four04Reply"
+        '500':
+          description: a backend bug
+          content:
+            '*':
+              schema:
+                type: string
+        '200':
+          description: Expected response to a valid request
+          content:
+            '*':
+              schema:
+                type: object
+                required:
+                - major
+                - minor
+                - fix
+                - build
+                - variant
+                - timestamp
+                properties:
+                  major:
+                    type: number
+                  minor:
+                    type: number
+                  fix:
+                    type: number
+                  build:
+                    type: number
+                  variant:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+
   /api/parttos/:
     get:
       summary: list all part tos
