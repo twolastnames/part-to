@@ -74,7 +74,7 @@ class Engagements:
             return [], 0, {}, datetime.timedelta(seconds=0)
         time_to_consume = self.duties[0].duration
         completed_duties = [self.duties[0].duty]
-        self.duties = self.duties[1:]
+        self.duties = [duty.subtract(time_to_consume) for duty in self.duties[1:]]
         time_consumed = {
             key: datetime.timedelta(seconds=value + time_to_consume)
             for key, value in time_consumed.items()

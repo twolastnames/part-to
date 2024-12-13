@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.test import Client
 from freezegun import freeze_time
 from parttobe import models
+from datetime import timedelta
 import json
 import toml
 import os
@@ -100,6 +101,11 @@ class ClientTester(TestCase):
                 response.headers["Cache-Control"], "public, max-age=31536000, immutable"
             )
             self.assertEqual(response.data["description"], description)
+
+    def assertImminentTills(self, *tills):
+        self.assertEqual(len(tills), len(self.runStateData["imminent"]))
+        for imminent, till in zip(self.runStateData["imminent"], tills):
+            self.assertEqual(timedelta(seconds=imminent["till"]), till)
 
     def assertStartedDescriptions(self, *descriptions):
         self.assertEqual(len(descriptions), len(self.runStateData["started"]))
