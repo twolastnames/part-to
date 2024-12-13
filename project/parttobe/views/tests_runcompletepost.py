@@ -33,6 +33,7 @@ class RunCompleteTestClass(helpers.ClientTester):
             "Frozen Green Beans",
             "Corn on the Cob",
         )
+        self.assertEqual(self.runStateData["duration"], 950)
         self.assertStartedDescriptions("wash the corn")
         self.assertImminentDescriptions(
             "boil water in large pot for corn",
@@ -44,6 +45,7 @@ class RunCompleteTestClass(helpers.ClientTester):
         )
 
         self.changeState("start", "boil water in large pot for beans")
+        self.assertEqual(self.runStateData["duration"], 950)
         self.assertStartedDescriptions(
             "boil water in large pot for beans",
             "wash the corn",
@@ -56,6 +58,7 @@ class RunCompleteTestClass(helpers.ClientTester):
         )
 
         self.changeState("start", "boil water in large pot for corn")
+        self.assertEqual(self.runStateData["duration"], 1010)
         self.assertStartedDescriptions(
             "boil water in large pot for beans",
             "boil water in large pot for corn",
@@ -65,6 +68,7 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.assertImminentTills()
 
         self.changeState("complete", "wash the corn")
+        self.assertEqual(self.runStateData["duration"], 950)
         self.assertStartedDescriptions(
             "boil water in large pot for beans",
             "boil water in large pot for corn",
@@ -77,6 +81,7 @@ class RunCompleteTestClass(helpers.ClientTester):
             "complete",
             "cut partially with kitchen shears to weaken cob middle to break in half",
         )
+        self.assertEqual(self.runStateData["duration"], 950)
         self.assertStartedDescriptions(
             "boil water in large pot for beans",
             "boil water in large pot for corn",
@@ -85,6 +90,7 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.assertImminentTills()
 
         self.changeState("complete", "boil water in large pot for beans")
+        self.assertEqual(self.runStateData["duration"], 770)
         self.assertStartedDescriptions(
             "boil water in large pot for corn",
         )
@@ -92,6 +98,7 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.assertImminentTills(timedelta(seconds=360))
 
         self.changeState("complete", "boil water in large pot for corn")
+        self.assertEqual(self.runStateData["duration"], 410)
         self.assertStartedDescriptions()
         self.assertImminentDescriptions(
             "put and leave beans in boiling water",
@@ -100,6 +107,7 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.assertImminentTills(timedelta(seconds=0), timedelta(seconds=120))
 
         self.changeState("start", "put and leave beans in boiling water")
+        self.assertEqual(self.runStateData["duration"], 410)
         self.assertStartedDescriptions("put and leave beans in boiling water")
         self.assertImminentDescriptions(
             "put corn in and boil",
@@ -107,6 +115,7 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.assertImminentTills(timedelta(seconds=120))
 
         self.changeState("start", "put corn in and boil")
+        self.assertEqual(self.runStateData["duration"], 410)
         self.assertStartedDescriptions(
             "put and leave beans in boiling water",
             "put corn in and boil",
@@ -115,6 +124,7 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.assertImminentTills()
 
         self.changeState("complete", "put corn in and boil")
+        self.assertEqual(self.runStateData["duration"], 410)
         self.assertStartedDescriptions(
             "put and leave beans in boiling water",
             "remove from heat",
@@ -123,6 +133,7 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.assertImminentTills()
 
         self.changeState("complete", "put and leave beans in boiling water")
+        self.assertEqual(self.runStateData["duration"], 170)
         self.assertStartedDescriptions(
             "remove from heat",
         )
@@ -130,21 +141,25 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.assertImminentTills(timedelta(seconds=0))
 
         self.changeState("complete", "remove from heat")
+        self.assertEqual(self.runStateData["duration"], 150)
         self.assertStartedDescriptions()
         self.assertImminentDescriptions("get water boiling again")
         self.assertImminentTills(timedelta(seconds=0))
 
         self.changeState("start", "get water boiling again")
+        self.assertEqual(self.runStateData["duration"], 150)
         self.assertStartedDescriptions("get water boiling again")
         self.assertImminentDescriptions()
         self.assertImminentTills()
 
         self.changeState("complete", "get water boiling again")
+        self.assertEqual(self.runStateData["duration"], 30)
         self.assertStartedDescriptions("drain and serve beans")
         self.assertImminentDescriptions()
         self.assertImminentTills()
 
         self.changeState("complete", "drain and serve beans")
+        self.assertEqual(self.runStateData["duration"], 0)
         self.assertStartedDescriptions()
         self.assertImminentDescriptions()
         self.assertImminentTills()
@@ -156,6 +171,7 @@ class RunCompleteTestClass(helpers.ClientTester):
             "Bavarian Pot Roast",
             "Baked Beans (Easy)",
         )
+        self.assertEqual(self.runStateData["duration"], 11875)
         self.assertStartedDescriptions("put oil in dutch oven")
         self.assertImminentDescriptions(
             "Heat Oven to 325 degrees",
@@ -163,6 +179,7 @@ class RunCompleteTestClass(helpers.ClientTester):
             "boil water in large pot for beans",
         )
         self.changeState("complete", "put oil in dutch oven")
+        self.assertEqual(self.runStateData["duration"], 11875)
         self.assertStartedDescriptions("chop an onion and put it in 4ish cup bowl")
         self.assertImminentDescriptions(
             "Heat Oven to 325 degrees",
@@ -171,6 +188,7 @@ class RunCompleteTestClass(helpers.ClientTester):
             "boil water in large pot for beans",
         )
         self.changeState("void", "chop an onion and put it in 4ish cup bowl")
+        self.assertEqual(self.runStateData["duration"], 11875)
         self.assertStartedDescriptions("get pan and put 2 tbs butter in it")
 
         self.assertImminentDescriptions(
@@ -180,6 +198,7 @@ class RunCompleteTestClass(helpers.ClientTester):
             "boil water in large pot for beans",
         )
         self.changeState("complete", "get pan and put 2 tbs butter in it")
+        self.assertEqual(self.runStateData["duration"], 11875)
         self.assertStartedDescriptions(
             "put the following "
             + "in the bowl onion bowl: 1/2 tsp ground ginger, 1/2 tsp "

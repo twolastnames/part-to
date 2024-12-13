@@ -181,6 +181,7 @@ export interface TaskDefinition {
 
 export interface RunState {
   runState: RunStateId;
+  duration: Duration;
   timestamp: DateTime;
   startTimes: Array<{ task: TaskDefinitionId; started: DateTime }>;
   imminent: Array<{ till: Duration; duty: TaskDefinitionId }>;

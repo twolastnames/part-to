@@ -649,11 +649,15 @@ components:
       - timestamp
       - startTimes
       - imminent
+      - duration
       type: object
       properties:
         runState:
           type: string
           format: RunStateId
+        duration:
+          type: string
+          format: duration
         timestamp:
           type: string
           format: date-time

@@ -147,7 +147,11 @@ class CompletionResult:
         return self._actions
 
     def duration(self):
-        return self.total_duration
+        if not self.actions():
+            return datetime.timedelta(seconds=0)
+        last = self.actions()[-1]
+        return last.till() + last.definition().duration
+        # return self._total_duration
 
     def ready_tasks(self):
         dependeds = [action.definition().depended for action in self._actions]
@@ -560,6 +564,7 @@ class RunState(models.Model):
             for index in range(1, len(RunState.OPERATION_TEXTS))
         }
         taskStates = self.task_states()
+
         order = order_definitions([state.task for state in taskStates])
         lookup = {state.task: state.operation for state in taskStates}
         result["startTimes"] = [
@@ -578,12 +583,12 @@ class RunState(models.Model):
         result["tasks"] = [task for task in result["started"] if task.is_task()]
         result["duties"] = [task for task in result["started"] if not task.is_task()]
         result["timestamp"] = self.created
-        result["imminent"] = self._imminent(result["staged"], result["started"])
+        completion = calculate_completion(result["staged"] + result["started"])
+        result["duration"] = completion.duration()
+        result["imminent"] = self._imminent(completion, result["started"])
         return result
 
-    def _imminent(self, staged, started):
-        active = staged + started
-        completion = calculate_completion(active)
+    def _imminent(self, completion, started):
         dependeds = set(
             [
                 action.definition().depended
