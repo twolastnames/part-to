@@ -1,17 +1,15 @@
 @import "../../../App.scss";
 
 .label {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+  height: 100px;
+  padding: 16px 16px 0 0;
+  text-wrap: nowrap;
 }
 
 .ring {
-  width: 100%;
-  height: 100%;
-}
-
-.ringRoot {
-  width: 100%;
-  height: 100%;
+  width: fit-content;
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid var(--highlight-color);
+  border-radius: 50px;
 }
