@@ -36,7 +36,7 @@ clean:
 	rm -rf $(NODE_BUILD) $(NENV_BASE) $(VENV_BASE)
 
 runback: $(VENV) $(NENV) $(NODE_BUILD) migrate
-	$(WITH_ENV) cd project && python3 manage.py runserver
+	$(WITH_ENV) cd project && python3 manage.py runserver $(ARGUMENTS)
 
 runfront: $(VENV) $(NENV) $(NODE_BUILD)
 	$(WITH_ENV) cd $(NODE_SOURCE) && npm run start
@@ -45,10 +45,10 @@ runstorybook: $(VENV) $(NENV) $(NODE_BUILD)
 	$(WITH_ENV) cd $(NODE_SOURCE) && npm run storybook
 
 testfront: $(NENV)
-	$(WITH_ENV) cd $(NODE_SOURCE) && npm run test -- --watchAll=false $(TEST_ARGUMENTS)
+	$(WITH_ENV) cd $(NODE_SOURCE) && npm run test -- --watchAll=false $(ARGUMENTS)
 
 testback: $(NENV)
-	$(WITH_ENV) cd $(PROJECT) && python3 manage.py test parttobe$(TEST_ARGUMENTS)
+	$(WITH_ENV) cd $(PROJECT) && python3 manage.py test parttobe$(ARGUMENTS)
 
 checkformat:
 	$(WITH_ENV) black --check . && cd $(NODE_SOURCE) && npm run checkformat
