@@ -1,0 +1,88 @@
+[part_to]
+name = "Sloppy Joes (homemade)"
+depends = ["Cook", "Toast Buns"]
+
+['Heat Oil']
+duration = "3 minutes"
+description = "Heat butter and oil in large skillet over MED/MED-HIGH heat."
+ingredients= [ "2 tbs butter",  "2 tsp olive oil (in pan)"]
+engagement=10
+
+['Brown Meat']
+duration = "5 minutes"
+description = "Add beef and brown, breaking apart into crumbles as it cooks, about 5 minutes."
+ingredients=[ "2 lb ground beef" ]
+engagement=5
+depends=['Heat Oil']
+
+['Drain Meat']
+duration = "1 minute"
+description = "Transfer Meat to colander to drain."
+depends=['Brown Meat']
+
+['Fry Onion and Pepper']
+duration = "2 minutes 30 seconds"
+description = "Fry Onion and Pepper in meat pan for 2-3 minutes. Be ready to put garlic in."
+depends=["Mince Onion And Pepper", 'Drain Meat']
+engagement=15
+
+['Mince Onion And Pepper']
+duration = "4 minutes"
+description = "Mince an onion and 2/3 of a bell pepper"
+ingredients=[ "1 minced large Onion"," 2/3 minced bell pepper" ]
+
+['Mince Garlic Cloves']
+duration = "2 minutes"
+description = "mince 6 garlic cloves"
+ingredients=[ "6 minced Garlic cloves" ]
+
+['Cook Garlic']
+duration = "30 seconds"
+description = "Put Garlic in with onion and pepper and cook another 30 seconds"
+engagement=20
+depends= ['Mince Garlic Cloves', 'Fry Onion and Pepper']
+
+['Put Beef Back in Pan']
+duration = "30 seconds"
+description = "Put Beef Back in Pan"
+depends=['Cook Garlic']
+
+['Put Tomato Paste In Pan']
+duration = "30 seconds"
+description = "Put tomato paste in pan"
+ingredients=[ "2 tbs Tomato paste" ]
+depends= ['Put Beef Back in Pan']
+
+['Add Sauce']
+duration = "30 seconds"
+description = "Add the sauce ingredients and stir in."
+depends=['Put Tomato Paste In Pan', 'Gather Sauce Ingredients']
+
+['Gather Sauce Ingredients']
+duration = "2 minutes"
+description = "Put sauce ingredients in a small bowl to add later."
+ingredients=[ "2 tbs brown sugar", "1 1/2 tsp chili powder", "1 tsp salt", "1/2 tsp black pepper", "optionally 1/2 tsp crushed red pepper", "1 1/2 cup Ketchup", "2 tsp yellow mustard", "1 tsp Worcestershire sauce" ,"2/3 cup water" ]
+
+['Cook']
+duration = "15 minutes"
+engagement=5
+description = "Continue cooking on medium heat for 15 minutes"
+depends = ["Add Sauce"]
+
+['Preheat Broiler']
+duration = "8 minutes"
+description = "Preheat Broiler on high for buns"
+engagement=5
+
+['Gather Buns']
+duration = "1 minutes"
+description = "Put buns on large baking sheet with middles up to broil in oven"
+ingredients=['buns']
+
+['Toast Buns']
+duration = "1 minutes 30 seconds"
+description = "Put buns in broiler"
+depends= ['Gather Buns','Preheat Broiler']
+
+
+
