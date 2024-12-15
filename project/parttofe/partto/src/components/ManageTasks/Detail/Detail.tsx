@@ -32,6 +32,9 @@ export function Detail({ task, runState }: DetailProps) {
         <div className={classes.description}>
           {taskResponse.data?.description}
         </div>
+        <ul>
+          {taskResponse.data?.ingredients.map((ingredient) => <li>{ingredient}</li>)}
+        </ul>
         {partToResponse.data && (
           <div>For Recipe: {partToResponse.data?.name}</div>
         )}
