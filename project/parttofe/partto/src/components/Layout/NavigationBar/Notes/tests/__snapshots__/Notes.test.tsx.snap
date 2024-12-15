@@ -9,7 +9,7 @@ exports[`snapshot 1`] = `
     class=" note"
   >
     <div
-      class="note"
+      class="note "
       data-testid="Note"
     >
       <div
@@ -28,7 +28,7 @@ exports[`snapshot 1`] = `
     class="inactive note"
   >
     <div
-      class="note"
+      class="note "
       data-testid="Note"
     >
       <div

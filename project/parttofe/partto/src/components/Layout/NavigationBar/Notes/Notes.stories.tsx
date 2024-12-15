@@ -17,5 +17,15 @@ export default meta;
 type Story = StoryObj<typeof Notes>;
 
 export const Simple: Story = {
-  args: {},
+  args: {
+    notes: [{ heading: "heading", detail: "some stuff" }],
+  },
+};
+
+export const TimerAlert: Story = {
+  args: {
+    notes: [
+      { heading: "heading", detail: "some stuff", sound: "message-alert.mp3" },
+    ],
+  },
 };
