@@ -567,8 +567,12 @@ class RunState(models.Model):
 
         order = order_definitions([state.task for state in taskStates])
         lookup = {state.task: state.operation for state in taskStates}
-        result["startTimes"] = [
-            {"task": state.task, "started": state.created}
+        timers = [
+            {
+                "task": state.task,
+                "started": state.created,
+                "duration": state.task.duration,
+            }
             for state in taskStates
             if RunState.OPERATION_TEXTS[state.operation] == "started"
         ]
@@ -585,7 +589,11 @@ class RunState(models.Model):
         result["timestamp"] = self.created
         completion = calculate_completion(result["staged"] + result["started"])
         result["duration"] = completion.duration()
-        result["imminent"] = self._imminent(completion, result["started"])
+        result["timers"] = {
+            "enforced": [timer for timer in timers if not timer["task"].is_task()],
+            "laxed": [timer for timer in timers if timer["task"].is_task()],
+            "imminent": self._imminent(completion, result["started"]),
+        }
         return result
 
     def _imminent(self, completion, started):
@@ -606,7 +614,7 @@ class RunState(models.Model):
         ready_duties.sort(key=lambda action: action.till())
         return [
             {
-                "duty": duty.definition(),
+                "task": duty.definition(),
                 "till": duty.till(),
             }
             for duty in ready_duties

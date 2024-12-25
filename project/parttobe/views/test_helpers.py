@@ -91,11 +91,13 @@ class ClientTester(TestCase):
         )
         self.runStateData = response.data
 
-    def assertImminentDescriptions(self, *descriptions):
-        self.assertEqual(len(descriptions), len(self.runStateData["imminent"]))
-        for imminent, description in zip(self.runStateData["imminent"], descriptions):
-            self.definitionIds[description] = imminent["duty"]
-            response = self.client.get("/api/task/?task={}".format(imminent["duty"]))
+    def assertTimerDescriptions(self, type, *descriptions):
+        self.assertEqual(len(descriptions), len(self.runStateData["timers"][type]))
+        for imminent, description in zip(
+            self.runStateData["timers"][type], descriptions
+        ):
+            self.definitionIds[description] = imminent["task"]
+            response = self.client.get("/api/task/?task={}".format(imminent["task"]))
             self.assertEqual(response.status_code, 200)
             self.assertEqual(
                 response.headers["Cache-Control"], "public, max-age=31536000, immutable"
@@ -103,9 +105,14 @@ class ClientTester(TestCase):
             self.assertEqual(response.data["description"], description)
 
     def assertImminentTills(self, *tills):
-        self.assertEqual(len(tills), len(self.runStateData["imminent"]))
-        for imminent, till in zip(self.runStateData["imminent"], tills):
+        self.assertEqual(len(tills), len(self.runStateData["timers"]["imminent"]))
+        for imminent, till in zip(self.runStateData["timers"]["imminent"], tills):
             self.assertEqual(timedelta(seconds=imminent["till"]), till)
+
+    def assertTimerDurations(self, type, *durations):
+        self.assertEqual(len(durations), len(self.runStateData["timers"][type]))
+        for timer, duration in zip(self.runStateData["timers"][type], durations):
+            self.assertEqual(timedelta(seconds=timer["duration"]), duration)
 
     def assertStartedDescriptions(self, *descriptions):
         self.assertEqual(len(descriptions), len(self.runStateData["started"]))

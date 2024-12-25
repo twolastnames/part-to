@@ -93,15 +93,17 @@ export function ManageTasks({
   const navigate = useNavigate();
   const runStateData = useRunGet({ runState });
 
-  const prepended=getPrependedItems && runStateData.data
-  ? getPrependedItems(navigate, runStateData.data)
-  : []
+  const prepended =
+    getPrependedItems && runStateData.data
+      ? getPrependedItems(navigate, runStateData.data)
+      : [];
 
   return (
     <DynamicItemSet
       context={context}
-      items={(prepended.length > 0 ? [prepended[0]] : prepended
-      ).concat(getItems(navigate, runState, tasks))}
+      items={(prepended.length > 0 ? [prepended[0]] : prepended).concat(
+        getItems(navigate, runState, tasks),
+      )}
       setOperations={[]}
       emptyPage={<EmptySimpleView content={emptyText} />}
     />

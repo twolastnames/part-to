@@ -692,8 +692,7 @@ components:
       - voided
       - completed
       - timestamp
-      - startTimes
-      - imminent
+      - timers
       - duration
       type: object
       properties:
@@ -706,34 +705,63 @@ components:
         timestamp:
           type: string
           format: date-time
-        startTimes:
-          type: array
-          items:
-            type: object
-            required:
-            - task
-            - started
-            properties:
-              task:
-                type: string
-                format: TaskDefinitionId
-              started:
-                type: string
-                format: date-time
-        imminent:
-          type: array
-          items:
-            type: object
-            required:
-            - till
-            - duty
-            properties:
-              till:
-                type: string
-                format: duration
-              duty:
-                type: string
-                format: TaskDefinitionId
+        timers:
+          type: object
+          required:
+          - enforced
+          - laxed
+          - imminent
+          properties:
+            enforced:
+              type: array
+              items:
+                type: object
+                required:
+                - task
+                - started
+                - duration
+                properties:
+                  task:
+                    type: string
+                    format: TaskDefinitionId
+                  started:
+                    type: string
+                    format: date-time
+                  duration:
+                    type: string
+                    format: duration
+            laxed:
+              type: array
+              items:
+                type: object
+                required:
+                - task
+                - started
+                - duration
+                properties:
+                  task:
+                    type: string
+                    format: TaskDefinitionId
+                  started:
+                    type: string
+                    format: date-time
+                  duration:
+                    type: string
+                    format: duration
+            imminent:
+              type: array
+              items:
+                type: object
+                required:
+                - till
+                - task
+                properties:
+                  till:
+                    type: string
+                    format: duration
+                  task:
+                    type: string
+                    format: TaskDefinitionId
         complete:
           type: string
           format: date-time

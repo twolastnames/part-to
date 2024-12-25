@@ -31,8 +31,19 @@ export type RunGet200Body = {
   runState: RunStateId;
   duration: Duration;
   timestamp: DateTime;
-  startTimes: Array<{ task: TaskDefinitionId; started: DateTime }>;
-  imminent: Array<{ till: Duration; duty: TaskDefinitionId }>;
+  timers: {
+    enforced: Array<{
+      task: TaskDefinitionId;
+      started: DateTime;
+      duration: Duration;
+    }>;
+    laxed: Array<{
+      task: TaskDefinitionId;
+      started: DateTime;
+      duration: Duration;
+    }>;
+    imminent: Array<{ till: Duration; task: TaskDefinitionId }>;
+  };
   complete?: DateTime | undefined;
   activePartTos?: Array<PartToId>;
   tasks: Array<TaskDefinitionId>;
@@ -48,8 +59,15 @@ type Wire200Body = {
   runState: RunStateId;
   duration: number;
   timestamp: string;
-  startTimes: Array<{ task: TaskDefinitionId; started: string }>;
-  imminent: Array<{ till: number; duty: TaskDefinitionId }>;
+  timers: {
+    enforced: Array<{
+      task: TaskDefinitionId;
+      started: string;
+      duration: number;
+    }>;
+    laxed: Array<{ task: TaskDefinitionId; started: string; duration: number }>;
+    imminent: Array<{ till: number; task: TaskDefinitionId }>;
+  };
   complete?: string | undefined;
   activePartTos?: Array<PartToId>;
   tasks: Array<TaskDefinitionId>;
@@ -88,14 +106,22 @@ export const useRunGet: (
         runState: unmarshalers.required["RunStateId"](body.runState),
         duration: unmarshalers.required["duration"](body.duration),
         timestamp: unmarshalers.required["date-time"](body.timestamp),
-        startTimes: body.startTimes.map((value) => ({
-          task: unmarshalers.required["TaskDefinitionId"](value.task),
-          started: unmarshalers.required["date-time"](value.started),
-        })),
-        imminent: body.imminent.map((value) => ({
-          till: unmarshalers.required["duration"](value.till),
-          duty: unmarshalers.required["TaskDefinitionId"](value.duty),
-        })),
+        timers: {
+          enforced: body.timers.enforced.map((value) => ({
+            task: unmarshalers.required["TaskDefinitionId"](value.task),
+            started: unmarshalers.required["date-time"](value.started),
+            duration: unmarshalers.required["duration"](value.duration),
+          })),
+          laxed: body.timers.laxed.map((value) => ({
+            task: unmarshalers.required["TaskDefinitionId"](value.task),
+            started: unmarshalers.required["date-time"](value.started),
+            duration: unmarshalers.required["duration"](value.duration),
+          })),
+          imminent: body.timers.imminent.map((value) => ({
+            till: unmarshalers.required["duration"](value.till),
+            task: unmarshalers.required["TaskDefinitionId"](value.task),
+          })),
+        },
         complete: unmarshalers.unrequired["date-time"](body.complete),
         activePartTos: body.activePartTos?.map((value) =>
           unmarshalers.required["PartToId"](value),

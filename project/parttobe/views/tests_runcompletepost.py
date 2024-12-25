@@ -35,9 +35,24 @@ class RunCompleteTestClass(helpers.ClientTester):
         )
         self.assertEqual(self.runStateData["duration"], 950)
         self.assertStartedDescriptions("wash the corn")
-        self.assertImminentDescriptions(
+        self.assertTimerDescriptions(
+            "imminent",
             "boil water in large pot for corn",
             "boil water in large pot for beans",
+        )
+        self.assertTimerDescriptions(
+            "laxed",
+            "wash the corn",
+        )
+        self.assertTimerDescriptions(
+            "enforced",
+        )
+        self.assertTimerDurations(
+            "laxed",
+            timedelta(seconds=60),
+        )
+        self.assertTimerDurations(
+            "enforced",
         )
         self.assertImminentTills(
             timedelta(seconds=0),
@@ -50,9 +65,25 @@ class RunCompleteTestClass(helpers.ClientTester):
             "boil water in large pot for beans",
             "wash the corn",
         )
-        self.assertImminentDescriptions(
+        self.assertTimerDescriptions(
+            "imminent",
             "boil water in large pot for corn",
         )
+
+        self.assertTimerDescriptions(
+            "laxed",
+            "wash the corn",
+        )
+        self.assertTimerDescriptions("enforced", "boil water in large pot for beans")
+        self.assertTimerDurations(
+            "laxed",
+            timedelta(seconds=60),
+        )
+        self.assertTimerDurations(
+            "enforced",
+            timedelta(seconds=540),
+        )
+
         self.assertImminentTills(
             timedelta(seconds=0),
         )
@@ -64,7 +95,27 @@ class RunCompleteTestClass(helpers.ClientTester):
             "boil water in large pot for corn",
             "wash the corn",
         )
-        self.assertImminentDescriptions()
+        self.assertTimerDescriptions("imminent")
+
+        self.assertTimerDescriptions(
+            "laxed",
+            "wash the corn",
+        )
+        self.assertTimerDescriptions(
+            "enforced",
+            "boil water in large pot for corn",
+            "boil water in large pot for beans",
+        )
+        self.assertTimerDurations(
+            "laxed",
+            timedelta(seconds=60),
+        )
+        self.assertTimerDurations(
+            "enforced",
+            timedelta(seconds=480),
+            timedelta(seconds=540),
+        )
+
         self.assertImminentTills()
 
         self.changeState("complete", "wash the corn")
@@ -74,7 +125,7 @@ class RunCompleteTestClass(helpers.ClientTester):
             "boil water in large pot for corn",
             "cut partially with kitchen shears to weaken cob middle to break in half",
         )
-        self.assertImminentDescriptions()
+        self.assertTimerDescriptions("imminent")
         self.assertImminentTills()
 
         self.changeState(
@@ -86,7 +137,7 @@ class RunCompleteTestClass(helpers.ClientTester):
             "boil water in large pot for beans",
             "boil water in large pot for corn",
         )
-        self.assertImminentDescriptions()
+        self.assertTimerDescriptions("imminent")
         self.assertImminentTills()
 
         self.changeState("complete", "boil water in large pot for beans")
@@ -94,13 +145,14 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.assertStartedDescriptions(
             "boil water in large pot for corn",
         )
-        self.assertImminentDescriptions("put and leave beans in boiling water")
+        self.assertTimerDescriptions("imminent", "put and leave beans in boiling water")
         self.assertImminentTills(timedelta(seconds=360))
 
         self.changeState("complete", "boil water in large pot for corn")
         self.assertEqual(self.runStateData["duration"], 410)
         self.assertStartedDescriptions()
-        self.assertImminentDescriptions(
+        self.assertTimerDescriptions(
+            "imminent",
             "put and leave beans in boiling water",
             "put corn in and boil",
         )
@@ -109,7 +161,8 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.changeState("start", "put and leave beans in boiling water")
         self.assertEqual(self.runStateData["duration"], 410)
         self.assertStartedDescriptions("put and leave beans in boiling water")
-        self.assertImminentDescriptions(
+        self.assertTimerDescriptions(
+            "imminent",
             "put corn in and boil",
         )
         self.assertImminentTills(timedelta(seconds=120))
@@ -120,7 +173,7 @@ class RunCompleteTestClass(helpers.ClientTester):
             "put and leave beans in boiling water",
             "put corn in and boil",
         )
-        self.assertImminentDescriptions()
+        self.assertTimerDescriptions("imminent")
         self.assertImminentTills()
 
         self.changeState("complete", "put corn in and boil")
@@ -129,7 +182,7 @@ class RunCompleteTestClass(helpers.ClientTester):
             "put and leave beans in boiling water",
             "remove from heat",
         )
-        self.assertImminentDescriptions()
+        self.assertTimerDescriptions("imminent")
         self.assertImminentTills()
 
         self.changeState("complete", "put and leave beans in boiling water")
@@ -137,31 +190,31 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.assertStartedDescriptions(
             "remove from heat",
         )
-        self.assertImminentDescriptions("get water boiling again")
+        self.assertTimerDescriptions("imminent", "get water boiling again")
         self.assertImminentTills(timedelta(seconds=0))
 
         self.changeState("complete", "remove from heat")
         self.assertEqual(self.runStateData["duration"], 150)
         self.assertStartedDescriptions()
-        self.assertImminentDescriptions("get water boiling again")
+        self.assertTimerDescriptions("imminent", "get water boiling again")
         self.assertImminentTills(timedelta(seconds=0))
 
         self.changeState("start", "get water boiling again")
         self.assertEqual(self.runStateData["duration"], 150)
         self.assertStartedDescriptions("get water boiling again")
-        self.assertImminentDescriptions()
+        self.assertTimerDescriptions("imminent")
         self.assertImminentTills()
 
         self.changeState("complete", "get water boiling again")
         self.assertEqual(self.runStateData["duration"], 30)
         self.assertStartedDescriptions("drain and serve beans")
-        self.assertImminentDescriptions()
+        self.assertTimerDescriptions("imminent")
         self.assertImminentTills()
 
         self.changeState("complete", "drain and serve beans")
         self.assertEqual(self.runStateData["duration"], 0)
         self.assertStartedDescriptions()
-        self.assertImminentDescriptions()
+        self.assertTimerDescriptions("imminent")
         self.assertImminentTills()
 
     def test_can_multitask(self):
@@ -173,7 +226,8 @@ class RunCompleteTestClass(helpers.ClientTester):
         )
         self.assertEqual(self.runStateData["duration"], 11875)
         self.assertStartedDescriptions("put oil in dutch oven")
-        self.assertImminentDescriptions(
+        self.assertTimerDescriptions(
+            "imminent",
             "Heat Oven to 325 degrees",
             "boil water in large pot for corn",
             "boil water in large pot for beans",
@@ -181,7 +235,8 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.changeState("complete", "put oil in dutch oven")
         self.assertEqual(self.runStateData["duration"], 11875)
         self.assertStartedDescriptions("chop an onion and put it in 4ish cup bowl")
-        self.assertImminentDescriptions(
+        self.assertTimerDescriptions(
+            "imminent",
             "Heat Oven to 325 degrees",
             "heat oil in dutch oven",
             "boil water in large pot for corn",
@@ -191,7 +246,8 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.assertEqual(self.runStateData["duration"], 11875)
         self.assertStartedDescriptions("get pan and put 2 tbs butter in it")
 
-        self.assertImminentDescriptions(
+        self.assertTimerDescriptions(
+            "imminent",
             "Heat Oven to 325 degrees",
             "heat oil in dutch oven",
             "boil water in large pot for corn",
@@ -206,7 +262,8 @@ class RunCompleteTestClass(helpers.ClientTester):
             + "2 tbs sugar, 1 tbs white vinegar, 8 oz tomato sauce, "
             + "3/4 cup beer or beef broth, 1 1/4 cup water"
         )
-        self.assertImminentDescriptions(
+        self.assertTimerDescriptions(
+            "imminent",
             "Heat Oven to 325 degrees",
             "heat oil in dutch oven",
             "heat pan to medium heat",

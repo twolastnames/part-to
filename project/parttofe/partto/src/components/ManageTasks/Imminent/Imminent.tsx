@@ -12,12 +12,12 @@ import { doRunstartPost } from "../../../api/runstartpost";
 
 export function getImminentItems(
   navigate: NavigateFunction,
-  { timestamp, imminent, runState }: RunState,
+  { timestamp, timers: {imminent}, runState }: RunState,
 ): Array<Item> {
-  return imminent.map(({ till, duty }) => ({
-    key: duty,
-    listView: <List timestamp={timestamp} till={till} duty={duty} />,
-    detailView: <Detail timestamp={timestamp} till={till} duty={duty} />,
+  return imminent?.map(({ till, task }) => ({
+    key: task,
+    listView: <List timestamp={timestamp} till={till} duty={task} />,
+    detailView: <Detail timestamp={timestamp} till={till} duty={task} />,
     itemOperations: [
       {
         text: "Skip and Void",
@@ -26,7 +26,7 @@ export function getImminentItems(
           doRunvoidPost({
             body: {
               runState,
-              definitions: [duty],
+              definitions: [task],
             },
             on200: ({ runState }) => {
               navigate(getRoute("CookMeal", { runState }));
@@ -41,7 +41,7 @@ export function getImminentItems(
           doRunstartPost({
             body: {
               runState,
-              definitions: [duty],
+              definitions: [task],
             },
             on200: ({ runState }) => {
               navigate(getRoute("CookMeal", { runState }));
@@ -50,5 +50,5 @@ export function getImminentItems(
         },
       },
     ],
-  }));
+  })) || [];
 }
