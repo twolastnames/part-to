@@ -27,7 +27,7 @@ $(NENV): $(VENV)
 	$(WITH_VENV) echo nodeenv using virtulenv $(VIRTUAL_ENV)
 	$(WITH_VENV) nodeenv $(NENV_BASE) --node=20.10.0
 
-$(NODE_BUILD): $(VENV)  $(NENV) $(shell find ${NODE_SOURCE} -type f)
+$(NODE_BUILD): $(VENV) project/parttofe/partto/node_modules $(NENV) $(shell find ${NODE_SOURCE} -type f)
 	$(WITH_ENV) node -v && cd $(NODE_BASE) && npm run build
 
 build: $(VENV) $(NENV) $(NODE_BUILD)
@@ -44,7 +44,10 @@ runfront: $(VENV) $(NENV) $(NODE_BUILD)
 runstorybook: $(VENV) $(NENV) $(NODE_BUILD)
 	$(WITH_ENV) cd $(NODE_SOURCE) && npm run storybook
 
-testfront: $(NENV)
+project/parttofe/partto/node_modules: $(NENV) project/parttofe/partto/package-lock.json
+	$(WITH_ENV) cd $(NODE_SOURCE) && npm ci
+
+testfront: $(NENV) project/parttofe/partto/node_modules
 	$(WITH_ENV) cd $(NODE_SOURCE) && npm run test -- --watchAll=false $(ARGUMENTS)
 
 testback: $(NENV)
