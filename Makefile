@@ -11,6 +11,7 @@ PROJECT=project
 NODE_BASE=project/parttofe/partto
 NODE_SOURCE=$(NODE_BASE)/src
 NODE_BUILD=$(NODE_BASE)/build
+NODE_MODULES=$(NODE_BASE)/node_modules
 
 WITH_VENV=. $(VENV) &&
 WITH_ENV=$(WITH_VENV) . $(NENV) &&
@@ -33,7 +34,7 @@ $(NODE_BUILD): $(VENV) project/parttofe/partto/node_modules $(NENV) $(shell find
 build: $(VENV) $(NENV) $(NODE_BUILD)
 
 clean:
-	rm -rf $(NODE_BUILD) $(NENV_BASE) $(VENV_BASE)
+	rm -rf $(NODE_BUILD) $(NENV_BASE) $(VENV_BASE) $(NODE_MODULES)
 
 runback: $(VENV) $(NENV) $(NODE_BUILD) migrate
 	$(WITH_ENV) cd project && python3 manage.py runserver $(ARGUMENTS)
