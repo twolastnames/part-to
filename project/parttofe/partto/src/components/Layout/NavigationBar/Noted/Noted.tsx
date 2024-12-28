@@ -23,7 +23,7 @@ export const addErrorNote = ({
   heading: ReactNode;
   detail: ReactNode;
 }) => {
-  notePassRef.current({ heading, detail });
+  notePassRef.current({ heading, detail, timeToLive: TimeToLive.NOTICABLE });
 };
 
 const ChangingText = ({ children }: PropsWithChildren) => {
@@ -40,23 +40,21 @@ const ChangingText = ({ children }: PropsWithChildren) => {
 };
 
 export const addAlarmNote = ({
+  key,
   heading,
   detail,
   onClick,
 }: {
+  key: string;
   heading: ReactNode;
   detail: ReactNode;
   onClick?: () => void;
 }) => {
-  new Audio(require("./messageAlert.mp3")).play();
-  const id = setInterval(() => {
-    new Audio(require("./messageAlert.mp3")).play();
-  }, 6000);
   const onLocalClick = () => {
-    clearInterval(id);
     onClick && onClick();
   };
   notePassRef.current({
+    key,
     heading: <ChangingText>{heading}</ChangingText>,
     detail: <ChangingText>{detail}</ChangingText>,
     onClick: onLocalClick,
@@ -64,14 +62,30 @@ export const addAlarmNote = ({
   });
 };
 
+const noteRemovalRef: MutableRefObject<(key: string) => void> = {
+  current: (key: string) => undefined,
+};
+
+export function removeNote(key: string) {
+  noteRemovalRef.current(key);
+}
+
 export function Noted() {
   const [notes, setNotes] = useState<Array<StoredNote>>([]);
+  const removeNote = (newKey: string) => {
+    setNotes((previous) => previous.filter(({ key }) => key !== newKey));
+  };
+  noteRemovalRef.current = removeNote;
+
   notePassRef.current = (note) => {
-    const newKey = Math.random();
+    const newKey = note.key || Math.random().toString();
+    if (notes.some(({ key }) => key === newKey)) {
+      return;
+    }
     const remove = () => {
-      setNotes((previous) => previous.filter(({ key }) => key !== newKey));
+      removeNote(newKey);
     };
-    if (note.timeToLive == null || note.timeToLive === TimeToLive.NOTICABLE) {
+    if (note.timeToLive === TimeToLive.NOTICABLE) {
       setTimeout(remove, 20000);
     }
     const onClick =
@@ -80,7 +94,7 @@ export function Noted() {
             remove();
             note.onClick && note.onClick();
           }
-        : note.onClick;
+        : () => note.onClick && note.onClick();
     setNotes((previous) => [{ ...note, onClick, key: newKey }, ...previous]);
   };
   return <NavigationBar extra={<Notes notes={notes} />} />;

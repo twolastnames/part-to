@@ -458,7 +458,7 @@ exports[`snapshot 1`] = `
       class=" note"
     >
       <div
-        class="note "
+        class="note clickable"
         data-testid="Note"
       >
         <div

@@ -1,40 +1,99 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 
 import classes from "./Timer.module.scss";
 import { TimerProps } from "./TimerTypes";
 import { Ring } from "./Ring/Ring";
 import { DateTime, getDateTime } from "../../shared/dateTime";
-import { Duration, DurationFormat } from "../../shared/duration";
+import { Duration, DurationFormat, getDuration } from "../../shared/duration";
+
+const adders = [10000, 60000, 600000, 60 * 60 * 1000];
+
+const getEnforcedDurationLabel = (
+  duration: string,
+  addOffset: (offset: Duration) => void,
+) => (
+  <>
+    {
+      duration
+        .split("")
+        .reverse()
+        .reduce(
+          (
+            { result, adder }: { result: Array<ReactNode>; adder: number },
+            character: string,
+          ) => {
+            const parsed = parseInt(character);
+            return {
+              adder: isNaN(parsed) ? adder : adder + 1,
+              result: [
+                isNaN(parsed) ? (
+                  <span>{character}</span>
+                ) : (
+                  <span
+                    className={classes.clickable}
+                    onClick={() => {
+                      if (adders.length <= adder) {
+                        return;
+                      }
+                      addOffset(getDuration(adders[adder]));
+                    }}
+                  >
+                    {character}
+                  </span>
+                ),
+                ...result,
+              ],
+            };
+          },
+          { adder: 0, result: [] },
+        ).result
+    }
+  </>
+);
 
 const getMagnitude = (started: DateTime, duration: Duration) =>
   (getDateTime().sinceEpoch() - started.sinceEpoch()) /
   duration.toMilliseconds();
 
-export function Timer({ start, duration }: TimerProps) {
+export function Timer({ start, duration, adjustment }: TimerProps) {
   const [started] = useState<DateTime>(start || getDateTime());
+  const offset = useRef(getDuration(0));
+  const addOffset = (value: Duration) => {
+    offset.current = offset.current.add(value);
+    adjustment?.setOffset(offset.current);
+  };
 
+  const getEffectiveDuration = () => duration.add(offset.current);
   const [magnitude, setMagnitude] = useState<number>(
-    getMagnitude(started, duration),
+    getMagnitude(started, getEffectiveDuration()),
   );
 
   useEffect(() => {
     const listener = () => {
-      setMagnitude(getMagnitude(started, duration));
+      setMagnitude(getMagnitude(started, getEffectiveDuration()));
     };
     const id = setInterval(listener, 1000);
     return () => {
+      addOffset(
+        offset.current.subtract(offset.current).subtract(offset.current),
+      );
       clearInterval(id);
     };
-  }, [started, duration]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [duration, started]);
+
+  const labelText = started
+    .add(getEffectiveDuration())
+    .subtract(getDateTime())
+    .format(DurationFormat.TIMER);
 
   return (
     <Ring
       label={
         <div className={magnitude > 2 ? classes.overdue : classes.normal}>
-          {started
-            .add(duration)
-            .subtract(getDateTime())
-            .format(DurationFormat.TIMER)}
+          {adjustment
+            ? getEnforcedDurationLabel(labelText, addOffset)
+            : labelText}
         </div>
       }
       magnitude={magnitude}

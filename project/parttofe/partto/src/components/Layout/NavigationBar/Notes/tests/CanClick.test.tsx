@@ -3,6 +3,7 @@ import { expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { ShellProvider } from "../../../../../providers/ShellProvider";
 import { Notes } from "../Notes";
+import { TimeToLive } from "../NotesTypes";
 
 test("snapshot", async () => {
   const onClick = jest.fn();
@@ -14,6 +15,7 @@ test("snapshot", async () => {
             heading: "my heading",
             detail: <span data-testid="bubbleup">my detail</span>,
             onClick,
+            timeToLive: TimeToLive.NOTICABLE,
           },
         ]}
       />

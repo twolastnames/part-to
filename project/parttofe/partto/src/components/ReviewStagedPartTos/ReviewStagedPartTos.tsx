@@ -12,7 +12,6 @@ import { getRoute } from "../../routes";
 import { doRunstartPost } from "../../api/runstartpost";
 import { ReviewStagedPartTosProps } from "./ReviewStagedPartTosTypes";
 import { LeftContext, RightContext } from "../../providers/DynamicItemSetPair";
-import { clearTimers } from "../../providers/Timer";
 
 export function ReviewStagedPartTosIdFromer({
   runState,
@@ -50,7 +49,6 @@ function getItems(
               definitions: [taskDefinitionId],
             },
             on200: ({ runState }) => {
-              clearTimers();
               navigate(getRoute("StageMeal", { runState: runState }));
             },
           });

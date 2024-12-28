@@ -11,6 +11,7 @@ test("snapshot", async () => {
     </ShellProvider>,
   );
   addAlarmNote({
+    key: "myalarmkey",
     detail: "will not still be here",
     heading: <span data-testid="bubbleup">head</span>,
   });

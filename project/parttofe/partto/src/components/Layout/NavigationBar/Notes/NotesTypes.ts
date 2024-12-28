@@ -6,7 +6,8 @@ export enum TimeToLive {
 }
 
 export interface NoteForNotesProps extends NoteProps {
-  timeToLive?: TimeToLive;
+  timeToLive: TimeToLive;
+  key?: string;
 }
 
 export interface NotesProps {

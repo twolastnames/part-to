@@ -11,7 +11,11 @@ test("snapshot", async () => {
       <Noted />
     </ShellProvider>,
   );
-  addAlarmNote({ detail: "will still be here", heading: "head" });
+  addAlarmNote({
+    detail: "will still be here",
+    heading: "head",
+    key: "mykeyid",
+  });
   expect(await screen.findByText("will still be here")).toBeTruthy();
   jest.advanceTimersByTime(28000);
   jest.useRealTimers();

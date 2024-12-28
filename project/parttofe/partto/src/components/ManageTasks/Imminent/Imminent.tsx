@@ -12,43 +12,45 @@ import { doRunstartPost } from "../../../api/runstartpost";
 
 export function getImminentItems(
   navigate: NavigateFunction,
-  { timestamp, timers: {imminent}, runState }: RunState,
+  { timestamp, timers: { imminent }, runState }: RunState,
 ): Array<Item> {
-  return imminent?.map(({ till, task }) => ({
-    key: task,
-    listView: <List timestamp={timestamp} till={till} duty={task} />,
-    detailView: <Detail timestamp={timestamp} till={till} duty={task} />,
-    itemOperations: [
-      {
-        text: "Skip and Void",
-        icon: Cancel,
-        onClick: () => {
-          doRunvoidPost({
-            body: {
-              runState,
-              definitions: [task],
-            },
-            on200: ({ runState }) => {
-              navigate(getRoute("CookMeal", { runState }));
-            },
-          });
+  return (
+    imminent?.map(({ till, task }) => ({
+      key: task,
+      listView: <List timestamp={timestamp} till={till} duty={task} />,
+      detailView: <Detail timestamp={timestamp} till={till} duty={task} />,
+      itemOperations: [
+        {
+          text: "Skip and Void",
+          icon: Cancel,
+          onClick: () => {
+            doRunvoidPost({
+              body: {
+                runState,
+                definitions: [task],
+              },
+              on200: ({ runState }) => {
+                navigate(getRoute("CookMeal", { runState }));
+              },
+            });
+          },
         },
-      },
-      {
-        text: "Start Duty",
-        icon: Oven,
-        onClick: () => {
-          doRunstartPost({
-            body: {
-              runState,
-              definitions: [task],
-            },
-            on200: ({ runState }) => {
-              navigate(getRoute("CookMeal", { runState }));
-            },
-          });
+        {
+          text: "Start Duty",
+          icon: Oven,
+          onClick: () => {
+            doRunstartPost({
+              body: {
+                runState,
+                definitions: [task],
+              },
+              on200: ({ runState }) => {
+                navigate(getRoute("CookMeal", { runState }));
+              },
+            });
+          },
         },
-      },
-    ],
-  })) || [];
+      ],
+    })) || []
+  );
 }
