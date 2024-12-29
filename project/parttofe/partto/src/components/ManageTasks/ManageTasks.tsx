@@ -2,7 +2,6 @@ import React from "react";
 
 import { ManageTasksProps, RunStateItemGetter } from "./ManageTasksTypes";
 import { RunStateId, TaskDefinitionId } from "../../api/sharedschemas";
-import { useRunGet } from "../../api/runget";
 import { Spinner } from "../Spinner/Spinner";
 import { DynamicItemSet } from "../DynamicItemSet/DynamicItemSet";
 import { ContextDescription } from "../../providers/DynamicItemSetPair";
@@ -13,28 +12,26 @@ import { getRoute } from "../../routes";
 import { Cancel, Check } from "../Icon/Icon";
 import { doRuncompletePost } from "../../api/runcompletepost";
 import { Detail } from "./Detail/Detail";
+import { useRunState } from "../../hooks/runState";
 
 export function ManageTasksIdFromer({
-  runState,
   typeKey,
   emptyText,
   context,
   getPrependedItems,
 }: {
   typeKey: "duties" | "tasks";
-  runState: RunStateId;
   emptyText: string;
   context: ContextDescription;
   getPrependedItems?: RunStateItemGetter;
 }) {
-  const response = useRunGet({ runState });
+  const response = useRunState();
   return (
     <Spinner responses={[response]}>
       <ManageTasks
         context={context}
         emptyText={emptyText}
         tasks={response.data?.[typeKey] || []}
-        runState={runState}
         getPrependedItems={getPrependedItems}
       />
     </Spinner>
@@ -86,12 +83,11 @@ function getItems(
 export function ManageTasks({
   context,
   tasks,
-  runState,
   emptyText,
   getPrependedItems,
 }: ManageTasksProps) {
   const navigate = useNavigate();
-  const runStateData = useRunGet({ runState });
+  const runStateData = useRunState();
 
   const prepended =
     getPrependedItems && runStateData.data
@@ -99,13 +95,15 @@ export function ManageTasks({
       : [];
 
   return (
-    <DynamicItemSet
-      context={context}
-      items={(prepended.length > 0 ? [prepended[0]] : prepended).concat(
-        getItems(navigate, runState, tasks),
-      )}
-      setOperations={[]}
-      emptyPage={<EmptySimpleView content={emptyText} />}
-    />
+    <Spinner responses={[runStateData]}>
+      <DynamicItemSet
+        context={context}
+        items={(prepended.length > 0 ? [prepended[0]] : prepended).concat(
+          getItems(navigate, runStateData?.data?.runState as RunStateId, tasks),
+        )}
+        setOperations={[]}
+        emptyPage={<EmptySimpleView content={emptyText} />}
+      />
+    </Spinner>
   );
 }

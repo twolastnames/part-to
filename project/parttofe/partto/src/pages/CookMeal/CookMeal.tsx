@@ -2,7 +2,6 @@ import React from "react";
 
 import { Layout } from "../../components/Layout/Layout";
 import { ManageTasksIdFromer } from "../../components/ManageTasks/ManageTasks";
-import { useParams } from "react-router-dom";
 import { LeftContext, RightContext } from "../../providers/DynamicItemSetPair";
 import { getImminentItems } from "../../components/ManageTasks/Imminent/Imminent";
 
@@ -19,12 +18,10 @@ const getEmptyText = (target: Entity, other: Entity) =>
   ].join(" ");
 
 export function CookMeal() {
-  const { runState } = useParams() as { runState: string };
   return (
     <Layout
       pair={[
         <ManageTasksIdFromer
-          runState={runState}
           typeKey="duties"
           context={LeftContext}
           emptyText={getEmptyText(
@@ -34,7 +31,6 @@ export function CookMeal() {
           getPrependedItems={getImminentItems}
         />,
         <ManageTasksIdFromer
-          runState={runState}
           context={RightContext}
           typeKey="tasks"
           emptyText={getEmptyText(

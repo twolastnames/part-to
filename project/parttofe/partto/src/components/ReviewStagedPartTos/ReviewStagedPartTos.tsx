@@ -1,8 +1,7 @@
-import React, { MutableRefObject } from "react";
+import React from "react";
 
 import { RunStateId, TaskDefinitionId } from "../../api/sharedschemas";
 import { DynamicItemSet } from "../DynamicItemSet/DynamicItemSet";
-import { useRunGet } from "../../api/runget";
 import { Spinner } from "../Spinner/Spinner";
 import { DefinitionIdFromer } from "../PartTo/Definition/Definition";
 import { Cancel, Oven } from "../Icon/Icon";
@@ -12,26 +11,20 @@ import { getRoute } from "../../routes";
 import { doRunstartPost } from "../../api/runstartpost";
 import { ReviewStagedPartTosProps } from "./ReviewStagedPartTosTypes";
 import { LeftContext, RightContext } from "../../providers/DynamicItemSetPair";
+import { useRunState } from "../../hooks/runState";
 
-export function ReviewStagedPartTosIdFromer({
-  runState,
-}: {
-  runState: MutableRefObject<RunStateId>;
-}) {
-  const response = useRunGet({ runState: runState.current });
+export function ReviewStagedPartTosIdFromer() {
+  const response = useRunState();
   return (
     <Spinner responses={[response]}>
-      <ReviewStagedPartTos
-        runState={runState}
-        taskDefinitions={response?.data?.staged || []}
-      />
+      <ReviewStagedPartTos taskDefinitions={response?.data?.staged || []} />
     </Spinner>
   );
 }
 
 function getItems(
   navigate: (arg: string) => void,
-  runState: MutableRefObject<RunStateId>,
+  runState: RunStateId,
   taskDefinitions: Array<TaskDefinitionId>,
 ) {
   return taskDefinitions.map((taskDefinitionId: TaskDefinitionId) => ({
@@ -45,7 +38,7 @@ function getItems(
         onClick: () => {
           doRunvoidPost({
             body: {
-              runState: runState.current,
+              runState: runState,
               definitions: [taskDefinitionId],
             },
             on200: ({ runState }) => {
@@ -60,40 +53,46 @@ function getItems(
 
 export function ReviewStagedPartTos({
   taskDefinitions,
-  runState,
 }: ReviewStagedPartTosProps) {
   const navigate = useNavigate();
-  const items = getItems(navigate, runState, taskDefinitions);
+  const response = useRunState();
+  const items = getItems(
+    navigate,
+    response.data?.runState as RunStateId,
+    taskDefinitions,
+  );
   return (
-    <DynamicItemSet
-      items={items}
-      context={RightContext}
-      setOperations={[
-        {
-          text: "Start Cooking",
-          icon: Oven,
-          onClick: () => {
-            doRunstartPost({
-              body: { runState: runState.current },
-              on200: ({ runState }) => {
-                LeftContext.setCount(0);
-                LeftContext.setSettingKey("duties");
-                RightContext.setCount(0);
-                RightContext.setSettingKey("tasks");
-                navigate(getRoute("CookMeal", { runState }));
-              },
-            });
+    <Spinner responses={[response]}>
+      <DynamicItemSet
+        items={items}
+        context={RightContext}
+        setOperations={[
+          {
+            text: "Start Cooking",
+            icon: Oven,
+            onClick: () => {
+              doRunstartPost({
+                body: { runState: response.data?.runState },
+                on200: ({ runState }) => {
+                  LeftContext.setCount(0);
+                  LeftContext.setSettingKey("duties");
+                  RightContext.setCount(0);
+                  RightContext.setSettingKey("tasks");
+                  navigate(getRoute("CookMeal", { runState }));
+                },
+              });
+            },
           },
-        },
-      ]}
-      emptyPage={
-        <>
-          {[
-            "Select recipes from the left with the arrow",
-            "button to put a meal together.",
-          ].join(" ")}
-        </>
-      }
-    />
+        ]}
+        emptyPage={
+          <>
+            {[
+              "Select recipes from the left with the arrow",
+              "button to put a meal together.",
+            ].join(" ")}
+          </>
+        }
+      />
+    </Spinner>
   );
 }

@@ -52,8 +52,8 @@ const noRecipesMessage = [
 export function SelectPartTos({ runState }: SelectPartTosProps) {
   const navigate = useNavigate();
   const run = useRunGet(
-    { runState: runState?.current || "" },
-    { shouldSkip: () => !runState?.current },
+    { runState: runState as RunStateId },
+    { shouldSkip: () => !runState },
   );
   const loading = "Loading...";
   const allRecipes = useParttosGet();
@@ -70,7 +70,7 @@ export function SelectPartTos({ runState }: SelectPartTosProps) {
         navigate,
         allRecipes?.data?.partTos || [],
         run?.data?.activePartTos || [],
-        runState?.current,
+        runState,
       )}
       context={LeftContext}
       setOperations={[]}

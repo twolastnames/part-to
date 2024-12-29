@@ -7,6 +7,7 @@ import "@testing-library/jest-dom";
 jest.mock("react-router-dom", () => ({
   ...(jest.requireActual("react-router-dom") as any),
   useNavigate: () => jest.fn(),
+  useParams: () => ({ runState: "someSt" }),
 }));
 
 require("jest-fetch-mock").enableMocks();

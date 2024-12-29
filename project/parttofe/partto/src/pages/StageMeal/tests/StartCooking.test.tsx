@@ -48,7 +48,7 @@ test("snapshot", async () => {
   start.click();
   expect(fetchMock.mock.calls.at(-1)).toBeTruthy();
   expect(fetchMock.mock.calls.at(-1)?.[1]?.body || "").toEqual(
-    '{"runState":"someState"}',
+    '{"runState":"wfGhVbmK0kzGYWqRZM2Xl3"}',
   );
   await waitFor(() =>
     expect(mockedUsedNavigate.mock.calls).toEqual([

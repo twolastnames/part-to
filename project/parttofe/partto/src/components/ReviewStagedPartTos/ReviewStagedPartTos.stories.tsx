@@ -21,7 +21,6 @@ type Story = StoryObj<typeof ReviewStagedPartTos>;
 
 export const Simple: Story = {
   args: {
-    runState: { current: "hello" },
     taskDefinitions: [],
   },
 };
