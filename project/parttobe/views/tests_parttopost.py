@@ -22,6 +22,19 @@ class PartToPostTestClass(TestCase):
     def setUp(self):
         models.get_task_definitions.cache_clear()
 
+    def test_block_of_same_will_not_freeze(self):
+        file_directory = os.path.dirname(__file__)
+        client = Client()
+        data = get_toml_recipe_as_json(
+            file_directory + "/../mocks_partto/salad_pear_apple.toml"
+        )
+        response = client.post(
+            "/api/partto/",
+            json.dumps(data),
+            content_type="*",
+        )
+        self.assertEqual(response.status_code, 200)
+
     def test_missing_part_to(self):
         file_directory = os.path.dirname(__file__)
         client = Client()

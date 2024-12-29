@@ -64,7 +64,7 @@ def save_job(tasks, dependeds):
         if current in saved_tasks:
             continue
         if current in dependeds and dependeds[current] not in saved_tasks:
-            stack.append(current)
+            stack.insert(0, current)
             continue
         depended = saved_tasks[dependeds[current]] if current in dependeds else None
         task = tasks[current]

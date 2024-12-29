@@ -1,0 +1,46 @@
+[part_to]
+name = "Salad - Pear and Apple"
+depends = ["Mix"]
+
+['Dressing']
+duration = "3 minutes"
+description = "whisk the ingredients together in a bowl"
+ingredients = ["2 tablespoons aged balsamic vinegar", "2 tablespoons Dijon mustard", "1 to 2 tablespoons* pure maple syrup or honey", "1/4 teaspoon salt", "6 tablespoons olive oil"]
+
+['Bowl']
+duration = "30 seconds"
+description = "get about a 4 qt bowl to put finished product in"
+
+['Apple']
+duration = "3 minutes"
+description = "Core and thingly slice an apple and put in the bowl"
+ingredients = ["Apple"]
+depends=['Greens']
+
+['Pear']
+duration = "3 minutes"
+description = "Core and thingly slice an pear and put in the bowl"
+ingredients = ["Pear"]
+depends=['Greens']
+
+['Greens']
+duration = "90 seconds"
+description = "put greens in bowl"
+ingredients = ["3 cups baby spinach leaves", "3 cups baby mixed greens"]
+depends=['Bowl']
+
+
+['Nuts']
+duration = "1 minute"
+description = "Put glazed pecans or walnuts in the bowl"
+ingredients = ["1/2 cup of glazed pecans or walnuts"]
+depends=['Greens']
+
+
+['Mix']
+duration = "90 seconds"
+description = "mix everything in the bowl with the dressing"
+depends=['Nuts', "Pear", "Apple", "Dressing"]
+
+
+
