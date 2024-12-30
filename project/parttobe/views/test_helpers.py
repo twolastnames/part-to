@@ -126,7 +126,7 @@ class ClientTester(TestCase):
             self.assertEqual
             self.assertEqual(response.data["description"], description)
 
-    def startPartTos(self, *names):
+    def stagePartTos(self, *names):
         response = self.client.get("/api/parttos/")
         self.assertEqual(response.status_code, 200)
         self.partToDatas = [
@@ -148,6 +148,15 @@ class ClientTester(TestCase):
             )
             self.assertEqual(response.status_code, 200)
             self.runState = response.data["runState"]
+        response = self.client.get("/api/run/?runState={}".format(self.runState))
+        self.assertEqual(
+            response.headers["Cache-Control"], "public, max-age=31536000, immutable"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.runStateData = response.data
+
+    def startPartTos(self, *names):
+        self.stagePartTos(*names)
         response = self.client.post(
             "/api/run/start",
             {

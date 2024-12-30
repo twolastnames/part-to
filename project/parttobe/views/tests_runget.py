@@ -3,8 +3,19 @@ from django.test import TestCase
 from django.test import Client
 
 
-class RunGetTestClass(TestCase):
-    """This is heavily used in other tests.
-    Keeping this here to satisfy api generation"""
+class RunGetTestClass(helpers.ClientTester):
+    def test_not_having_timers_before_cooking_with_imminent(self):
+        self.stagePartTos(
+            "Corn on the Cob",
+        )
+        self.assertTimerDescriptions("imminent")
+        self.assertTimerDescriptions("enforced")
+        self.assertTimerDescriptions("laxed")
 
-    pass
+    def test_not_having_timers_before_cooking_with_laxed(self):
+        self.stagePartTos(
+            "Bavarian Pot Roast",
+        )
+        self.assertTimerDescriptions("imminent")
+        self.assertTimerDescriptions("enforced")
+        self.assertTimerDescriptions("laxed")
