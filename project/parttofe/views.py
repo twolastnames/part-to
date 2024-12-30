@@ -34,6 +34,7 @@ except KeyError:
 
 import json
 
+
 def index(*args, **kargs):
     return render(
         args[0],
