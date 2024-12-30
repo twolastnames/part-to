@@ -36,6 +36,11 @@ build: $(VENV) $(NENV) $(NODE_BUILD)
 clean:
 	rm -rf $(NODE_BUILD) $(NENV_BASE) $(VENV_BASE) $(NODE_MODULES)
 
+insertdefaultrecipes:
+	${WITH_ENV} python3 project/manage.py insertrecipe recipeexamples/*
+
+demo: $(NENV) test migrate insertdefaultrecipes runback
+
 runback: $(VENV) $(NENV) $(NODE_BUILD) migrate
 	$(WITH_ENV) cd project && python3 manage.py runserver $(ARGUMENTS)
 
@@ -53,6 +58,9 @@ testfront: $(NENV) project/parttofe/partto/node_modules
 
 testback: $(NENV)
 	$(WITH_ENV) cd $(PROJECT) && python3 manage.py test parttobe$(ARGUMENTS)
+
+command: $(NENV)
+	$(WITH_ENV) python3 project/manage.py $(ARGUMENTS)
 
 checkformat:
 	$(WITH_ENV) black --check . && cd $(NODE_SOURCE) && npm run checkformat
