@@ -5,12 +5,12 @@ import { DetailProps } from "./DetailTypes";
 import { useTaskGet } from "../../../api/taskget";
 import { useRunGet } from "../../../api/runget";
 import { Spinner } from "../../Spinner/Spinner";
-import { Timer } from "../../Timer/Timer";
 import { useTaskdurationmetricGet } from "../../../api/taskdurationmetricget";
-import { getDuration } from "../../../shared/duration";
 import { useParttoGet } from "../../../api/parttoget";
+import { useTimerProvider } from "../../../providers/Timer";
 
 export function Detail({ task, runState }: DetailProps) {
+  const timer = useTimerProvider({ task });
   const taskResponse = useTaskGet({ task });
   const partToResponse = useParttoGet(
     { partTo: taskResponse?.data?.partTo || "" },
@@ -21,14 +21,7 @@ export function Detail({ task, runState }: DetailProps) {
   return (
     <Spinner responses={[taskResponse, runStateResponse, metricResponse]}>
       <div className={classes.detail} data-testid="Detail">
-        <Timer
-          start={
-            runStateResponse.data?.timers.enforced
-              ?.concat(runStateResponse.data?.timers.laxed || [])
-              .find(({ task: taskId }) => taskId === task)?.started
-          }
-          duration={metricResponse.data?.estimatedDuration || getDuration(0)}
-        />
+        {timer}
         <div className={classes.description}>
           {taskResponse.data?.description}
         </div>
