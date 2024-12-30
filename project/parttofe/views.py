@@ -34,10 +34,6 @@ except KeyError:
 
 import json
 
-print("css files", shaed_css_files)
-print("js files", shaed_js_files)
-
-
 def index(*args, **kargs):
     return render(
         args[0],
