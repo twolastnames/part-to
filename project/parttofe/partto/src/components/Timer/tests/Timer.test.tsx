@@ -6,6 +6,7 @@ import { Timer } from "../Timer";
 import { getDuration } from "../../../shared/duration";
 
 test("snapshot", () => {
+  jest.useFakeTimers();
   render(
     <ShellProvider>
       <Timer duration={getDuration(5000)} />
