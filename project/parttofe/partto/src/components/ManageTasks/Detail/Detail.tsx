@@ -5,7 +5,6 @@ import { DetailProps } from "./DetailTypes";
 import { useTaskGet } from "../../../api/taskget";
 import { useRunGet } from "../../../api/runget";
 import { Spinner } from "../../Spinner/Spinner";
-import { useTaskdurationmetricGet } from "../../../api/taskdurationmetricget";
 import { useParttoGet } from "../../../api/parttoget";
 import { useTimerProvider } from "../../../providers/Timer";
 
@@ -17,9 +16,8 @@ export function Detail({ task, runState }: DetailProps) {
     { shouldSkip: () => !taskResponse.data },
   );
   const runStateResponse = useRunGet({ runState });
-  const metricResponse = useTaskdurationmetricGet({ task });
   return (
-    <Spinner responses={[taskResponse, runStateResponse, metricResponse]}>
+    <Spinner responses={[taskResponse, runStateResponse]}>
       <div className={classes.detail} data-testid="Detail">
         {timer}
         <div className={classes.description}>
