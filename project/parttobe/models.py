@@ -1,4 +1,5 @@
 from django.db import models
+from django.db import connection
 import functools
 import collections
 import types
@@ -631,21 +632,45 @@ class RunState(models.Model):
     def append_states(self, operation, tasks):
         if len(tasks) < 1:
             return self
-        result = []
-        parent = self
-        for task in tasks:
-            parent.save()
-            parent = RunState(operation=operation, task=task, parent=parent)
-            result.append(parent)
-        parent.save()
-        return parent
+        inserts = ["(%s, %s, %s, %s, %s)"] + [
+            "(LAST_INSERT_ROWID(), %s, %s, %s,  %s)"
+        ] * (len(tasks) - 1)
+        columns = "(parent_id, uuid, created, task_id, operation)"
+        table = "parttobe_runstate"
 
+        statement = "INSERT INTO {} {} VALUES {};".format(
+            table, columns, ",".join(inserts)
+        )
+
+        uuids = [uuid.uuid4() for ignored in tasks]
+        last_uuid = uuids[0]
+
+        values = [self.id] + sum(
+            [
+                [
+                    str(uuids.pop()).replace("-", ""),
+                    datetime.datetime.now(),
+                    id,
+                    operation,
+                ]
+                for id in [task.id for task in tasks]
+            ],
+            [],
+        )
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute(statement, values)
+            finally:
+                cursor.close()
+                return RunState.objects.get(uuid=last_uuid)
 
 def append_states(operation, tasks, run_state=None):
     if len(tasks) < 1:
         return
     if run_state:
         return run_state.append_states(operation, tasks)
-    return RunState(operation=operation, task=tasks[0]).append_states(
+    run_state = RunState(operation=operation, task=tasks[0])
+    run_state.save()
+    return run_state.append_states(
         operation, tasks[1:]
     )
