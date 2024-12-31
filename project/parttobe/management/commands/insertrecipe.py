@@ -6,6 +6,7 @@ from parttobe.views.test_nondjango_helpers import get_toml_recipe_as_json
 from parttobe.views.parttopost import handle
 from collections import namedtuple
 
+
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("recipes", nargs="+")
