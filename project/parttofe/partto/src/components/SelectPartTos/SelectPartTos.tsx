@@ -44,10 +44,7 @@ function getFirstPairItems(
     }));
 }
 
-const noRecipesMessage = [
-  'Select "Enter Recipe" from the menu to',
-  "put menus in the system.",
-].join(" ");
+const noRecipesMessage = "No Recipes Left To Add. Have an eventful meal.";
 
 export function SelectPartTos({ runState }: SelectPartTosProps) {
   const navigate = useNavigate();
