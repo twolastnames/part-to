@@ -42,11 +42,24 @@ function getItems(
   navigate: (arg: string) => void,
   runState: RunStateId,
   tasks: Array<TaskDefinitionId>,
+  context: ContextDescription,
+  offset: number,
 ) {
-  return tasks.map((taskDefinitionId: TaskDefinitionId) => ({
+  return tasks.map((taskDefinitionId: TaskDefinitionId, index: number) => ({
     key: taskDefinitionId,
     listView: <>{taskDefinitionId}</>,
-    detailView: <Detail task={taskDefinitionId} runState={runState} />,
+    detailView: (
+      <Detail
+        locatable={{
+          context,
+          onLocate: (setter: (value: number) => void) => () => {
+            setter(index + offset);
+          },
+        }}
+        task={taskDefinitionId}
+        runState={runState}
+      />
+    ),
     itemOperations: [
       {
         text: "Skip and Void",
@@ -99,7 +112,13 @@ export function ManageTasks({
       <DynamicItemSet
         context={context}
         items={(prepended.length > 0 ? [prepended[0]] : prepended).concat(
-          getItems(navigate, runStateData?.data?.runState as RunStateId, tasks),
+          getItems(
+            navigate,
+            runStateData?.data?.runState as RunStateId,
+            tasks,
+            context,
+            prepended.length ? 1 : 0,
+          ),
         )}
         setOperations={[]}
         emptyPage={<EmptySimpleView content={emptyText} />}

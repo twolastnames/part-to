@@ -6,6 +6,7 @@ import { Detail } from "../Detail";
 import task1 from "../../../../mocks/task1.json";
 import runState1 from "../../../../mocks/runState1.json";
 import metricTask1 from "../../../../mocks/metricTask1.json";
+import { LeftContext } from "../../../../providers/DynamicItemSetPair";
 
 test("snapshot", async () => {
   fetchMock.mockResponse((request: Request) => {
@@ -22,7 +23,14 @@ test("snapshot", async () => {
   });
   render(
     <ShellProvider>
-      <Detail task="aTask" runState="aRunState" />
+      <Detail
+        locatable={{
+          context: LeftContext,
+          onLocate: () => () => {},
+        }}
+        task="aTask"
+        runState="aRunState"
+      />
     </ShellProvider>,
   );
   const component = await waitFor(() => {

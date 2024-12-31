@@ -1,5 +1,4 @@
 import React from "react";
-
 import classes from "./Detail.module.scss";
 import { DetailProps } from "./DetailTypes";
 import { useTaskGet } from "../../../api/taskget";
@@ -7,9 +6,14 @@ import { useRunGet } from "../../../api/runget";
 import { Spinner } from "../../Spinner/Spinner";
 import { useParttoGet } from "../../../api/parttoget";
 import { useTimerProvider } from "../../../providers/Timer";
+import { useSingleOfPair } from "../../../providers/DynamicItemSetPair";
 
-export function Detail({ task, runState }: DetailProps) {
-  const timer = useTimerProvider({ task });
+export function Detail({ task, runState, locatable }: DetailProps) {
+  const { setSelected } = useSingleOfPair(locatable.context);
+  const timer = useTimerProvider({
+    task,
+    ...(locatable ? { onLocate: locatable.onLocate(setSelected) } : {}),
+  });
   const taskResponse = useTaskGet({ task });
   const partToResponse = useParttoGet(
     { partTo: taskResponse?.data?.partTo || "" },

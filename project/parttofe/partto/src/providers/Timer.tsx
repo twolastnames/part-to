@@ -28,6 +28,7 @@ type TimerDescription = {
   message: string;
   enforced: boolean;
   task: TaskDefinitionId;
+  setOnLocate: (callback: () => void) => void;
 };
 
 export type TimerType = {
@@ -64,6 +65,7 @@ export function TimerProvider({ children }: PropsWithChildren) {
   const offsets = useRef<{
     [id: string]: Duration;
   }>({});
+  const onLocates = useRef<{ [task: string]: () => void }>({});
   const audio = useRef(new Audio(require("./messageAlert.mp3")));
   const timestamp = runState?.timestamp;
   const timers = useMemo(
@@ -72,6 +74,9 @@ export function TimerProvider({ children }: PropsWithChildren) {
         ({ task, started, duration }) => ({
           task,
           started,
+          setOnLocate: (callback: () => void) => {
+            onLocates.current[task] = callback;
+          },
           duration,
           enforced: true,
           message: "Duty Complete?",
@@ -92,6 +97,9 @@ export function TimerProvider({ children }: PropsWithChildren) {
         ({ task, started, duration }) => ({
           task,
           started,
+          setOnLocate: (callback: () => void) => {
+            onLocates.current[task] = callback;
+          },
           duration,
           enforced: false,
           message: "Past Expected Time",
@@ -103,6 +111,9 @@ export function TimerProvider({ children }: PropsWithChildren) {
         ({ task, till }) => ({
           task,
           started: timestamp,
+          setOnLocate: (callback: () => void) => {
+            onLocates.current[task] = callback;
+          },
           duration: till,
           enforced: true,
           message: "Need to Start Duty",
@@ -136,7 +147,7 @@ export function TimerProvider({ children }: PropsWithChildren) {
           heading: "Alarm Expired",
           detail: timer.message,
           onClick: () => {
-            //TODO: navigate to key
+            onLocates.current[key]?.();
           },
         });
         if (!audio.current.paused) {
@@ -173,7 +184,14 @@ export function TimerProvider({ children }: PropsWithChildren) {
   );
 }
 
-export function useTimerProvider({ task }: { task: TaskDefinitionId }) {
+export function useTimerProvider({
+  task,
+  onLocate,
+}: {
+  task: TaskDefinitionId;
+  onLocate?: () => void;
+}) {
   const timers = useContext(TimerContext)?.timers;
+  onLocate && timers?.[task]?.setOnLocate(onLocate);
   return timers?.[task]?.component || <></>;
 }
