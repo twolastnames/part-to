@@ -1,6 +1,6 @@
 from django.test import TestCase
 from uuid import uuid4, UUID
-from parttobe.validation import shorten_uuid, recover_uuid
+from parttobe.marshaling import shorten_uuid, recover_uuid
 
 
 class UrlShortener(TestCase):
