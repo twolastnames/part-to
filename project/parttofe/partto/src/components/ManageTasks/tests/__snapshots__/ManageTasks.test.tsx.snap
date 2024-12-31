@@ -247,7 +247,7 @@ exports[`snapshot 1`] = `
                         cy="28"
                         fill="none"
                         r="17.2"
-                        stroke-dasharray="72.04719152232593, 36.02359576116296"
+                        stroke-dasharray="-Infinity, Infinity"
                         stroke-dashoffset="0"
                         stroke-linecap="butt"
                         stroke-width="8"
@@ -259,7 +259,7 @@ exports[`snapshot 1`] = `
                         cy="28"
                         fill="none"
                         r="17.2"
-                        stroke-dasharray="36.02359576116296, 72.04719152232593"
+                        stroke-dasharray="Infinity, -Infinity"
                         stroke-dashoffset="108.07078728348888"
                         stroke-linecap="butt"
                         stroke-width="8"
@@ -272,7 +272,7 @@ exports[`snapshot 1`] = `
                       <div
                         class="label"
                       >
-                        3
+                        0
                       </div>
                     </div>
                   </div>
