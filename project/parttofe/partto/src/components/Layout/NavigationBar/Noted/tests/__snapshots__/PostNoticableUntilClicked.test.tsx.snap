@@ -465,7 +465,8 @@ exports[`snapshot 1`] = `
           class="heading"
         >
           <span
-            class=""
+            class="flasher"
+            data-testid="Flasher"
           >
             head
           </span>
@@ -474,7 +475,8 @@ exports[`snapshot 1`] = `
           class="detail"
         >
           <span
-            class=""
+            class="flasher"
+            data-testid="Flasher"
           >
             will still be here
           </span>

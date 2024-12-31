@@ -1,16 +1,10 @@
-import React, {
-  MutableRefObject,
-  PropsWithChildren,
-  ReactNode,
-  useEffect,
-  useState,
-} from "react";
-import classes from "./Noted.module.scss";
+import React, { MutableRefObject, ReactNode, useState } from "react";
 import { NavigationBar } from "../NavigationBar";
 import { Notes } from "../Notes/Notes";
 import { NoteProps } from "../Note/NoteTypes";
 import { StoredNote } from "./NotedTypes";
 import { NoteForNotesProps, TimeToLive } from "../Notes/NotesTypes";
+import { Flasher } from "../../../Flasher/Flasher";
 
 let notePassRef: MutableRefObject<(arg: NoteForNotesProps) => void> = {
   current: (arg: NoteProps) => undefined,
@@ -24,19 +18,6 @@ export const addErrorNote = ({
   detail: ReactNode;
 }) => {
   notePassRef.current({ heading, detail, timeToLive: TimeToLive.NOTICABLE });
-};
-
-const ChangingText = ({ children }: PropsWithChildren) => {
-  const [classString, setClassString] = useState<string>("");
-  useEffect(() => {
-    const id = setInterval(() => {
-      setClassString((previous) => (previous === "" ? classes.loudText : ""));
-    }, 2000);
-    return () => {
-      clearInterval(id);
-    };
-  });
-  return <span className={classString}>{children}</span>;
 };
 
 export const addAlarmNote = ({
@@ -55,8 +36,8 @@ export const addAlarmNote = ({
   };
   notePassRef.current({
     key,
-    heading: <ChangingText>{heading}</ChangingText>,
-    detail: <ChangingText>{detail}</ChangingText>,
+    heading: <Flasher>{heading}</Flasher>,
+    detail: <Flasher>{detail}</Flasher>,
     onClick: onLocalClick,
     timeToLive: TimeToLive.UNTIL_CLICKED,
   });

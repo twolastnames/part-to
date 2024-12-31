@@ -89,13 +89,13 @@ export function Timer({ start, duration, adjustment }: TimerProps) {
     .format(DurationFormat.TIMER);
 
   const label = adjustment
-  ? getEnforcedDurationLabel(labelText, addOffset)
-  : labelText
+    ? getEnforcedDurationLabel(labelText, addOffset)
+    : labelText;
   return (
     <Ring
-      label={<span className={classes.label}>
-
-        {magnitude > 2 ? <Flasher>{label}</Flasher> : label}
+      label={
+        <span className={classes.label}>
+          {magnitude > 2 ? <Flasher>{label}</Flasher> : label}
         </span>
       }
       magnitude={magnitude}
