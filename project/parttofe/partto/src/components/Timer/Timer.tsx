@@ -5,6 +5,7 @@ import { TimerProps } from "./TimerTypes";
 import { Ring } from "./Ring/Ring";
 import { DateTime, getDateTime } from "../../shared/dateTime";
 import { Duration, DurationFormat, getDuration } from "../../shared/duration";
+import { Flasher } from "../Flasher/Flasher";
 
 const adders = [10000, 60000, 600000, 60 * 60 * 1000];
 
@@ -87,14 +88,15 @@ export function Timer({ start, duration, adjustment }: TimerProps) {
     .subtract(getDateTime())
     .format(DurationFormat.TIMER);
 
+  const label = adjustment
+  ? getEnforcedDurationLabel(labelText, addOffset)
+  : labelText
   return (
     <Ring
-      label={
-        <div className={magnitude > 2 ? classes.overdue : classes.normal}>
-          {adjustment
-            ? getEnforcedDurationLabel(labelText, addOffset)
-            : labelText}
-        </div>
+      label={<span className={classes.label}>
+
+        {magnitude > 2 ? <Flasher>{label}</Flasher> : label}
+        </span>
       }
       magnitude={magnitude}
     />

@@ -53,11 +53,11 @@ exports[`color change will change 1`] = `
   <div
     class="label"
   >
-    <div
-      class="normal"
+    <span
+      class="label"
     >
       5
-    </div>
+    </span>
   </div>
 </div>
 `;
