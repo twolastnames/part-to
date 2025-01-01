@@ -3,7 +3,6 @@ import React from "react";
 import classes from "./Menu.module.scss";
 import { NavLink } from "@mantine/core";
 import { Book, ChefHat, Icon, Info, Oven, Settings } from "../../../Icon/Icon";
-import { ThemeSwitch } from "../ThemeSwitch/ThemeSwitch";
 
 export function Menu() {
   return (
@@ -40,7 +39,6 @@ export function Menu() {
           leftSection={<Icon definition={Info} />}
         />
       </nav>
-      <ThemeSwitch key={Math.random()} />
     </>
   );
 }
