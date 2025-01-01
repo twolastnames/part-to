@@ -1,12 +1,12 @@
 import React from "react";
 import { expect, test } from "@jest/globals";
 import { render, screen, waitFor } from "@testing-library/react";
-import { ShellProvider } from "../../../../providers/ShellProvider";
-import { Detail } from "../Detail";
-import task1 from "../../../../mocks/task1.json";
-import runState1 from "../../../../mocks/runState1.json";
-import metricTask1 from "../../../../mocks/metricTask1.json";
-import { LeftContext } from "../../../../providers/DynamicItemSetPair";
+import { ShellProvider } from "../../../providers/ShellProvider";
+import { TaskDefinition } from "../TaskDefinition";
+import task1 from "../../../mocks/task1.json";
+import runState1 from "../../../mocks/runState1.json";
+import metricTask1 from "../../../mocks/metricTask1.json";
+import { LeftContext } from "../../../providers/DynamicItemSetPair";
 
 test("snapshot", async () => {
   fetchMock.mockResponse((request: Request) => {
@@ -23,7 +23,7 @@ test("snapshot", async () => {
   });
   render(
     <ShellProvider>
-      <Detail
+      <TaskDefinition
         locatable={{
           context: LeftContext,
           onLocate: () => () => {},

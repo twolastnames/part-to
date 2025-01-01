@@ -1,5 +1,5 @@
-import { RunStateId, TaskDefinitionId } from "../../../api/sharedschemas";
-import { ContextDescription } from "../../../providers/DynamicItemSetPair";
+import { RunStateId, TaskDefinitionId } from "../../api/sharedschemas";
+import { ContextDescription } from "../../providers/DynamicItemSetPair";
 
 type Locatable = {
   onLocate: (setter: (value: number) => void) => () => void;

@@ -4,12 +4,12 @@ import { NavigateFunction } from "react-router-dom";
 import { RunState } from "../../../api/sharedschemas";
 import { Item } from "../../DynamicItemSet/DynamicItemSetTypes";
 import { List } from "./List/List";
-import { Detail } from "../Detail/Detail";
 import { Cancel, Oven } from "../../Icon/Icon";
 import { doRunvoidPost } from "../../../api/runvoidpost";
 import { getRoute } from "../../../routes";
 import { doRunstartPost } from "../../../api/runstartpost";
 import { ContextDescription } from "../../../providers/DynamicItemSetPair";
+import { TaskDefinition } from "../../TaskDefinition/TaskDefinition";
 
 export function getImminentItems(
   navigate: NavigateFunction,
@@ -22,7 +22,7 @@ export function getImminentItems(
       key: task,
       listView: <List timestamp={timestamp} till={till} duty={task} />,
       detailView: (
-        <Detail
+        <TaskDefinition
           task={task}
           runState={runState}
           locatable={{

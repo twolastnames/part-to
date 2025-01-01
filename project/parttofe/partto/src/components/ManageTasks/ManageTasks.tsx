@@ -11,7 +11,7 @@ import { doRunvoidPost } from "../../api/runvoidpost";
 import { getRoute } from "../../routes";
 import { Cancel, Check } from "../Icon/Icon";
 import { doRuncompletePost } from "../../api/runcompletepost";
-import { Detail } from "./Detail/Detail";
+import { TaskDefinition } from "../TaskDefinition/TaskDefinition";
 import { useRunState } from "../../hooks/runState";
 
 export function ManageTasksIdFromer({
@@ -49,7 +49,7 @@ function getItems(
     key: taskDefinitionId,
     listView: <>{taskDefinitionId}</>,
     detailView: (
-      <Detail
+      <TaskDefinition
         locatable={{
           context,
           onLocate: (setter: (value: number) => void) => () => {
