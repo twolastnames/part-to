@@ -40,7 +40,6 @@ export function Menu() {
           leftSection={<Icon definition={Info} />}
         />
       </nav>
-      <ThemeSwitch key={Math.random()} />
     </>
   );
 }

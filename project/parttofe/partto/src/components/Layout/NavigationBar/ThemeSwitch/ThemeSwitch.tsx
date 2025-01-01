@@ -16,7 +16,7 @@ export function ThemeSwitch() {
           changeTheme(changeTo);
           setTheme(changeTo);
         }}
-        label="Dark Theme"
+        label="Dark"
       />
     </div>
   );
