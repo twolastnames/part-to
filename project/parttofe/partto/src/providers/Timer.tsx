@@ -62,7 +62,7 @@ function getMappedTimers<T extends TaskKeyed>(
 
 export function TimerProvider({ children }: PropsWithChildren) {
   const [runState, setRunState] = useState<RunState | undefined>();
-  const offsets = useRef<{
+  const [offsets, setOffsets] = useState<{
     [id: string]: Duration;
   }>({});
   const onLocates = useRef<{ [task: string]: () => void }>({});
@@ -85,8 +85,10 @@ export function TimerProvider({ children }: PropsWithChildren) {
               start={started}
               duration={duration}
               adjustment={{
-                offset: offsets.current[task] || getDuration(0),
-                setOffset: (value: Duration) => (offsets.current[task] = value),
+                offset: offsets[task] || getDuration(0),
+                setOffset: (value: Duration) => {
+                  setOffsets((previous) => ({ ...previous, [task]: value }));
+                },
               }}
             />
           ),
@@ -117,14 +119,27 @@ export function TimerProvider({ children }: PropsWithChildren) {
           duration: till,
           enforced: true,
           message: "Need to Start Duty",
-          component: <Timer start={timestamp} duration={till} />,
+          component: (
+            <Timer
+              start={timestamp}
+              duration={till}
+              adjustment={{
+                offset: offsets[task] || getDuration(0),
+                setOffset: (value: Duration) => {
+                  setOffsets((previous) => ({ ...previous, [task]: value }));
+                },
+              }}
+            />
+          ),
         }),
         runState?.timers.imminent || [],
       ),
     }),
     [runState, offsets, timestamp],
   );
-
+  console.log("ooooffffssss", {
+    offsets: Object.values(offsets).map((v) => v.toString()),
+  });
   useEffect(() => {
     addRunStateListener(setRunState);
     return () => {
@@ -137,7 +152,7 @@ export function TimerProvider({ children }: PropsWithChildren) {
       const now = getDateTime();
       for (const [key, timer] of Object.entries(timers)) {
         const expireAt = timer.started
-          .add(offsets.current[key] || getDuration(0))
+          .add(offsets[key] || getDuration(0))
           .add(timer.duration);
         if (!timer.enforced || now.sinceEpoch() < expireAt.sinceEpoch()) {
           continue;

@@ -58,7 +58,7 @@ const getMagnitude = (started: DateTime, duration: Duration) =>
 
 export function Timer({ start, duration, adjustment }: TimerProps) {
   const [started] = useState<DateTime>(start || getDateTime());
-  const offset = useRef(getDuration(0));
+  const offset = useRef(adjustment ? adjustment.offset : getDuration(0));
   const addOffset = (value: Duration) => {
     offset.current = offset.current.add(value);
     adjustment?.setOffset(offset.current);
@@ -75,9 +75,6 @@ export function Timer({ start, duration, adjustment }: TimerProps) {
     };
     const id = setInterval(listener, 1000);
     return () => {
-      addOffset(
-        offset.current.subtract(offset.current).subtract(offset.current),
-      );
       clearInterval(id);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
