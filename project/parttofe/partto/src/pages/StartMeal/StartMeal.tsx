@@ -8,8 +8,10 @@ import { Spinner } from "../../components/Spinner/Spinner";
 import { RightContext } from "../../providers/DynamicItemSetPair";
 
 const secondPairEmptyText = [
-  "Select recipes from the left with the arrow",
-  "button to put a meal together.",
+  "Select recipes from the first pane with the plus",
+  "and add tasks for meal a meal to the second",
+  "pane. When all your meal tasks are in the second pane,",
+  "click the oven that will appear to start cooking.",
 ].join(" ");
 
 export function StartMeal() {
