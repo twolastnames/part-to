@@ -6,6 +6,8 @@ import { Item } from "../DynamicItemSet/DynamicItemSetTypes";
 export type RunStateItemGetter = (
   navigate: NavigateFunction,
   runState: RunState,
+  context: ContextDescription,
+  mapIndex: (value: number) => number,
 ) => Array<Item>;
 
 export interface ManageTasksProps {

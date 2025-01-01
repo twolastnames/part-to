@@ -104,7 +104,7 @@ export function ManageTasks({
 
   const prepended =
     getPrependedItems && runStateData.data
-      ? getPrependedItems(navigate, runStateData.data)
+      ? getPrependedItems(navigate, runStateData.data, context, (ignored) => 0)
       : [];
 
   return (
