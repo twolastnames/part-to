@@ -137,9 +137,6 @@ export function TimerProvider({ children }: PropsWithChildren) {
     }),
     [runState, offsets, timestamp],
   );
-  console.log("ooooffffssss", {
-    offsets: Object.values(offsets).map((v) => v.toString()),
-  });
   useEffect(() => {
     addRunStateListener(setRunState);
     return () => {
