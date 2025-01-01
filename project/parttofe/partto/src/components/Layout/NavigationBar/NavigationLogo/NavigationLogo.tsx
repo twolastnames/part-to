@@ -3,10 +3,19 @@ import React from "react";
 import classes from "./NavigationLogo.module.scss";
 import { Logo } from "../../../Logo/Logo";
 import { Size } from "../../../Logo/LogoTypes";
+import { useNavigate } from "react-router-dom";
+import { getRoute } from "../../../../routes";
 
 export function NavigationLogo() {
+  const navigate = useNavigate();
   return (
-    <div className={classes.navigationLogo} data-testid="NavigationLogo">
+    <div
+      onClick={() => {
+        navigate(getRoute("Base"));
+      }}
+      className={classes.navigationLogo}
+      data-testid="NavigationLogo"
+    >
       <span className={`${classes.mediumLogo} ${classes.logo}`}>
         <Logo />
       </span>
