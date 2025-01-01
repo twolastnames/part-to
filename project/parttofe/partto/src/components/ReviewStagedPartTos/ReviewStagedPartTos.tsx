@@ -3,7 +3,6 @@ import React from "react";
 import { RunStateId, TaskDefinitionId } from "../../api/sharedschemas";
 import { DynamicItemSet } from "../DynamicItemSet/DynamicItemSet";
 import { Spinner } from "../Spinner/Spinner";
-import { DefinitionIdFromer } from "../PartTo/Definition/Definition";
 import { Cancel, Oven } from "../Icon/Icon";
 import { doRunvoidPost } from "../../api/runvoidpost";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +11,7 @@ import { doRunstartPost } from "../../api/runstartpost";
 import { ReviewStagedPartTosProps } from "./ReviewStagedPartTosTypes";
 import { LeftContext, RightContext } from "../../providers/DynamicItemSetPair";
 import { useRunState } from "../../hooks/runState";
+import { TaskDefinition } from "../TaskDefinition/TaskDefinition";
 
 export function ReviewStagedPartTosIdFromer() {
   const response = useRunState();
@@ -27,28 +27,41 @@ function getItems(
   runState: RunStateId,
   taskDefinitions: Array<TaskDefinitionId>,
 ) {
-  return taskDefinitions.map((taskDefinitionId: TaskDefinitionId) => ({
-    key: taskDefinitionId,
-    listView: <>{taskDefinitionId}</>,
-    detailView: <DefinitionIdFromer task={taskDefinitionId} />,
-    itemOperations: [
-      {
-        text: "Skip and Void",
-        icon: Cancel,
-        onClick: () => {
-          doRunvoidPost({
-            body: {
-              runState: runState,
-              definitions: [taskDefinitionId],
+  return taskDefinitions.map(
+    (taskDefinitionId: TaskDefinitionId, index: number) => ({
+      key: taskDefinitionId,
+      listView: <>{taskDefinitionId}</>,
+      detailView: (
+        <TaskDefinition
+          task={taskDefinitionId}
+          runState={runState}
+          locatable={{
+            onLocate: (setter) => () => {
+              setter(index);
             },
-            on200: ({ runState }) => {
-              navigate(getRoute("StageMeal", { runState: runState }));
-            },
-          });
+            context: RightContext,
+          }}
+        />
+      ),
+      itemOperations: [
+        {
+          text: "Skip and Void",
+          icon: Cancel,
+          onClick: () => {
+            doRunvoidPost({
+              body: {
+                runState: runState,
+                definitions: [taskDefinitionId],
+              },
+              on200: ({ runState }) => {
+                navigate(getRoute("StageMeal", { runState: runState }));
+              },
+            });
+          },
         },
-      },
-    ],
-  }));
+      ],
+    }),
+  );
 }
 
 export function ReviewStagedPartTos({
