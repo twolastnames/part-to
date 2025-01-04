@@ -102,7 +102,10 @@ function getItems(
 
 function isComplete(runState?: RunGet200Body) {
   return (
-    runState && runState.completed.length && !runState.staged.length && !runState.started.length
+    runState &&
+    runState.completed.length &&
+    !runState.staged.length &&
+    !runState.started.length
   );
 }
 
