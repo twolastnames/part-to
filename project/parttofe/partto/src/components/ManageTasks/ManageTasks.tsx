@@ -14,6 +14,7 @@ import { doRuncompletePost } from "../../api/runcompletepost";
 import { TaskDefinition } from "../TaskDefinition/TaskDefinition";
 import { useRunState } from "../../hooks/runState";
 import { ClassNames } from "../TaskDefinition/TaskDefinitionTypes";
+import { RunGet200Body } from "../../api/runget";
 
 export function ManageTasksIdFromer({
   typeKey,
@@ -99,6 +100,14 @@ function getItems(
   }));
 }
 
+function isComplete(runState?: RunGet200Body) {
+  return (
+    runState && runState.completed.length && !runState.staged.length && !runState.started.length
+  );
+}
+
+const completedText = "Done Yo!";
+
 export function ManageTasks({
   context,
   tasks,
@@ -129,7 +138,11 @@ export function ManageTasks({
           ),
         )}
         setOperations={[]}
-        emptyPage={<EmptySimpleView content={emptyText} />}
+        emptyPage={
+          <EmptySimpleView
+            content={isComplete(runStateData.data) ? completedText : emptyText}
+          />
+        }
       />
     </Spinner>
   );

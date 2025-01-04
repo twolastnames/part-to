@@ -1,0 +1,22 @@
+{
+  "runState": "wfGhVbmK0kzGYWqRZM2Xl3",
+  "staged": [],
+  "startTimes": [],
+  "tasks": [],
+  "duties": [],
+  "started": [],
+  "completed": ["imminent1", "enforced1", "laxed1"],
+  "timers": {
+    "imminent": [],
+    "enforced": [],
+    "laxed": []
+  },
+  "voided": [
+    "cHsBXRyHSyBSSoCp8uXqr5",
+    "aekFmNJKUyt64YhBJwb2Z3",
+    "H3tjccSUkEfbmImH77jSk"
+  ],
+  "timestamp": "2025-01-02T01:03:26.200540+00:00",
+  "created": [],
+  "activePartTos": ["PqgVxmgdJDZUJe7R13Yht"]
+}
