@@ -20,6 +20,7 @@ import {
   addRunStateListener,
   removeRunStateListener,
 } from "../shared/runStateMessage";
+import { HiddenRing, RingedRing } from "../components/Timer/Ring/Ring";
 
 type TimerDescription = {
   component: ReactNode;
@@ -90,6 +91,7 @@ export function TimerProvider({ children }: PropsWithChildren) {
                   setOffsets((previous) => ({ ...previous, [task]: value }));
                 },
               }}
+              ringClasses={RingedRing}
             />
           ),
         }),
@@ -105,7 +107,13 @@ export function TimerProvider({ children }: PropsWithChildren) {
           duration,
           enforced: false,
           message: "Past Expected Time",
-          component: <Timer start={started} duration={duration} />,
+          component: (
+            <Timer
+              ringClasses={RingedRing}
+              start={started}
+              duration={duration}
+            />
+          ),
         }),
         runState?.timers.laxed || [],
       ),
@@ -129,6 +137,7 @@ export function TimerProvider({ children }: PropsWithChildren) {
                   setOffsets((previous) => ({ ...previous, [task]: value }));
                 },
               }}
+              ringClasses={HiddenRing}
             />
           ),
         }),

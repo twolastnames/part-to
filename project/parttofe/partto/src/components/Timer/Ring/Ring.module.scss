@@ -6,6 +6,14 @@
   text-wrap: nowrap;
 }
 
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
 .ring {
   width: fit-content;
   display: flex;

@@ -56,7 +56,13 @@ const getMagnitude = (started: DateTime, duration: Duration) =>
   (getDateTime().sinceEpoch() - started.sinceEpoch()) /
   duration.toMilliseconds();
 
-export function Timer({ start, duration, adjustment }: TimerProps) {
+export function Timer({
+  start,
+  duration,
+  adjustment,
+  ringClasses,
+}: TimerProps) {
+  const [rerenderKey, setRerenderKey] = useState<number>(Math.random());
   const [started] = useState<DateTime>(start || getDateTime());
   const offset = useRef(adjustment ? adjustment.offset : getDuration(0));
   const addOffset = (value: Duration) => {
@@ -72,6 +78,7 @@ export function Timer({ start, duration, adjustment }: TimerProps) {
   useEffect(() => {
     const listener = () => {
       setMagnitude(getMagnitude(started, getEffectiveDuration()));
+      setRerenderKey(Math.random());
     };
     const id = setInterval(listener, 1000);
     return () => {
@@ -90,11 +97,13 @@ export function Timer({ start, duration, adjustment }: TimerProps) {
     : labelText;
   return (
     <Ring
+      key={rerenderKey}
       label={
         <span className={classes.label}>
           {magnitude > 2 ? <Flasher>{label}</Flasher> : label}
         </span>
       }
+      classNames={ringClasses}
       magnitude={magnitude}
     />
   );

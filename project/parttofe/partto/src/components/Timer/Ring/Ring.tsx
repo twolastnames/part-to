@@ -1,10 +1,18 @@
 import React from "react";
 
 import classes from "./Ring.module.scss";
-import { RingProps } from "./RingTypes";
+import { ClassNames, RingProps } from "./RingTypes";
 import { RingProgress } from "@mantine/core";
 
-export function Ring({ magnitude, label }: RingProps) {
+export const RingedRing: ClassNames = {
+  progress: classes.show,
+};
+
+export const HiddenRing: ClassNames = {
+  progress: classes.hide,
+};
+
+export function Ring({ magnitude, label, classNames }: RingProps) {
   const color1 =
     magnitude >= 1 ? "var(--highlight-color)" : "var(--secondary-color)";
   const value1 = magnitude >= 2 ? 1 : magnitude % 1;
@@ -14,14 +22,16 @@ export function Ring({ magnitude, label }: RingProps) {
 
   return (
     <div className={classes.ring} data-testid="Ring">
-      <RingProgress
-        size={100}
-        thickness={100}
-        sections={[
-          { color: color1, value: value1 * 100 },
-          { color: color2, value: value2 * 100 },
-        ]}
-      />
+      <span className={classNames.progress}>
+        <RingProgress
+          size={100}
+          thickness={100}
+          sections={[
+            { color: color1, value: value1 * 100 },
+            { color: color2, value: value2 * 100 },
+          ]}
+        />
+      </span>
       <div className={classes.label}>{label}</div>
     </div>
   );
