@@ -7,6 +7,7 @@ import { LeftContext } from "../../../providers/DynamicItemSetPair";
 import task1 from "../../../mocks/task1.json";
 import partTo1 from "../../../mocks/partTo1.json";
 import runState1 from "../../../mocks/runState1.json";
+import { TaskClassNames } from "../../TaskDefinition/TaskDefinition";
 
 test("snapshot", async () => {
   fetchMock.mockResponse((request: Request) => {
@@ -38,6 +39,7 @@ test("snapshot", async () => {
           context={LeftContext}
           emptyText="Empty Yo"
           tasks={["a", "task", "list"]}
+          definitionClassNames={TaskClassNames}
         />{" "}
       </div>
     </ShellProvider>,

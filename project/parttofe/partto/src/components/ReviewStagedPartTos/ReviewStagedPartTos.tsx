@@ -11,7 +11,10 @@ import { doRunstartPost } from "../../api/runstartpost";
 import { ReviewStagedPartTosProps } from "./ReviewStagedPartTosTypes";
 import { LeftContext, RightContext } from "../../providers/DynamicItemSetPair";
 import { useRunState } from "../../hooks/runState";
-import { TaskDefinition } from "../TaskDefinition/TaskDefinition";
+import {
+  StagedClassNames,
+  TaskDefinition,
+} from "../TaskDefinition/TaskDefinition";
 
 export function ReviewStagedPartTosIdFromer() {
   const response = useRunState();
@@ -41,6 +44,7 @@ function getItems(
             },
             context: RightContext,
           }}
+          classNames={StagedClassNames}
         />
       ),
       itemOperations: [

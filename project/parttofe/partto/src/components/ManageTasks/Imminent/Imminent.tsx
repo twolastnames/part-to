@@ -9,7 +9,10 @@ import { doRunvoidPost } from "../../../api/runvoidpost";
 import { getRoute } from "../../../routes";
 import { doRunstartPost } from "../../../api/runstartpost";
 import { ContextDescription } from "../../../providers/DynamicItemSetPair";
-import { TaskDefinition } from "../../TaskDefinition/TaskDefinition";
+import {
+  ImminentClassNames,
+  TaskDefinition,
+} from "../../TaskDefinition/TaskDefinition";
 
 export function getImminentItems(
   navigate: NavigateFunction,
@@ -31,6 +34,7 @@ export function getImminentItems(
             },
             context,
           }}
+          classNames={ImminentClassNames}
         />
       ),
       itemOperations: [

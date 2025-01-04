@@ -4,6 +4,10 @@ import { Layout } from "../../components/Layout/Layout";
 import { ManageTasksIdFromer } from "../../components/ManageTasks/ManageTasks";
 import { LeftContext, RightContext } from "../../providers/DynamicItemSetPair";
 import { getImminentItems } from "../../components/ManageTasks/Imminent/Imminent";
+import {
+  DutyClassNames,
+  TaskClassNames,
+} from "../../components/TaskDefinition/TaskDefinition";
 
 type Entity = {
   name: string;
@@ -29,6 +33,7 @@ export function CookMeal() {
             { name: "tasks", side: "second" },
           )}
           getPrependedItems={getImminentItems}
+          definitionClassNames={DutyClassNames}
         />,
         <ManageTasksIdFromer
           context={RightContext}
@@ -37,6 +42,7 @@ export function CookMeal() {
             { name: "tasks", side: "second" },
             { name: "duties", side: "first" },
           )}
+          definitionClassNames={TaskClassNames}
         />,
       ]}
     />

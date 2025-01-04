@@ -13,17 +13,20 @@ import { Cancel, Check } from "../Icon/Icon";
 import { doRuncompletePost } from "../../api/runcompletepost";
 import { TaskDefinition } from "../TaskDefinition/TaskDefinition";
 import { useRunState } from "../../hooks/runState";
+import { ClassNames } from "../TaskDefinition/TaskDefinitionTypes";
 
 export function ManageTasksIdFromer({
   typeKey,
   emptyText,
   context,
   getPrependedItems,
+  definitionClassNames,
 }: {
   typeKey: "duties" | "tasks";
   emptyText: string;
   context: ContextDescription;
   getPrependedItems?: RunStateItemGetter;
+  definitionClassNames: ClassNames;
 }) {
   const response = useRunState();
   return (
@@ -33,12 +36,14 @@ export function ManageTasksIdFromer({
         emptyText={emptyText}
         tasks={response.data?.[typeKey] || []}
         getPrependedItems={getPrependedItems}
+        definitionClassNames={definitionClassNames}
       />
     </Spinner>
   );
 }
 
 function getItems(
+  definitionClassNames: ClassNames,
   navigate: (arg: string) => void,
   runState: RunStateId,
   tasks: Array<TaskDefinitionId>,
@@ -58,6 +63,7 @@ function getItems(
         }}
         task={taskDefinitionId}
         runState={runState}
+        classNames={definitionClassNames}
       />
     ),
     itemOperations: [
@@ -98,6 +104,7 @@ export function ManageTasks({
   tasks,
   emptyText,
   getPrependedItems,
+  definitionClassNames,
 }: ManageTasksProps) {
   const navigate = useNavigate();
   const runStateData = useRunState();
@@ -113,6 +120,7 @@ export function ManageTasks({
         context={context}
         items={(prepended.length > 0 ? [prepended[0]] : prepended).concat(
           getItems(
+            definitionClassNames,
             navigate,
             runStateData?.data?.runState as RunStateId,
             tasks,

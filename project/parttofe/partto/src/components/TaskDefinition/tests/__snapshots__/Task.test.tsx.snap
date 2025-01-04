@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<div
+  class="taskDefinition"
+  data-testid="TaskDefinition"
+>
+  <div
+    class="task"
+  >
+    <h3
+      class="hidden"
+    >
+      Upcoming:
+    </h3>
+    <div
+      class="hidden"
+    >
+      You don't need to do anything about this yet. It's just warning of what is coming. Start at your own risk of having cold food at the end. We've seen from Hollywood films that time travel can go bad.
+    </div>
+    <div
+      class="normalTimer"
+    />
+    <div
+      class="description"
+    >
+      saute diced green peppers and onion
+    </div>
+  </div>
+  <ul />
+</div>
+`;

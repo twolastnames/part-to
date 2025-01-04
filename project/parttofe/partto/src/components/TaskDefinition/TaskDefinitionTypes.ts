@@ -6,8 +6,16 @@ type Locatable = {
   context: ContextDescription;
 };
 
-export interface DetailProps {
+export type ClassNames = {
+  layout: string;
+  timer: string;
+  upcomingTitle: string;
+  upcomingDescription: string;
+};
+
+export interface TaskDefinitionProps {
   task: TaskDefinitionId;
   runState: RunStateId;
   locatable: Locatable;
+  classNames: ClassNames;
 }

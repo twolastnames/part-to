@@ -1,14 +1,75 @@
 @import "../../App.scss";
 
-.detail {
+.imminent {
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: 100%;
+  grid-template-areas:
+    "upcomingTitle"
+    "upcomingTimer"
+    "description"
+    "upcomingDescription";
+}
+
+.upcomingTitle {
+  font: var(--font-strong-large);
+  grid-area: upcomingTitle;
+}
+
+.upcomingDescription {
+  font: var(--font-weak-small);
+  grid-area: upcomingDescription;
+}
+
+.duty {
+  display: grid;
+  grid-template-areas:
+    "description"
+    "timer";
+}
+
+.task {
+  display: grid;
+  grid-template-areas:
+    "timer"
+    "description";
+}
+
+.staged {
+  display: grid;
+  grid-template-areas: "description";
+}
+
+.upcoming {
+  grid-area: upcoming;
+}
+
+.hidden {
+  display: none;
+}
+
+.normalTimer {
+  justify-content: center;
+  grid-area: timer;
+}
+
+.upcomingTimer {
+  opacity: 0.5;
+  grid-area: upcomingTimer;
+  color: var(--secondary-color);
+}
+
+.taskDefinition {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 100%;
   height: 100%;
+  overflow-y: auto;
+  overflow-x: visible;
 }
 
 .description {
-  padding: 20%;
+  padding: 10%;
   font: var(--font-regular-xlarge);
+  grid-area: description;
 }
