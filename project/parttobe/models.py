@@ -590,19 +590,11 @@ class RunState(models.Model):
         result["timestamp"] = self.created
         completion = calculate_completion(result["staged"] + result["started"])
         result["duration"] = completion.duration()
-        result["timers"] = (
-            {
-                "enforced": [timer for timer in timers if not timer["task"].is_task()],
-                "laxed": [timer for timer in timers if timer["task"].is_task()],
-                "imminent": self._imminent(completion, result["started"]),
-            }
-            if result["started"] or result["completed"]
-            else {
-                "enforced": [],
-                "laxed": [],
-                "imminent": [],
-            }
-        )
+        result["timers"] = {
+            "enforced": [timer for timer in timers if not timer["task"].is_task()],
+            "laxed": [timer for timer in timers if timer["task"].is_task()],
+            "imminent": self._imminent(completion, result["started"]),
+        }
         return result
 
     def _imminent(self, completion, started):

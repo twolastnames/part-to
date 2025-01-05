@@ -4,11 +4,11 @@ from django.test import Client
 
 
 class RunGetTestClass(helpers.ClientTester):
-    def test_not_having_timers_before_cooking_with_imminent(self):
+    def test_having_timers_before_cooking_with_imminent(self):
         self.stagePartTos(
             "Corn on the Cob",
         )
-        self.assertTimerDescriptions("imminent")
+        self.assertTimerDescriptions("imminent", "boil water in large pot for corn")
         self.assertTimerDescriptions("enforced")
         self.assertTimerDescriptions("laxed")
 

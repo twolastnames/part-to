@@ -21,6 +21,7 @@ import {
   removeRunStateListener,
 } from "../shared/runStateMessage";
 import { HiddenRing, RingedRing } from "../components/Timer/Ring/Ring";
+import { getRoute } from "../routes";
 
 type TimerDescription = {
   component: ReactNode;
@@ -155,6 +156,14 @@ export function TimerProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     const id = setInterval(() => {
+      if (
+        // eslint-disable-next-line no-restricted-globals
+        !location.pathname.includes(
+          getRoute("CookMeal").replace(":runState", ""),
+        )
+      ) {
+        return;
+      }
       const now = getDateTime();
       for (const [key, timer] of Object.entries(timers)) {
         const expireAt = timer.started
