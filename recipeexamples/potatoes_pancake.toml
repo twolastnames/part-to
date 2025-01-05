@@ -1,0 +1,57 @@
+[part_to]
+name = "Potatoes (pancake)"
+depends = ["Bake2"]
+
+['Preheat Oven']
+description = "Preheat oven to 425 degrees"
+duration = "9 minutes"
+engagement = 2
+
+['Grease']
+description = "grease 2 baking sheets liberally with cooking spray"
+duration = "1 minute"
+
+['Shred']
+description = "Shred the potatoes and an onion and put them in a large bowl"
+duration = "5 minutes"
+ingredients = ["2 lb Russet Potatoes", "1 small onion"]
+
+['Drain']
+description = "Drain the potatoes and onions the best you can and return to the large bowl"
+duration = "2 minutes"
+depends = ["Shred"]
+
+['Eggs']
+description = "crack 2 eggs into the large bowl with potatoes and onion"
+duration = "1 minute"
+depends = ["Drain"]
+ingredients = ["2 eggs"]
+
+['Mix']
+description = "Mix the remaining ingredients in the bowl (hands work well)"
+duration = "2 minutes"
+depends = ["Eggs"]
+ingredients = ["1/4 cups flour", "1 tsp garlic powder", "1 tsp onion powder", "1/2 tsp salt", "1/4 tsp pepper", "1 tbs baking powder"]
+
+['Portion']
+description = "Portion 20-22 cakes on the pans with your oiled hands; Thin as you can to not have them fall apart"
+duration = "4 minutes"
+depends = ["Mix", "Grease", "Preheat Oven"]
+
+['Bake1']
+description = "Bake for 15 minutes before flipping"
+duration = "15 minutes"
+engagement = 3
+depends = ["Portion"]
+
+['Flip']
+description = "Flip the potatoes"
+duration = "1 minute"
+depends = ["Bake1"]
+
+['Bake2']
+description = "Bake about 10 more minutes, until golden brown"
+duration = "10 minutes"
+engagement = 3
+depends = ["Flip"]
+

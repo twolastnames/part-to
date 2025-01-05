@@ -1,0 +1,77 @@
+[part_to]
+name = "Pancakes (German)"
+depends = ["Sugar", "Vanilla", "Blueberries"]
+
+['Preheat']
+description = "Preheat oven to 400 degrees"
+duration = "8 minute"
+engagement = 2
+
+['Eggs']
+description= "Wisk eggs in container large enough to stir in 2 more cups of stuff"
+duration = "3 minute"
+ingredients = ["6 eggs"]
+
+['Batter']
+description = "Wisk the other batter components in with the eggs"
+duration = "3 minutes"
+depends = ["Eggs"]
+ingredients = ["1 cup 2% milk", "1 cup all-purpose flour", "1/2 teaspoon salt"]
+
+['Melt']
+description = "Melt butter in microwave"
+duration = "1 minute"
+ingredients = ["2 tablespoons butter"]
+depends = ["Batter", "Preheat"]
+engagement = 20
+
+['Prepare']
+description = "Pour melted butter into a 13x9-in. baking dish; tilt dish to coat then add the batter"
+duration = "1 minute"
+depends = ["Melt"]
+
+['Bake']
+description = "bake, uncovered, until puffed and golden brown, about 20 minutes."
+duration = "20 minutes"
+engagement = 2
+depends = ["Prepare"]
+
+['Dice Butter']
+description = "Dice a stick of butter and put in small saucepan"
+duration = "1 minutes"
+ingredients = ["1/2 cup butter, cubed"]
+
+['Start Syrup']
+description = "place butter and other syrup ingredients in a small saucepan that has diced butter in it"
+duration = "3 minutes"
+depends = ['Dice Butter']
+ingredients = ["1-1/2 cups sugar", "3/4 cup buttermilk", "2 tablespoons corn syrup", "1 teaspoon baking soda"]
+
+['Boil Syrup']
+description = "Bring to boil"
+duration = "5 minutes"
+depends = ["Start Syrup"]
+engagement = 2
+
+['Cook Syrup']
+description = "Boil syrup for 7 minutes"
+duration = "7 minutes"
+depends = ["Boil Syrup"]
+engagement = 2
+
+['Blueberries']
+description = "Wash some blueberries to serve with pancakes"
+duration = "2 minutes"
+ingredients = ["Blueberries"]
+
+['Vanilla']
+description = "stir vanilla into the syrup"
+duration = "1 minute"
+depends = ["Cook Syrup"]
+ingredients = ["2 tsp vanilla extract"]
+
+['Sugar']
+description = "Remove pancake from oven and dust with confectioners' sugar"
+duration = "1 minute"
+depends = ["Bake"]
+

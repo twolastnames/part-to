@@ -1,0 +1,24 @@
+[part_to]
+name = "Brats (raw)"
+depends = ["Simmer"]
+
+
+['Cover Brats']
+description = "Place the bratwurst in a large pot and cover them with water."
+duration = "1 minute"
+ingredients = ["Raw Brats (Any amount)"]
+
+
+['Boil']
+description = "bring water to boil"
+duration = "10 minutes"
+depends = ["Cover Brats"]
+engagement = 2
+
+
+['Simmer']
+description = "Reduce heat and simmer for 20 minutes"
+duration = "20 minutes"
+engagement = 3
+depends = ["Boil"]
+

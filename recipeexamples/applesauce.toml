@@ -1,0 +1,23 @@
+[part_to]
+name = "Applesauce"
+depends = ["Cook"]
+
+['Chop']
+description = "Chop apples"
+duration = "6 minutes"
+ingredients = ["6 apples"]
+
+['Gather']
+description = "Put all ingredients, including the chopped apples into a pot,"
+duration = "1 minute"
+ingredients = ["1 1/8 cups water", "3/8 cups sugar", "3/4 teaspoons cinnamon"]
+depends = ["Chop"]
+
+
+['Cook']
+description = "cook on medium heat for 15-20 minutes"
+duration = "17 minutes"
+depends = ["Gather"]
+engagement = 2
+
+
