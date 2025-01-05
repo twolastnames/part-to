@@ -10,6 +10,17 @@ import {
 } from "./DynamicItemSetPair";
 import { TimerProvider } from "./Timer";
 
+export enum Theme {
+  Default = "default",
+  Dark = "dark",
+}
+
+const themeStorageKey = "theme";
+
+export function getTheme(): Theme {
+  return (localStorage.getItem(themeStorageKey) || Theme.Default) as Theme;
+}
+
 const themes = {
   default: createTheme({
     primaryColor: "red",
@@ -21,24 +32,27 @@ const themes = {
 
 let themeChangeRef: MutableRefObject<(theme: Theme) => void>;
 
-export enum Theme {
-  Default = "default",
-  Dark = "dark",
-}
-
-export function changeTheme(theme: Theme) {
+function setThemeClass() {
   const themeNode = document.getElementById("theme");
   if (!themeNode || !themeNode.className) {
     console.error("developers should have created an theme ID in the project");
     return;
   }
+  themeNode.className = `${getTheme()}Theme`;
+}
+
+export function changeTheme(theme: Theme) {
+  localStorage.setItem(themeStorageKey, theme.toString());
   themeChangeRef?.current && themeChangeRef.current(theme);
-  themeNode.className = `${theme}Theme`;
 }
 
 export const ShellProvider = ({ children }: PropsWithChildren) => {
-  const [theme, setTheme] = useState<Theme>(Theme.Default);
+  const [theme, setTheme] = useState<Theme>(getTheme());
+  console.log("ttttt", { theme });
   themeChangeRef = useRef(setTheme);
+  setTimeout(() => {
+    setThemeClass();
+  }, 0);
   return (
     <div id="theme" className="defaultTheme">
       <LeftDynamicItemSetPairProvider>
