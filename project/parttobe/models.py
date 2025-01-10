@@ -568,15 +568,6 @@ class RunState(models.Model):
 
         order = order_definitions([state.task for state in taskStates])
         lookup = {state.task: state.operation for state in taskStates}
-        timers = [
-            {
-                "task": state.task,
-                "started": state.created,
-                "duration": state.task.duration,
-            }
-            for state in taskStates
-            if RunState.OPERATION_TEXTS[state.operation] == "started"
-        ]
         for task in order:
             operation = lookup[task]
             result[RunState.OPERATION_TEXTS[operation]].append(task)
@@ -590,6 +581,16 @@ class RunState(models.Model):
         result["timestamp"] = self.created
         completion = calculate_completion(result["staged"] + result["started"])
         result["duration"] = completion.duration()
+        durations = calculate_durations(result["started"], result["timestamp"])
+        timers = [
+            {
+                "task": state.task,
+                "started": state.created,
+                "duration": durations[state.task.id],
+            }
+            for state in taskStates
+            if RunState.OPERATION_TEXTS[state.operation] == "started"
+        ]
         result["timers"] = {
             "enforced": [timer for timer in timers if not timer["task"].is_task()],
             "laxed": [timer for timer in timers if timer["task"].is_task()],
@@ -657,3 +658,94 @@ def append_states(operation, tasks, run_state=None):
         finally:
             cursor.close()
             return RunState.objects.get(uuid=last_uuid)
+
+
+def calculate_durations(tasks, before):
+    if not tasks:
+        return {}
+    statement = " UNION ALL ".join(
+        [
+            """
+    select * from (
+        WITH Durations AS (
+        WITH Paired AS (
+            WITH RECURSIVE Times AS (
+                WITH Completeds AS (
+                    SELECT 
+                        id,
+                        operation,
+                        task_id,
+                        parent_id,
+                        created
+                    FROM parttobe_runstate
+                    WHERE operation = %s
+                    AND task_id = %s
+                    AND created <= %s
+                    LIMIT 5
+                )
+                SELECT
+                    id,
+                    Completeds.id AS completedId,
+                    operation,
+                    task_id,
+                    parent_id,
+                    created
+                FROM Completeds
+                WHERE id = Completeds.id
+                UNION ALL
+                SELECT
+                    rs.id,
+                    completedId,
+                    rs.operation,
+                    rs.task_id,
+                    rs.parent_id,
+                    rs.created
+                FROM parttobe_runstate rs
+                JOIN Times ss ON ss.parent_id = rs.id
+            )
+            SELECT 
+                id,
+                completedId,
+                task_id,
+                created,
+                operation
+            FROM Times t1
+            WHERE operation = %s OR operation = %s
+        )
+        SELECT p1.task_id AS task, ((    
+            JULIANDAY(p1.created) - JULIANDAY(p2.created)
+        ) * 24 * 60 * 60) AS duration  FROM Paired p1
+        INNER JOIN Paired p2
+        ON p2.completedId = p1.completedId
+        AND p1.operation > p2.operation
+        UNION ALL
+        SELECT u1.id AS task, (u1.initial_duration / 1000000) AS duration
+        FROM parttobe_taskdefinition u1
+        WHERE id = %s
+        LIMIT 5        
+        )
+        SELECT task, SUM(duration) / COUNT(duration)
+        FROM Durations
+        GROUP BY task
+        )
+    """
+        ]
+        * len(tasks)
+    )
+
+    values = []
+    for task in tasks:
+        values.extend(
+            [
+                RunState.Operation.COMPLETED,
+                task.id,
+                before,
+                RunState.Operation.COMPLETED,
+                RunState.Operation.STARTED,
+                task.id,
+            ]
+        )
+    with connection.cursor() as cursor:
+        exectued = cursor.execute(statement, values)
+        query_result = exectued.fetchall()
+    return {row[0]: datetime.timedelta(seconds=round(row[1])) for row in query_result}

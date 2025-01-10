@@ -27,6 +27,198 @@ class RunCompleteTestClass(helpers.ClientTester):
         response = client.post("/api/run/complete", complete_body, content_type="*")
         self.assertEqual(response.status_code, 400)
 
+    @freeze_time("2024-03-21 01:23:45", as_arg=True)
+    def test_will_not_calculate_in_future_to_run_state_creation(time, self):
+        # create a state to reread
+        self.startPartTos(
+            "Frozen Green Beans",
+        )
+        self.assertTimerDescriptions(
+            "imminent",
+            "boil water in large pot for beans",
+        )
+        self.assertImminentTills(
+            timedelta(seconds=0),
+        )
+        self.changeState("start", "boil water in large pot for beans")
+        self.assertTimerDurations(
+            "enforced",
+            timedelta(seconds=540),
+        )
+        kept_run_state = self.runState
+        time.move_to("2024-03-21 01:28:45")
+        self.changeState("complete", "boil water in large pot for beans")
+
+        # make another entry
+        time.move_to("2024-03-21 02:28:45")
+        self.startPartTos(
+            "Frozen Green Beans",
+        )
+        self.assertTimerDescriptions(
+            "imminent",
+            "boil water in large pot for beans",
+        )
+        self.assertImminentTills(
+            timedelta(seconds=0),
+        )
+        self.changeState("start", "boil water in large pot for beans")
+        self.assertTimerDurations(
+            "enforced",
+            timedelta(seconds=420),
+        )
+        time.move_to("2024-03-21 02:38:45")
+        self.changeState("complete", "boil water in large pot for beans")
+
+        # read from the past
+        response = self.client.get("/api/run/?runState={}".format(kept_run_state))
+        self.assertEqual(response.data["timers"]["enforced"][0]["duration"], 540.0)
+
+    @freeze_time("2024-03-21 01:23:45", as_arg=True)
+    def test_can_calculate_durations_from_previous_runs(time, self):
+        self.startPartTos(
+            "Frozen Green Beans",
+        )
+        self.assertTimerDescriptions(
+            "imminent",
+            "boil water in large pot for beans",
+        )
+        self.assertImminentTills(
+            timedelta(seconds=0),
+        )
+        self.changeState("start", "boil water in large pot for beans")
+        self.assertTimerDurations(
+            "enforced",
+            timedelta(seconds=540),
+        )
+        time.move_to("2024-03-21 01:28:45")
+        self.changeState("complete", "boil water in large pot for beans")
+
+        self.startPartTos(
+            "Frozen Green Beans",
+        )
+        self.assertTimerDescriptions(
+            "imminent",
+            "boil water in large pot for beans",
+        )
+        self.assertImminentTills(
+            timedelta(seconds=0),
+        )
+        self.changeState("start", "boil water in large pot for beans")
+        self.assertTimerDurations(
+            "enforced",
+            timedelta(seconds=420),
+        )
+        time.move_to("2024-03-21 01:33:45")
+        self.changeState("complete", "boil water in large pot for beans")
+
+        self.startPartTos(
+            "Frozen Green Beans",
+        )
+        self.assertTimerDescriptions(
+            "imminent",
+            "boil water in large pot for beans",
+        )
+        self.assertImminentTills(
+            timedelta(seconds=0),
+        )
+        self.changeState("start", "boil water in large pot for beans")
+        self.assertTimerDurations(
+            "enforced",
+            timedelta(seconds=380),
+        )
+        time.move_to("2024-03-21 01:37:45")
+        self.changeState("complete", "boil water in large pot for beans")
+
+        self.startPartTos(
+            "Frozen Green Beans",
+        )
+        self.assertTimerDescriptions(
+            "imminent",
+            "boil water in large pot for beans",
+        )
+        self.assertImminentTills(
+            timedelta(seconds=0),
+        )
+        self.changeState("start", "boil water in large pot for beans")
+        self.assertTimerDurations(
+            "enforced",
+            timedelta(seconds=345),
+        )
+        time.move_to("2024-03-21 01:41:45")
+        self.changeState("complete", "boil water in large pot for beans")
+
+        self.startPartTos(
+            "Frozen Green Beans",
+        )
+        self.assertTimerDescriptions(
+            "imminent",
+            "boil water in large pot for beans",
+        )
+        self.assertImminentTills(
+            timedelta(seconds=0),
+        )
+        self.changeState("start", "boil water in large pot for beans")
+        self.assertTimerDurations(
+            "enforced",
+            timedelta(seconds=324),
+        )
+        time.move_to("2024-03-21 01:48:45")
+        self.changeState("complete", "boil water in large pot for beans")
+
+        # the estimated duration goes away after the 6th
+        self.startPartTos(
+            "Frozen Green Beans",
+        )
+        self.assertTimerDescriptions(
+            "imminent",
+            "boil water in large pot for beans",
+        )
+        self.assertImminentTills(
+            timedelta(seconds=0),
+        )
+        self.changeState("start", "boil water in large pot for beans")
+        self.assertTimerDurations(
+            "enforced",
+            timedelta(seconds=300),
+        )
+        time.move_to("2024-03-21 01:53:45")
+        self.changeState("complete", "boil water in large pot for beans")
+
+        # voids do not effect things
+        self.startPartTos(
+            "Frozen Green Beans",
+        )
+        self.assertTimerDescriptions(
+            "imminent",
+            "boil water in large pot for beans",
+        )
+        self.assertImminentTills(
+            timedelta(seconds=0),
+        )
+        self.changeState("start", "boil water in large pot for beans")
+        self.assertTimerDurations(
+            "enforced",
+            timedelta(seconds=300),
+        )
+        time.move_to("2024-03-21 02:33:45")
+        self.changeState("void", "boil water in large pot for beans")
+
+        self.startPartTos(
+            "Frozen Green Beans",
+        )
+        self.assertTimerDescriptions(
+            "imminent",
+            "boil water in large pot for beans",
+        )
+        self.assertImminentTills(
+            timedelta(seconds=0),
+        )
+        self.changeState("start", "boil water in large pot for beans")
+        self.assertTimerDurations(
+            "enforced",
+            timedelta(seconds=300),
+        )
+
     @freeze_time("2024-03-21 01:23:45")
     def test_can_calculate_endtimes(self):
         self.startPartTos(
