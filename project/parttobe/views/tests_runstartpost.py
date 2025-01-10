@@ -3,8 +3,12 @@ from django.test import TestCase
 from django.test import Client
 
 
-class RunstartPostTestClass(TestCase):
-    """This is heavily used in other tests.
-    Keeping this here to satisfy api generation"""
-
-    pass
+class RunstartPostTestClass(helpers.ClientTester):
+    def test_start_with_imminent_timer(self):
+        self.startPartTos(
+            "Frozen Green Beans",
+        )
+        self.assertTimerDescriptions(
+            "imminent",
+            "boil water in large pot for beans",
+        )
