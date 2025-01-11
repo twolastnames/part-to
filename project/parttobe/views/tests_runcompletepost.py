@@ -96,6 +96,7 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.startPartTos(
             "Frozen Green Beans",
         )
+        self.assertEqual(self.runStateData["duration"], 810.0)
         self.assertTimerDescriptions(
             "imminent",
             "boil water in large pot for beans",
@@ -110,10 +111,12 @@ class RunCompleteTestClass(helpers.ClientTester):
         )
         time.move_to("2024-03-21 01:33:45")
         self.changeState("complete", "boil water in large pot for beans")
+        self.assertEqual(self.runStateData["duration"], 390.0)
 
         self.startPartTos(
             "Frozen Green Beans",
         )
+        self.assertEqual(self.runStateData["duration"], 770.0)
         self.assertTimerDescriptions(
             "imminent",
             "boil water in large pot for beans",
@@ -150,6 +153,7 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.startPartTos(
             "Frozen Green Beans",
         )
+        self.assertEqual(self.runStateData["duration"], 714.0)
         self.assertTimerDescriptions(
             "imminent",
             "boil water in large pot for beans",

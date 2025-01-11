@@ -163,7 +163,10 @@ class CompletionResult:
         ]
 
 
-def calculate_completion(definitions):
+def calculate_completion(definitions, at_time=datetime.datetime.now()):
+    calculated_durations = calculate_durations(definitions, at_time)
+    for definition in definitions:
+        definition.set_calculated_duration(calculated_durations[definition.id])
     time_consumed = {task.part_to: datetime.timedelta(0) for task in definitions}
     on_time = datetime.timedelta()
     left = [
@@ -264,7 +267,7 @@ def next_work(run_state):
     staged.sort()
     if len([task for task in started if task.is_task()]) > 0:
         return run_state
-    result = calculate_completion(staged + started)
+    result = calculate_completion(staged + started, full_state["timestamp"])
     ready_tasks = result.ready_tasks()
     to_add = []
     if (
@@ -373,7 +376,12 @@ class TaskDefinition(models.Model):
 
     @property
     def duration(self):
+        if hasattr(self, "calculated_duration"):
+            return self.calculated_duration
         return self.initial_duration
+
+    def set_calculated_duration(self, calculated):
+        self.calculated_duration = calculated
 
     @property
     def dependencies(self):
@@ -579,7 +587,9 @@ class RunState(models.Model):
         result["tasks"] = [task for task in result["started"] if task.is_task()]
         result["duties"] = [task for task in result["started"] if not task.is_task()]
         result["timestamp"] = self.created
-        completion = calculate_completion(result["staged"] + result["started"])
+        completion = calculate_completion(
+            result["staged"] + result["started"], self.created
+        )
         result["duration"] = completion.duration()
         durations = calculate_durations(result["started"], result["timestamp"])
         timers = [
