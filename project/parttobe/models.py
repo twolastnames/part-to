@@ -152,7 +152,6 @@ class CompletionResult:
             return datetime.timedelta(seconds=0)
         last = self.actions()[-1]
         return last.till() + last.definition().duration
-        # return self._total_duration
 
     def ready_tasks(self):
         dependeds = [action.definition().depended for action in self._actions]
