@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<details
+  class="accordion"
+  data-testid="Accordion"
+>
+  <summary>
+    Some Summary
+  </summary>
+  <div
+    class="body"
+  >
+    <div
+      class="noneSpecified"
+    >
+      None Specified
+    </div>
+    <ul
+      id="ulId123456789"
+    />
+  </div>
+</details>
+`;

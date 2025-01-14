@@ -27,6 +27,45 @@ exports[`snapshot 1`] = `
       saute diced green peppers and onion
     </div>
   </div>
-  <ul />
+  <details
+    class="accordion"
+    data-testid="Accordion"
+  >
+    <summary>
+      Ingredients
+    </summary>
+    <div
+      class="body"
+    >
+      <div
+        class="noneSpecified"
+      >
+        None Specified
+      </div>
+      <ul
+        id="ulId123456789"
+      />
+    </div>
+  </details>
+  <details
+    class="accordion"
+    data-testid="Accordion"
+  >
+    <summary>
+      Tools
+    </summary>
+    <div
+      class="body"
+    >
+      <div
+        class="noneSpecified"
+      >
+        None Specified
+      </div>
+      <ul
+        id="ulId123456789"
+      />
+    </div>
+  </details>
 </div>
 `;

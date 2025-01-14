@@ -1,11 +1,11 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { PartTo } from "./PartTo";
+import { Accordion } from "./Accordion";
 import { ShellProvider } from "../../providers/ShellProvider";
 
-const meta: Meta<typeof PartTo> = {
-  component: PartTo,
+const meta: Meta<typeof Accordion> = {
+  component: Accordion,
   decorators: (Story) => (
     <ShellProvider>
       <Story />
@@ -14,16 +14,16 @@ const meta: Meta<typeof PartTo> = {
 };
 export default meta;
 
-type Story = StoryObj<typeof PartTo>;
+type Story = StoryObj<typeof Accordion>;
 
 export const Simple: Story = {
   args: {
-    name: "A simple part to",
+    summary: "An Accordian",
     children: (
-      <>
-        <div>More</div>
-        <div>Things</div>
-      </>
+      <ul>
+        <li>Some</li>
+        <li>List</li>
+      </ul>
     ),
   },
 };

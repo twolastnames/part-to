@@ -1,9 +1,8 @@
-import { ReactNode } from "react";
 import { Duration } from "../../shared/duration";
+import { PropsWithChildren } from "react";
 
-export interface PartToProps {
+export interface PartToProps extends PropsWithChildren {
   name: string;
   workDuration?: Duration;
   clockDuration?: Duration;
-  tasks: Array<ReactNode>;
 }

@@ -8,6 +8,7 @@ import task1 from "../../../mocks/task1.json";
 import { LeftContext } from "../../../providers/DynamicItemSetPair";
 
 test("snapshot", async () => {
+  jest.spyOn(Math, 'random').mockReturnValue(0.123456789);
   jest.useFakeTimers();
   jest.setSystemTime(new Date("2025-01-02T01:03:26.200540+00:00"));
   fetchMock.mockResponse((request: Request) => {

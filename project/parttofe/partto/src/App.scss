@@ -67,3 +67,10 @@ $desktop: "only screen and (min-width : 1025px)";
 
 $portrait: "only screen and (orientation: portrait)";
 $landscape: "only screen and (orientation: landscape)";
+
+details {
+  padding: var(--gap-small);
+  font: var(--font-regular-medium);
+  border: 1px solid var(--detail-color);
+  border-radius: var(--gap-medium);
+}

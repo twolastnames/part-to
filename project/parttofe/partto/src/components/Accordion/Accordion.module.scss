@@ -1,0 +1,44 @@
+@import "../../App.scss";
+
+.accordion[open] summary ~ * {
+  animation: sweep 0.5s ease-in-out;
+}
+
+.accordion summary::marker {
+  content: "";
+}
+
+// TODO: Test this works in safari
+.accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+@keyframes sweep {
+  0% {
+    opacity: 0;
+    margin-left: var(--gap-small);
+  }
+  100% {
+    opacity: 1;
+    margin-left: 0px;
+  }
+}
+
+.accordion {
+  padding: var(--gap-small);
+  font: var(--font-regular-medium);
+  border: 1px solid var(--detail-color);
+  border-radius: var(--gap-medium);
+
+  summary {
+    padding: var(--gap-small) var(--gap-large);
+    font: var(--font-strong-medium);
+    background-color: var(--secondary-color);
+    border-radius: var(--gap-medium);
+    cursor: pointer;
+  }
+
+  .body {
+    padding: var(--gap-small);
+  }
+}

@@ -16,19 +16,8 @@ exports[`snapshot 1`] = `
   <div
     class="clockDuration"
   />
-  <div
-    class="tasks"
-  >
-    <div
-      class="task"
-    >
-      more
-    </div>
-    <div
-      class="task"
-    >
-      things
-    </div>
-  </div>
+  <p>
+    More Stuff
+  </p>
 </div>
 `;

@@ -2,17 +2,19 @@ import React from "react";
 import { expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { ShellProvider } from "../../../providers/ShellProvider";
-import { PartTo } from "../PartTo";
+import { Accordion } from "../Accordion";
 
 test("snapshot", () => {
-  jest.spyOn(Math, 'random').mockReturnValue(0.123456789);
   render(
     <ShellProvider>
-      <PartTo name="A simple part to">
-        <p>More Stuff</p>
-      </PartTo>
+      <Accordion summary="A Summary">
+        <ul>
+          <li>Some</li>
+          <li>List</li>
+        </ul>
+      </Accordion>
     </ShellProvider>,
   );
-  const component = screen.getByTestId("PartTo");
+  const component = screen.getByTestId("Accordion");
   expect(component).toMatchSnapshot();
 });

@@ -7,6 +7,10 @@ import { Spinner } from "../Spinner/Spinner";
 import { useParttoGet } from "../../api/parttoget";
 import { useTimerProvider } from "../../providers/Timer";
 import { useSingleOfPair } from "../../providers/DynamicItemSetPair";
+import {
+  Definition,
+  DefinitionListed,
+} from "../DefinitionListed/DefinitionListed";
 
 export const TaskClassNames: ClassNames = {
   layout: classes.task,
@@ -70,11 +74,12 @@ export function TaskDefinition({
             {taskResponse.data?.description}
           </div>
         </div>
-        <ul>
-          {taskResponse.data?.ingredients.map((ingredient) => (
-            <li>{ingredient}</li>
-          ))}
-        </ul>
+        <DefinitionListed summary="Ingredients">
+          <Definition definitionKey="ingredients" id={task} />
+        </DefinitionListed>
+        <DefinitionListed summary="Tools">
+          <Definition definitionKey="tools" id={task} />
+        </DefinitionListed>
         {partToResponse.data && (
           <div>For Recipe: {partToResponse.data?.name}</div>
         )}

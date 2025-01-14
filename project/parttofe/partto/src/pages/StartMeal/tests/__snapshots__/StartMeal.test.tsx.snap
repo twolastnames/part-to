@@ -42,162 +42,46 @@ exports[`snapshot 1`] = `
             >
               14 minutes and 42 seconds
             </div>
-            <div
-              class="tasks"
+            <details
+              class="accordion"
+              data-testid="Accordion"
             >
+              <summary>
+                Ingredients
+              </summary>
               <div
-                class="task"
+                class="body"
               >
                 <div
-                  class="definition"
-                  data-testid="Definition"
+                  class="noneSpecified"
                 >
-                  <div
-                    class="description"
-                  >
-                    saute diced green peppers and onion
-                  </div>
-                  <div
-                    class="duration"
-                  >
-                    5 minutes and 0 seconds
-                  </div>
+                  None Specified
                 </div>
+                <ul
+                  id="ulId123456789"
+                />
               </div>
+            </details>
+            <details
+              class="accordion"
+              data-testid="Accordion"
+            >
+              <summary>
+                Tools
+              </summary>
               <div
-                class="task"
+                class="body"
               >
                 <div
-                  class="definition"
-                  data-testid="Definition"
+                  class="noneSpecified"
                 >
-                  <div
-                    class="description"
-                  >
-                    saute diced green peppers and onion
-                  </div>
-                  <div
-                    class="duration"
-                  >
-                    5 minutes and 0 seconds
-                  </div>
+                  None Specified
                 </div>
+                <ul
+                  id="ulId123456789"
+                />
               </div>
-              <div
-                class="task"
-              >
-                <div
-                  class="definition"
-                  data-testid="Definition"
-                >
-                  <div
-                    class="description"
-                  >
-                    saute diced green peppers and onion
-                  </div>
-                  <div
-                    class="duration"
-                  >
-                    5 minutes and 0 seconds
-                  </div>
-                </div>
-              </div>
-              <div
-                class="task"
-              >
-                <div
-                  class="definition"
-                  data-testid="Definition"
-                >
-                  <div
-                    class="description"
-                  >
-                    saute diced green peppers and onion
-                  </div>
-                  <div
-                    class="duration"
-                  >
-                    5 minutes and 0 seconds
-                  </div>
-                </div>
-              </div>
-              <div
-                class="task"
-              >
-                <div
-                  class="definition"
-                  data-testid="Definition"
-                >
-                  <div
-                    class="description"
-                  >
-                    saute diced green peppers and onion
-                  </div>
-                  <div
-                    class="duration"
-                  >
-                    5 minutes and 0 seconds
-                  </div>
-                </div>
-              </div>
-              <div
-                class="task"
-              >
-                <div
-                  class="definition"
-                  data-testid="Definition"
-                >
-                  <div
-                    class="description"
-                  >
-                    saute diced green peppers and onion
-                  </div>
-                  <div
-                    class="duration"
-                  >
-                    5 minutes and 0 seconds
-                  </div>
-                </div>
-              </div>
-              <div
-                class="task"
-              >
-                <div
-                  class="definition"
-                  data-testid="Definition"
-                >
-                  <div
-                    class="description"
-                  >
-                    saute diced green peppers and onion
-                  </div>
-                  <div
-                    class="duration"
-                  >
-                    5 minutes and 0 seconds
-                  </div>
-                </div>
-              </div>
-              <div
-                class="task"
-              >
-                <div
-                  class="definition"
-                  data-testid="Definition"
-                >
-                  <div
-                    class="description"
-                  >
-                    saute diced green peppers and onion
-                  </div>
-                  <div
-                    class="duration"
-                  >
-                    5 minutes and 0 seconds
-                  </div>
-                </div>
-              </div>
-            </div>
+            </details>
           </div>
         </div>
         <div

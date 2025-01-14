@@ -1,0 +1,10 @@
+@import "../../App.scss";
+
+.noneSpecified {
+  font: var(--font-regular-medium);
+  font-style: italic;
+}
+
+.hidden {
+  display: none;
+}
