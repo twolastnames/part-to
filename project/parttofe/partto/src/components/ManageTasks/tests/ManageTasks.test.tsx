@@ -8,6 +8,7 @@ import task1 from "../../../mocks/task1.json";
 import partTo1 from "../../../mocks/partTo1.json";
 import runState1 from "../../../mocks/runState1.json";
 import { TaskClassNames } from "../../TaskDefinition/TaskDefinition";
+import { Duty, Imminent, Task } from "../../TaskDefinition/Icon/Icon";
 
 test("snapshot", async () => {
   fetchMock.mockResponse((request: Request) => {
@@ -36,6 +37,7 @@ test("snapshot", async () => {
     <ShellProvider>
       <div data-testid="ManageTasks">
         <ManageTasks
+          definitionListSets={{ imminent: Imminent, task: Task, duty: Duty }}
           context={LeftContext}
           emptyText="Empty Yo"
           tasks={["a", "task", "list"]}

@@ -15,6 +15,8 @@ import {
   StagedClassNames,
   TaskDefinition,
 } from "../TaskDefinition/TaskDefinition";
+import { ListItem } from "../TaskDefinition/ListItem/ListItem";
+import { Duty, Task } from "../TaskDefinition/Icon/Icon";
 
 export function ReviewStagedPartTosIdFromer() {
   const response = useRunState();
@@ -33,7 +35,17 @@ function getItems(
   return taskDefinitions.map(
     (taskDefinitionId: TaskDefinitionId, index: number) => ({
       key: taskDefinitionId,
-      listView: <>{taskDefinitionId}</>,
+      listView: (
+        <ListItem
+          iconClassSets={{
+            imminent: Duty,
+            task: Task,
+            duty: Duty,
+          }}
+          runState={runState}
+          task={taskDefinitionId}
+        />
+      ),
       detailView: (
         <TaskDefinition
           task={taskDefinitionId}

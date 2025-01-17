@@ -3,6 +3,7 @@ import { ContextDescription } from "../../providers/DynamicItemSetPair";
 import { NavigateFunction } from "react-router-dom";
 import { Item } from "../DynamicItemSet/DynamicItemSetTypes";
 import { ClassNames } from "../TaskDefinition/TaskDefinitionTypes";
+import { IconClassSets } from "../TaskDefinition/ListItem/ListItemTypes";
 
 export type RunStateItemGetter = (
   navigate: NavigateFunction,
@@ -17,4 +18,5 @@ export interface ManageTasksProps {
   context: ContextDescription;
   getPrependedItems?: RunStateItemGetter;
   definitionClassNames: ClassNames;
+  definitionListSets: IconClassSets;
 }

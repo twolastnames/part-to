@@ -7,8 +7,8 @@
     "c972BQ4anGcTbMeMpxPv32"
   ],
   "startTimes": [],
-  "tasks": [],
-  "duties": [],
+  "tasks": ["laxed1"],
+  "duties": ["enforced1"],
   "started": ["imminent1", "enforced1", "laxed1"],
   "completed": [],
   "timers": {

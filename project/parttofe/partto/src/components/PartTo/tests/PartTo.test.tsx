@@ -5,7 +5,7 @@ import { ShellProvider } from "../../../providers/ShellProvider";
 import { PartTo } from "../PartTo";
 
 test("snapshot", () => {
-  jest.spyOn(Math, 'random').mockReturnValue(0.123456789);
+  jest.spyOn(Math, "random").mockReturnValue(0.123456789);
   render(
     <ShellProvider>
       <PartTo name="A simple part to">

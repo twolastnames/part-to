@@ -8,7 +8,7 @@ import task2 from "../../../mocks/task2.json";
 import partTo1 from "../../../mocks/partTo1.json";
 
 test("snapshot", async () => {
-  jest.spyOn(Math, 'random').mockReturnValue(0.123456789);
+  jest.spyOn(Math, "random").mockReturnValue(0.123456789);
   fetchMock.mockResponse((request: Request) => {
     if (request.url.includes("/api/parttos/")) {
       return Promise.resolve(

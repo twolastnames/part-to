@@ -13,26 +13,31 @@ import { Cancel, Check } from "../Icon/Icon";
 import { doRuncompletePost } from "../../api/runcompletepost";
 import { TaskDefinition } from "../TaskDefinition/TaskDefinition";
 import { useRunState } from "../../hooks/runState";
-import { ClassNames } from "../TaskDefinition/TaskDefinitionTypes";
+import { ClassNames as DefinitionClassNames } from "../TaskDefinition/TaskDefinitionTypes";
 import { RunGet200Body } from "../../api/runget";
+import { ListItem } from "../TaskDefinition/ListItem/ListItem";
+import { IconClassSets } from "../TaskDefinition/ListItem/ListItemTypes";
 
 export function ManageTasksIdFromer({
   typeKey,
   emptyText,
+  definitionListSets,
   context,
   getPrependedItems,
   definitionClassNames,
 }: {
   typeKey: "duties" | "tasks";
   emptyText: string;
+  definitionListSets: IconClassSets;
   context: ContextDescription;
   getPrependedItems?: RunStateItemGetter;
-  definitionClassNames: ClassNames;
+  definitionClassNames: DefinitionClassNames;
 }) {
   const response = useRunState();
   return (
     <Spinner responses={[response]}>
       <ManageTasks
+        definitionListSets={definitionListSets}
         context={context}
         emptyText={emptyText}
         tasks={response.data?.[typeKey] || []}
@@ -44,7 +49,8 @@ export function ManageTasksIdFromer({
 }
 
 function getItems(
-  definitionClassNames: ClassNames,
+  definitionClassNames: DefinitionClassNames,
+  definitionListSets: IconClassSets,
   navigate: (arg: string) => void,
   runState: RunStateId,
   tasks: Array<TaskDefinitionId>,
@@ -53,7 +59,13 @@ function getItems(
 ) {
   return tasks.map((taskDefinitionId: TaskDefinitionId, index: number) => ({
     key: taskDefinitionId,
-    listView: <>{taskDefinitionId}</>,
+    listView: (
+      <ListItem
+        iconClassSets={definitionListSets}
+        runState={runState}
+        task={taskDefinitionId}
+      />
+    ),
     detailView: (
       <TaskDefinition
         locatable={{
@@ -117,6 +129,7 @@ export function ManageTasks({
   emptyText,
   getPrependedItems,
   definitionClassNames,
+  definitionListSets,
 }: ManageTasksProps) {
   const navigate = useNavigate();
   const runStateData = useRunState();
@@ -133,6 +146,7 @@ export function ManageTasks({
         items={(prepended.length > 0 ? [prepended[0]] : prepended).concat(
           getItems(
             definitionClassNames,
+            definitionListSets,
             navigate,
             runStateData?.data?.runState as RunStateId,
             tasks,

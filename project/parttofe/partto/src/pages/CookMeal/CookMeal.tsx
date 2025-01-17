@@ -8,6 +8,11 @@ import {
   DutyClassNames,
   TaskClassNames,
 } from "../../components/TaskDefinition/TaskDefinition";
+import {
+  Duty,
+  Imminent,
+  Task,
+} from "../../components/TaskDefinition/Icon/Icon";
 
 type Entity = {
   name: string;
@@ -26,6 +31,11 @@ export function CookMeal() {
     <Layout
       pair={[
         <ManageTasksIdFromer
+          definitionListSets={{
+            imminent: Imminent,
+            task: Task,
+            duty: Duty,
+          }}
           typeKey="duties"
           context={LeftContext}
           emptyText={getEmptyText(
@@ -36,6 +46,11 @@ export function CookMeal() {
           definitionClassNames={DutyClassNames}
         />,
         <ManageTasksIdFromer
+          definitionListSets={{
+            imminent: Imminent,
+            task: Task,
+            duty: Duty,
+          }}
           context={RightContext}
           typeKey="tasks"
           emptyText={getEmptyText(

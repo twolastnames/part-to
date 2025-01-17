@@ -11,9 +11,9 @@ export function List({ timestamp, till, duty }: ImminentProps) {
   return (
     <Spinner responses={[taskResponse]}>
       <div className={classes.list} data-testid="List">
-        "Duty Start Time:"
+        Duty Start Time:
         <TimerString started={timestamp} duration={till} />
-        {`to "${taskResponse.data?.description}"`}
+        {` to "${taskResponse.data?.description}"`}
       </div>
     </Spinner>
   );

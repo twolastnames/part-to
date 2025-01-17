@@ -3,7 +3,6 @@ import React from "react";
 import { NavigateFunction } from "react-router-dom";
 import { RunState } from "../../../api/sharedschemas";
 import { Item } from "../../DynamicItemSet/DynamicItemSetTypes";
-import { List } from "./List/List";
 import { Cancel, Oven } from "../../Icon/Icon";
 import { doRunvoidPost } from "../../../api/runvoidpost";
 import { getRoute } from "../../../routes";
@@ -13,6 +12,8 @@ import {
   ImminentClassNames,
   TaskDefinition,
 } from "../../TaskDefinition/TaskDefinition";
+import { ListItem } from "../../TaskDefinition/ListItem/ListItem";
+import { Imminent } from "../../TaskDefinition/Icon/Icon";
 
 export function getImminentItems(
   navigate: NavigateFunction,
@@ -23,7 +24,17 @@ export function getImminentItems(
   return (
     imminent?.map(({ till, task }, index) => ({
       key: task,
-      listView: <List timestamp={timestamp} till={till} duty={task} />,
+      listView: (
+        <ListItem
+          task={task}
+          runState={runState}
+          iconClassSets={{
+            imminent: Imminent,
+            duty: Imminent,
+            task: Imminent,
+          }}
+        />
+      ),
       detailView: (
         <TaskDefinition
           task={task}
