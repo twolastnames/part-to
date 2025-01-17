@@ -1,0 +1,12 @@
+@import "../../../App.scss";
+
+.listItem {
+  display: flex;
+  height: 100%;
+  padding: var(--gap-xsmall);
+  overflow: hidden;
+}
+
+.description {
+  height: 100%;
+}
