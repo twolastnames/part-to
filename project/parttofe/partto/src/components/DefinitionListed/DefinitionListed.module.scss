@@ -1,6 +1,7 @@
 @import "../../App.scss";
 
 .noneSpecified {
+  padding-top: var(--gap-medium);
   font: var(--font-regular-medium);
   font-style: italic;
 }
