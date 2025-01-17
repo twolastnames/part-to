@@ -19,7 +19,6 @@ export function List({ items, context, onSelectionChanged }: ListProps) {
           >
             {listView}
           </div>
-          <div className={classes.spacer} />
         </div>
       ))}
     </div>
