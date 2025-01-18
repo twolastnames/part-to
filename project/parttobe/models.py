@@ -21,6 +21,19 @@ class PartTo(models.Model):
         unique_together = [("uuid")]
         indexes = [models.Index(fields=["uuid"])]
 
+    @staticmethod
+    def displayables():
+        return (
+            PartTo.objects.annotate(
+                newest_ones=models.Window(
+                    expression=models.Max("id"),
+                    partition_by=[models.F("name")],
+                )
+            )
+            .filter(newest_ones=models.F("id"))
+            .order_by("name")
+        )
+
     @property
     def task_definitions(self):
         return get_task_definitions(self)
