@@ -1,11 +1,11 @@
 import React from "react";
 
-import classes from "./ListItem.module.scss";
 import { ListItemProps } from "./ListItemTypes";
 import { Spinner } from "../../Spinner/Spinner";
 import { useRunGet } from "../../../api/runget";
 import { Icon } from "../Icon/Icon";
 import { useTaskGet } from "../../../api/taskget";
+import { ListItem as GenericListItem } from "../../ListItem/ListItem";
 
 export function ListItem({ task, runState, iconClassSets }: ListItemProps) {
   const taskResponse = useTaskGet({ task });
@@ -21,12 +21,10 @@ export function ListItem({ task, runState, iconClassSets }: ListItemProps) {
 
   return (
     <Spinner responses={[response]}>
-      <div className={classes.listItem} data-testid="ListItem">
-        <Icon classNames={iconClasses} />
-        <div className={classes.description}>
-          {taskResponse.data?.description}
-        </div>
-      </div>
+      <GenericListItem
+        precursor={<Icon classNames={iconClasses} />}
+        description={taskResponse.data?.description}
+      />
     </Spinner>
   );
 }
