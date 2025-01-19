@@ -1,0 +1,105 @@
+[part_to]
+name = "Pizza (French Bread)"
+depends = ["Top"]
+
+['Heat']
+duration = "10 minutes"
+description = "Adjust oven rack to upper position on 2 ovens and preheat ovens to 425 degrees F,"
+engagement = 2
+
+['Heat Oil']
+duration = "3 minutes"
+description = "Heat butter and olive oil over medium-low heat until butter is melted."
+engagement = 2
+depends=['Put Oil']
+
+['Put Oil']
+duration = "1 minute"
+description = "Put butter and oil in a medium saucepan"
+tools = ["medium saucepan"]
+ingredients = ["6 tbs Butter", "6 tbs olive oil"]
+
+['Flavor Oil']
+duration = "1 minute"
+description = "Add garlic, pepper flakes, and oregano."
+ingredients = ["8 cloves Garlic", "2 pinches pepper flakes", "1 tsp oregano"]
+depends=['Heat Oil']
+
+['Cook Oil']
+duration = "2 minutes"
+description = "Cook while stirring occasionally until garlic is softened but not browned"
+engagement = 9
+depends=['Flavor Oil']
+
+['Season Oil']
+duration = "30 seconds"
+description = "Stir half of the mince Basil or Parsley in the oil and remove from heat"
+depends=['Cook Oil', 'Mince Herb']
+
+['Mince Herb']
+duration = "4 minutes"
+description = "Mince 1 cup of Basil or Parsley"
+ingredients = ["1 cup minced fresh Basil or Parsley"]
+
+['Shred']
+duration = "4 minutes"
+description = "Shred cheese"
+ingredients = ["16 oz Mozzarella cheese"]
+
+['Bread']
+duration = "2 minutes"
+description = "Cut bread in half lengthwise and crosswise and with a backing sheet smoosh it to about 2/3rds of its original height"
+ingredients = ["2 French Bread loafs from bread counter"]
+
+['Place']
+duration = "1 minute"
+description = "Arrange bread on 2 baking sheets"
+tools = ["2 baking sheets"]
+depends=['Bread']
+
+['Oil Bread']
+duration = "2 minutes"
+description = "Using a pastry brush, brush HALF of garlic/butter/oil mixture evenly over cut surfaces of bread, making sure to get plenty of bits of garlic and herbs and set aside"
+depends=['Place', 'Season Oil']
+
+['Add Tomatoes']
+duration = "30 seconds"
+description = "Add tomatoes to remaining butter/herb mixture"
+depends=["Oil Bread"]
+ingredients = ["30 oz crushed Tomatoes"]
+
+['Simmer Tomatoes']
+duration = "15 minutes"
+description = "Cook tomato/herb/oil mixture on medium heat until rich and reduced, about 15 minutes."
+engagement = 6
+depends=['Add Tomatoes']
+
+['Little Cheese']
+duration = "1 minute"
+description = "Evenly spread 1/4 of the cheese over the bread"
+depends=['Oil Bread', 'Shred']
+
+['First Cook']
+duration = "8 minutes"
+description = "Put the bread in the oven for about 8 minutes, when the cheese is barely melted"
+engagement = 2
+depends=['Little Cheese', 'Heat']
+
+['Toppings']
+duration = "3 minutes"
+description = "Spread sauce evenly over bread, then spread remaining mozzarella on top of sauce."
+depends=['First Cook', 'Simmer Tomatoes']
+ingredients=['optional/custom pizza toppings']
+
+['Second Cook']
+duration = "10 minutes"
+description = "Bake until the cheese starts to melt"
+engagement = 2
+depends=['Toppings']
+
+['Top']
+duration = "1 minute"
+description = "Coat with 2 tbs olive oil and sprinkle with remaining herbs"
+depends=['Second Cook']
+ingredients = ["2 tablespoon Olive oil"]
+
