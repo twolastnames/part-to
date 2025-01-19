@@ -1,0 +1,55 @@
+[part_to]
+name = "Potatoes (Mashed)"
+depends = ["Season"]
+
+['Quarter Potatoes']
+duration = "5 minutes"
+description = "Cut 2 lb of potatoes into quarters"
+ingredients = ["2 lbs quartered potatoes"]
+
+
+['Gather Flavoring']
+duration = "90 seconds"
+description = "Put tbs butter and 1 cup of milk in a saucepan"
+ingredients = ["2 tbs butter", "1 cup milk"]
+
+
+
+['Boil Water']
+duration = "10 minutes"
+description = "Boil Water in a large pot"
+engagement=2
+
+
+['Simmer Potatoes']
+duration = "18 minutes"
+description = "Lower heat to medium, add potatoes and simmer for 15 to 20 minutes."
+depends=["Boil Water", "Quarter Potatoes"]
+engagement=2
+
+
+['Heat Butter/Milk']
+duration = "3 minutes"
+description = "Melt the butter and mix with milk"
+depends=["Gather Flavoring"]
+engagement=2
+
+
+['Drain Potatoes']
+duration = "90 seconds"
+description = "Drain Potatoes and return to pot"
+depends=['Simmer Potatoes']
+
+['Mash Potatoes']
+duration = "3 minutes"
+description = "Add warm butter/milk to potatoes and mash with masher"
+depends=['Heat Butter/Milk', 'Drain Potatoes']
+
+
+
+['Season']
+duration = "30 seconds"
+description = "Salt and Pepper to taste"
+depends = ['Mash Potatoes']
+ingredients=["Salt", "Pepper"]
+
