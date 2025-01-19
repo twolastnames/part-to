@@ -746,7 +746,7 @@ def calculate_durations(tasks, before):
         WHERE id = %s
         LIMIT 5        
         )
-        SELECT task, SUM(duration) / COUNT(duration)
+        SELECT task, AVG(duration)
         FROM Durations
         GROUP BY task
         )
