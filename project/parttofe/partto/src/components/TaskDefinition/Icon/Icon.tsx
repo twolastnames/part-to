@@ -11,18 +11,18 @@ import {
 
 export const Duty: ClassNames = {
   imminent: classes.hidden,
-  duty: classes.icon,
+  duty: "",
   task: classes.hidden,
 };
 
 export const Task: ClassNames = {
   imminent: classes.hidden,
   duty: classes.hidden,
-  task: classes.icon,
+  task: "",
 };
 
 export const Imminent: ClassNames = {
-  imminent: classes.icon,
+  imminent: "",
   duty: classes.hidden,
   task: classes.hidden,
 };

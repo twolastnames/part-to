@@ -55,7 +55,7 @@ exports[`snapshot 1`] = `
       </svg>
     </span>
     <span
-      class="icon"
+      class=""
     >
       <svg
         class="tabler-icon tabler-icon-checklist "

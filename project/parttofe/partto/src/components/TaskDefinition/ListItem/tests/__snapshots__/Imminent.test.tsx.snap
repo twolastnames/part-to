@@ -9,7 +9,7 @@ exports[`snapshot 1`] = `
     class="precursor"
   >
     <span
-      class="icon"
+      class=""
     >
       <svg
         class="tabler-icon tabler-icon-plane-arrival "

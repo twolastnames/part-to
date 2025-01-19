@@ -72,7 +72,12 @@ exports[`toggle to list 1`] = `
             <div
               class="item"
             >
-              partTo1
+              <div
+                class="error"
+                data-testid="Spinner"
+              >
+                Loading...
+              </div>
             </div>
           </div>
           <div
@@ -81,7 +86,12 @@ exports[`toggle to list 1`] = `
             <div
               class="item"
             >
-              partTo2
+              <div
+                class="error"
+                data-testid="Spinner"
+              >
+                Loading...
+              </div>
             </div>
           </div>
         </div>

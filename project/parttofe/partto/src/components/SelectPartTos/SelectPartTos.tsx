@@ -13,6 +13,7 @@ import { PartToId, RunStateId } from "../../api/sharedschemas";
 import { useRunGet } from "../../api/runget";
 import { SelectPartTosProps } from "./SelectPartTosTypes";
 import { LeftContext } from "../../providers/DynamicItemSetPair";
+import { ListItem } from "../PartTo/ListItem/ListItem";
 
 function getFirstPairItems(
   navigate: (arg: string) => void,
@@ -24,7 +25,7 @@ function getFirstPairItems(
     .filter((partTo) => !(ommittablePartTos || []).includes(partTo))
     .map((partTo) => ({
       key: partTo,
-      listView: <>{partTo}</>,
+      listView: <ListItem partTo={partTo}/>,
       detailView: <PartToIdFromer partTo={partTo} />,
       itemOperations: [
         {
