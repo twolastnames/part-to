@@ -1,6 +1,7 @@
 :root {
   --navigation-height: 48px;
   --content-height: calc(100vh - var(--navigation-height));
+  --animation-tempo: 0.2s;
 }
 
 @mixin themeSpacing {
@@ -93,3 +94,22 @@ details {
   border: 1px solid var(--detail-color);
   border-radius: var(--gap-medium);
 }
+
+@keyframes popout {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
