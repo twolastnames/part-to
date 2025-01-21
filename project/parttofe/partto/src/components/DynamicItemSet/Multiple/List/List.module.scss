@@ -7,6 +7,7 @@
 .item {
   width: 100%;
   cursor: pointer;
+  overflow-y: scroll;
   padding: var(--gap-medium) 0;
   font: var(--font-regular-large);
 }

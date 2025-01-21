@@ -19,7 +19,9 @@
 .content {
   flex: 1 1 auto;
   overflow-x: wrap;
-  overflow-y: hidden;
+  overflow-y: scroll;
+  padding-right: var(--gap-medium);
+  padding-left: var(--gap-medium);
 }
 
 .slide {
