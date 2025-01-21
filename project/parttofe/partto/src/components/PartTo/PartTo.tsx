@@ -5,23 +5,23 @@ import { PartToId } from "../../api/sharedschemas";
 import { useParttoGet } from "../../api/parttoget";
 import { Stage } from "../../api/helpers";
 import { PartToProps } from "./PartToTypes";
-import { DurationFormat } from "../../shared/duration";
 import {
   DefinitionListed,
   PartTo as DefinitionPartTo,
 } from "../DefinitionListed/DefinitionListed";
+import { ListItem } from "./ListItem/ListItem";
 
 export function PartToIdFromer({ partTo }: { partTo: PartToId }) {
   const response = useParttoGet({ partTo });
   if (response.stage !== Stage.Ok || !response?.data) {
     return <></>;
   }
-  const { name, workDuration, clockDuration } = response.data;
+  const { workDuration, clockDuration } = response.data;
 
   return (
     <PartTo
       key={partTo}
-      name={name}
+      name={<ListItem partTo={partTo} />}
       workDuration={workDuration}
       clockDuration={clockDuration}
     >
@@ -30,6 +30,9 @@ export function PartToIdFromer({ partTo }: { partTo: PartToId }) {
       </DefinitionListed>
       <DefinitionListed summary="Tools">
         <DefinitionPartTo definitionKey="tools" id={partTo} />
+      </DefinitionListed>
+      <DefinitionListed summary="Tasks">
+        <DefinitionPartTo definitionKey="description" id={partTo} />
       </DefinitionListed>
     </PartTo>
   );
@@ -44,12 +47,6 @@ export function PartTo({
   return (
     <div className={classes.partTo} data-testid="PartTo">
       <div className={classes.name}>{name}</div>
-      <div className={classes.workDuration}>
-        {workDuration?.format(DurationFormat.LONG) || ""}
-      </div>
-      <div className={classes.clockDuration}>
-        {clockDuration?.format(DurationFormat.LONG) || ""}
-      </div>
       {children}
     </div>
   );

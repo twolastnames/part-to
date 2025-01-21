@@ -18,8 +18,8 @@ test("snapshot", async () => {
     </ShellProvider>,
   );
   await waitFor(() => {
-  screen.getByTestId("ListItem");
-  })
+    screen.getByTestId("ListItem");
+  });
   const component = screen.getByTestId("ListItem");
   expect(component).toMatchSnapshot();
 });

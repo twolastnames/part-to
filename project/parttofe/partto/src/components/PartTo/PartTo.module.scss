@@ -1,4 +1,16 @@
 @import "../../App.scss";
 
 .partTo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xlarge);
+  padding-top: var(--gap-xlarge);
+  background-color: var(--background-color);
+}
+
+.name {
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  font: var(--font-strong-large);
 }

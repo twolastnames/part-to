@@ -10,12 +10,6 @@ exports[`snapshot 1`] = `
   >
     A simple part to
   </div>
-  <div
-    class="workDuration"
-  />
-  <div
-    class="clockDuration"
-  />
   <p>
     More Stuff
   </p>

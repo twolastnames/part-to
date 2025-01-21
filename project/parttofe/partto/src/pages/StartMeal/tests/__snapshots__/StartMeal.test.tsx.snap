@@ -30,21 +30,17 @@ exports[`snapshot 1`] = `
             <div
               class="name"
             >
-              Bavarian Pot Roast
-            </div>
-            <div
-              class="workDuration"
-            >
-              19 minutes and 42 seconds
-            </div>
-            <div
-              class="clockDuration"
-            >
-              14 minutes and 42 seconds
+              <div
+                class="error"
+                data-testid="Spinner"
+              >
+                Loading...
+              </div>
             </div>
             <details
               class="accordion"
               data-testid="Accordion"
+              open=""
             >
               <summary>
                 Ingredients
@@ -52,11 +48,9 @@ exports[`snapshot 1`] = `
               <div
                 class="body"
               >
-                <div
+                <span
                   class="noneSpecified"
-                >
-                  None Specified
-                </div>
+                />
                 <ul
                   id="ulId123456789"
                 />
@@ -65,6 +59,7 @@ exports[`snapshot 1`] = `
             <details
               class="accordion"
               data-testid="Accordion"
+              open=""
             >
               <summary>
                 Tools
@@ -72,11 +67,28 @@ exports[`snapshot 1`] = `
               <div
                 class="body"
               >
-                <div
+                <span
                   class="noneSpecified"
-                >
-                  None Specified
-                </div>
+                />
+                <ul
+                  id="ulId123456789"
+                />
+              </div>
+            </details>
+            <details
+              class="accordion"
+              data-testid="Accordion"
+              open=""
+            >
+              <summary>
+                Tasks
+              </summary>
+              <div
+                class="body"
+              >
+                <span
+                  class="noneSpecified"
+                />
                 <ul
                   id="ulId123456789"
                 />

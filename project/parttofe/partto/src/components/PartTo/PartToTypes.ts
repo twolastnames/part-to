@@ -1,8 +1,8 @@
 import { Duration } from "../../shared/duration";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 
 export interface PartToProps extends PropsWithChildren {
-  name: string;
+  name: ReactNode;
   workDuration?: Duration;
   clockDuration?: Duration;
 }

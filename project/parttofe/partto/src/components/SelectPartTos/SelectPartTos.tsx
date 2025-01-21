@@ -25,7 +25,7 @@ function getFirstPairItems(
     .filter((partTo) => !(ommittablePartTos || []).includes(partTo))
     .map((partTo) => ({
       key: partTo,
-      listView: <ListItem partTo={partTo}/>,
+      listView: <ListItem partTo={partTo} />,
       detailView: <PartToIdFromer partTo={partTo} />,
       itemOperations: [
         {
