@@ -11,14 +11,14 @@ exports[`snapshot 1`] = `
   <div
     class="body"
   >
-    <div
+    <span
       class="noneSpecified"
-    >
-      None Specified
-    </div>
+    />
     <ul
       id="ulId123456789"
-    />
+    >
+      <li />
+    </ul>
   </div>
 </details>
 `;

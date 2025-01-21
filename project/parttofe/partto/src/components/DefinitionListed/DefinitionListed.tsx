@@ -35,6 +35,7 @@ export function Definition({ definitionKey, id }: ForData<PartToId>) {
 }
 
 export function DefinitionListed({ summary, children }: DefinitionListedProps) {
+  const [noneText, setNoneText] = useState<string | null>(null);
   const [ulId] = useState<string>(
     `ulId${Math.random().toString().split(".")[1]}`,
   );
@@ -45,6 +46,9 @@ export function DefinitionListed({ summary, children }: DefinitionListedProps) {
     if (noneClassNames === classes.hidden) {
       return;
     }
+    setTimeout(() => {
+      setNoneText("None Specified");
+    }, 600);
     const id = setInterval(() => {
       const ul = document.querySelector(`#${ulId}`);
       if ((ul?.childNodes.length || 0) > 0) {
@@ -58,7 +62,7 @@ export function DefinitionListed({ summary, children }: DefinitionListedProps) {
 
   return (
     <Accordion summary={summary}>
-      <div className={noneClassNames}>None Specified</div>
+      <span className={noneClassNames}>{noneText}</span>
       {<ul id={ulId}>{children}</ul>}
     </Accordion>
   );
