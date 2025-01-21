@@ -4,6 +4,7 @@ exports[`snapshot 1`] = `
 <details
   class="accordion"
   data-testid="Accordion"
+  open=""
 >
   <summary>
     Some Summary
