@@ -24,8 +24,13 @@ export function PartTo({ definitionKey, id }: ForData<PartToId>) {
 
 export function Definition({ definitionKey, id }: ForData<PartToId>) {
   const response = useTaskGet({ task: id });
+  const value = response?.data?.[definitionKey];
   return (
-    <>{response?.data?.[definitionKey].map((value) => <li>{value}</li>)}</>
+    <>
+      {(Array.isArray(value) ? value : [value]).map((value) => (
+        <li>{value}</li>
+      ))}
+    </>
   );
 }
 
