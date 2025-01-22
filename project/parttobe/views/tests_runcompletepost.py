@@ -229,6 +229,28 @@ class RunCompleteTestClass(helpers.ClientTester):
             "Frozen Green Beans",
             "Corn on the Cob",
         )
+        self.assertUpcomingDescriptions(
+            "boil water in large pot for corn",
+            "boil water in large pot for beans",
+            "wash the corn",
+            "put and leave beans in boiling water",
+            "cut partially with kitchen shears to weaken cob middle to break in half",
+            "put corn in and boil",
+            "get water boiling again",
+            "remove from heat",
+            "drain and serve beans",
+        )
+        self.assertUpcomingTills(
+            timedelta(seconds=0),
+            timedelta(seconds=0),
+            timedelta(seconds=480),
+            timedelta(seconds=540),
+            timedelta(seconds=540),
+            timedelta(seconds=660),
+            timedelta(seconds=780),
+            timedelta(seconds=900),
+            timedelta(seconds=920),
+        )
         self.assertEqual(self.runStateData["duration"], 950)
         self.assertStartedDescriptions("wash the corn")
         self.assertTimerDescriptions(

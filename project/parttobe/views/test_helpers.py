@@ -109,10 +109,25 @@ class ClientTester(TestCase):
         for imminent, till in zip(self.runStateData["timers"]["imminent"], tills):
             self.assertEqual(timedelta(seconds=imminent["till"]), till)
 
+    def assertUpcomingTills(self, *tills):
+        self.assertEqual(len(tills), len(self.runStateData["upcoming"]))
+        for upcoming, till in zip(self.runStateData["upcoming"], tills):
+            self.assertEqual(timedelta(seconds=upcoming["till"]), till)
+
     def assertTimerDurations(self, type, *durations):
         self.assertEqual(len(durations), len(self.runStateData["timers"][type]))
         for timer, duration in zip(self.runStateData["timers"][type], durations):
             self.assertEqual(timedelta(seconds=timer["duration"]), duration)
+
+    def assertUpcomingDescriptions(self, *descriptions):
+        self.assertEqual(len(descriptions), len(self.runStateData["upcoming"]))
+        for upcoming, description in zip(self.runStateData["upcoming"], descriptions):
+            response = self.client.get("/api/task/?task={}".format(upcoming["task"]))
+            self.assertEqual(
+                response.headers["Cache-Control"], "public, max-age=31536000, immutable"
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.data["description"], description)
 
     def assertStartedDescriptions(self, *descriptions):
         self.assertEqual(len(descriptions), len(self.runStateData["started"]))
@@ -123,7 +138,6 @@ class ClientTester(TestCase):
                 response.headers["Cache-Control"], "public, max-age=31536000, immutable"
             )
             self.assertEqual(response.status_code, 200)
-            self.assertEqual
             self.assertEqual(response.data["description"], description)
 
     def stagePartTos(self, *names):

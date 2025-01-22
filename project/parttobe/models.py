@@ -602,6 +602,13 @@ class RunState(models.Model):
         completion = calculate_completion(
             result["staged"] + result["started"], self.created
         )
+        result["upcoming"] = [
+            {
+                "till": action.till(),
+                "task": action.definition(),
+            }
+            for action in completion.actions()
+        ]
         result["duration"] = completion.duration()
         durations = calculate_durations(result["started"], result["timestamp"])
         timers = [

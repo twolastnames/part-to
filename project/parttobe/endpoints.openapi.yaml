@@ -705,6 +705,20 @@ components:
         timestamp:
           type: string
           format: date-time
+        upcoming:
+          type: array
+          items:
+            type: object
+            required:
+            - task
+            - till
+            properties:
+              till:
+                type: string
+                format: duration
+              task:
+                type: string
+                format: TaskDefinitionId
         timers:
           type: object
           required:
