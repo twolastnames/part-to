@@ -1,11 +1,27 @@
 @import "../../App.scss";
 
-.noneSpecified {
-  padding-top: var(--gap-medium);
+@mixin noneSpecified {
   font: var(--font-regular-medium);
+  padding: var(--gap-large) var(--gap-xlarge) 0;
   font-style: italic;
 }
 
+.items {
+  animation: fadein var(--animation-tempo);
+}
+
+.showing {
+  @include noneSpecified;
+  visibility: visible;
+  animation: fadein var(--animation-tempo);
+}
+
+.default {
+  @include noneSpecified;
+  visibility: hidden;
+}
+
 .hidden {
+  @include noneSpecified;
   display: none;
 }

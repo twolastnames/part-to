@@ -48,10 +48,13 @@ exports[`snapshot 1`] = `
               <div
                 class="body"
               >
-                <span
-                  class="noneSpecified"
-                />
+                <div
+                  class="default"
+                >
+                  None Specified
+                </div>
                 <ul
+                  class="items"
                   id="ulId123456789"
                 />
               </div>
@@ -67,10 +70,13 @@ exports[`snapshot 1`] = `
               <div
                 class="body"
               >
-                <span
-                  class="noneSpecified"
-                />
+                <div
+                  class="default"
+                >
+                  None Specified
+                </div>
                 <ul
+                  class="items"
                   id="ulId123456789"
                 />
               </div>
@@ -86,10 +92,13 @@ exports[`snapshot 1`] = `
               <div
                 class="body"
               >
-                <span
-                  class="noneSpecified"
-                />
+                <div
+                  class="default"
+                >
+                  None Specified
+                </div>
                 <ul
+                  class="items"
                   id="ulId123456789"
                 />
               </div>

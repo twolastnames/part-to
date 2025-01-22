@@ -28,33 +28,37 @@ export function Definition({ definitionKey, id }: ForData<PartToId>) {
   return (
     <>
       {(Array.isArray(value) ? value : [value]).map((value) => (
-        <li>{value}</li>
+        <li className={classes.item}>{value}</li>
       ))}
     </>
   );
 }
 
 export function DefinitionListed({ summary, children }: DefinitionListedProps) {
-  const [noneText, setNoneText] = useState<string | null>(null);
+  const [noneClassNames, setNoneClassnames] = useState<string>(classes.default);
   const [ulId] = useState<string>(
     `ulId${Math.random().toString().split(".")[1]}`,
-  );
-  const [noneClassNames, setNoneClassnames] = useState<string>(
-    classes.noneSpecified,
   );
   useEffect(() => {
     if (noneClassNames === classes.hidden) {
       return;
     }
+    const hasItems = () =>
+      (document.querySelector(`#${ulId}`)?.childNodes.length || 0) > 0;
     setTimeout(() => {
-      setNoneText("None Specified");
+      if (
+        !hasItems() &&
+        noneClassNames !== classes.showing &&
+        noneClassNames !== classes.showing
+      ) {
+        setNoneClassnames(classes.showing);
+      }
     }, 600);
     const id = setInterval(() => {
-      const ul = document.querySelector(`#${ulId}`);
-      if ((ul?.childNodes.length || 0) > 0) {
+      if (hasItems() && noneClassNames !== classes.hidden) {
         setNoneClassnames(classes.hidden);
       }
-    }, 500);
+    }, 100);
     return () => {
       clearInterval(id);
     };
@@ -62,8 +66,10 @@ export function DefinitionListed({ summary, children }: DefinitionListedProps) {
 
   return (
     <Accordion summary={summary}>
-      <span className={noneClassNames}>{noneText}</span>
-      {<ul id={ulId}>{children}</ul>}
+      <div className={noneClassNames}>None Specified</div>
+      <ul className={classes.items} id={ulId}>
+        {children}
+      </ul>
     </Accordion>
   );
 }

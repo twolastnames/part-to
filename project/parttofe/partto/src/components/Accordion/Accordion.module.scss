@@ -1,7 +1,7 @@
 @import "../../App.scss";
 
 .accordion[open] summary ~ * {
-  animation: sweep var(--animation-tempo) ease-in-out;
+  animation: sweep var(--animation-tempo);
 }
 
 .accordion summary::marker {

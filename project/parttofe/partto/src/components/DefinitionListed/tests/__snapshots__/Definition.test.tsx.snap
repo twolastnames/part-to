@@ -12,13 +12,18 @@ exports[`snapshot 1`] = `
   <div
     class="body"
   >
-    <span
-      class="noneSpecified"
-    />
+    <div
+      class="default"
+    >
+      None Specified
+    </div>
     <ul
+      class="items"
       id="ulId123456789"
     >
-      <li />
+      <li
+        class="item"
+      />
     </ul>
   </div>
 </details>
