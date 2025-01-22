@@ -37,72 +37,76 @@ exports[`snapshot 1`] = `
                 Loading...
               </div>
             </div>
-            <details
-              class="accordion"
-              data-testid="Accordion"
-              open=""
+            <div
+              class="children"
             >
-              <summary>
-                Ingredients
-              </summary>
-              <div
-                class="body"
+              <details
+                class="accordion"
+                data-testid="Accordion"
+                open=""
               >
+                <summary>
+                  Ingredients
+                </summary>
                 <div
-                  class="default"
+                  class="body"
                 >
-                  None Specified
+                  <div
+                    class="default"
+                  >
+                    None Specified
+                  </div>
+                  <ul
+                    class="items"
+                    id="ulId123456789"
+                  />
                 </div>
-                <ul
-                  class="items"
-                  id="ulId123456789"
-                />
-              </div>
-            </details>
-            <details
-              class="accordion"
-              data-testid="Accordion"
-              open=""
-            >
-              <summary>
-                Tools
-              </summary>
-              <div
-                class="body"
+              </details>
+              <details
+                class="accordion"
+                data-testid="Accordion"
+                open=""
               >
+                <summary>
+                  Tools
+                </summary>
                 <div
-                  class="default"
+                  class="body"
                 >
-                  None Specified
+                  <div
+                    class="default"
+                  >
+                    None Specified
+                  </div>
+                  <ul
+                    class="items"
+                    id="ulId123456789"
+                  />
                 </div>
-                <ul
-                  class="items"
-                  id="ulId123456789"
-                />
-              </div>
-            </details>
-            <details
-              class="accordion"
-              data-testid="Accordion"
-              open=""
-            >
-              <summary>
-                Tasks
-              </summary>
-              <div
-                class="body"
+              </details>
+              <details
+                class="accordion"
+                data-testid="Accordion"
+                open=""
               >
+                <summary>
+                  Tasks
+                </summary>
                 <div
-                  class="default"
+                  class="body"
                 >
-                  None Specified
+                  <div
+                    class="default"
+                  >
+                    None Specified
+                  </div>
+                  <ul
+                    class="items"
+                    id="ulId123456789"
+                  />
                 </div>
-                <ul
-                  class="items"
-                  id="ulId123456789"
-                />
-              </div>
-            </details>
+              </details>
+            </div>
           </div>
         </div>
         <div

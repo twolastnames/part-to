@@ -8,6 +8,13 @@
   background-color: var(--background-color);
 }
 
+.children {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xlarge);
+  padding: 0 var(--gap-large);
+}
+
 .name {
   height: 64px;
   display: flex;

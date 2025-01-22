@@ -10,8 +10,12 @@ exports[`snapshot 1`] = `
   >
     A simple part to
   </div>
-  <p>
-    More Stuff
-  </p>
+  <div
+    class="children"
+  >
+    <p>
+      More Stuff
+    </p>
+  </div>
 </div>
 `;

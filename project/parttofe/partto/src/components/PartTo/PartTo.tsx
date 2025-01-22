@@ -47,7 +47,7 @@ export function PartTo({
   return (
     <div className={classes.partTo} data-testid="PartTo">
       <div className={classes.name}>{name}</div>
-      {children}
+      <div className={classes.children}>{children}</div>
     </div>
   );
 }
