@@ -1,0 +1,56 @@
+[part_to]
+name = "Potato Wedges"
+depends = ["Salt"]
+
+['Heat']
+duration = "10 minutes"
+description = "Heat oven to 400 degrees"
+engagement = 2
+
+['Wash']
+duration = "1 minute"
+description = "Wash and dry potatoes"
+ingredients=['32 oz waxy potatoes (about 4 large potatoes)']
+
+['Cut']
+duration = "4 minutes"
+description = "Cut potatos into 4 or 8 long wedges based on how large the potato is and put them in a large mixing bowl"
+depends=['Wash']
+
+['Spices']
+duration = "2 minutes"
+description = "mix the spices in a bowl"
+ingredients=["1/2 teaspoons paprika", "1 teaspoon garlic powder", "1 teaspoon onion powder", "1/2 teaspon salt to taste", "1/4 teaspoon freshly ground black pepper to taste"]
+
+['Spray']
+duration = "1 minute"
+description = "Spray to coat potatoes with cooking spray"
+ingredients=['low-fat cooking spray or olive oil']
+depends=['Cut']
+
+['Coat']
+duration = "2 minutes"
+description = "Toss to coat the potatoes in the spice mix"
+depends = ["Spray", "Spices"]
+
+['Line']
+duration = "1 minute"
+description = "line a baking dish with aluminum foil"
+tools = ["baking pan"]
+
+['Spread']
+duration = "1 minute"
+description = "Spread the potatoes onto the baking pan"
+depends = ["Line", "Coat"]
+
+['Bake']
+duration = "38 minutes"
+description = "Put in oven and bake 35 to 40 minutes"
+depends = ["Spread", "Heat"]
+engagement = 2
+
+['Salt']
+duration = "1 minute"
+description = "Salt to taste"
+depends = ["Bake"]
+

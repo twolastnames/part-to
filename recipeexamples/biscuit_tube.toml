@@ -1,0 +1,16 @@
+[part_to]
+name = "Biscuit Tube (Prepared)"
+depends = ["Bake"]
+
+['Heat']
+duration = "9 minutes"
+description = "heat oven to 375 degrees or what the package says"
+engagement = 2
+
+['Bake']
+duration = "14 minutes"
+description = "cook until starting to brown maybe about 14 minutes or what the package says"
+depends = ["Heat"]
+ingredients = ["1 tube of biscuits"]
+engagement = 2
+
