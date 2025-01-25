@@ -176,20 +176,12 @@ def to_representation(value, type_schema):
     return Serialization(type_schema).to_representation(value)
 
 
-def map_value(value, schema):
-    if "format" in schema and schema["format"].endswith("Id"):
-        return serialization[schema["format"]]().to_representation(value)
-    return serialization[
-        schema["format"] if "format" in schema else schema["type"]
-    ]().to_representation(value)
-
-
 def get_body_serializer(operation):
     for status, response in operation["responses"].items():
         if status != "200":
             continue
         return lambda body: map_tree(
-            map_value,
+            to_representation,
             response["content"]["*"]["schema"],
             body,
         )
