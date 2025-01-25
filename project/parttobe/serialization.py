@@ -196,31 +196,26 @@ def get_body_serializer(operation):
     raise SystemError("operation {} is undefined".format(operation))
 
 
-argument_types = {}
+class TypeExpansionDoer:
+    def __init__(self, operation, operationId):
+        self.arguments = list(get_request_body_arguments(operation)) + list(
+            get_parameter_arguments(operation)
+        )
+        self.argument_type = collections.namedtuple(
+            "ArgumentType_{}".format(OperationId(operationId).slug()),
+            self.arguments,
+        )
+
+    def __call__(self, **args):
+        return self.argument_type(
+            **({key: args.get(key, None) for key in self.arguments})
+        )
 
 
-def register_sanitized_argument_type(operationId, operation):
-    arguments = (
-        list(get_request_body_arguments(operation))
-        + list(get_parameter_arguments(operation))
-    )
-    argument_type = collections.namedtuple(
-        "ArgumentType_{}".format(OperationId(operationId).slug()),
-        arguments,
-    )
-
-    def do_type_expansion(**args):
-        return argument_type(**({key: args.get(key, None) for key in arguments}))
-
-    argument_types[operationId] = do_type_expansion
-
-
-def populate_input_argument_types():
-    for operationId, operation in operations.items():
-        register_sanitized_argument_type(operationId, operation)
-
-
-populate_input_argument_types()
+argument_types = {
+    operationId: TypeExpansionDoer(operation, operationId)
+    for operationId, operation in operations.items()
+}
 
 
 def path_from_operation_id(id):
