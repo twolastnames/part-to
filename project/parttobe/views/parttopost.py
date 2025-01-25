@@ -1,8 +1,7 @@
 from django.db import transaction
 from parttobe import models
 import datetime
-
-# import duration_parser
+from rest_framework.response import Response
 
 
 def ensure_list(value):
@@ -172,14 +171,12 @@ def validate(part_to=None, tasks=None):
 def handle(argument):
     validation = validate(argument.part_to, argument.tasks)
     if validation:
-        return argument.respond_400(validation[0]["messages"])
+        return Response(validation[0]["messages"], 400)
     together = {"part_to": argument.part_to} | {
         task["name"]: task for task in argument.tasks
     }
     id = save_job(together, invert_depends(together))
-    return argument.respond_200(
-        {
-            "partTo": str(id),
-            "message": "job insert successfull",
-        }
-    )
+    return {
+        "partTo": str(id),
+        "message": "job insert successfull",
+    }

@@ -12,4 +12,4 @@ def handle(arguments):
         )
     else:
         runState = arguments.runState
-    return arguments.respond_200({"runState": models.next_work(runState)})
+    return {"runState": models.next_work(runState)}

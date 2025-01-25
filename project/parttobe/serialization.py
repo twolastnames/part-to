@@ -190,30 +190,16 @@ def map_value(value, schema):
     ]().to_representation(value)
 
 
-def get_responder(response, status):
-    def two00_responder(body):
-        return Response(
-            map_tree(
-                map_value,
-                response["content"]["*"]["schema"],
-                body,
-            )
+def get_body_serializer(operation):
+    for status, response in operation["responses"].items():
+        if status != "200":
+            continue
+        return lambda body: map_tree(
+            map_value,
+            response["content"]["*"]["schema"],
+            body,
         )
-
-    def general_responder(body):
-        return Response(body, status)
-
-    if status == "200":
-        return two00_responder
-    return general_responder
-
-
-def have_marshaled_bodies(operation):
-    return {
-        status: get_responder(response, status)
-        for status, response in operation["responses"].items()
-        if status not in automatic_status_returns
-    }
+    raise SystemError("operation {} is undefined".format(operation))
 
 
 argument_types = {}
@@ -223,11 +209,6 @@ def register_sanitized_argument_type(operationId, operation):
     arguments = (
         list(get_request_body_arguments(operation))
         + list(get_parameter_arguments(operation))
-        + [
-            "respond_{}".format(status)
-            for status in operation["responses"].keys()
-            if status not in automatic_status_returns
-        ]
     )
     argument_type = collections.namedtuple(
         "ArgumentType_{}".format(OperationId(operationId).slug()),
@@ -272,7 +253,7 @@ def path_from_operation_id(id):
                 partial_path = openapi_path.replace("/" + PATH_START, "")
                 variants[operationId.variant().upper()] = {
                     "handle": get_meta_definition(filename, "handle"),
-                    "responders": have_marshaled_bodies(operation),
+                    "serializer": get_body_serializer(operation),
                     "argumentType": argument_types[operationId.value],
                 }
     return path(
@@ -454,7 +435,7 @@ def unmarshaler(variants):
     def handle_request(request):
         response = None
         handle = variants[request.method]["handle"]
-        responders = variants[request.method]["responders"]
+        serialize = variants[request.method]["serializer"]
         argumentType = variants[request.method]["argumentType"]
         try:
             validation = is_valid_body(request)
@@ -468,16 +449,12 @@ def unmarshaler(variants):
             else:
                 message = [e.message]
             return Response(message, status=400)
-        for status, responder in responders.items():
-            arguments["respond_{}".format(status)] = responders[status]
         try:
             response = handle(argumentType(**arguments))
         except (exceptions.ValidationError, ResourceError) as e:
             return Response({"messages": [e.message]}, status=404)
-        if type(response) is tuple:
-            return Response(response)
         if isinstance(response, Response):
             return response
-        return Response(response)
+        return Response(serialize(response))
 
     return handle_request

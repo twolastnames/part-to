@@ -8,4 +8,4 @@ def handle(arguments):
     filename = os.path.join(self_directory, "..", "..", "..", "version.toml")
     versionData = toml.load(filename)["version"]
     versionData["timestamp"] = parser.parse(versionData["timestamp"])
-    return arguments.respond_200(versionData)
+    return versionData
