@@ -39,13 +39,13 @@ paths:
                 - timestamp
                 properties:
                   major:
-                    type: number
+                    type: integer
                   minor:
-                    type: number
+                    type: integer
                   fix:
-                    type: number
+                    type: integer
                   build:
-                    type: number
+                    type: integer
                   variant:
                     type: string
                   timestamp:
@@ -575,7 +575,7 @@ paths:
                 - from
                 properties:
                   estimatedDuration:
-                    type: number
+                    type: integer
                     format: duration
                   initialEstimation:
                     type: object
@@ -584,7 +584,7 @@ paths:
                     - usedInCalculation
                     properties:
                       duration:
-                        type: number
+                        type: integer
                         format: duration
                       usedInCalculation:
                         type: boolean
@@ -641,10 +641,10 @@ components:
         name:
           type: string
         workDuration:
-          type: number
+          type: integer
           format: duration
         clockDuration:
-          type: number
+          type: integer
           format: duration
         tasks:
           type: array
@@ -663,7 +663,7 @@ components:
         name:
           type: string
         duration:
-          type: number
+          type: integer
           format: duration
         description:
           type: string
@@ -680,7 +680,7 @@ components:
           items:
             type: string
         engagement:
-          type: number
+          type: integer
     RunState:
       required:
       - runState

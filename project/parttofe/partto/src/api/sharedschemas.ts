@@ -26,6 +26,8 @@ export type RunStateId = string;
 
 export type TaskDefinitionId = string;
 
+export type integer = number;
+
 export type ParameterMarshalers = BaseParameterMarshalers & {
   required: {
     PartToId: MarshalMapper<PartToId, string>;
@@ -176,7 +178,7 @@ export interface TaskDefinition {
   ingredients: Array<string>;
   tools: Array<string>;
   depends?: Array<string>;
-  engagement?: number | undefined;
+  engagement?: integer | undefined;
 }
 
 export interface RunState {

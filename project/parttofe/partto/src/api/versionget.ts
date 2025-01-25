@@ -14,6 +14,7 @@ import { Duration } from "../shared/duration";
 import {
   parameterMarshalers,
   unmarshalers,
+  integer,
   Four04Reply,
   RunOperationReply,
   RunOperation,
@@ -28,19 +29,19 @@ import {
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 export type VersionGet200Body = {
-  major: number;
-  minor: number;
-  fix: number;
-  build: number;
+  major: integer;
+  minor: integer;
+  fix: integer;
+  build: integer;
   variant: string;
   timestamp: DateTime;
 };
 
 type Wire200Body = {
-  major: number;
-  minor: number;
-  fix: number;
-  build: number;
+  major: integer;
+  minor: integer;
+  fix: integer;
+  build: integer;
   variant: string;
   timestamp: string;
 };
@@ -61,10 +62,10 @@ export const useVersionGet: (options?: Options) => VersionGetResult = (
     [],
     {
       200: (body: Wire200Body) => ({
-        major: unmarshalers.required["number"](body.major),
-        minor: unmarshalers.required["number"](body.minor),
-        fix: unmarshalers.required["number"](body.fix),
-        build: unmarshalers.required["number"](body.build),
+        major: unmarshalers.required["integer"](body.major),
+        minor: unmarshalers.required["integer"](body.minor),
+        fix: unmarshalers.required["integer"](body.fix),
+        build: unmarshalers.required["integer"](body.build),
         variant: unmarshalers.required["string"](body.variant),
         timestamp: unmarshalers.required["date-time"](body.timestamp),
       }),

@@ -15,6 +15,7 @@ import {
   parameterMarshalers,
   bodyMarshalers,
   unmarshalers,
+  integer,
   Four04Reply,
   RunOperationReply,
   RunOperation,
@@ -41,7 +42,7 @@ type WireBody = {
     ingredients: Array<string>;
     tools: Array<string>;
     depends?: Array<string>;
-    engagement?: number | undefined;
+    engagement?: integer | undefined;
   }>;
 };
 
@@ -98,7 +99,7 @@ export const doParttoPost = async ({
         depends: value.depends?.map((value) =>
           bodyMarshalers.required["string"](value),
         ),
-        engagement: bodyMarshalers.unrequired["number"](value.engagement),
+        engagement: bodyMarshalers.unrequired["integer"](value.engagement),
       })),
     },
     {

@@ -15,6 +15,7 @@ import {
   parameterMarshalers,
   bodyMarshalers,
   unmarshalers,
+  integer,
   Four04Reply,
   RunOperationReply,
   RunOperation,

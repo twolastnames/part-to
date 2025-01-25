@@ -31,12 +31,14 @@ export type MarshalMapper<IN, OUT> = (arg: IN) => OUT;
 export interface BaseParameterMarshalers {
   required: {
     "date-time": MarshalMapper<DateTime, string>;
+    integer: MarshalMapper<number, string>;
     number: MarshalMapper<number, string>;
     string: MarshalMapper<string, string>;
     duration: MarshalMapper<Duration, string>;
   };
   unrequired: {
     "date-time": MarshalMapper<DateTime | undefined, string | undefined>;
+    integer: MarshalMapper<number | undefined, string | undefined>;
     number: MarshalMapper<number | undefined, string | undefined>;
     string: MarshalMapper<string | undefined, string | undefined>;
     duration: MarshalMapper<Duration | undefined, string | undefined>;
@@ -46,12 +48,15 @@ export interface BaseParameterMarshalers {
 export const baseParameterMarshalers: BaseParameterMarshalers = {
   required: {
     "date-time": (date: DateTime) => date.toISOString(),
+    integer: (value: number) => Number(value).toString(),
     number: (value: number) => Number(value).toString(),
     string: (value: string) => value,
     duration: (value: Duration) => (value.toMilliseconds() / 1000).toString(),
   },
   unrequired: {
     "date-time": (date: DateTime | undefined) => date?.toISOString(),
+    integer: (value: number | undefined) =>
+      value ? Number(value).toString() : undefined,
     number: (value: number | undefined) =>
       value ? Number(value).toString() : undefined,
     string: (value: string | undefined) => value,
@@ -63,6 +68,7 @@ export const baseParameterMarshalers: BaseParameterMarshalers = {
 export interface BaseBodyMarshalers {
   required: {
     "date-time": MarshalMapper<DateTime, string>;
+    integer: MarshalMapper<number, number>;
     number: MarshalMapper<number, number>;
     string: MarshalMapper<string, string>;
     duration: MarshalMapper<Duration, number>;
@@ -70,6 +76,7 @@ export interface BaseBodyMarshalers {
   unrequired: {
     "date-time": MarshalMapper<DateTime | undefined, string | undefined>;
     number: MarshalMapper<number | undefined, number | undefined>;
+    integer: MarshalMapper<number | undefined, number | undefined>;
     string: MarshalMapper<string | undefined, string | undefined>;
     duration: MarshalMapper<Duration | undefined, number | undefined>;
   };
@@ -79,6 +86,7 @@ export const baseBodyMarshalers: BaseBodyMarshalers = {
   required: {
     "date-time": (date: DateTime) => new Date(date.sinceEpoch()).toISOString(),
     number: (value: number) => value,
+    integer: (value: number) => value,
     string: (value: string) => value,
     duration: (value: Duration) => value.toMilliseconds() / 1000,
   },
@@ -86,6 +94,7 @@ export const baseBodyMarshalers: BaseBodyMarshalers = {
     "date-time": (date: DateTime | undefined) =>
       date ? new Date(date.sinceEpoch()).toISOString() : undefined,
     number: (value: number | undefined) => value,
+    integer: (value: number | undefined) => value,
     string: (value: string | undefined) => value,
     duration: (value: Duration | undefined) =>
       value ? value.toMilliseconds() / 1000 : undefined,
@@ -96,6 +105,7 @@ export interface BaseUnmarshalers {
   required: {
     "date-time": MarshalMapper<string, DateTime>;
     number: MarshalMapper<number, number>;
+    integer: MarshalMapper<number, number>;
     string: MarshalMapper<string, string>;
     duration: MarshalMapper<number, Duration>;
     boolean: MarshalMapper<boolean, boolean>;
@@ -103,6 +113,7 @@ export interface BaseUnmarshalers {
   unrequired: {
     "date-time": MarshalMapper<string | undefined, DateTime | undefined>;
     number: MarshalMapper<number | undefined, number | undefined>;
+    integer: MarshalMapper<number | undefined, number | undefined>;
     string: MarshalMapper<string | undefined, string | undefined>;
     duration: MarshalMapper<number | undefined, Duration | undefined>;
     boolean: MarshalMapper<boolean | undefined, boolean | undefined>;
@@ -116,6 +127,7 @@ export const baseUnmarshalers: BaseUnmarshalers = {
     duration: (value: number | undefined) =>
       value ? getDuration(value * 1000) : undefined,
     number: (value: number | undefined) => value,
+    integer: (value: number | undefined) => value,
     boolean: (value: boolean | undefined) => value,
     string: (value: string | undefined) => value,
   },
@@ -123,6 +135,7 @@ export const baseUnmarshalers: BaseUnmarshalers = {
     "date-time": (value: string) => getDateTime(new Date(value)),
     duration: (value: number) => getDuration(value * 1000),
     number: (value: number) => value,
+    integer: (value: number) => value,
     boolean: (value: boolean) => value,
     string: (value: string) => value,
   },

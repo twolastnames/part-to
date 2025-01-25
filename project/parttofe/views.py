@@ -17,7 +17,7 @@ try:
     raw_files = {type: os.listdir(get_path(type)) for type in file_types}
 except:
     print("could not find a type directory")
-    files = []
+    raw_files = {}
 
 
 try:
@@ -33,7 +33,7 @@ except KeyError:
 
 import json
 
-media_path = os.path.join(self_directory, "partto", "build", "media")
+media_path = os.path.join(self_directory, "partto", "build", "static", "media")
 
 if not os.path.isdir(media_path):
     os.makedirs(media_path)

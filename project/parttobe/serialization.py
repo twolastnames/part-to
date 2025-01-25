@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import serializers
 from django.urls import path
 import django.core.exceptions as exceptions
 import jsonschema
@@ -42,37 +43,6 @@ class ValidationError(RuntimeError):
         self.message = message
 
 
-letter_to_number = {}
-number_to_letter = {}
-
-for index, letter in enumerate(
-    "".join([str(number) for number in range(10)]) + ascii_lowercase + ascii_uppercase
-):
-    letter_to_number[letter] = index
-    number_to_letter[index] = letter
-
-
-def shorten_uuid(value):
-    current = UUID(str(value)).int
-    shortened = ""
-    while True:
-        if current < len(number_to_letter):
-            return shortened + number_to_letter[current]
-        remainder = current % len(number_to_letter)
-        shortened += number_to_letter[remainder]
-        current = current // len(number_to_letter)
-
-
-def recover_uuid(value):
-    current = 0
-    for index, digit in enumerate(value):
-        reversed_index = len(letter_to_number) - index
-        if digit == "-":
-            continue
-        current += len(letter_to_number) ** index * letter_to_number[digit]
-    return UUID(int=current)
-
-
 @api_view(["GET", "POST"])
 def undefined_path(request):
     return Response(
@@ -90,26 +60,134 @@ def get_meta_definition(filename, symbol):
     return getattr(module, symbol)
 
 
-def handle_id_type(value, format):
-    if hasattr(value, "uuid"):
-        return shorten_uuid(value.uuid)
-    return shorten_uuid(value)
+class UuidSerialization(serializers.Field):
+    letter_to_number = {}
+    number_to_letter = {}
+
+    for index, letter in enumerate(
+        "".join([str(number) for number in range(10)])
+        + ascii_lowercase
+        + ascii_uppercase
+    ):
+        letter_to_number[letter] = index
+        number_to_letter[index] = letter
+
+    def to_representation(self, value):
+        current = UUID(str(value)).int
+        shortened = ""
+        while True:
+            if current < len(UuidSerialization.number_to_letter):
+                return shortened + UuidSerialization.number_to_letter[current]
+            remainder = current % len(UuidSerialization.number_to_letter)
+            shortened += UuidSerialization.number_to_letter[remainder]
+            current = current // len(UuidSerialization.number_to_letter)
+
+    def to_internal_value(self, data):
+        current = 0
+        for index, digit in enumerate(data):
+            reversed_index = len(UuidSerialization.letter_to_number) - index
+            if digit == "-":
+                continue
+            current += (
+                len(UuidSerialization.letter_to_number) ** index
+                * UuidSerialization.letter_to_number[digit]
+            )
+        return UUID(int=current)
+
+
+class DurationSerialization(serializers.Field):
+    def to_representation(self, value):
+        return value.total_seconds()
+
+    def to_internal_value(self, data):
+        return datetime.timedelta(seconds=data)
+
+
+class DateTimeSerialization(serializers.Field):
+    def to_representation(self, value):
+        return value.isoformat()
+
+    def to_internal_value(self, data):
+        return datetime.datetime.fromisoformat(data)
+
+
+def get_model_serialization(name):
+    def construct_model(wire_uuid):
+        if name not in loaded_model_definitions:
+            add_loadable_model_definition(name)
+        try:
+            return loaded_model_definitions[name].objects.get(
+                uuid=UuidSerialization().to_internal_value(wire_uuid)
+            )
+        except exceptions.ObjectDoesNotExist:
+            raise ResourceError("Id {} does not exist".format(wire_uuid))
+
+    class ModelSerialization(serializers.Field):
+        def to_representation(self, value):
+            return UuidSerialization().to_representation(
+                value.uuid if hasattr(value, "uuid") else value
+            )
+
+        def to_internal_value(self, data):
+            return construct_model(data)
+
+    return ModelSerialization
+
+
+serialization = {
+    "string": serializers.CharField,
+    "uuid": UuidSerialization,
+    "duration": DurationSerialization,
+    "boolean": serializers.BooleanField,
+    "integer": serializers.IntegerField,
+    "number": serializers.FloatField,
+    "date-time": DateTimeSerialization,
+} | {
+    type: get_model_serialization(type)
+    for type in set(
+        [
+            format
+            for format in traverse_api(lambda key: key == "format")
+            if format.endswith("Id")
+        ]
+    )
+}
+
+
+class Serialization:
+    def __init__(self, type_schema):
+        key = type_schema["format"] if "format" in type_schema else type_schema["type"]
+        if key not in serialization:
+            raise ValidationError("Format of type {} not defined in schema".format(key))
+        self.serialization = serialization[key]
+
+    def to_representation(self, value):
+        return self.serialization().to_representation(value)
+
+    def to_internal_value(self, data):
+        return self.serialization().to_internal_value(data)
+
+
+def to_internal_value(data, type_schema):
+    return Serialization(type_schema).to_internal_value(data)
+
+
+def to_representation(value, type_schema):
+    return Serialization(type_schema).to_representation(value)
+
+
+def _serialize_value(value, schema):
+    key = type_schema["format"] if "format" in type_schema else type_schema["type"]
+    if key not in serialization:
+        raise ValidationError("Format of type {} not defined in schema".format(key))
 
 
 def map_value(value, schema):
     if "format" in schema and schema["format"].endswith("Id"):
-        return handle_id_type(value, schema["format"])
-    elif "format" in schema:
-        type = schema["format"]
-    else:
-        type = schema["type"]
-    if type == "date-time":
-        return value.isoformat()
-    elif type == "duration":
-        return value.total_seconds()
-    elif type == "uuid":
-        return shorten_uuid(value)
-    return value
+        return serialization[schema["format"]]().to_representation(value)
+    return serialization[
+        schema["format"] if "format" in schema else schema["type"]
+    ]().to_representation(value)
 
 
 def get_responder(response, status):
@@ -246,7 +324,7 @@ def get_model_uuid_constructor(name):
             add_loadable_model_definition(name)
         try:
             return loaded_model_definitions[name].objects.get(
-                uuid=recover_uuid(wire_uuid)
+                uuid=UuidSerialization().to_internal_value(wire_uuid)
             )
         except exceptions.ObjectDoesNotExist:
             raise ResourceError("Id {} does not exist".format(wire_uuid))
@@ -254,31 +332,10 @@ def get_model_uuid_constructor(name):
     return construct_model
 
 
-unmarshal_parameter_handlers = {
-    "string": lambda value: value,
-    "uuid": recover_uuid,
-    "duration": lambda value: datetime.timedelta(seconds=value),
-    "boolean": lambda value: value,
-    "number": int,
-    "date-time": lambda value: datetime.datetime.fromisoformat(value),
-} | {
-    type: get_model_uuid_constructor(type)
-    for type in set(
-        [
-            format
-            for format in traverse_api(lambda key: key == "format")
-            if format.endswith("Id")
-        ]
-    )
-}
-
-
 def unmarshal_value(value, schema):
-    if "format" in schema:
-        type = schema["format"]
-    else:
-        type = schema["type"]
-    return unmarshal_parameter_handlers[type](value)
+    return serialization[
+        schema["format"] if "format" in schema else schema["type"]
+    ]().to_internal_value(value)
 
 
 def unmarshal(request):
@@ -288,7 +345,7 @@ def unmarshal(request):
     if request.body:
         body = json.loads(request.body)
         response |= map_tree(
-            unmarshal_value,
+            to_internal_value,
             definition["requestBody"]["content"]["*"]["schema"],
             body,
         )
@@ -302,15 +359,18 @@ def unmarshal(request):
             )
         else:
             value = request.GET.get(parameter["name"])
+
         if "format" in parameter["schema"]:
             type = parameter["schema"]["format"]
         else:
             type = parameter["schema"]["type"]
-        if type not in unmarshal_parameter_handlers:
+        if type not in serialization:
             raise ValidationError(
                 "Format of type {} not defined in schema".format(type)
             )
-        response[parameter["name"]] = unmarshal_parameter_handlers[type](value)
+        response[parameter["name"]] = Serialization(
+            parameter["schema"]
+        ).to_internal_value(value)
     return response
 
 

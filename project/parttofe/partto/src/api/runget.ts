@@ -14,6 +14,7 @@ import { Duration } from "../shared/duration";
 import {
   parameterMarshalers,
   unmarshalers,
+  integer,
   Four04Reply,
   RunOperationReply,
   RunOperation,
