@@ -176,12 +176,6 @@ def to_representation(value, type_schema):
     return Serialization(type_schema).to_representation(value)
 
 
-def _serialize_value(value, schema):
-    key = type_schema["format"] if "format" in type_schema else type_schema["type"]
-    if key not in serialization:
-        raise ValidationError("Format of type {} not defined in schema".format(key))
-
-
 def map_value(value, schema):
     if "format" in schema and schema["format"].endswith("Id"):
         return serialization[schema["format"]]().to_representation(value)
