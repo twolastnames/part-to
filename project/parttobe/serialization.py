@@ -14,6 +14,7 @@ import os
 import re
 from . import models
 from .endpoints import (
+    get_definition,
     openapi,
     OperationId,
     operations,
@@ -248,32 +249,6 @@ def path_from_operation_id(id):
     )
 
 
-def is_request_body_required(definition):
-    return "requestBody" in definition and (
-        "required" not in definition["requestBody"]
-        or definition["requestBody"]["required"]
-    )
-
-
-def are_request_parameters_required(definition):
-    return "parameters" in definition and (
-        "required" not in definition["parameters"]
-        or definition["parameters"]["required"]
-    )
-
-
-def get_request_body_schema(definition):
-    return definition["requestBody"]["content"]["*"]["schema"]
-
-
-def get_definition(request):
-    path = request.path
-    try:
-        return openapi["paths"][path][request.method.lower()]
-    except KeyError:
-        pass
-
-
 loaded_model_definitions = {}
 
 
@@ -340,98 +315,15 @@ def unmarshal(request):
     return response
 
 
-def get_parameter_error(request):
-    def check(parameter):
-        if "default" in parameter:
-            value = request.GET.get(
-                parameter["name"],
-                parameter["default"],
-            )
-        else:
-            value = request.GET.get(parameter["name"])
-            if not value:
-                return "parameter {} missing".format(parameter["name"])
-        type = parameter["schema"]["type"]
-        if type == "string":
-            return
-        if type == "number":
-            try:
-                int(value)
-                return
-            except ValueError:
-                return "expected {} to be parsable to a number".format(
-                    parameter["name"]
-                )
-        raise NotImplementedError("Parameter Type".format(type))
-
-    return check
-
-
-def get_parameter_errors(request):
-    definition = get_definition(request)
-    if "parameters" not in definition:
-        return []
-    return [
-        error
-        for error in map(
-            get_parameter_error(request),
-            definition["parameters"],
-        )
-        if error
-    ]
-
-
-def is_valid_body(request):
-    definition = get_definition(request)
-    if not definition:
-        raise ValidationError("Path not defined")
-    if not is_request_body_required(definition) and not request.body:
-        return
-    body = json.loads(request.body)
-    try:
-        jsonschema.validate(
-            instance=body,
-            schema=get_request_body_schema(definition),
-        )
-    except jsonschema.ValidationError as e:
-        raise ValidationError(e.message)
-
-
-def is_valid_query(request):
-    parameter_errors = get_parameter_errors(request)
-    if len(parameter_errors) > 0:
-        raise ValidationError(parameter_errors)
-
-
-def validate(request):
-    definition = get_definition(request)
-    if not definition:
-        return Response(
-            {"messages": ["Path not defined"]},
-            404,
-        )
-    body_validation_error = is_valid_body(request)
-    if body_validation_error:
-        return body_validation_error
-
-
 def unmarshaler(variants):
     @api_view([value.upper() for value in variants.keys()])
     def handle_request(request):
         response = None
         for_method = variants[request.method]
         try:
-            validation = is_valid_body(request)
-            is_valid_query(request)
             arguments = unmarshal(request)
         except (exceptions.ValidationError, ResourceError) as e:
             return Response({"messages": [e.message]}, status=404)
-        except ValidationError as e:
-            if isinstance(e.message, list):
-                message = e.message
-            else:
-                message = [e.message]
-            return Response(message, status=400)
         try:
             response = for_method.handle(for_method.argumentType(**arguments))
         except (exceptions.ValidationError, ResourceError) as e:
