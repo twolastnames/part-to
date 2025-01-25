@@ -209,6 +209,10 @@ argument_types = {
     for operationId, operation in operations.items()
 }
 
+EndpointVariant = collections.namedtuple(
+    "EndpointVariant", "handle serialize argumentType"
+)
+
 
 def path_from_operation_id(id):
     variants = {}
@@ -232,11 +236,11 @@ def path_from_operation_id(id):
                 )
             if operationId.name() == id:
                 partial_path = openapi_path.replace("/" + PATH_START, "")
-                variants[operationId.variant().upper()] = {
-                    "handle": get_meta_definition(filename, "handle"),
-                    "serializer": get_body_serializer(operation),
-                    "argumentType": argument_types[operationId.value],
-                }
+                variants[operationId.variant().upper()] = EndpointVariant(
+                    handle=get_meta_definition(filename, "handle"),
+                    serialize=get_body_serializer(operation),
+                    argumentType=argument_types[operationId.value],
+                )
     return path(
         partial_path,
         unmarshaler(variants),
@@ -412,12 +416,10 @@ def validate(request):
 
 
 def unmarshaler(variants):
-    @api_view(["GET", "POST"])
+    @api_view([value.upper() for value in variants.keys()])
     def handle_request(request):
         response = None
-        handle = variants[request.method]["handle"]
-        serialize = variants[request.method]["serializer"]
-        argumentType = variants[request.method]["argumentType"]
+        for_method = variants[request.method]
         try:
             validation = is_valid_body(request)
             is_valid_query(request)
@@ -431,11 +433,11 @@ def unmarshaler(variants):
                 message = [e.message]
             return Response(message, status=400)
         try:
-            response = handle(argumentType(**arguments))
+            response = for_method.handle(for_method.argumentType(**arguments))
         except (exceptions.ValidationError, ResourceError) as e:
             return Response({"messages": [e.message]}, status=404)
         if isinstance(response, Response):
             return response
-        return Response(serialize(response))
+        return Response(for_method.serialize(response))
 
     return handle_request
