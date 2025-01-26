@@ -35,6 +35,83 @@ class PartToPostTestClass(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    def test_errors_when_tasks_depend_on_each_other(self):
+        file_directory = os.path.dirname(__file__)
+        client = Client()
+        data = get_toml_recipe_as_json(
+            file_directory + "/../mocks_partto/salad_pear_apple.toml"
+        )
+        data["tasks"] = [
+            (
+                {**task, **({"depends": ["Greens", "Pear"]})}
+                if "ingredients" in task and "Apple" in task["ingredients"]
+                else task
+            )
+            for task in data["tasks"]
+        ]
+        data["tasks"] = [
+            (
+                {**task, **({"depends": ["Greens", "Apple"]})}
+                if "ingredients" in task and "Pear" in task["ingredients"]
+                else task
+            )
+            for task in data["tasks"]
+        ]
+
+        response = client.post(
+            "/api/partto/",
+            json.dumps(data),
+            content_type="*",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content),
+            ['Cyclic dependency in "Pear"'],
+        )
+
+    def test_errors_when_part_to_depends_on_itself(self):
+        file_directory = os.path.dirname(__file__)
+        client = Client()
+        data = get_toml_recipe_as_json(
+            file_directory + "/../mocks_partto/salad_pear_apple.toml"
+        )
+        data["part_to"]["depends"] = ["Mix", "part_to"]
+        response = client.post(
+            "/api/partto/",
+            json.dumps(data),
+            content_type="*",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content),
+            ['Cyclic dependency in "part_to"'],
+        )
+
+    def test_errors_when_task_depends_on_itself(self):
+        file_directory = os.path.dirname(__file__)
+        client = Client()
+        data = get_toml_recipe_as_json(
+            file_directory + "/../mocks_partto/salad_pear_apple.toml"
+        )
+        data["tasks"] = [
+            (
+                {**task, **({"depends": ["Greens", "Bowl"]})}
+                if "depends" in task and "Bowl" in task["depends"]
+                else task
+            )
+            for task in data["tasks"]
+        ]
+        response = client.post(
+            "/api/partto/",
+            json.dumps(data),
+            content_type="*",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content),
+            ['Cyclic dependency in "Greens"'],
+        )
+
     def test_missing_part_to(self):
         file_directory = os.path.dirname(__file__)
         client = Client()

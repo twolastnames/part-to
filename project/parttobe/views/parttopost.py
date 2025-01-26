@@ -109,6 +109,15 @@ class TaskNotFoundException(RuntimeError):
         return 'Missing Task(s): "{}"'.format(self.task_name)
 
 
+class CyclicTaskDependencyException(RuntimeError):
+    def __init__(self, dependency):
+        self.dependency = dependency
+        super().__init__()
+
+    def __str__(self):
+        return 'Cyclic dependency in "{}"'.format(self.dependency)
+
+
 class MissingTaskKeyException(RuntimeError):
     def __init__(self, task_name, key_name):
         self.task_name = task_name
@@ -120,6 +129,9 @@ class MissingTaskKeyException(RuntimeError):
 
 
 def traverse_tasks(tasks):
+    for key, task in tasks.items():
+        if "depends" in task and key in task["depends"]:
+            raise CyclicTaskDependencyException(key)
     seen_keys = set()
     if "part_to" not in tasks:
         raise TaskNotFoundException("part_to")
@@ -135,6 +147,15 @@ def traverse_tasks(tasks):
         seen_keys.add(current)
         if current not in tasks:
             raise TaskNotFoundException(current)
+        if "depends" in tasks[current]:
+            for stacked in stack:
+                if "depends" not in tasks[stacked]:
+                    continue
+                if (
+                    current in tasks[stacked]["depends"]
+                    and stacked in tasks[current]["depends"]
+                ):
+                    raise CyclicTaskDependencyException(stacked)
         task = tasks[current]
         yield current, task
         if "depends" in task:
