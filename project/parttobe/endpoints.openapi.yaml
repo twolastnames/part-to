@@ -692,6 +692,7 @@ components:
       - voided
       - completed
       - timestamp
+      - upcoming
       - timers
       - duration
       type: object

@@ -22,6 +22,7 @@ const useRunState = () => {
       tasks: [],
       duties: [],
       staged: [],
+      upcoming: [],
       started: [],
       created: [],
       voided: [],

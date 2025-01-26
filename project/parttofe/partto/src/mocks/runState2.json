@@ -10,6 +10,7 @@
   "tasks": ["laxed1"],
   "duties": ["enforced1"],
   "started": ["imminent1", "enforced1", "laxed1"],
+  "upcoming": [],
   "completed": [],
   "timers": {
     "imminent": [{ "task": "imminent1", "till": 30000 }],
