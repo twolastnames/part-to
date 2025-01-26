@@ -31,7 +31,7 @@ test("snapshot", async () => {
     </ShellProvider>,
   );
   const { findAllByTestId } = within(
-    await waitFor(async () => screen.getAllByTestId("PartTo")[0]),
+    await waitFor(async () => screen.getAllByTestId("DetailShell")[0]),
   );
   await findAllByTestId("Accordion");
   const page = screen.getByTestId("Layout");

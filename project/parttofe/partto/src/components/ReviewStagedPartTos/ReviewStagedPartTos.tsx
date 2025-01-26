@@ -17,6 +17,7 @@ import {
 } from "../TaskDefinition/TaskDefinition";
 import { ListItem } from "../TaskDefinition/ListItem/ListItem";
 import { Duty, Task } from "../TaskDefinition/Icon/Icon";
+import { asItem } from "../Overview/Overview";
 
 export function ReviewStagedPartTosIdFromer() {
   const response = useRunState();
@@ -31,6 +32,7 @@ function getItems(
   navigate: (arg: string) => void,
   runState: RunStateId,
   taskDefinitions: Array<TaskDefinitionId>,
+  prependedOffset: number,
 ) {
   return taskDefinitions.map(
     (taskDefinitionId: TaskDefinitionId, index: number) => ({
@@ -52,7 +54,7 @@ function getItems(
           runState={runState}
           locatable={{
             onLocate: (setter) => () => {
-              setter(index);
+              setter(index + prependedOffset);
             },
             context: RightContext,
           }}
@@ -85,11 +87,14 @@ export function ReviewStagedPartTos({
 }: ReviewStagedPartTosProps) {
   const navigate = useNavigate();
   const response = useRunState();
-  const items = getItems(
-    navigate,
-    response.data?.runState as RunStateId,
-    taskDefinitions,
-  );
+  const runState = response?.data?.runState as RunStateId;
+  const prepended = runState ? [asItem({ runState })] : [];
+  const items = runState
+    ? [
+        ...prepended,
+        ...getItems(navigate, runState, taskDefinitions, prepended.length),
+      ]
+    : [];
   return (
     <Spinner responses={[response]}>
       <DynamicItemSet

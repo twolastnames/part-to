@@ -24,8 +24,8 @@ exports[`snapshot 1`] = `
           class="content"
         >
           <div
-            class="partTo"
-            data-testid="PartTo"
+            class="detailShell"
+            data-testid="DetailShell"
           >
             <div
               class="name"
