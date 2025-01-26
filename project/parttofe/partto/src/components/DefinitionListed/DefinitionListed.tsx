@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import { DefinitionListedProps, ForData } from "./DefinitionListedTypes";
+import {
+  DefinitionListedProps,
+  ForData,
+  ForDatas,
+} from "./DefinitionListedTypes";
 import { Accordion } from "../Accordion/Accordion";
 import { PartToId } from "../../api/sharedschemas";
 import { useTaskGet } from "../../api/taskget";
@@ -29,6 +33,16 @@ export function Definition({ definitionKey, id }: ForData<PartToId>) {
     <>
       {(Array.isArray(value) ? value : [value]).map((value) => (
         <li className={classes.item}>{value}</li>
+      ))}
+    </>
+  );
+}
+
+export function Definitions({ definitionKey, ids }: ForDatas<PartToId>) {
+  return (
+    <>
+      {ids.map((id) => (
+        <Definition definitionKey={definitionKey} id={id} />
       ))}
     </>
   );
