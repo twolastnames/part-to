@@ -21,6 +21,7 @@ import {
   IconChecklist,
   IconPlaneArrival,
   IconBowlSpoon,
+  IconBinoculars,
 } from "@tabler/icons-react";
 
 import classes from "./Icon.module.scss";
@@ -62,3 +63,4 @@ export const Duty = IconEye;
 export const Task = IconChecklist;
 export const Imminent = IconPlaneArrival;
 export const Recipe = IconBowlSpoon;
+export const Overview = IconBinoculars;
