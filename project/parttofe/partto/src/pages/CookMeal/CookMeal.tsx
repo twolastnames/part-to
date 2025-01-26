@@ -13,6 +13,7 @@ import {
   Imminent,
   Task,
 } from "../../components/TaskDefinition/Icon/Icon";
+import { asItem } from "../../components/Overview/Overview";
 
 type Entity = {
   name: string;
@@ -57,6 +58,9 @@ export function CookMeal() {
             { name: "tasks", side: "second" },
             { name: "duties", side: "first" },
           )}
+          getPrependedItems={(navigate, runState, context, mapIndex) => [
+            asItem({ runState: runState.runState }),
+          ]}
           definitionClassNames={TaskClassNames}
         />,
       ]}
