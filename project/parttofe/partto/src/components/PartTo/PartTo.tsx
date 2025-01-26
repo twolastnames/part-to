@@ -1,6 +1,5 @@
 import React from "react";
 
-import classes from "./PartTo.module.scss";
 import { PartToId } from "../../api/sharedschemas";
 import { useParttoGet } from "../../api/parttoget";
 import { Stage } from "../../api/helpers";
@@ -10,6 +9,7 @@ import {
   PartTo as DefinitionPartTo,
 } from "../DefinitionListed/DefinitionListed";
 import { ListItem } from "./ListItem/ListItem";
+import { DetailShell } from "../DetailShell/DetailShell";
 
 export function PartToIdFromer({ partTo }: { partTo: PartToId }) {
   const response = useParttoGet({ partTo });
@@ -44,10 +44,5 @@ export function PartTo({
   clockDuration,
   children,
 }: PartToProps) {
-  return (
-    <div className={classes.partTo} data-testid="PartTo">
-      <div className={classes.name}>{name}</div>
-      <div className={classes.children}>{children}</div>
-    </div>
-  );
+  return <DetailShell name={name}>{children}</DetailShell>;
 }
