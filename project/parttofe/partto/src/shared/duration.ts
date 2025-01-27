@@ -34,7 +34,8 @@ const durationFormatter =
             : [formatter(true, value)],
       [],
     );
-    return joiner(negative, stringValues);
+    const formattedString = joiner(negative, stringValues);
+    return (formattedString?.trim() || "") === "" ? "now" : formattedString;
   };
 
 const timerValueStringer = (_: boolean, value: number) => value.toString();
