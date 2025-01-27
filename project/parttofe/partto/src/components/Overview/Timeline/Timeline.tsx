@@ -36,6 +36,8 @@ export function Timeline({ runState }: TimelineProps) {
           {upcoming.map(({ till, task }) => (
             <Event till={till} task={task} />
           ))}
+          <dt>{duration?.format(DurationFormat.SHORT)}</dt>
+          <dd>Part To Dinner</dd>
         </dl>
       </Accordion>
     </>

@@ -12,7 +12,12 @@ exports[`snapshot 1`] = `
   <div
     class="body"
   >
-    <dl />
+    <dl>
+      <dt />
+      <dd>
+        Part To Dinner
+      </dd>
+    </dl>
   </div>
 </details>
 `;
