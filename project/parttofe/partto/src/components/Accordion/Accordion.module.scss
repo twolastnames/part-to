@@ -4,6 +4,10 @@
   animation: sweep var(--animation-tempo);
 }
 
+.accordion summary ~ * {
+  animation: sweep var(--animation-tempo);
+}
+
 .accordion summary::marker {
   content: "";
 }
@@ -16,7 +20,7 @@
 @keyframes sweep {
   0% {
     opacity: 0;
-    margin-left: var(--gap-small);
+    margin-left: var(--gap-large);
   }
   100% {
     opacity: 1;
