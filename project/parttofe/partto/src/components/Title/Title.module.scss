@@ -1,0 +1,15 @@
+@import "../../App.scss";
+
+.title {
+  display: flex;
+  gap: var(--gap-medium);
+  font: var(--font-strong-medium);
+}
+
+.icon {
+  animation: popout var(--animation-tempo);
+}
+
+.text {
+  animation: fadein var(--animation-tempo);
+}
