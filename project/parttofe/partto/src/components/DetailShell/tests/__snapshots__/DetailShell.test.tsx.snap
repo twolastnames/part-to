@@ -11,7 +11,8 @@ exports[`snapshot 1`] = `
     Some Name
   </div>
   <div
-    class="children"
+    class="body"
+    data-testid="Body"
   >
     <div>
       hello

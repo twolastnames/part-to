@@ -38,7 +38,8 @@ exports[`snapshot 1`] = `
               </div>
             </div>
             <div
-              class="children"
+              class="body"
+              data-testid="Body"
             >
               <details
                 class="accordion"
