@@ -584,20 +584,21 @@ class RunState(models.Model):
             RunState.OPERATION_TEXTS[index]: []
             for index in range(1, len(RunState.OPERATION_TEXTS))
         }
-        taskStates = self.task_states()
+        task_states = self.task_states()
 
-        order = order_definitions([state.task for state in taskStates])
-        lookup = {state.task: state.operation for state in taskStates}
+        result["tasks"] = []
+        result["duties"] = []
+        order = order_definitions([state.task for state in task_states])
+        lookup = {state.task: state.operation for state in task_states}
         for task in order:
             operation = lookup[task]
             result[RunState.OPERATION_TEXTS[operation]].append(task)
+            result["tasks" if task.is_task() else "duties"].append(task)
         active_tasks = result["staged"] + result["started"]
         seen_part_tos = set()
         for task in active_tasks:
             seen_part_tos.add(task.part_to)
         result["activePartTos"] = list(seen_part_tos)
-        result["tasks"] = [task for task in result["started"] if task.is_task()]
-        result["duties"] = [task for task in result["started"] if not task.is_task()]
         result["timestamp"] = self.created
         completion = calculate_completion(
             result["staged"] + result["started"], self.created
@@ -617,7 +618,7 @@ class RunState(models.Model):
                 "started": state.created,
                 "duration": durations[state.task.id],
             }
-            for state in taskStates
+            for state in task_states
             if RunState.OPERATION_TEXTS[state.operation] == "started"
         ]
         result["timers"] = {

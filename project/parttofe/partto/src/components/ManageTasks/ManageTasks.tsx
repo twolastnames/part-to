@@ -34,13 +34,16 @@ export function ManageTasksIdFromer({
   definitionClassNames: DefinitionClassNames;
 }) {
   const response = useRunState();
+  const tasks = (response?.data?.["started"] || []).filter((key) =>
+    (response.data?.[typeKey] || []).includes(key),
+  );
   return (
     <Spinner responses={[response]}>
       <ManageTasks
         definitionListSets={definitionListSets}
         context={context}
         emptyText={emptyText}
-        tasks={response.data?.[typeKey] || []}
+        tasks={tasks}
         getPrependedItems={getPrependedItems}
         definitionClassNames={definitionClassNames}
       />
