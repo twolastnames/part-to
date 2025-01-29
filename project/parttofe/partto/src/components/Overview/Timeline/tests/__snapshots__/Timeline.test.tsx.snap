@@ -12,10 +12,39 @@ exports[`snapshot 1`] = `
   <div
     class="body"
   >
-    <dl>
-      <dt />
+    <dl
+      class="timeline"
+    >
+      <div
+        class="title"
+        data-testid="Title"
+      >
+        <div
+          class="icon"
+        >
+          <svg
+            class="tabler-icon tabler-icon-picnic-table "
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M16 7l2 9m-10 -9l-2 9m-1 -9h14m2 5h-18"
+            />
+          </svg>
+        </div>
+        <div
+          class="text"
+        />
+      </div>
       <dd>
-        Part To Dinner
+        Part To
       </dd>
     </dl>
   </div>

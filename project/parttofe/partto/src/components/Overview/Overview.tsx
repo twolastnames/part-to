@@ -30,9 +30,6 @@ export function Overview({ runState }: OverviewProps) {
         <DefinitionListed summary="Tools">
           <Definitions definitionKey="tools" ids={staged} />
         </DefinitionListed>
-        <DefinitionListed summary="Tasks">
-          <Definitions definitionKey="description" ids={staged} />
-        </DefinitionListed>
       </DetailShell>
     </Spinner>
   );
