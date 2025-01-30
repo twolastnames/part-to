@@ -13,7 +13,9 @@ import {
 } from "../DefinitionListed/DefinitionListed";
 import { Body } from "../Body/Body";
 import { Title } from "../Title/Title";
-import { Recipe } from "../Icon/Icon";
+import { Duty, Icon, Imminent, Recipe, Task } from "../Icon/Icon";
+import { Size } from "../Icon/IconTypes";
+import { ListItem } from "../ListItem/ListItem";
 
 export const TaskClassNames: ClassNames = {
   layout: classes.task,
@@ -61,6 +63,10 @@ export function TaskDefinition({
   );
   const runStateResponse = useRunGet({ runState });
 
+  const imminent = runStateResponse?.data?.timers.imminent.some(
+    (imminent) => task === imminent.task,
+  );
+
   return (
     <Spinner responses={[taskResponse, runStateResponse]}>
       <div className={classes.taskDefinition} data-testid="TaskDefinition">
@@ -74,7 +80,20 @@ export function TaskDefinition({
 
           <div className={classNames.timer}>{timer}</div>
           <div className={classes.description}>
-            {taskResponse.data?.description}
+            <ListItem
+              precursor={
+                <Icon
+                  definition={
+                    imminent
+                      ? Imminent
+                      : runStateResponse.data?.duties.includes(task)
+                        ? Duty
+                        : Task
+                  }
+                />
+              }
+              description={taskResponse.data?.description}
+            />
           </div>
         </div>
         <Body>
