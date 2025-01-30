@@ -160,7 +160,7 @@ function useProvider({
     setState((previous) => ({ ...previous, count: value }));
   };
 
-  if (selected !== 0 && (selected < 0 || selected >= count)) {
+  if (selected !== 0 && count !== 0 && (selected < 0 || selected >= count)) {
     setState((current) => ({ ...current, selected: 0 }));
   }
 
