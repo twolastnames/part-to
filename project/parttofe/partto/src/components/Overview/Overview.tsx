@@ -1,6 +1,6 @@
 import React from "react";
 
-import classes  from "./Overview.module.scss";
+import classes from "./Overview.module.scss";
 import { OverviewProps } from "./OverviewTypes";
 import { Item } from "../DynamicItemSet/DynamicItemSetTypes";
 import { useRunGet } from "../../api/runget";
@@ -15,9 +15,10 @@ import { ListItem } from "../ListItem/ListItem";
 import { Timeline } from "./Timeline/Timeline";
 
 const listView = (
-  <ListItem precursor={<OverviewIcon />} description={
-  <div className={classes.overviewText}>Overview</div>
-} />
+  <ListItem
+    precursor={<OverviewIcon />}
+    description={<div className={classes.overviewText}>Overview</div>}
+  />
 );
 
 export function Overview({ runState }: OverviewProps) {

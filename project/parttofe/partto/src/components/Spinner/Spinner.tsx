@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import classes from "./Spinner.module.scss";
 import { Stage } from "../../api/helpers";
@@ -13,6 +13,19 @@ export function willHold(responses: Array<ResponseStatusCheckable>) {
   return !!responses.some((response) =>
     [Stage.Errored, Stage.Fetching, Stage.Skipped].includes(response.stage),
   );
+}
+
+function DelayedText() {
+  const [text, setText] = useState<string>("");
+  useEffect(() => {
+    const id = setTimeout(() => {
+      setText("Loading...");
+    }, 500);
+    return () => {
+      clearTimeout(id);
+    };
+  });
+  return <>{text}</>;
 }
 
 export function Spinner({ responses, children }: SpinnerProps) {
@@ -32,7 +45,7 @@ export function Spinner({ responses, children }: SpinnerProps) {
   if (willHold(responses || [])) {
     return (
       <div className={classes.error} data-testid="Spinner">
-        Loading...
+        <DelayedText />
       </div>
     );
   }
