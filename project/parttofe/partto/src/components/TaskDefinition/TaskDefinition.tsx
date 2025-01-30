@@ -11,6 +11,9 @@ import {
   Definition,
   DefinitionListed,
 } from "../DefinitionListed/DefinitionListed";
+import { Body } from "../Body/Body";
+import { Title } from "../Title/Title";
+import { Recipe } from "../Icon/Icon";
 
 export const TaskClassNames: ClassNames = {
   layout: classes.task,
@@ -74,15 +77,15 @@ export function TaskDefinition({
             {taskResponse.data?.description}
           </div>
         </div>
-        <DefinitionListed summary="Ingredients">
-          <Definition definitionKey="ingredients" id={task} />
-        </DefinitionListed>
-        <DefinitionListed summary="Tools">
-          <Definition definitionKey="tools" id={task} />
-        </DefinitionListed>
-        {partToResponse.data && (
-          <div>For Recipe: {partToResponse.data?.name}</div>
-        )}
+        <Body>
+          <DefinitionListed summary="Ingredients">
+            <Definition definitionKey="ingredients" id={task} />
+          </DefinitionListed>
+          <DefinitionListed summary="Tools">
+            <Definition definitionKey="tools" id={task} />
+          </DefinitionListed>
+          <Title icon={Recipe}>{partToResponse.data?.name}</Title>
+        </Body>
       </div>
     </Spinner>
   );
