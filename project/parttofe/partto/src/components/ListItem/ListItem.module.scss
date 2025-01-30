@@ -1,6 +1,7 @@
 @import "../../App.scss";
 
 .precursor {
+  padding-top: var(--gap-small);
   animation: popout var(--animation-tempo);
 }
 
