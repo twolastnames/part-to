@@ -23,7 +23,9 @@ class _Chunk:
     def __init__(self, id, duration, **kwargs):
         self.id = id
         self.duration = duration
-        self.dependent = kwargs["dependent"] if "dependent" in kwargs else None
+        self.container = kwargs["container"] if "container" in kwargs else None
+        self.before = kwargs["before"] if "before" in kwargs else None
+        self.after = kwargs["after"] if "after" in kwargs else None
         self.engagement = kwargs["engagement"] if "engagement" in kwargs else 1.0
 
     def weight(self):
@@ -34,7 +36,6 @@ class _Chunk:
             type(self)(
                 self.id,
                 self.duration - duration,
-                dependent=self.dependent,
                 engagement=self.engagement,
             ),
         )
@@ -42,10 +43,11 @@ class _Chunk:
             type(self)(
                 self.id,
                 duration,
-                dependent=task2,
+                after=task2,
                 engagement=self.engagement,
             ),
         )
+        task2.before = task1
         return [task1, task2]
 
     def __repr__(self):
@@ -76,7 +78,7 @@ class _TimeWindow:
     def __init__(self, chunks=[], before=None, after=None):
         self.chunks = []
         for chunk in chunks:
-            self.chunks.append(chunk)
+            self.insert(chunk)
         self.before = before
         self.after = after
         if before:
@@ -101,10 +103,25 @@ class _TimeWindow:
     def __contains__(self, chunk):
         return chunk.id in [chunk.id for chunk in self.chunks]
 
-    def append(self, chunk):
+    def insert(self, chunk):
+        chunk.container = self
         if not self.chunks:
             self.chunks.append(chunk)
             return None
+        if (chunk.weight() == 1.0 - self.weight()) and (
+            chunk.duration == self.duration
+        ):
+            self.chunks.append(chunk)
+            return self
+        if(self.weight() >= 1.0) {
+
+        }
+
+    def pop_mutable(self):
+        task = [chunk for chunk in self.chunks if hasattr(chunk, 'scale_duration')]
+        self.chunks = [chunk for chunk in self.chunks if not hasattr(chunk, 'scale_duration')]
+        return task[0] if task else None
+
 
     def weight(self):
         return sum([chunk.weight() for chunk in self.chunks])
@@ -135,62 +152,95 @@ class Marker:
 
 
 class Timeline:
-    def __init__(self):
-        self.one = None
+    def __init__(self, definitions):
+        if len(definitions) == 0:
+            return
+        for definition in definitions:
+            if hasattr(definition, "scale_duration"):
+                continue
+            self._add_duty(definition)
+        for definition in definitions:
+            if not hasattr(definition, "scale_duration"):
+                continue
+            self._add_task(definition)
 
     def _insert(self, chunks, before=None, after=None):
-        self.one = _TimeWindow(
-            chunks, before=before, after=after
-        )
-
+        self.one = _TimeWindow(chunks, before=before, after=after)
 
     def _add_duty(self, definition):
+        if not hasattr(self, "one"):
+            self.one = _TimeWindow([definition])
+            return
         for window in self._chain(reversed=True):
-            pass
+            self._insert([definition])
 
     def _add_task(self, definition):
+        if not hasattr(self, "one"):
+            self.one = _TimeWindow([definition])
+            return
+        # window = self._get_first()
+        # while window.after:
         for window in self._chain():
-            if (
-                definition.dependent
-                and definition.dependent in window
-            ):
-                self._insert(
-                    [definition], window.before, window
-                )
+            print("wwww", window, definition)
+            if definition.dependent and definition.dependent in window:
+                print("bbbbb0")
+                if window.before:
+                    print("bbbbb")
+                    window.before.insert(definition)
+                else:
+                    print("bbbbb2")
+                    self._insert([definition], window.before, window)
                 return
-            if definition in window.dependents:
-                self._insert(
-                    [definition], window, window.after
-                )
+            elif definition in window.dependents:
+                print("aaaaaa0")
+                if window.after:
+                    print("aaaaaa")
+                    window.after.insert(definition)
+                else:
+                    print("aaaaaa1")
+                    self._insert([definition], window, window.after)
                 return
-        _TimeWindow([definition], after=self.one)
-
- 
-
-    def add(self, definition):
-        if not definition:
+            # window = window.after
+        if self._get_first():
+            self.one = self._get_first().insert(definition)
             return
-        if not self.one:
-            self._insert([definition])
-            return
-        if hasattr(definition, 'scale_duration'):
-            return self._add_task(definition)
-        self._add_duty(duration)
+        self._insert(definition)
+        # _TimeWindow([definition], after=self.one)
+
+        # for window in self._chain():
+        #    if definition.dependent and definition.dependent in window:
+        #        self._insert([definition], window.before, window)
+        #        return
+        #    if definition in window.dependents:
+        #        self._insert([definition], window, window.after)
+        #        return
+
+    #    def add(self, definition):
+    #            if not definition:
+    #                return
+    #            if not self.one:
+    #                self._insert([definition])
+    #                return
+    #            if hasattr(definition, 'scale_duration'):
+    #                return self._add_task(definition)
+    #            self._add_duty(duration)
 
     def _get_first(self):
         on = self.one
-        while on.before:
+        while on and on.before:
             on = on.before
         return on
 
     def _get_last(self):
         on = self.one
-        while on.after:
+        while on and on.after:
             on = on.after
         return on
 
     def _chain(self, reversed=False, start=None):
-        window = start if start else (self._get_last() if reversed else self._get_first())
+        window = (
+            start if start else (self._get_last() if reversed else self._get_first())
+        )
         while window:
             yield window
             window = window.before if reversed else window.after
@@ -201,7 +251,7 @@ class Timeline:
     def __iter__(self):
         duration = 0.0
         active = set()
-        if not self.one:
+        if not hasattr(self, "one"):
             return
         for window in self._chain():
             local = set([chunk.id for chunk in window.chunks])

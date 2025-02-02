@@ -28,7 +28,7 @@ class CollectionTaskTestClass(TestCase):
         self.assertEqual(task1.dependent.id, "2")
 
     def test_can_return_nothing(self):
-        line = Timeline()
+        line = Timeline([])
         self.assertEqual(len(list(line)), 0)
 
     #    def test_split_a_task(self):
@@ -38,16 +38,14 @@ class CollectionTaskTestClass(TestCase):
 
     def test_can_add_a_duty(self):
         duty = define(Definition(1, 200, 0.5))
-        line = Timeline()
-        line.add(duty)
+        line = Timeline([duty])
         line = list(line)
         self.assertEqual(line[0], Marker("1", 0.0, False))
         self.assertEqual(line[1], Marker("1", 200.0, True))
 
     def test_can_add_a_task(self):
         task = define(Definition(1, 200, None))
-        line = Timeline()
-        line.add(task)
+        line = Timeline([task])
         line = list(line)
         self.assertEqual(line[0], Marker("1", 0.0, False))
         self.assertEqual(line[1], Marker("1", 200.0, True))
@@ -55,9 +53,7 @@ class CollectionTaskTestClass(TestCase):
     def test_can_order_2_nondependent_tasks(self):
         task1 = define(Definition(1, 200, None))
         task2 = define(Definition(2, 300, None))
-        line = Timeline()
-        line.add(task2)
-        line.add(task1)
+        line = Timeline([task2, task1])
         line = list(line)
         self.assertEqual(line[0], Marker("1", 0.0, False))
         self.assertEqual(line[1], Marker("1", 200.0, True))
@@ -68,9 +64,7 @@ class CollectionTaskTestClass(TestCase):
         task1 = define(Definition(1, 200, None))
         task2 = define(Definition(2, 300, None))
         task1.dependent = task2
-        line = Timeline()
-        line.add(task1)
-        line.add(task2)
+        line = Timeline([task1, task2])
         line = list(line)
         self.assertEqual(line[0], Marker("1", 0.0, False))
         self.assertEqual(line[1], Marker("1", 200.0, True))
@@ -81,9 +75,7 @@ class CollectionTaskTestClass(TestCase):
         task1 = define(Definition(1, 200, None))
         task2 = define(Definition(2, 300, None))
         task1.dependent = task2
-        line = Timeline()
-        line.add(task2)
-        line.add(task1)
+        line = Timeline([task2, task1])
         line = list(line)
         self.assertEqual(line[0], Marker("1", 0.0, False))
         self.assertEqual(line[1], Marker("1", 200.0, True))
@@ -95,10 +87,7 @@ class CollectionTaskTestClass(TestCase):
         task2 = define(Definition(2, 300, None))
         task3 = define(Definition(3, 100, None))
         task3.dependent = task2
-        line = Timeline()
-        line.add(task2)
-        line.add(task1)
-        line.add(task3)
+        line = Timeline([task2, task1, task3])
         line = list(line)
         self.assertEqual(line[0], Marker("1", 0.0, False))
         self.assertEqual(line[1], Marker("1", 200.0, True))
@@ -112,10 +101,7 @@ class CollectionTaskTestClass(TestCase):
         task2 = define(Definition(2, 300, None))
         task3 = define(Definition(3, 100, None))
         task3.dependent = task2
-        line = Timeline()
-        line.add(task2)
-        line.add(task3)
-        line.add(task1)
+        line = Timeline([task2, task3, task1])
         line = list(line)
         self.assertEqual(line[0], Marker("1", 0.0, False))
         self.assertEqual(line[1], Marker("1", 200.0, True))
@@ -124,13 +110,10 @@ class CollectionTaskTestClass(TestCase):
         self.assertEqual(line[4], Marker("2", 300.0, False))
         self.assertEqual(line[5], Marker("2", 600.0, True))
 
-
     def test_will_overput_same_duration_duty(self):
         task1 = define(Definition(1, 100, None))
         duty2 = define(Definition(2, 200, 0.5))
-        line = Timeline()
-        line.add(task1)
-        line.add(duty2)
+        line = Timeline([task1, duty2])
         line = list(line)
         self.assertEqual(line[0], Marker("1", 0.0, False))
         self.assertEqual(line[1], Marker("2", 0.0, False))
@@ -140,9 +123,7 @@ class CollectionTaskTestClass(TestCase):
     def test_task_will_overrun_a_duty_into_own_window(self):
         task1 = define(Definition(1, 100, None))
         duty2 = define(Definition(2, 200, 0.25))
-        line = Timeline()
-        line.add(task1)
-        line.add(duty2)
+        line = Timeline([task1, duty2])
         line = list(line)
         self.assertEqual(line[0], Marker("1", 0.0, False))
         self.assertEqual(line[1], Marker("2", 50.0, False))
@@ -152,13 +133,9 @@ class CollectionTaskTestClass(TestCase):
     def test_duty_will_overrun_a_task_into_own_window(self):
         task1 = define(Definition(1, 100, None))
         duty2 = define(Definition(2, 200, 0.75))
-        line = Timeline()
-        line.add(task1)
-        line.add(duty2)
+        line = Timeline([task1, duty2])
         line = list(line)
         self.assertEqual(line[0], Marker("1", 0.0, False))
         self.assertEqual(line[1], Marker("2", 25.0, False))
         self.assertEqual(line[2], Marker("2", 225.0, True))
         self.assertEqual(line[3], Marker("1", 225.0, True))
-
-
