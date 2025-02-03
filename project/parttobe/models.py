@@ -6,6 +6,7 @@ import types
 import datetime
 import uuid
 import re
+from parttobe.common import common_repr
 
 
 @functools.lru_cache(maxsize=64)
@@ -391,6 +392,9 @@ class TaskDefinition(models.Model):
         if hasattr(self, "calculated_duration"):
             return self.calculated_duration
         return self.initial_duration
+
+    def __repr__(self):
+        return common_repr(self, "id", "duration", "description", "engagement")
 
     def set_calculated_duration(self, calculated):
         self.calculated_duration = calculated
