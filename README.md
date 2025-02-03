@@ -2,7 +2,7 @@
 
 ### An interactive cookbook.
 
-A user picks what recipes they want to cook in a meal. The program then estimates a completion time and commands the cook operation by operation to complete the meal. Execution times of tasks are used to better forcast future meal execution times.
+A user picks what recipes they want to cook in a meal. The program then estimates a completion time of the interwoven recipes and commands the cook operation by operation to complete the meal. Execution times of tasks are used to better forcast future meal execution times. It can make two recipes that take 15 minutes with 10 minutes of work each become a meal with 20 minutes of work completed in 20 minutes.
 
 ## Makefile Targets
 
