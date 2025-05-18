@@ -8,6 +8,33 @@ class TimeOverfill(RuntimeError):
     pass
 
 
+@functools.total_ordering
+class Definition:
+    def __init__(self, id, duration, engagement):
+        self.id = id
+        self.duration = timedelta(seconds=duration)
+        self.engagement = engagement
+        self.depended = None
+
+    def __hash__(self):
+        return hash(self.id)
+
+    def __lt__(self, other):
+        return self.id < other.id
+
+    def __repr__(self):
+        return "[id={}:duration={}:engagement={}]".format(
+            self.id, self.duration, self.engagement
+        )
+
+    def __eq__(self, other):
+        if not hasattr(other, "id"):
+            return False
+        if not other.id:
+            return False
+        return self.id == other.id
+
+
 def _define(definition):
     if not definition:
         return None

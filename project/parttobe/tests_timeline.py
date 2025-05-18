@@ -1,40 +1,13 @@
 from django.test import TestCase
 from parttobe.timeline import Timeline
 from parttobe.timeline import Marker
-import functools
+from parttobe.timeline import Definition
 from datetime import timedelta
 from dataclasses import dataclass
 
 
 def dump_line(line):
     print([repr(Marker(marker.id.id, marker.till, marker.is_done)) for marker in line])
-
-
-@functools.total_ordering
-class Definition:
-    def __init__(self, id, duration, engagement):
-        self.id = id
-        self.duration = timedelta(seconds=duration)
-        self.engagement = engagement
-        self.dependent = None
-
-    def __hash__(self):
-        return hash(self.id)
-
-    def __lt__(self, other):
-        return self.id < other.id
-
-    def __repr__(self):
-        return "[id={}:duration={}:engagement={}]".format(
-            self.id, self.duration, self.engagement
-        )
-
-    def __eq__(self, other):
-        if not hasattr(other, "id"):
-            return False
-        if not other.id:
-            return False
-        return self.id == other.id
 
 
 class CollectionTaskTestClass(TestCase):
