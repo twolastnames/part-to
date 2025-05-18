@@ -45,14 +45,14 @@ def _define(definition):
             definition.id,
             float(definition.duration.seconds),
             engagement=definition.engagement,
-            dependent=_define(definition.dependent),
+            depended=_define(definition.depended),
         )
     else:
         return _Task(
             definition.id,
             float(definition.duration.seconds),
             engagement=1.0,
-            dependent=_define(definition.dependent),
+            depended=_define(definition.depended),
         )
 
 
@@ -62,7 +62,7 @@ class _Chunk:
         self.id = id
         self.duration = duration
         self.container = kwargs["container"] if "container" in kwargs else None
-        self.dependent = kwargs["dependent"] if "dependent" in kwargs else None
+        self.depended = kwargs["depended"] if "depended" in kwargs else None
         self.engagement = kwargs["engagement"] if "engagement" in kwargs else 1.0
 
     @property
@@ -89,14 +89,14 @@ class _Chunk:
             self.id,
             self.duration - duration,
             engagement=self.engagement,
-            dependent=self.dependent,
+            depended=self.depended,
         )
         task1 = type(self)(
             self.id,
             duration,
             after=task2,
             engagement=self.engagement,
-            dependent=self.dependent,
+            depended=self.depended,
         )
         return (task1, task2)
 
@@ -112,7 +112,7 @@ class _Task(_Chunk):
         return _Task(
             self.id,
             self.weight / engagement,
-            dependent=self.dependent,
+            depended=self.depended,
             engagement=engagement,
         )
 
@@ -124,7 +124,7 @@ class _Task(_Chunk):
             sum([task.change_engagement(1.0).duration for task in tasks])
             + self.change_engagement(1.0).duration
         )
-        return _Task(self.id, duration, dependent=self.dependent, engagement=1.0)
+        return _Task(self.id, duration, depended=self.depended, engagement=1.0)
 
 
 class _Duty(_Chunk):
@@ -206,20 +206,20 @@ class TaskFrontloader:
 
     def find_dependencies(self):
         self.dependencies = {}
-        self.dependents = {}
+        self.dependeds = {}
         for on in self.defineds:
-            if not hasattr(on, "dependent") or not on.dependent:
+            if not hasattr(on, "depended") or not on.depended:
                 continue
-            self.dependents[on] = on.dependent
+            self.dependeds[on] = on.depended
             try:
-                self.dependencies[on.dependent].add(on)
+                self.dependencies[on.depended].add(on)
             except KeyError:
-                self.dependencies[on.dependent] = {on}
+                self.dependencies[on.depended] = {on}
 
     def pop_tasks(self):
         self.tasks = set()
         for on in self.one:
-            # if on.task and on.task not in self.dependents:
+            # if on.task and on.task not in self.dependeds:
             if on.task:
                 self.tasks.add(on.pop_task())
 
@@ -234,8 +234,8 @@ class TaskFrontloader:
                 self.duty_order.append(chunk)
 
     def get_next_duty_depended(self):
-        for dependent in sorted(
-            [duty for duty in self.dependents],
+        for depended in sorted(
+            [duty for duty in self.dependeds],
             key=lambda duty: -duty.duration,
         ):
             pass
@@ -310,11 +310,11 @@ class _TimeWindow:
         return self.duration < 0.01
 
     @property
-    def dependents(self):
+    def dependeds(self):
         found = set()
         for chunk in self.chunks:
-            if hasattr(chunk, "dependent") and chunk.dependent:
-                found.add(chunk.dependent)
+            if hasattr(chunk, "depended") and chunk.depended:
+                found.add(chunk.depended)
         return found
 
     @property
@@ -492,7 +492,7 @@ class _TimeWindow:
         on = self.first
         seen_dependency = False
         while on.after:
-            if on.id in on.dependents:
+            if on.id in on.dependeds:
                 seen_dependency = True
             elif seen_dependency and on.task:
                 return _TaskPrepender()(self, task)
@@ -641,12 +641,12 @@ class Timeline:
         self.originals = {definition.id: definition for definition in definitions}
         defineds = [_define(definition) for definition in definitions]
         dependends = {
-            on.dependent: on
+            on.depended: on
             for on in defineds
-            if hasattr(on, "dependent") and on.dependent
+            if hasattr(on, "depended") and on.depended
         }
         inserteds = set(
-            [on for on in defineds if not hasattr(on, "dependent") or not on.dependent]
+            [on for on in defineds if not hasattr(on, "depended") or not on.depended]
         )
         to_insert = [defined for defined in inserteds if defined in dependends] + [
             defined for defined in inserteds if defined not in dependends
@@ -654,9 +654,9 @@ class Timeline:
         self.one = _TimeWindow([])
         while True:
             for insertable in to_insert:
-                if self.one.find(lambda window: insertable.dependent in window.chunks):
+                if self.one.find(lambda window: insertable.depended in window.chunks):
                     self.one = self.one.find(
-                        lambda window: insertable.dependent in window.chunks
+                        lambda window: insertable.depended in window.chunks
                     ).add_before(insertable)
                 else:
                     self.one = self.one.last.add(insertable)
@@ -666,7 +666,7 @@ class Timeline:
                     inserteds.add(value)
                     to_insert.append(value)
             for key in to_insert:
-                del dependends[key.dependent]
+                del dependends[key.depended]
             if not to_insert:
                 break
         self.one = TaskFrontloader(
