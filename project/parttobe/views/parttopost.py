@@ -16,33 +16,6 @@ def check_task(task):
     return missing
 
 
-def traverse_tasks(tasks):
-    seen_keys = set()
-    if "part_to" not in tasks:
-        raise TaskNotFoundException("part_to")
-    seen_keys.add("part_to")
-    part_to = tasks["part_to"]
-    if "depends" not in part_to:
-        raise MissingTaskKeyException("part_to", "depends")
-    if "name" not in part_to:
-        raise MissingTaskKeyException("part_to", "name")
-    stack = part_to["depends"][:]
-    while len(stack) > 0:
-        current = stack.pop()
-        seen_keys.add(current)
-        if current not in tasks:
-            raise TaskNotFoundException(current)
-        task = tasks[current]
-        yield current, task
-        if "depends" in task:
-            for depend in task["depends"]:
-                stack.append(depend)
-    all_keys = set(tasks.keys())
-    extra_keys = all_keys - seen_keys
-    if extra_keys:
-        raise UnusedTaskFoundException(",".join(extra_keys))
-
-
 def invert_depends(tasks):
     invertion = {}
     for name, task in traverse_tasks(tasks):
