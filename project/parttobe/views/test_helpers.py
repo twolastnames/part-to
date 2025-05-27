@@ -123,6 +123,7 @@ class ClientTester(TestCase):
         self.assertEqual(len(descriptions), len(self.runStateData["upcoming"]))
         for upcoming, description in zip(self.runStateData["upcoming"], descriptions):
             response = self.client.get("/api/task/?task={}".format(upcoming["task"]))
+            self.definitionIds[description] = upcoming["task"]
             self.assertEqual(
                 response.headers["Cache-Control"], "public, max-age=31536000, immutable"
             )

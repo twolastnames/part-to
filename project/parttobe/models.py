@@ -1,5 +1,7 @@
 from django.db import models
 from django.db import connection
+from parttobe.timeline import Definition
+from parttobe.timeline import Timeline
 import functools
 import collections
 import types
@@ -146,41 +148,45 @@ class Engagements:
         )
 
 
+@functools.total_ordering
+class CompletionAction(
+    collections.namedtuple("CompletionAction", "definition till duration")
+):
+    def __eq__(self, other):
+        return other.till == other.till
+
+    def __lt__(self, other):
+        return self.till < other.till
+
+
 class CompletionResult:
-    class DefinitionInfo:
-        def __init__(self, parent, definition, duration_to_end):
-            self._definition = definition
-            self.duration_to_end = duration_to_end
-            self.parent = parent
-
-        def definition(self):
-            return self._definition
-
-        def till(self):
-            return self.parent._total_duration - self.duration_to_end
-
-    def __init__(self, result, total_duration):
-        self._actions = [
-            CompletionResult.DefinitionInfo(self, change["definition"], change["time"])
-            for change in result
+    def __init__(self, timeline):
+        starts = {marker.id: marker.till for marker in timeline if not marker.is_done}
+        self.result = [
+            CompletionAction(
+                marker.id, starts[marker.id], marker.till - starts[marker.id]
+            )
+            for marker in timeline
+            if marker.is_done
         ]
-        self._total_duration = total_duration
+        self.result.sort()
 
     def actions(self):
-        return self._actions
+        return self.result
 
     def duration(self):
-        if not self.actions():
-            return datetime.timedelta(seconds=0)
-        last = self.actions()[-1]
-        return last.till() + last.definition().duration
+        last = datetime.timedelta(seconds=0)
+        for action in self.result:
+            if action.till + action.duration > last:
+                last = action.till + action.duration
+        return last
 
     def ready_tasks(self):
-        dependeds = [action.definition().depended for action in self._actions]
+        dependeds = [action.definition.depended for action in self.result]
         return [
-            action.definition()
-            for action in self._actions
-            if action.definition().is_task() and action.definition() not in dependeds
+            action.definition
+            for action in self.result
+            if action.definition.is_task() and action.definition not in dependeds
         ]
 
 
@@ -188,37 +194,8 @@ def calculate_completion(definitions, at_time=datetime.datetime.now()):
     calculated_durations = calculate_durations(definitions, at_time)
     for definition in definitions:
         definition.set_calculated_duration(calculated_durations[definition.id])
-    time_consumed = {task.part_to: datetime.timedelta(0) for task in definitions}
-    on_time = datetime.timedelta()
-    left = [
-        definition
-        for definition in definitions
-        if definition.depended or definition.is_task()
-    ]
-    engagements = Engagements()
-    [
-        engagements.append_duty(definition)
-        for definition in definitions
-        if not definition.depended and not definition.is_task()
-    ]
-    result = []
-    for definition in definitions:
-        if definition.depended or not definition.is_task():
-            continue
-        completed_duties, work_left, consumed, time_later = engagements.execute_task(
-            definition
-        )
-        on_time += time_later
-
-        if definition in left:
-            left.remove(definition)
-        result.append({"definition": definition, "time": on_time})
-        for completed in completed_duties:
-            if completed in [entry["definition"] for entry in result]:
-                continue
-            result.append({"definition": completed, "time": on_time})
-        for id, count in consumed.items():
-            time_consumed[id] += count
+    timeline = Timeline(definitions)
+    return CompletionResult(timeline)
 
     def next():
         dependeds = [
@@ -273,7 +250,7 @@ def calculate_completion(definitions, at_time=datetime.datetime.now()):
 
 def order_definitions(definitions):
     return [
-        information.definition()
+        information.definition
         for information in calculate_completion(definitions).actions()
     ]
 
@@ -651,20 +628,23 @@ class RunState(models.Model):
         completion = calculate_completion(
             result["staged"] + result["started"], self.created
         )
+        completion_durations = {
+            action.definition: action.duration for action in completion.actions()
+        }
         result["upcoming"] = [
             {
-                "till": action.till(),
-                "task": action.definition(),
+                "till": action.till,
+                "task": action.definition,
+                "duration": action.duration,
             }
             for action in completion.actions()
         ]
         result["duration"] = completion.duration()
-        durations = calculate_durations(result["started"], result["timestamp"])
         timers = [
             {
                 "task": state.task,
                 "started": state.created,
-                "duration": durations[state.task.id],
+                "duration": completion_durations[state.task],
             }
             for state in task_states
             if RunState.OPERATION_TEXTS[state.operation] == "started"
@@ -679,23 +659,23 @@ class RunState(models.Model):
     def _imminent(self, completion, started):
         dependeds = set(
             [
-                action.definition().depended
+                action.definition.depended
                 for action in completion.actions()
-                if action.definition().depended
+                if action.definition.depended
             ]
         )
         ready_duties = [
             action
             for action in completion.actions()
-            if action.definition() not in dependeds
-            and not action.definition().is_task()
-            and action.definition() not in started
+            if action.definition not in dependeds
+            and not action.definition.is_task()
+            and action.definition not in started
         ]
-        ready_duties.sort(key=lambda action: action.till())
+        ready_duties.sort(key=lambda action: action.till)
         return [
             {
-                "task": duty.definition(),
-                "till": duty.till(),
+                "task": duty.definition,
+                "till": duty.till,
             }
             for duty in ready_duties
         ]
@@ -738,9 +718,10 @@ def append_states(operation, tasks, run_state=None):
             return RunState.objects.get(uuid=last_uuid)
 
 
-def calculate_durations(tasks, before):
-    if not tasks:
+def calculate_duty_durations(definitions, before):
+    if not definitions:
         return {}
+    tasks = [definition for definition in definitions if not definition.is_task()]
     statement = " UNION ALL ".join(
         [
             """
@@ -827,3 +808,24 @@ def calculate_durations(tasks, before):
         exectued = cursor.execute(statement, values)
         query_result = exectued.fetchall()
     return {row[0]: datetime.timedelta(seconds=round(row[1])) for row in query_result}
+
+
+def calculate_task_durations(definitions, before):
+    tasks = [definition for definition in definitions if definition.is_task()]
+    result = {}
+    for task in tasks:
+        completions = RunState.objects.filter(
+            task=task, operation=RunState.Operation.COMPLETED, created__lt=before
+        )[:5]
+        observeds = [completion.task_duration().seconds for completion in completions]
+        results = (
+            observeds if len(observeds) > 4 else observeds + [task.duration.seconds]
+        )
+        result[task.id] = datetime.timedelta(seconds=sum(results) / len(results))
+    return result
+
+
+def calculate_durations(definitions, before):
+    task_durations = calculate_task_durations(definitions, before)
+    duty_durations = calculate_duty_durations(definitions, before)
+    return task_durations | duty_durations

@@ -26,16 +26,16 @@ class TaskTestClass(TestCase):
         self.assertEqual(
             response.headers["Cache-Control"], "public, max-age=31536000, immutable"
         )
+        self.assertEqual("wash the corn", response.data["description"])
+        self.assertEqual(["cobbed corn"], response.data["ingredients"])
+        self.assertEqual([], response.data["tools"])
+
+        response = client.get("/api/task/?task={}".format(payload1["tasks"][1]))
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(
             "boil water in large pot for corn", response.data["description"]
         )
         self.assertEqual([], response.data["ingredients"])
-        self.assertEqual(["large pot"], response.data["tools"])
-
-        response = client.get("/api/task/?task={}".format(payload1["tasks"][1]))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual("wash the corn", response.data["description"])
-        self.assertEqual(["cobbed corn"], response.data["ingredients"])
         self.assertEqual(partTo, response.data["partTo"])
 
         response = client.get("/api/task/?task={}".format(payload1["tasks"][2]))

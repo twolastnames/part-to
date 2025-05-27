@@ -713,7 +713,11 @@ components:
             required:
             - task
             - till
+            - duration
             properties:
+              duration:
+                type: string
+                format: duration
               till:
                 type: string
                 format: duration
