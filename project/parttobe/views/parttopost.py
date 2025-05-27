@@ -27,7 +27,8 @@ def invert_depends(tasks):
 
 
 @transaction.atomic
-def save_job(tasks, dependeds):
+def save_job(tasks):
+    dependeds = invert_depends(tasks)
     saved_tasks = {}
     part_to = models.PartTo.objects.create(name=tasks["part_to"]["name"])
     stack = tasks["part_to"]["depends"][:]
@@ -47,7 +48,11 @@ def save_job(tasks, dependeds):
             depended=depended,
             part_to=part_to,
             description=task["description"],
-            engagement=(task["engagement"] if "engagement" in task else None),
+            engagement=(
+                task["engagement"]
+                if "engagement" in task and task["engagement"] > 0
+                else None
+            ),
         )
         for ingredient in (
             ensure_list(task["ingredients"]) if "ingredients" in task else []
@@ -169,7 +174,7 @@ def handle(argument):
     together = {"part_to": argument.part_to} | {
         task["name"]: task for task in argument.tasks
     }
-    id = save_job(together, invert_depends(together))
+    id = save_job(together)
     return {
         "partTo": str(id),
         "message": "job insert successfull",
