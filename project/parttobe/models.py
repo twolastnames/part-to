@@ -9,6 +9,14 @@ import re
 from parttobe.common import common_repr
 
 
+class WrongDefinitionType(RuntimeError):
+    pass
+
+
+class ImproperRunStateSequence(RuntimeError):
+    pass
+
+
 @functools.lru_cache(maxsize=64)
 def get_task_definitions(part_to):
     return set(TaskDefinition.objects.filter(part_to=part_to))
@@ -562,6 +570,42 @@ class RunState(models.Model):
         """,
             [self.id],
         )
+
+    def task_duration(self):
+        if not self.task:
+            raise WrongDefinitionType()
+        if not self.task.is_task():
+            raise WrongDefinitionType(
+                "definition {} is not a task".format(self.task.id)
+            )
+        if self.operation != self.Operation.COMPLETED:
+            raise WrongDefinitionType(
+                "task {} is not a completed task".format(self.task.id)
+            )
+        active_duties = set()
+        result = 0.0
+        on_time = None
+        for state in reversed(self.full_chain()):
+            if on_time and (
+                state.operation == self.Operation.STARTED
+                or state.operation == self.Operation.COMPLETED
+            ):
+                elapsed = state.created.timestamp() - on_time.timestamp()
+                engagement = sum([(duty.engagement / 100.0) for duty in active_duties])
+                result = result + (elapsed * (1.0 - engagement))
+            if on_time and state == self:
+                return datetime.timedelta(seconds=result)
+            if on_time or (
+                state.task == self.task and state.operation == self.Operation.STARTED
+            ):
+                on_time = state.created
+            if state.task.is_task():
+                continue
+            if state.operation == self.Operation.STARTED:
+                active_duties.add(state.task)
+            if state.operation == self.Operation.COMPLETED:
+                active_duties.remove(state.task)
+        return self.task.duration
 
     def full_chain(self):
         return RunState.objects.raw(
