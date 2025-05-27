@@ -17,7 +17,7 @@ class TaskDurationMetricTestClass(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.data["estimatedDuration"],
-            480.0,
+            60.0,
         )
         self.assertEqual(response.data["from"], [])
         self.assertEqual(

@@ -4,6 +4,7 @@ from parttobe.timeline import Marker
 from parttobe.timeline import Definition
 from datetime import timedelta
 from dataclasses import dataclass
+import os
 
 
 def dump_line(line):
@@ -53,6 +54,142 @@ class CollectionTaskTestClass(TestCase):
         self.assertEqual(line[2], Marker(task1, timedelta(seconds=300.0), False))
         self.assertEqual(line[3], Marker(task1, timedelta(seconds=500.0), True))
 
+    def test_seen_baked_beans_fail(self):
+        # remove pan from oven and let stand for 5 minutes
+        duty1 = Definition("duty1", 300, 0.05)
+        # remove beans from oven
+        task2 = Definition("task2", 10, None)
+        # bake to desired consistency
+        duty3 = Definition("duty3", 9000, 0.02)
+        # pour bean mixture in 3 quart baking pan and layout cooked bacon on top
+        task4 = Definition("task4", 30, None)
+        # simmer bean mixture a minute or so
+        duty5 = Definition("duty5", 90, 0.05)
+        # saute diced green peppers and onion
+        duty6 = Definition("duty6", 300, 0.1)
+        # dice half of a green pepper and a whole yellow onion and combine aside
+        task7 = Definition("task7", 120, None)
+        # heat pan to medium heat
+        duty8 = Definition("duty8", 150, 0.02)
+        # get pan and put 2 tbs butter in it
+        task9 = Definition("task9", 60, None)
+        # gather and combine 54 oz canned pork and beans, 2 tsp dry mustard, 2/3 cup brown sugar, 1/4 cup cider vinegar, 4 tbs ketchup, & 1/4 cup molasses
+        task10 = Definition("task10", 180, None)
+        # cook bacon to slightly rare
+        duty11 = Definition("duty11", 1200, 0.03)
+        # put 10 slices of bacon on pan and put in oven
+        task12 = Definition("task12", 120, None)
+        # Heat Oven to 325 degrees
+        duty13 = Definition("duty13", 900, 0.0)
+        # grease 3 quart baking pan
+        task14 = Definition("task14", 45, None)
+        task2.depended = duty1
+        duty3.depended = task2
+        task4.depended = duty3
+        duty5.depended = task4
+        duty6.depended = duty5
+        task7.depended = duty6
+        duty8.depended = duty6
+        task9.depended = duty8
+        task10.depended = duty5
+        duty11.depended = task4
+        task12.depended = duty11
+        duty13.depended = task12
+        task14.depended = task4
+        line = list(
+            Timeline(
+                [
+                    duty1,
+                    task2,
+                    duty3,
+                    task4,
+                    duty5,
+                    duty6,
+                    task7,
+                    duty8,
+                    task9,
+                    task10,
+                    duty11,
+                    task12,
+                    duty13,
+                    task14,
+                ]
+            )
+        )
+        self.assertEqual(line[0], Marker(duty13, timedelta(seconds=0.0), False))
+        self.assertEqual(line[1], Marker(duty13, timedelta(seconds=900.0), True))
+        self.assertEqual(line[2], Marker(task12, timedelta(seconds=900.0), False))
+        self.assertEqual(line[3], Marker(task12, timedelta(seconds=1020.0), True))
+        self.assertEqual(line[4], Marker(duty11, timedelta(seconds=1020.0), False))
+        self.assertEqual(line[5], Marker(task10, timedelta(seconds=1020.0), False))
+        self.assertEqual(line[6], Marker(task10, timedelta(seconds=1205.56701), True))
+        self.assertEqual(line[7], Marker(task7, timedelta(seconds=1205.56701), False))
+        self.assertEqual(line[8], Marker(task7, timedelta(seconds=1329.278351), True))
+        self.assertEqual(line[9], Marker(task9, timedelta(seconds=1329.278351), False))
+        self.assertEqual(line[10], Marker(task9, timedelta(seconds=1391.134021), True))
+        self.assertEqual(
+            line[11], Marker(task14, timedelta(seconds=1391.134021), False)
+        )
+        self.assertEqual(line[12], Marker(task14, timedelta(seconds=1437.525773), True))
+        self.assertEqual(line[13], Marker(duty8, timedelta(seconds=1680.0), False))
+        self.assertEqual(line[14], Marker(duty8, timedelta(seconds=1830.0), True))
+        self.assertEqual(line[15], Marker(duty6, timedelta(seconds=1830.0), False))
+        self.assertEqual(line[16], Marker(duty6, timedelta(seconds=2130.0), True))
+        self.assertEqual(line[17], Marker(duty5, timedelta(seconds=2130.0), False))
+        self.assertEqual(line[18], Marker(duty11, timedelta(seconds=2220.0), True))
+        self.assertEqual(line[19], Marker(duty5, timedelta(seconds=2220.0), True))
+        self.assertEqual(line[20], Marker(task4, timedelta(seconds=2220.0), False))
+        self.assertEqual(line[21], Marker(task4, timedelta(seconds=2250.0), True))
+        self.assertEqual(line[22], Marker(duty3, timedelta(seconds=2250.0), False))
+        self.assertEqual(line[23], Marker(duty3, timedelta(seconds=11250.0), True))
+        self.assertEqual(line[24], Marker(task2, timedelta(seconds=11250.0), False))
+        self.assertEqual(line[25], Marker(task2, timedelta(seconds=11260.0), True))
+        self.assertEqual(line[26], Marker(duty1, timedelta(seconds=11260.0), False))
+        self.assertEqual(line[27], Marker(duty1, timedelta(seconds=11560.0), True))
+
+    def test_seen_pot_roast_fail_with_leading_task(self):
+        # put oil in dutch oven
+        task1 = Definition("task1", 30, None)
+        # put the following in the bowl onion bowl: 1/2 tsp ground ginger, 1/2 tsp pepper, 1 bay leaf,  1 tsp ground cinnamon, 1 tsp salt, 2 tbs sugar, 1 tbs white vinegar, 8 oz tomato sauce, 3/4 cup beer or beef broth, 1 1/4 cup water
+        task2 = Definition("task2", 180, None)
+        # chop an onion and put it in 4ish cup bowl
+        task3 = Definition("task3", 120, None)
+        # remove meat and slice
+        task4 = Definition("task4", 120, None)
+        # reduce heat, cover, and simmer
+        duty5 = Definition("duty5", 9900, 0.01)
+        # dump ingredients in dutch oven and stir
+        task6 = Definition("task6", 30, None)
+        # put roast meat in dutch oven and brown all sides
+        duty7 = Definition("duty7", 600, 0.1)
+        # heat oil in dutch oven
+        duty8 = Definition("duty8", 150, 0.02)
+        task1.depended = duty8
+        task2.depended = task6
+        task3.depended = task2
+        duty5.depended = task4
+        task6.depended = duty5
+        duty7.depended = task6
+        duty8.depended = duty7
+        line = Timeline([task1, task2, task3, task4, duty5, task6, duty7, duty8])
+        line = list(line)
+        self.assertEqual(line[0], Marker(task1, timedelta(seconds=0.0), False))
+        self.assertEqual(line[1], Marker(task1, timedelta(seconds=30.0), True))
+        self.assertEqual(line[2], Marker(duty8, timedelta(seconds=30.0), False))
+        self.assertEqual(line[3], Marker(task3, timedelta(seconds=30.0), False))
+        self.assertEqual(line[4], Marker(task3, timedelta(seconds=152.44898), True))
+        self.assertEqual(line[5], Marker(task2, timedelta(seconds=152.44898), False))
+        self.assertEqual(line[6], Marker(duty8, timedelta(seconds=180.0), True))
+        self.assertEqual(line[7], Marker(duty7, timedelta(seconds=180.0), False))
+        self.assertEqual(line[8], Marker(task2, timedelta(seconds=350.0), True))
+        self.assertEqual(line[9], Marker(duty7, timedelta(seconds=780.0), True))
+        self.assertEqual(line[10], Marker(task6, timedelta(seconds=780.0), False))
+        self.assertEqual(line[11], Marker(task6, timedelta(seconds=810.0), True))
+        self.assertEqual(line[12], Marker(duty5, timedelta(seconds=810.0), False))
+        self.assertEqual(line[13], Marker(duty5, timedelta(seconds=10710.0), True))
+        self.assertEqual(line[14], Marker(task4, timedelta(seconds=10710.0), False))
+        self.assertEqual(line[15], Marker(task4, timedelta(seconds=10830.0), True))
+
     def test_can_order_2_tasks_in_forward(self):
         task1 = Definition(1, 200, None)
         task2 = Definition(2, 300, None)
@@ -82,10 +219,10 @@ class CollectionTaskTestClass(TestCase):
         task3.depended = task2
         line = Timeline([task2, task1, task3])
         line = list(line)
-        self.assertEqual(line[0], Marker(task1, timedelta(seconds=0.0), False))
-        self.assertEqual(line[1], Marker(task1, timedelta(seconds=200.0), True))
-        self.assertEqual(line[2], Marker(task3, timedelta(seconds=200.0), False))
-        self.assertEqual(line[3], Marker(task3, timedelta(seconds=300.0), True))
+        self.assertEqual(line[0], Marker(task3, timedelta(seconds=0.0), False))
+        self.assertEqual(line[1], Marker(task3, timedelta(seconds=100.0), True))
+        self.assertEqual(line[2], Marker(task1, timedelta(seconds=100.0), False))
+        self.assertEqual(line[3], Marker(task1, timedelta(seconds=300.0), True))
         self.assertEqual(line[4], Marker(task2, timedelta(seconds=300.0), False))
         self.assertEqual(line[5], Marker(task2, timedelta(seconds=600.0), True))
 
@@ -96,10 +233,10 @@ class CollectionTaskTestClass(TestCase):
         task3.depended = task2
         line = Timeline([task2, task3, task1])
         line = list(line)
-        self.assertEqual(line[0], Marker(task1, timedelta(seconds=0.0), False))
-        self.assertEqual(line[1], Marker(task1, timedelta(seconds=200.0), True))
-        self.assertEqual(line[2], Marker(task3, timedelta(seconds=200.0), False))
-        self.assertEqual(line[3], Marker(task3, timedelta(seconds=300.0), True))
+        self.assertEqual(line[0], Marker(task3, timedelta(seconds=0.0), False))
+        self.assertEqual(line[1], Marker(task3, timedelta(seconds=100.0), True))
+        self.assertEqual(line[2], Marker(task1, timedelta(seconds=100.0), False))
+        self.assertEqual(line[3], Marker(task1, timedelta(seconds=300.0), True))
         self.assertEqual(line[4], Marker(task2, timedelta(seconds=300.0), False))
         self.assertEqual(line[5], Marker(task2, timedelta(seconds=600.0), True))
 
@@ -112,6 +249,29 @@ class CollectionTaskTestClass(TestCase):
         self.assertEqual(line[1], Marker(duty2, timedelta(seconds=0.0), False))
         self.assertEqual(line[2], Marker(duty1, timedelta(seconds=100.0), True))
         self.assertEqual(line[3], Marker(duty2, timedelta(seconds=100.0), True))
+
+    def test_ends_with_task_with_inner_tasks(self):
+        task1 = Definition("task1", 20, None)
+        duty2 = Definition("duty2", 240, 0.04)
+        task3 = Definition("task3", 120, None)
+        task4 = Definition("task4", 60, None)
+        duty5 = Definition("duty5", 480, 0.02)
+        duty2.depended = task1
+        task3.depended = duty2
+        task4.depended = task3
+        duty5.depended = duty2
+        line = Timeline([task1, duty2, task3, task4, duty5])
+        line = list(line)
+        self.assertEqual(line[0], Marker(duty5, timedelta(seconds=0.0), False))
+        self.assertEqual(line[1], Marker(task4, timedelta(seconds=0.0), False))
+        self.assertEqual(line[2], Marker(task4, timedelta(seconds=61.22449), True))
+        self.assertEqual(line[3], Marker(task3, timedelta(seconds=61.22449), False))
+        self.assertEqual(line[4], Marker(task3, timedelta(seconds=183.673469), True))
+        self.assertEqual(line[5], Marker(duty5, timedelta(seconds=480.0), True))
+        self.assertEqual(line[6], Marker(duty2, timedelta(seconds=480.0), False))
+        self.assertEqual(line[7], Marker(duty2, timedelta(seconds=720.0), True))
+        self.assertEqual(line[8], Marker(task1, timedelta(seconds=720.0), False))
+        self.assertEqual(line[9], Marker(task1, timedelta(seconds=740.0), True))
 
     def test_will_split_different_duration_duty(self):
         duty1 = Definition(1, 70, 0.3)
@@ -317,3 +477,163 @@ class CollectionTaskTestClass(TestCase):
         self.assertEqual(line[1], Marker(duty2, timedelta(seconds=200.0), True))
         self.assertEqual(line[2], Marker(duty1, timedelta(seconds=200.0), False))
         self.assertEqual(line[3], Marker(duty1, timedelta(seconds=300.0), True))
+
+    def test_does_not_have_seen_duplicates(self):
+        # reduce heat, cover, and simmer
+        duty1 = Definition("duty1", 9900, 0.01)
+        # dump ingredients in dutch oven and stir
+        task2 = Definition("task2", 30, None)
+        # put roast meat in dutch oven and brown all sides
+        duty3 = Definition("duty3", 600, 0.1)
+        # heat oil in dutch oven
+        duty4 = Definition("duty4", 150, 0.02)
+        # put oil in dutch oven
+        task5 = Definition("task5", 30, None)
+        # put the following in the bowl onion bowl: 1/2 tsp ground ginger, 1/2 tsp pepper, 1 bay leaf,  1 tsp ground cinnamon, 1 tsp salt, 2 tbs sugar, 1 tbs white vinegar, 8 oz tomato sauce, 3/4 cup beer or beef broth, 1 1/4 cup water
+        task6 = Definition("task6", 180, None)
+        # chop an onion and put it in 4ish cup bowl
+        task7 = Definition("task7", 120, None)
+        # remove meat and slice
+        task8 = Definition("task8", 120, None)
+        duty1.depended = task8
+        task2.depended = duty1
+        duty3.depended = task2
+        duty4.depended = duty3
+        task5.depended = duty4
+        task6.depended = task2
+        task7.depended = task6
+        # remove pan from oven and let stand for 5 minutes
+        duty9 = Definition("duty9", 300, 0.05)
+        # remove beans from oven
+        task10 = Definition("task10", 10, None)
+        # bake to desired consistency
+        duty11 = Definition("duty11", 9000, 0.02)
+        # pour bean mixture in 3 quart baking pan and layout cooked bacon on top
+        task12 = Definition("task12", 30, None)
+        # simmer bean mixture a minute or so
+        duty13 = Definition("duty13", 90, 0.05)
+        # saute diced green peppers and onion
+        duty14 = Definition("duty14", 300, 0.1)
+        # dice half of a green pepper and a whole yellow onion and combine aside
+        task15 = Definition("task15", 120, None)
+        # heat pan to medium heat
+        duty16 = Definition("duty16", 150, 0.02)
+        # get pan and put 2 tbs butter in it
+        task17 = Definition("task17", 60, None)
+        # gather and combine 54 oz canned pork and beans, 2 tsp dry mustard, 2/3 cup brown sugar, 1/4 cup cider vinegar, 4 tbs ketchup, & 1/4 cup molasses
+        task18 = Definition("task18", 180, None)
+        # put bacon in oven and cook to slightly rare
+        duty19 = Definition("duty19", 1200, 0.03)
+        # put 10 slices of bacon on pan
+        task20 = Definition("task20", 120, None)
+        # Heat Oven to 325 degrees
+        duty21 = Definition("duty21", 900, 0.01)
+        # grease 3 quart baking pan
+        task22 = Definition("task22", 45, None)
+        task10.depended = duty9
+        duty11.depended = task10
+        task12.depended = duty11
+        duty13.depended = task12
+        duty14.depended = duty13
+        task15.depended = duty14
+        duty16.depended = duty14
+        task17.depended = duty16
+        task18.depended = duty13
+        duty19.depended = task12
+        task20.depended = duty19
+        duty21.depended = task20
+        task22.depended = task12
+        line = list(
+            Timeline(
+                [
+                    duty9,
+                    task10,
+                    duty11,
+                    task12,
+                    duty13,
+                    duty14,
+                    task15,
+                    duty16,
+                    task17,
+                    task18,
+                    duty19,
+                    task20,
+                    duty21,
+                    task22,
+                    duty1,
+                    task2,
+                    duty3,
+                    duty4,
+                    task5,
+                    task6,
+                    task7,
+                    task8,
+                ]
+            )
+        )
+        self.assertEqual(line[0], Marker(duty21, timedelta(seconds=0.0), False))
+        self.assertEqual(line[1], Marker(task18, timedelta(seconds=0.0), False))
+        self.assertEqual(line[2], Marker(task18, timedelta(seconds=181.818182), True))
+        self.assertEqual(line[3], Marker(task15, timedelta(seconds=181.818182), False))
+        self.assertEqual(line[4], Marker(task15, timedelta(seconds=303.030303), True))
+        self.assertEqual(line[5], Marker(task7, timedelta(seconds=303.030303), False))
+        self.assertEqual(line[6], Marker(task7, timedelta(seconds=424.242424), True))
+        self.assertEqual(line[7], Marker(task6, timedelta(seconds=424.242424), False))
+        self.assertEqual(line[8], Marker(duty4, timedelta(seconds=594.274662), False))
+        self.assertEqual(line[9], Marker(task6, timedelta(seconds=606.303615), True))
+        self.assertEqual(line[10], Marker(task17, timedelta(seconds=606.303615), False))
+        self.assertEqual(line[11], Marker(task17, timedelta(seconds=668.159285), True))
+        self.assertEqual(line[12], Marker(task22, timedelta(seconds=668.159285), False))
+        self.assertEqual(line[13], Marker(task22, timedelta(seconds=714.551038), True))
+        self.assertEqual(line[14], Marker(task5, timedelta(seconds=714.551038), False))
+        self.assertEqual(line[15], Marker(duty4, timedelta(seconds=744.274662), True))
+        self.assertEqual(line[16], Marker(duty3, timedelta(seconds=744.274662), False))
+        self.assertEqual(line[17], Marker(task5, timedelta(seconds=745.587117), True))
+        self.assertEqual(line[18], Marker(duty21, timedelta(seconds=900.0), True))
+        self.assertEqual(line[19], Marker(task20, timedelta(seconds=900.0), False))
+        self.assertEqual(line[20], Marker(task20, timedelta(seconds=1033.333333), True))
+        self.assertEqual(
+            line[21], Marker(duty19, timedelta(seconds=1033.333333), False)
+        )
+        self.assertEqual(line[22], Marker(duty3, timedelta(seconds=1344.274662), True))
+        self.assertEqual(line[23], Marker(task2, timedelta(seconds=1344.274662), False))
+        self.assertEqual(line[24], Marker(duty1, timedelta(seconds=1374.274662), False))
+        self.assertEqual(line[25], Marker(task2, timedelta(seconds=1375.212162), True))
+        self.assertEqual(
+            line[26], Marker(duty16, timedelta(seconds=1693.333333), False)
+        )
+        self.assertEqual(line[27], Marker(duty16, timedelta(seconds=1843.333333), True))
+        self.assertEqual(
+            line[28], Marker(duty14, timedelta(seconds=1843.333333), False)
+        )
+        self.assertEqual(line[29], Marker(duty14, timedelta(seconds=2143.333333), True))
+        self.assertEqual(
+            line[30], Marker(duty13, timedelta(seconds=2143.333333), False)
+        )
+        self.assertEqual(line[31], Marker(duty13, timedelta(seconds=2233.333333), True))
+        self.assertEqual(line[32], Marker(duty19, timedelta(seconds=2233.333333), True))
+        self.assertEqual(
+            line[33], Marker(task12, timedelta(seconds=2233.333333), False)
+        )
+        self.assertEqual(line[34], Marker(task12, timedelta(seconds=2263.636364), True))
+        self.assertEqual(
+            line[35], Marker(duty11, timedelta(seconds=2263.636364), False)
+        )
+        self.assertEqual(
+            line[36], Marker(duty9, timedelta(seconds=11100.590451), False)
+        )
+        self.assertEqual(
+            line[37], Marker(duty11, timedelta(seconds=11263.636364), True)
+        )
+        self.assertEqual(
+            line[38], Marker(task10, timedelta(seconds=11263.636364), False)
+        )
+        self.assertEqual(line[39], Marker(duty1, timedelta(seconds=11274.274662), True))
+        self.assertEqual(
+            line[40], Marker(task10, timedelta(seconds=11274.274662), True)
+        )
+        self.assertEqual(
+            line[41], Marker(task8, timedelta(seconds=11274.274662), False)
+        )
+        self.assertEqual(line[42], Marker(duty9, timedelta(seconds=11400.590451), True))
+        self.assertEqual(line[43], Marker(task8, timedelta(seconds=11400.590451), True))

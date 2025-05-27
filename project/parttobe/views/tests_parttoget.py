@@ -27,6 +27,11 @@ class PartToTestClass(TestCase):
         # self.assertEqual(
         #    payload["clockDuration"], timedelta(seconds=9085)
         # )
+        descriptions = []
+        for task in payload["tasks"]:
+            response = client.get("/api/task/?task={}".format(task))
+            self.assertEqual(response.status_code, 200)
+            descriptions.append((task, response.data["description"]))
         self.assertEqual(len(payload["tasks"]), 14)
 
     def test_400s_missing_parameter(self):
