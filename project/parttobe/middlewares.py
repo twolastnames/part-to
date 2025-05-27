@@ -115,6 +115,8 @@ class ApiBodyValidation:
         self.get_response = get_response
 
     def __call__(self, request):
+        if not request.path.startswith("/api/"):
+            return self.get_response(request)
         definition = get_definition(request)
         if not definition:
             return Response("Path not defined", status=404)
@@ -135,6 +137,8 @@ class ApiQueryValidation:
         self.get_response = get_response
 
     def __call__(self, request):
+        if not request.path.startswith("/api/"):
+            return self.get_response(request)
         definition = get_definition(request)
         check = ParameterErrorChecker(request)
         parameter_errors = (
