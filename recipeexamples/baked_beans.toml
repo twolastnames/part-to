@@ -21,13 +21,13 @@ depends = ["Heat Oven", "Assemble Beans"]
 
 ['Cook Bacon']
 duration = "20 minutes"
-description = "cook bacon to slightly rare"
+description = "put bacon in oven and cook to slightly rare"
 depends = ["Put Bacon in Oven"]
 engagement = 3
 
 ['Put Bacon in Oven']
 duration = "2 minutes"
-description = "put 10 slices of bacon on pan and put in oven"
+description = "put 10 slices of bacon on pan"
 tools = ["flatish baking pan"]
 ingredients = ["bacon, 10 slices"]
 depends = ["Heat Oven"]
