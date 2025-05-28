@@ -77,5 +77,15 @@ updateapi: $(NENV)
 release: $(NENV)
 	$(WITH_ENV) ./bin/release.py
 
+dockerimage: $(NENV)
+	${WITH_ENV} ./bin/docker_operations.py ensure_image
+
+dockerrun: $(NENV)
+	${WITH_ENV} ./bin/docker_operations.py ensure_running
+
+
 test: testfront testback
+
+runproduct: $(NENV)
+	$(WITH_ENV) cd project && gunicorn project.wsgi 
 
