@@ -14,7 +14,6 @@ import {
 import { Body } from "../Body/Body";
 import { Title } from "../Title/Title";
 import { Duty, Icon, Imminent, Recipe, Task } from "../Icon/Icon";
-import { Size } from "../Icon/IconTypes";
 import { ListItem } from "../ListItem/ListItem";
 
 export const TaskClassNames: ClassNames = {
