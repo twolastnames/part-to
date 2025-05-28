@@ -32,7 +32,11 @@ export type RunGet200Body = {
   runState: RunStateId;
   duration: Duration;
   timestamp: DateTime;
-  upcoming: Array<{ till: Duration; task: TaskDefinitionId }>;
+  upcoming: Array<{
+    duration: Duration;
+    till: Duration;
+    task: TaskDefinitionId;
+  }>;
   timers: {
     enforced: Array<{
       task: TaskDefinitionId;
@@ -61,7 +65,7 @@ type Wire200Body = {
   runState: RunStateId;
   duration: number;
   timestamp: string;
-  upcoming: Array<{ till: number; task: TaskDefinitionId }>;
+  upcoming: Array<{ duration: number; till: number; task: TaskDefinitionId }>;
   timers: {
     enforced: Array<{
       task: TaskDefinitionId;
@@ -110,6 +114,7 @@ export const useRunGet: (
         duration: unmarshalers.required["duration"](body.duration),
         timestamp: unmarshalers.required["date-time"](body.timestamp),
         upcoming: body.upcoming.map((value) => ({
+          duration: unmarshalers.required["duration"](value.duration),
           till: unmarshalers.required["duration"](value.till),
           task: unmarshalers.required["TaskDefinitionId"](value.task),
         })),

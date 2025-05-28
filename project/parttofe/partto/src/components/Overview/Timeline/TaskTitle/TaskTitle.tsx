@@ -9,8 +9,14 @@ import { Title } from "../../../Title/Title";
 export function TaskTitle({ runState, task }: TaskTitleProps) {
   const response = useRunGet({ runState });
   const icon = response?.data?.tasks.includes(task) ? Timed : Alarmed;
-  const { till } = response?.data?.upcoming.find(
+  const { till, duration } = response?.data?.upcoming.find(
     (event) => event.task === task,
   ) || { till: getDuration(0) };
-  return <Title icon={icon}>{till.format(DurationFormat.SHORT)}</Title>;
+  return (
+    <Title icon={icon}>
+      {till.format(DurationFormat.SHORT)}
+      {" - "}
+      {duration && till.add(duration)?.format(DurationFormat.SHORT)}
+    </Title>
+  );
 }

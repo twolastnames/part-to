@@ -185,7 +185,11 @@ export interface RunState {
   runState: RunStateId;
   duration: Duration;
   timestamp: DateTime;
-  upcoming: Array<{ till: Duration; task: TaskDefinitionId }>;
+  upcoming: Array<{
+    duration: Duration;
+    till: Duration;
+    task: TaskDefinitionId;
+  }>;
   timers: {
     enforced: Array<{
       task: TaskDefinitionId;

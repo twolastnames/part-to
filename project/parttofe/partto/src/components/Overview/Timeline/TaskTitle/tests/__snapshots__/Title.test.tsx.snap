@@ -38,6 +38,7 @@ exports[`snapshot 1`] = `
     class="text"
   >
     now
+     - 
   </div>
 </div>
 `;
