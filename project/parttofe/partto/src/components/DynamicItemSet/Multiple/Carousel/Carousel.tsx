@@ -18,12 +18,21 @@ function getPages(current: Array<Item>) {
   }));
 }
 
-export function Carousel({ items, context }: MultipleProps) {
-  const { paused, selected, goForward, goBack, showDuration } =
+export function Carousel({ items, context, pausedByDefault }: MultipleProps) {
+  const [initialized, setInitialized] = useState<boolean>(false);
+  const { paused, togglePause, selected, goForward, goBack, showDuration } =
     useSingleOfPair(context);
   const [pages, setPages] = useState<Array<CarouselPage & { key: string }>>(
     getPages(items),
   );
+  useEffect(() => {
+    if (!initialized) {
+      if ((!paused && pausedByDefault) || (paused && !pausedByDefault)) {
+        togglePause();
+      }
+      setInitialized(true);
+    }
+  }, [paused, initialized, pausedByDefault, togglePause]);
 
   const itemsLength = items.length;
   context.setCount(itemsLength);
