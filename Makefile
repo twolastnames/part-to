@@ -39,7 +39,7 @@ clean:
 insertdefaultrecipes:
 	${WITH_ENV} python3 project/manage.py insertrecipe recipeexamples/*
 
-demo: $(NENV) test migrate insertdefaultrecipes runback
+full: $(NENV) test migrate insertdefaultrecipes runback
 
 runback: $(VENV) $(NENV) $(NODE_BUILD) migrate
 	$(WITH_ENV) cd project && python3 manage.py runserver $(ARGUMENTS)
