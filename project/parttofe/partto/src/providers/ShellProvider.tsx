@@ -48,7 +48,6 @@ export function changeTheme(theme: Theme) {
 
 export const ShellProvider = ({ children }: PropsWithChildren) => {
   const [theme, setTheme] = useState<Theme>(getTheme());
-  console.log("ttttt", { theme });
   themeChangeRef = useRef(setTheme);
   setTimeout(() => {
     setThemeClass();
