@@ -70,6 +70,7 @@ export function SelectPartTos({ runState }: SelectPartTosProps) {
         run?.data?.activePartTos || [],
         runState,
       )}
+      pausedByDefault={true}
       context={LeftContext}
       setOperations={[]}
       emptyPage={

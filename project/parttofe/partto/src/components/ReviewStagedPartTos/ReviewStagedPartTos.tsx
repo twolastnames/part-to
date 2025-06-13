@@ -100,6 +100,7 @@ export function ReviewStagedPartTos({
       <DynamicItemSet
         items={items}
         context={RightContext}
+        pausedByDefault={true}
         setOperations={[
           {
             text: "Start Cooking",
