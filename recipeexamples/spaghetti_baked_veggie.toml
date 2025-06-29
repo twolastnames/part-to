@@ -1,0 +1,102 @@
+[part_to]
+name = "Spaghetti Vegetarian Baked"
+depends = ["Bake"]
+
+['Boil']
+duration = "8 minutes"
+description = "boil water"
+engagement=3
+
+['Spaghetti']
+duration = "7 minutes"
+description = "boil/cook the spagetti in the boiling water"
+engagement=3
+depends = ["Boil"]
+ingredients = ['16 oz spaghetti pasta']
+
+['Bowl']
+duration = "1 minutes"
+description = "Get medium mixing bowl out"
+
+['Onion']
+duration = "3 minutes"
+description = "Dice an onion and put it in the bowl"
+depends = ["Bowl"]
+ingredients = ['1 small yellow onion']
+
+['Pepper']
+duration = "3 minutes"
+description = "Dice a green pepper and put it in the bowl"
+depends = ["Bowl"]
+ingredients = ['1 green pepper']
+
+['Garlic']
+duration = "3 minutes"
+description = "Mince 8 large garlic cloves and put it in the bowl"
+depends = ["Bowl"]
+ingredients = ['8 large garlic cloves']
+
+['Mushrooms']
+duration = "3 minutes"
+description = "slice 16 oz of mushrooms and put them in the bowl"
+depends = ["Bowl"]
+ingredients = ['16 oz mushrooms']
+
+['Spice']
+duration = "1 minutes"
+description = "put 2 tbs oil in the bowl"
+depends = ["Bowl"]
+ingredients = ['1/2 tsp salt', '1/2 tsp pepper', '2 tsp dried basil', '1 tsp dried oregano']
+
+['Saute']
+duration = "17 minutes"
+description = "add bowl contents and saute 15-20 minutes until mushrooms cook down and their liquid evaporates"
+depends = [ "Heat"]
+engagement=5
+
+['Heat']
+duration = "3 minutes"
+description = "add 2 tbs to large skillet and heat to medium"
+depends = ["Onion","Pepper","Garlic","Mushrooms","Spice"]
+ingredients = ['2 tbs olive oil']
+engagement=3
+
+['Sauce']
+duration = "2 minutes"
+description = "Stir pasta sauce into sauted veggies"
+depends = ["Saute"]
+ingredients = ['25 oz pasta sauce']
+
+['Grease']
+duration = "2 minutes"
+description = "Grease a 9x13 inch baking dish with cooking spray"
+ingredients = ['cooking spray']
+
+['Pasta']
+duration = "2 minutes"
+description = "line bottom of baking dish with cooked pasta"
+depends = ["Grease", "Spaghetti"]
+
+['First Cheese']
+duration = "2 minutes"
+description = "put cheeses on top of pasta"
+depends = ["Sauce", "Pasta"]
+ingredients = ['1/2 cup shredded mozzerella cheese', '1 1/4 cup grated parmesan cheese']
+
+['Goop']
+duration = "2 minutes"
+description = "put spaghetti sauce and veggies over cheese"
+depends = ["First Cheese"]
+
+['Second Cheese']
+duration = "2 minutes"
+description = "put remaining cheese over top"
+depends = ["Goop"]
+ingredients = ['1 1/2 cup shredded mozzerella chese']
+
+['Bake']
+duration = "17 minutes"
+description = "bake for 15-20 minutes or until cheese is bubbling and starting to brown on edge of dish"
+depends = ["Second Cheese"]
+engagement=5
+

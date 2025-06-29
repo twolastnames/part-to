@@ -81,8 +81,9 @@ ingredients=['buns']
 
 ['Toast Buns']
 duration = "1 minutes 30 seconds"
-description = "Put buns in broiler"
+description = "Toast buns in broiler"
 depends= ['Gather Buns','Preheat Broiler']
+engagement=15
 
 
 
