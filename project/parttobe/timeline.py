@@ -42,7 +42,7 @@ def _define(definition):
         definition.engagement != 0.0 and definition.engagement is not None
     ):
         return _Duty(
-            definition.id,
+            str(definition.id),
             float(definition.duration.seconds),
             engagement=(
                 (float(definition.engagement) / 100.0)
@@ -53,7 +53,7 @@ def _define(definition):
         )
     else:
         return _Task(
-            definition.id,
+            str(definition.id),
             float(definition.duration.seconds),
             engagement=1.0,
             depended=_define(definition.depended),
