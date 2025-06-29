@@ -17,12 +17,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         client = Client()
         on = 0
+        ids = {}
         for filename in options["recipes"]:
             recipe = toml.load(filename)
             name = recipe["part_to"]["name"]
             part_to = PartTo.displayables().get(name=name)
             tasks = part_to.task_definitions
-            ids = {}
             for task in tasks:
                 on = on + 1
                 id = "{}{}".format("task" if task.is_task() else "duty", on)
@@ -41,6 +41,4 @@ class Command(BaseCommand):
                 if not task.depended:
                     continue
                 print("{}.depended = {}".format(ids[task.id], ids[task.depended.id]))
-            print("line = list(Timeline([{}]))".format(", ".join(ids.values())))
-
-            # payload = get_toml_recipe_as_json(recipe)
+        print("line = list(Timeline([{}]))".format(", ".join(ids.values())))
