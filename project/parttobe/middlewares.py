@@ -28,6 +28,9 @@ set_cache_for_paths(
     "public, max-age=31536000, immutable",
 )
 
+# for load time of page
+set_cache_for_paths(["^parttos:get$"], "private, max-age=15")
+
 
 class Headers:
     def __init__(self, get_response):
