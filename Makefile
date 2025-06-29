@@ -57,7 +57,7 @@ testfront: $(NENV) project/parttofe/partto/node_modules
 	$(WITH_ENV) cd $(NODE_SOURCE) && npm run test -- --watchAll=false $(ARGUMENTS)
 
 testback: $(NENV) $(NODE_BUILD)
-	$(WITH_ENV) cd $(PROJECT) && python3 manage.py test parttobe$(ARGUMENTS)
+	$(WITH_ENV) cd $(PROJECT) && PYTHONHASHSEED=18 python3 manage.py test parttobe$(ARGUMENTS)
 
 command: $(NENV)
 	$(WITH_ENV) python3 project/manage.py $(ARGUMENTS)
