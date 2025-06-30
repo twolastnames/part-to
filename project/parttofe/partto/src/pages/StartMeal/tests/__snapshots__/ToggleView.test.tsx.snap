@@ -8,6 +8,7 @@ exports[`toggle to list 1`] = `
   <div
     class="itemSet"
   >
+     
     <div
       class="dynamicItemSet"
       data-testid="DynamicItemSet"
@@ -93,6 +94,7 @@ exports[`toggle to list 1`] = `
         </div>
       </div>
     </div>
+     
   </div>
   <div
     class="itemSet"

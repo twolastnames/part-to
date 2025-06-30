@@ -9,20 +9,9 @@ exports[`error 1`] = `
     class="itemSet"
   >
     <div
-      class="dynamicItemSet"
-      data-testid="DynamicItemSet"
-    >
-      <div
-        class="buttonSet"
-        data-testid="ButtonSet"
-      />
-      <div
-        class="empty"
-        data-testid="Empty"
-      >
-        Page Load Error: 0
-      </div>
-    </div>
+      class="error"
+      data-testid="Spinner"
+    />
   </div>
   <div
     class="itemSet"

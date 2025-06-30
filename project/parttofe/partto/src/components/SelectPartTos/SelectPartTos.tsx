@@ -14,6 +14,7 @@ import { useRunGet } from "../../api/runget";
 import { SelectPartTosProps } from "./SelectPartTosTypes";
 import { LeftContext } from "../../providers/DynamicItemSetPair";
 import { ListItem } from "../PartTo/ListItem/ListItem";
+import { Spinner } from "../Spinner/Spinner";
 
 function getFirstPairItems(
   navigate: (arg: string) => void,
@@ -62,24 +63,37 @@ export function SelectPartTos({ runState }: SelectPartTosProps) {
   const firstPairEmptyText =
     allRecipes?.stage === Stage.Ok ? noRecipesMessage : loading;
 
+  const responses = [
+    {
+      stage:
+        runState && run.stage !== Stage.Ok && !errorMessage
+          ? Stage.Fetching
+          : Stage.Ok,
+    },
+    allRecipes,
+    runState ? run : { stage: Stage.Ok },
+  ];
+
   return (
-    <DynamicItemSet
-      items={getFirstPairItems(
-        navigate,
-        allRecipes?.data?.partTos || [],
-        run?.data?.activePartTos || [],
-        runState,
-      )}
-      pausedByDefault={true}
-      context={LeftContext}
-      setOperations={[]}
-      emptyPage={
-        errorMessage ? (
-          <>{errorMessage}</>
-        ) : (
-          <EmptySimpleView content={firstPairEmptyText} />
-        )
-      }
-    />
+    <Spinner responses={responses}>
+      <DynamicItemSet
+        items={getFirstPairItems(
+          navigate,
+          allRecipes?.data?.partTos || [],
+          run?.data?.activePartTos || [],
+          runState,
+        )}
+        pausedByDefault={true}
+        context={LeftContext}
+        setOperations={[]}
+        emptyPage={
+          errorMessage ? (
+            <>{errorMessage}</>
+          ) : (
+            <EmptySimpleView content={firstPairEmptyText} />
+          )
+        }
+      />
+    </Spinner>
   );
 }

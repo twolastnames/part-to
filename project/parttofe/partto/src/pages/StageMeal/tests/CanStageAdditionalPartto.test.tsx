@@ -5,6 +5,7 @@ import { ShellProvider } from "../../../providers/ShellProvider";
 import { StageMeal } from "../StageMeal";
 import task1 from "../../../mocks/task1.json";
 import partTo1 from "../../../mocks/partTo1.json";
+import runState1 from "../../../mocks/runState3complete.json";
 
 const mockedUsedNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -21,6 +22,9 @@ test("snapshot", async () => {
           partTos: ["partTo1"],
         }),
       );
+    }
+    if (request.url.includes("/api/run/")) {
+      return Promise.resolve(JSON.stringify(runState1));
     }
     if (request.url.includes("/api/partto/")) {
       return Promise.resolve(JSON.stringify(partTo1));
@@ -49,6 +53,8 @@ test("snapshot", async () => {
     '{"runState":"ourRunState","partTos":["partTo1"]}',
   );
   await waitFor(() =>
-    expect(mockedUsedNavigate.mock.calls).toEqual([["/start/someId"]]),
+    expect(mockedUsedNavigate.mock.calls).toEqual([
+      ["/start/wfGhVbmK0kzGYWqRZM2Xl3"],
+    ]),
   );
 });

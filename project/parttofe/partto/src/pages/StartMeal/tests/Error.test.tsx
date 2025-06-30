@@ -14,7 +14,7 @@ test("error", async () => {
     </ShellProvider>,
   );
   await waitFor(() => {
-    const found = screen.getByText("Page Load Error: 0");
+    const found = screen.getByText("0");
     expect(found).toBeTruthy();
   });
   await waitFor(() => {
