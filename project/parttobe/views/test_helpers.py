@@ -92,7 +92,7 @@ class ClientTester(TestCase):
         self.runStateData = response.data
 
     def assertTimerDescriptions(self, type, *descriptions):
-        self.assertEqual(len(descriptions), len(self.runStateData["timers"][type]))
+        test_descriptions = []
         for imminent, description in zip(
             self.runStateData["timers"][type], descriptions
         ):
@@ -102,25 +102,36 @@ class ClientTester(TestCase):
             self.assertEqual(
                 response.headers["Cache-Control"], "public, max-age=31536000, immutable"
             )
-            self.assertEqual(response.data["description"], description)
+            test_descriptions.append(response.data["description"])
+        self.assertListEqual(list(test_descriptions), list(descriptions))
 
     def assertImminentTills(self, *tills):
-        self.assertEqual(len(tills), len(self.runStateData["timers"]["imminent"]))
-        for imminent, till in zip(self.runStateData["timers"]["imminent"], tills):
-            self.assertEqual(timedelta(seconds=imminent["till"]), till)
+        self.assertListEqual(
+            [
+                timedelta(seconds=timer["till"])
+                for timer in self.runStateData["timers"]["imminent"]
+            ],
+            list(tills),
+        )
 
     def assertUpcomingTills(self, *tills):
-        self.assertEqual(len(tills), len(self.runStateData["upcoming"]))
-        for upcoming, till in zip(self.runStateData["upcoming"], tills):
-            self.assertEqual(timedelta(seconds=upcoming["till"]), till)
+        self.assertListEqual(
+            [
+                timedelta(seconds=timer["till"])
+                for timer in self.runStateData["upcoming"]
+            ],
+            list(tills),
+        )
 
     def assertTimerDurations(self, type, *durations):
         self.assertEqual(len(durations), len(self.runStateData["timers"][type]))
+        test_durations = []
         for timer, duration in zip(self.runStateData["timers"][type], durations):
-            self.assertEqual(timedelta(seconds=timer["duration"]), duration)
+            test_durations.append(timedelta(seconds=timer["duration"]))
+        self.assertListEqual(list(test_durations), list(durations))
 
     def assertUpcomingDescriptions(self, *descriptions):
-        self.assertEqual(len(descriptions), len(self.runStateData["upcoming"]))
+        test_descriptions = []
         for upcoming, description in zip(self.runStateData["upcoming"], descriptions):
             response = self.client.get("/api/task/?task={}".format(upcoming["task"]))
             self.definitionIds[description] = upcoming["task"]
@@ -128,10 +139,11 @@ class ClientTester(TestCase):
                 response.headers["Cache-Control"], "public, max-age=31536000, immutable"
             )
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.data["description"], description)
+            test_descriptions.append(response.data["description"])
+        self.assertListEqual(list(test_descriptions), list(descriptions))
 
     def assertStartedDescriptions(self, *descriptions):
-        self.assertEqual(len(descriptions), len(self.runStateData["started"]))
+        test_descriptions = []
         for started, description in zip(self.runStateData["started"], descriptions):
             response = self.client.get("/api/task/?task={}".format(started))
             self.definitionIds[description] = started
@@ -139,7 +151,8 @@ class ClientTester(TestCase):
                 response.headers["Cache-Control"], "public, max-age=31536000, immutable"
             )
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.data["description"], description)
+            test_descriptions.append(response.data["description"])
+        self.assertListEqual(list(test_descriptions), list(descriptions))
 
     def stagePartTos(self, *names):
         response = self.client.get("/api/parttos/")
