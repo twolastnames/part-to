@@ -175,6 +175,8 @@ const moveSemephore = (increment: boolean) => {
   });
 };
 
+const getImmutableKey = (url: string) => `immutable-${url}`;
+
 async function handleResponse<RESPONSE_TYPE>(
   response: Response,
 ): Promise<Result<RESPONSE_TYPE>> {
@@ -185,12 +187,20 @@ async function handleResponse<RESPONSE_TYPE>(
       stage: Stage.Errored,
     };
   }
+
   const data = await response.json();
-  return {
+  const returnable = {
     status: response.status,
     stage: Stage.Ok,
     data,
   };
+  if (response.headers.get("Cache-Control")?.includes("immutable")) {
+    localStorage.setItem(
+      getImmutableKey(response.url),
+      JSON.stringify(returnable),
+    );
+  }
+  return returnable;
 }
 
 const appendParameterString = (url: string, parameters: Parameters) => {
@@ -225,8 +235,21 @@ export function useGet<
   const [result, setResult] = useState<Result<RESPONSE_TYPE>>({
     stage: Stage.Fetching,
   });
+  const endpointUrl = partToApiBase + appendParameterString(url, parameters);
   useEffect(() => {
-    (async () => {
+    const parseResult = (
+      status: number,
+      wiredResponse: Result<WIRED_RESPONSE_TYPE>,
+    ) => {
+      const response = {
+        ...wiredResponse,
+        data: wiredResponse?.data
+          ? unmarshaler[status](wiredResponse.data)
+          : undefined,
+      };
+      setResult(response);
+    };
+    const makeCall = async () => {
       if ((options?.shouldSkip || (() => false))()) {
         setResult({
           status: 0,
@@ -238,7 +261,7 @@ export function useGet<
       try {
         moveSemephore(true);
         wiredResponse = await handleResponse<WIRED_RESPONSE_TYPE>(
-          await fetch(partToApiBase + appendParameterString(url, parameters), {
+          await fetch(endpointUrl, {
             headers: {
               Accept: "application/json",
             },
@@ -262,14 +285,15 @@ export function useGet<
         });
         return;
       }
-      const response = {
-        ...wiredResponse,
-        data: wiredResponse?.data
-          ? unmarshaler[status](wiredResponse.data)
-          : undefined,
-      };
-      setResult(response);
-    })();
+      parseResult(status, wiredResponse);
+    };
+    const stored = localStorage.getItem(getImmutableKey(endpointUrl));
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      parseResult(parsed.status, parsed);
+    } else {
+      makeCall();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, JSON.stringify(parameters)]);
   return result;
