@@ -7,7 +7,9 @@
 }
 
 .hide {
-  display: none;
+  width: 16px;
+  opacity: 0;
+  z-index: -5;
 }
 
 .show {
