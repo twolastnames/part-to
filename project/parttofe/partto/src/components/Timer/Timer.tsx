@@ -6,8 +6,9 @@ import { Ring } from "./Ring/Ring";
 import { DateTime, getDateTime } from "../../shared/dateTime";
 import { Duration, DurationFormat, getDuration } from "../../shared/duration";
 import { Flasher } from "../Flasher/Flasher";
+import { AdjustableDigit } from "./AdjustableDigit/AdjustableDigit";
 
-const adders = [10000, 60000, 600000, 60 * 60 * 1000];
+const adders = [1000, 10000, 60000, 600000, 60 * 60 * 1000];
 
 const getEnforcedDurationLabel = (
   duration: string,
@@ -30,17 +31,24 @@ const getEnforcedDurationLabel = (
                 isNaN(parsed) ? (
                   <span>{character}</span>
                 ) : (
-                  <span
-                    className={classes.clickable}
-                    onClick={() => {
-                      if (adders.length <= adder) {
-                        return;
-                      }
-                      addOffset(getDuration(adders[adder]));
-                    }}
+                  <AdjustableDigit
+                    increment={
+                      adders.length <= adder
+                        ? undefined
+                        : () => {
+                            addOffset(getDuration(adders[adder]));
+                          }
+                    }
+                    decrement={
+                      adders.length <= adder
+                        ? undefined
+                        : () => {
+                            addOffset(getDuration(-adders[adder]));
+                          }
+                    }
                   >
                     {character}
-                  </span>
+                  </AdjustableDigit>
                 ),
                 ...result,
               ],
