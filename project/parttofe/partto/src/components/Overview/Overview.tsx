@@ -13,6 +13,7 @@ import { DetailShell } from "../DetailShell/DetailShell";
 import { Overview as OverviewIcon } from "../Icon/Icon";
 import { ListItem } from "../ListItem/ListItem";
 import { Timeline } from "./Timeline/Timeline";
+import { Menu } from "../Menu/Menu";
 
 const listView = (
   <ListItem
@@ -28,6 +29,7 @@ export function Overview({ runState }: OverviewProps) {
     <Spinner responses={[response]}>
       <DetailShell name={listView}>
         <Timeline runState={runState} />
+        <Menu runState={runState} />
         <DefinitionListed summary="Ingredients">
           <Definitions definitionKey="ingredients" ids={staged} />
         </DefinitionListed>
