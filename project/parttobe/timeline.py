@@ -136,15 +136,17 @@ class _Duty(_Chunk):
 
 
 class _TaskPlacer:
-    def __call__(self, target, task):
+    def __call__(self, target, task, seen_duties=None):
         self.task = task.change_engagement(1.0)
         self.on = target
+        if self.task.insignificant:
+            return self.on
         while self.on and self.task:
-            if self.task.insignificant:
-                return self.on
+            if seen_duties is not None:
+                seen_duties |= set(self.on.duties)
             if self.on.task and not self.next_on:
                 return self.extend_nodes()
-            if self.on.task and self.next_on:
+            if self.on.task:
                 self.on = self.next_on
                 continue
             self.scaled = self.task.change_engagement(1.0 - self.on.engagement)
@@ -155,16 +157,22 @@ class _TaskPlacer:
                 self.continue_task()
             elif self.scaled.duration < self.on.duration:
                 return self.finish_task()
+            if self.task.insignificant:
+                return self.on
             if not self.next_on:
                 return self.extend_nodes()
             self.on = self.next_on
+        raise RuntimeError("Internal Error: Did not place task like it should")
+
+    def prepend_task(self):
+        one, two = self.scaled.split(self.scaled.duration - self.on.duration)
+        self.on.append_chunk(two)
+        self.task = one.change_engagement(1.0)
 
 
 class _TaskPrepender(_TaskPlacer):
     def continue_task(self):
-        one, two = self.scaled.split(self.scaled.duration - self.on.duration)
-        self.on.append_chunk(two)
-        self.task = one.change_engagement(1.0)
+        self.prepend_task()
 
     def finish_task(self):
         one, two = self.on.split(self.on.duration - self.scaled.duration)
@@ -201,94 +209,39 @@ class _TaskPostpender(_TaskPlacer):
         return window
 
 
-class TaskFrontloader:
-    def __init__(self, one, defineds):
-        self.one = one
-        self.defineds = defineds
-        self.find_dependencies()
-        self.done = set()
-
-    def find_dependencies(self):
-        self.dependencies = {}
-        self.dependeds = {}
-        for on in self.defineds:
-            if not hasattr(on, "depended") or not on.depended:
-                continue
-            self.dependeds[on] = on.depended
-            try:
-                self.dependencies[on.depended].add(on)
-            except KeyError:
-                self.dependencies[on.depended] = {on}
-
-    def pop_tasks(self):
-        self.tasks = set()
-        gapped = False
-        for on in self.one:
-            if not on.task:
-                gapped = True
-            elif gapped:
-                self.tasks.add(on.pop_task())
-            else:
-                self.done.add(on.task)
-
-    def find_duty_order(self):
-        seen_duties = set()
-        self.duty_order = []
-        for on in self.one:
-            for chunk in on.chunks:
-                if chunk in seen_duties:
-                    continue
-                seen_duties.add(chunk)
-                self.duty_order.append(chunk)
-
-    def get_next_task_depended(self):
-        ready = sorted(
-            [
-                task
-                for task in sorted(self.tasks)
-                if not (
-                    task in self.dependencies
-                    and (
-                        (self.dependencies[task] & self.tasks)
-                        or (
-                            len(self.dependencies[task] & self.done)
-                            != len(self.dependencies[task])
-                        )
-                    )
-                )
-            ],
-            key=lambda task: -task.duration,
+class FrontloaderState:
+    def __init__(self, target):
+        self.last_on_checked = None
+        self.coming_dependeds = set(
+            sum(
+                [
+                    [chunk.depended for chunk in window.chunks if chunk.depended]
+                    for window in target.start_from()
+                ],
+                [],
+            )
         )
-        if len(ready) > 0:
-            return ready[0]
+        self.loose_tasks = [
+            window.pop_task() for window in target.start_from() if window.task
+        ]
 
-    def __call__(self):
-        self.pop_tasks()
-        self.find_duty_order()
-        on = self.one.first
-        active_duties = set()
-        while self.tasks and on:
-            leftovers = active_duties.difference(on.chunks)
-            active_duties = set(on.duties).union(active_duties)
-            for leftover in leftovers:
-                if (
-                    hasattr(leftover, "change_engagement")
-                    or not leftover.engagement
-                    or leftover.engagement == 1.0
-                ):
-                    continue
-                active_duties.remove(leftover)
-                self.done.add(leftover)
+    def clean_duties(self, on):
+        if not on.before:
+            return
+        if on.before != self.last_on_checked:
+            self.clean_duties(on.before)
+        for chunk in on.before.chunks:
+            if chunk in on.chunks:
+                continue
+            if chunk.depended and chunk.depended in self.coming_dependeds:
+                self.coming_dependeds.remove(chunk.depended)
+        self.last_on_checked = on.before
 
-            while self.tasks:
-                task = self.get_next_task_depended()
-                if not task:
-                    break
-                self.tasks.remove(task)
-                on = self.one = _TaskPostpender()(on, task)
-                self.done.add(task)
-            on = on.after
-        return self.one
+    @property
+    def ready(self):
+        for task in self.loose_tasks:
+            if task not in self.coming_dependeds:
+                return task
 
 
 class _TimeWindow:
@@ -322,6 +275,16 @@ class _TimeWindow:
 
     def __contains__(self, chunk):
         return chunk.id in [chunk.id for chunk in self.chunks]
+
+    def __getitem__(self, index):
+        on = self.first
+        compare = 0
+        while on:
+            if index == compare:
+                return on
+            compare += 1
+            on = on.after
+        return None
 
     def normalize_inserted(self):
         chunk_ids = set([chunk.id for chunk in self.chunks])
@@ -375,13 +338,83 @@ class _TimeWindow:
         ]
         return self
 
-    def add_before(self, chunk):
-        if chunk.insignificant:
-            return self
+    def expand_for(self, defineds, completeds_in=None):
+        completeds = completeds_in if completeds_in else set()
+        dependends = set()
+        seen_dependeds = set()
+        dependeds = []
+        for on in defineds:
+            if hasattr(on, "depended") and on.depended:
+                if on.depended not in completeds:
+                    if on.depended not in seen_dependeds:
+                        seen_dependeds.add(on.depended)
+                        dependeds.append(on.depended)
+                dependends.add(on)
+        dependeds_in_completed = [
+            chunk for chunk in dependeds if chunk not in dependends
+        ] + [chunk for chunk in defineds if (chunk.depended in completeds)]
+        undependeds = [
+            chunk
+            for chunk in defineds
+            if not chunk.depended and chunk not in seen_dependeds
+        ]
+
+        ready_dependeds = dependeds_in_completed + undependeds
+        defineds_hash = {defined: defined for defined in defineds}
+        readies = [
+            (defineds_hash[ready] if ready in defineds_hash else ready)
+            for ready in ready_dependeds
+        ]
+
+        ready_duties = [
+            duty for duty in readies if not hasattr(duty, "change_engagement")
+        ]
+        ready_tasks = [task for task in readies if hasattr(task, "change_engagement")]
+        pass
+        active_task = None
+        for task in ready_tasks:
+            if self.after and task == self.after.task:
+                active_task = task
+        if not active_task and ready_tasks:
+            active_task = ready_tasks[0]
+        if active_task:
+            engagement = sum([duty.engagement for duty in ready_duties])
+            active_task = active_task.change_engagement(
+                1.0 - (engagement if engagement <= 1.0 else 1.0)
+            )
+        for_window = [active_task] + ready_duties if active_task else ready_duties
+        duration = min([chunk.duration for chunk in for_window])
+        comparable = set(for_window)
+        leftovers = [chunk for chunk in defineds if chunk not in comparable]
+        for chunk in for_window:
+            if chunk.duration == duration:
+                completeds.add(chunk)
+                self.chunks.append(chunk)
+            else:
+                one, two = chunk.split(duration)
+                self.chunks.append(one)
+                leftovers.append(two)
+        if leftovers:
+            next_target = self.back()
+            return next_target.expand_for(leftovers, completeds)
+        return self
+
+    def back(self):
         if not self.before:
             self.before = _TimeWindow([], self.pop_queue)
             self.before.after = self
-        return self.before.add(chunk)
+        return self.before
+
+    def forward(self):
+        if not self.after:
+            self.after = _TimeWindow([], self.pop_queue)
+            self.after.before = self
+        return self.after
+
+    def add_before(self, chunk):
+        if chunk.insignificant:
+            return self
+        return self.back().add(chunk)
 
     def prepend(self, chunk):
         for on in self:
@@ -483,86 +516,67 @@ class _TimeWindow:
             on = on.before
         return on
 
-    def frontload_tasks(self):
-        seen = set()
+    def start_from(self, reverse=False):
         on = self
-        while True:
-            task = None
-            if on.task or (on.task and on.task.id in seen):
-                if not on.after:
-                    return on
-                on = on.after
-                continue
-            task = on.pop_next_task()
-            if not task:
-                return on
-            seen.add(task.id)
-            on = _TaskPostpender()(on, task)
-            if not task:
-                return on
-            if not on.after:
-                return on
-            on = on.after
+        while on:
+            yield on
+            on = on.before if reverse else on.after
+
+    @property
+    def full_task_weight(self):
+        if not self.task:
+            return 0
+        total = 0
+        for on in self.start_from():
+            if on.task != self.task:
+                break
+            total += on.task.engagement * on.task.duration
+        if not self.before:
+            return total
+        for on in self.before.start_from(True):
+            if on.task != self.task:
+                break
+            total += on.task.engagement * on.task.duration.total_seconds
+        return total
+
+    def frontload_tasks(self, state_in=None):
+        state = state_in if state_in else FrontloaderState(self)
+        state.clean_duties(self)
+        if self.task and self.after:
+            return self.after.frontload_tasks(state)
+        ready = state.ready
+        if not ready and self.after:
+            return self.after.frontload_tasks(state)
+        if not ready and not self.after and state.loose_tasks:
+            raise RuntimeError("Internal Error: leftover task error")
+        if not ready:
+            return self
+        seen_duties = set()
+        target = _TaskPostpender()(self, ready, seen_duties)
+        state.loose_tasks.remove(ready)
+        on_dependeds = set(
+            [chunk.depended for chunk in target.chunks if chunk.depended]
+        )
+        completed_duties = seen_duties - on_dependeds
+        state.coming_dependeds -= completed_duties
+        if ready.depended and ready.depended in state.coming_dependeds:
+            state.coming_dependeds.remove(ready.depended)
+        if not target.after and state.loose_tasks:
+            raise RuntimeError("Internal Error: leftover task error")
+            for task in state.loose_tasks:
+                target = _TaskPostpender()(target, task, set())
+            return target
+        if not target.after:
+            return target
+        return target.after.frontload_tasks(state)
 
     def place_task(self, task):
         on = self.first
-        seen_dependency = False
-        while on.after:
-            if on.id in on.dependeds:
-                seen_dependency = True
-            elif seen_dependency and on.task:
-                return _TaskPrepender()(self, task)
+        while on:
+            if task.depended and task.depended.id in on.ids:
+                return _TaskPrepender()(on, task)
             on = on.after
-            continue
         return _TaskPrepender()(self.last, task)
-
-    def add(self, chunk):
-        if chunk.insignificant:
-            return self
-        chunk.container = self
-        partner = self.get_partner(chunk)
-        if partner:
-            return partner.add_before(chunk)
-        if not self.chunks:
-            self.chunks = [chunk]
-            return self
-        if hasattr(chunk, "scale_duration") and self.task:
-            return self.add_before(chunk)
-        if hasattr(chunk, "change_engagement") and not self.task:
-            return self.prepend_task(chunk)
-        if not hasattr(chunk, "scale_duration") and not self.task:
-            if chunk.duration == self.duration:
-                self.append_chunk(chunk)
-                return self
-            if chunk.duration > self.duration:
-                one, two = chunk.split(chunk.duration - self.duration)
-                self.append_chunk(two)
-                return self.prepend(one)
-            if chunk.duration < self.duration:
-                single, pair = self.split(self.duration - chunk.duration)
-                pair.append_chunk(chunk)
-                on = self.replace(single, pair)
-                return on
-        if not hasattr(chunk, "scale_duration") and self.task:
-            if chunk.duration == self.duration:
-                self.pop_queue.append(self.pop_task())
-                self.append_chunk(chunk)
-                return self.place_task(self.pop_queue.pop(0))
-            if chunk.duration > self.duration:
-                chunk1, chunk2 = chunk.split(chunk.duration - self.duration)
-                self.pop_queue.append(self.pop_task())
-                self.append_chunk(chunk2)
-                on = self.prepend(chunk1)
-                return on.place_task(self.pop_queue.pop(0))
-            if chunk.duration < self.duration:
-                single, pair = self.split(self.duration - chunk.duration)
-                pair.append_chunk(chunk)
-                self.pop_queue.append(self.pop_task())
-                single.pop_task()
-                pair.pop_task()
-                on = self.replace(single, pair) if single.chunks else self.replace(pair)
-                return on.place_task(self.pop_queue.pop(0))
-        raise RuntimeError("did not know add instructions")
 
     def append_chunk(self, chunk):
         if chunk.insignificant:
@@ -611,6 +625,7 @@ class _TimeWindow:
                 or window == self
             ):
                 continue
+            window.popped_duration = window.duration
             task = task.merge(window.task)
             window.remove_task()
         self.remove_task()
@@ -654,51 +669,10 @@ class Timeline:
     def __init__(self, definitions):
         if len(definitions) == 0:
             return
-        self.originals = {definition.id: definition for definition in definitions}
+        self.originals = {str(definition.id): definition for definition in definitions}
         defineds = [_define(definition) for definition in definitions]
-        dependends = {}
-        for on in defineds:
-            if hasattr(on, "depended") and on.depended:
-                if on.depended not in dependends:
-                    dependends[on.depended] = []
-                dependends[on.depended].append(on)
-        orphans = [
-            defined
-            for defined in defineds
-            if defined.depended and defined.depended not in defineds
-        ]
-        inserteds = set(
-            [on for on in defineds if not hasattr(on, "depended") or not on.depended]
-            + orphans
-        )
-        to_insert = (
-            [defined for defined in inserteds if defined in dependends]
-            + [defined for defined in inserteds if defined not in dependends]
-            + orphans
-        )
-        self.one = _TimeWindow([])
-        while True:
-            for insertable in to_insert:
-                if self.one.find(lambda window: insertable.depended in window.chunks):
-                    self.one = self.one.find(
-                        lambda window: insertable.depended in window.chunks
-                    ).add_before(insertable)
-                else:
-                    self.one = self.one.last.add(insertable)
-            to_insert = []
-            nexts = set()
-            for key, value in dependends.items():
-                if key in inserteds:
-                    nexts.update(set(value))
-                    to_insert.extend(value)
-            inserteds.update(nexts)
-            for key in to_insert:
-                if key.depended in dependends:
-                    del dependends[key.depended]
-            if not to_insert:
-                break
-        self.one = TaskFrontloader(self.one, defineds)()
-        return
+        self.one = _TimeWindow([]).expand_for(defineds)
+        self.one = self.one.first.frontload_tasks()
 
     def __repr__(self):
         return "][".join([repr(window) for window in self])
