@@ -574,9 +574,7 @@ class RunState(models.Model):
             seen_part_tos.add(task.part_to)
         result["activePartTos"] = list(seen_part_tos)
         result["timestamp"] = self.created
-        completion = calculate_completion(
-            result["staged"] + result["started"], self.created
-        )
+        completion = calculate_completion(active_tasks, self.created)
         completion_durations = {
             action.definition: action.duration for action in completion.actions()
         }
