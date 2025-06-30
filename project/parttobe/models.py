@@ -197,57 +197,6 @@ def calculate_completion(definitions, at_time=datetime.datetime.now()):
     timeline = Timeline(definitions)
     return CompletionResult(timeline)
 
-    def next():
-        dependeds = [
-            task
-            for task in left
-            if task.depended not in left
-            and task.depended not in [duty.duty for duty in engagements.duties]
-        ]
-        rankings = [
-            key for key, value in sorted(time_consumed.items(), key=lambda x: x[1])
-        ]
-        found = None
-        for ranking in rankings:
-            for task in dependeds:
-                if task.part_to == ranking:
-                    found = task
-        return found
-
-    while left or len(engagements) > 0:
-        definition = next()
-        if definition:
-            left.remove(definition)
-            if not definition.is_task():
-                engagements.append_duty(definition)
-                continue
-            completed_duties, work_left, consumed, time_taken = (
-                engagements.execute_task(definition)
-            )
-            on_time += time_taken
-            result.append({"definition": definition, "time": on_time})
-        else:
-            completed_duties, work_left, consumed, time_taken = (
-                engagements.finish_next_duty()
-            )
-            on_time += time_taken
-        for id, count in consumed.items():
-            time_consumed[id] += count
-        result.extend(
-            [
-                {"definition": duty, "time": on_time}
-                for duty in completed_duties
-                if duty not in [action["definition"] for action in result]
-            ]
-        )
-    completed_duties, work_left, consumed, time_taken = engagements.empty()
-    on_time += time_taken
-    for id, count in consumed.items():
-        time_consumed[id] += count
-    result.reverse()
-    return CompletionResult(result, on_time)
-
-
 def order_definitions(definitions):
     return [
         information.definition
