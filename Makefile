@@ -10,31 +10,42 @@ NENV=$(NENV_BASE)/bin/activate
 PROJECT=project
 NODE_BASE=project/parttofe/partto
 NODE_SOURCE=$(NODE_BASE)/src
-NODE_BUILD=$(NODE_BASE)/build
 NODE_MODULES=$(NODE_BASE)/node_modules
+NODE_BUILD=$(NODE_BASE)/build
+NODE ?=node
+NPM ?=npm
 
 WITH_VENV=. $(VENV) &&
 WITH_ENV=$(WITH_VENV) . $(NENV) &&
 
 GIT_HOOKS_PATH=githooks
 
+export PART_TO_DATA_DIRECTORY=/var/partto
+VENV_CHECK := $(shell command -v virtualenv 2> /dev/null)
+
 $(VENV):
-	git config core.hooksPath $(GIT_HOOKS_PATH)
-	python3 -m pip install virtualenv
+	if [ -d ".git" ]; then git config core.hooksPath $(GIT_HOOKS_PATH); fi
+ifndef  VENV_CHECK
+	-python3 -m pip install virtualenv
+endif
 	virtualenv $(VENV_BASE)
 	$(WITH_VENV) python3 -m pip install -r requirements.txt
 
 $(NENV): $(VENV)
+	echo nenv run
 	$(WITH_VENV) echo nodeenv using virtulenv $(VIRTUAL_ENV)
-	$(WITH_VENV) nodeenv $(NENV_BASE) --node=20.10.0
+	$(WITH_VENV) nodeenv $(NENV_BASE) --node=20.19.2
 
-$(NODE_BUILD): $(VENV) project/parttofe/partto/node_modules $(NENV) $(shell find ${NODE_SOURCE} -type f)
-	$(WITH_ENV) node -v && cd $(NODE_BASE) && npm run build
+$(NODE_MODULES): $(VENV)  $(NENV)
+	$(WITH_ENV) cd $(NODE_BASE) && $(NODE_ENV_PATH) $(NPM) ci
+
+$(NODE_BUILD): $(VENV) $(NENV) $(shell find ${NODE_SOURCE} -type f) $(NODE_MODULES)
+	$(WITH_ENV) $(NODE) -v && cd $(NODE_BASE) && $(NODE) ./node_modules/.bin/react-scripts build
 
 build: $(VENV) $(NENV) $(NODE_BUILD)
 
 clean:
-	rm -rf $(NODE_BUILD) $(NENV_BASE) $(VENV_BASE) $(NODE_MODULES)
+	rm -rf $(NODE_BUILD) $(NODE_MODULES) $(NENV_BASE) $(VENV_BASE)
 
 insertdefaultrecipes:
 	${WITH_ENV} python3 project/manage.py insertrecipe recipeexamples/*
@@ -45,7 +56,7 @@ runback: $(VENV) $(NENV) $(NODE_BUILD) migrate
 	$(WITH_ENV) cd project && python3 manage.py runserver $(ARGUMENTS)
 
 runfront: $(VENV) $(NENV) $(NODE_BUILD)
-	$(WITH_ENV) cd $(NODE_SOURCE) && npm run start
+	$(WITH_ENV) cd $(NODE_SOURCE) && REACT_APP_PART_TO_API_BASE=http://localhost:8000 $(NPM) run start
 
 runstorybook: $(VENV) $(NENV) $(NODE_BUILD)
 	$(WITH_ENV) cd $(NODE_SOURCE) && npm run storybook
@@ -65,7 +76,7 @@ command: $(NENV)
 checkformat:
 	$(WITH_ENV) black --check . && cd $(NODE_SOURCE) && npm run checkformat
 
-format: $(NENV)
+format: $(NENV) $(NODE_MODULES)
 	$(WITH_ENV) black . && cd $(NODE_SOURCE) && npm run format
 
 migrate: $(NENV)
@@ -77,5 +88,12 @@ updateapi: $(NENV)
 release: $(NENV)
 	$(WITH_ENV) ./bin/release.py
 
+image: $(NENV)
+	mkdir -p /var/partto
+	sudo bash -c "${WITH_ENV} ./bin/docker_operations.py ensure_image"
+
 test: testfront testback
+
+enterimage: $(VENV) migrate
+	cd project && ../venv/bin/gunicorn --bind :20222 --workers 4 --access-logfile $(PART_TO_DATA_DIRECTORY)/partto.out.log --error-logfile $(PART_TO_DATA_DIRECTORY)/partto.err.log --log-level debug project.wsgi
 
