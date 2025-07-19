@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,10 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-kws$_c81@i)muw(dowe0c^0zynw$h-=(e!ow5i28cvxo0qlni0"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if "DJANGO_DEBUG" in os.environ:
+    DEBUG = os.environ["DJANGO_DEBUG"].lower() in ["true", "yes", "1"]
+else:
+    DEBUG = True
 
-ALLOWED_HOSTS = ["testserver", "localhost", "127.0.0.1"]
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -89,10 +92,29 @@ WSGI_APPLICATION = "project.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": str(
+            (
+                (
+                    "PART_TO_DATA_DIRECTORY" in os.environ
+                    and Path(os.environ["PART_TO_DATA_DIRECTORY"])
+                )
+                or BASE_DIR
+            )
+            / "db.sqlite3"
+        ),
     }
 }
 
+LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "general.log",
+        },
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
