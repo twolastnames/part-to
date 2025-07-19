@@ -10,7 +10,7 @@ from project.parttobe.views.test_nondjango_helpers import get_toml_recipe_as_jso
 
 def get_command_line():
     parser = ArgumentParser()
-    parser.add_argument("filename", help="input filename for recipe")
+    parser.add_argument("filenames", nargs="+", help="input filename(s) for recipe")
     parser.add_argument("-o", "--origin", help="origin of Part To backend")
     return parser
 
@@ -18,9 +18,7 @@ def get_command_line():
 def insert_recipe(origin, filename):
     dump = get_toml_recipe_as_json(filename)
     response = post("{}/api/partto/".format(origin), json=dump)
-    if response.status_code == 200:
-        print("recipe inserted successfully")
-    print("Post Error:", response.status_code, response.text)
+    print("Post Response:", response.status_code, response.text)
 
 
 if __name__ == "__main__":
@@ -28,8 +26,8 @@ if __name__ == "__main__":
     arguments = parser.parse_args()
     print(arguments)
     errors = []
-    if not arguments.filename:
-        errors.append('missing option "filename"')
+    if not arguments.filenames:
+        errors.append('missing option "filename(s)"')
     if arguments.origin:
         origin = arguments.origin
     else:
@@ -40,5 +38,5 @@ if __name__ == "__main__":
         for message in errors:
             print(message)
         exit(1)
-    insert_recipe(origin, arguments.filename)
-    # print('o', options, arguments)
+    for filename in arguments.filenames:
+        insert_recipe(origin, filename)

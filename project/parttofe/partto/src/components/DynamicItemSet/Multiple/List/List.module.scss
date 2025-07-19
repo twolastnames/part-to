@@ -1,0 +1,25 @@
+@import "../../../../App.scss";
+
+.list {
+  overflow-y: scroll;
+}
+
+.item {
+  width: 100%;
+  cursor: pointer;
+  overflow-y: scroll;
+  padding: var(--gap-medium) 0;
+  font: var(--font-regular-large);
+}
+
+.list > div:first-of-type {
+  border-top: var(--detail-color) 1px solid;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  height: fit-content;
+  border-bottom: var(--detail-color) 1px solid;
+  margin-right: var(--gap-xlarge);
+}

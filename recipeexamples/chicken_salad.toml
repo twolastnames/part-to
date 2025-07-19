@@ -1,0 +1,59 @@
+[part_to]
+name = "Chicken Salad (grape & nuts)"
+depends = ["Grapes"]
+
+['Dressing']
+duration = "2 minutes"
+description = "mix dressing in the bowl"
+ingredients = ["1/2 cup mayonaise", "1 cup Miracle Whip"]
+depends=['Bowl']
+
+['Meat']
+duration = "10 minutes"
+description = "Cut the meat off the chicken in small pieces/shreds and put the skin to the side for later. Put and mix the meat with the dressing."
+tools = ["kitchen shears"]
+depends=['Dressing']
+ingredients = ["One Rotisserie Chicken"]
+
+['Bowl']
+duration='30 seconds'
+description="get out a 4qt bowl to put and mix everything in"
+
+['Skin']
+duration = "4 minutes"
+description = "Mince or cut small the skin and mix with the contents of the bowl"
+depends = ["Meat"]
+
+['Apple']
+duration = "3 minutes"
+description = "cut 2 apples into chunks and mix with the contents of the bowl"
+ingredients = ["2 Apples"]
+depends = ['Celery']
+
+['Others']
+duration = "90 seconds"
+description = "mix the walnuts and lemon juice into the bowl"
+ingredients = ["2 cups chopped walnuts", "3 tbs lemon juice"]
+depends=['Skin']
+
+['Onion']
+duration = "3 minutes"
+description = "Chop have a red onion and mix it into the bowl contents"
+ingredients = ["1/2 a red onion"]
+depends=['Others']
+
+
+['Celery']
+duration = "2 minutes"
+description = "Chop the celery and mix it with the contents of the bows"
+ingredients = ["3 Celery stalks"]
+depends=['Onion']
+
+
+['Grapes']
+duration = "3 minutes"
+description = "half the grapes and mix them with the contents of the bowl"
+ingredients = ["25 red/black grapes"]
+depends=['Apple']
+
+

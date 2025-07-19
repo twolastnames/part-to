@@ -35,6 +35,7 @@ import {
   parameterMarshalers,
   bodyMarshalers,
   unmarshalers,
+  integer,
 {% for shared_type in shared_types %}
   {{ shared_type }},
 {% endfor %}

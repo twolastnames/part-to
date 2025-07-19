@@ -5,6 +5,7 @@ import { ShellProvider } from "../../../providers/ShellProvider";
 import { StageMeal } from "../StageMeal";
 import task1 from "../../../mocks/task1.json";
 import partTo1 from "../../../mocks/partTo1.json";
+import runState1 from "../../../mocks/runState3complete.json";
 
 const mockedUsedNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -22,8 +23,12 @@ test("snapshot", async () => {
         }),
       );
     }
+
     if (request.url.includes("/api/partto/")) {
       return Promise.resolve(JSON.stringify(partTo1));
+    }
+    if (request.url.includes("/api/run/")) {
+      return Promise.resolve(JSON.stringify(runState1));
     }
     if (request.url.includes("/api/task/")) {
       return Promise.resolve(JSON.stringify(task1));

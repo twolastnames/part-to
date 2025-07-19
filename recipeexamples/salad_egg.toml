@@ -1,0 +1,62 @@
+[part_to]
+name = "Salad - Egg"
+depends = ["eggs"]
+
+['dressing']
+duration = "3 minutes"
+description = "mix the dressing"
+ingredients = ["3/4 cup mayonaise (1 tbs/egg)", "1.5 tsp mustard (1/8 tsp per egg)", "3/8 tsp paprika (1/16 tsp per egg)", "1.5 tsp salt (1/8 tsp per egg)", "1 tsp pepper (1/16 tsp per egg)"]
+
+['onion']
+duration = "3 minutes"
+description = "chop green onion and mix it with the dressing"
+ingredients= ["1/4 cup green onion (1/2 tbs per egg or 1/4 tsp dried chive per egg)"]
+depends=['dressing']
+
+['eggs']
+duration = "3 minutes"
+description = "with eggs in onion mix and chop mix to desired sized chunks"
+depends=['onion', 'peel']
+
+['boil']
+duration='10 minutes'
+description='get water boiling on the stovetop with enough water to easily cover eggs'
+tools=['pan']
+engagement=2
+
+['insert']
+duration='1 minutes'
+description='gently put eggs in boiling water, with a basket works well'
+ingredients=['12 eggs']
+depends=['boil']
+
+['cook']
+duration='13 minutes'
+description='gently simmer eggs for 13 minutes... just light bubbles'
+engagement=5
+depends=['insert']
+
+['ice']
+duration='3 minutes'
+description='put water and a ice in a mixing bowl for the eggs to fit in'
+tools=['mixing bowl']
+ingredients=['ice']
+
+['place']
+duration='1 minutes'
+description='put eggs from water boil to ice bath'
+depends=['ice', 'cook']
+
+['chill']
+duration='5 minutes'
+description='let eggs chill for 5 minutes'
+engagement=2
+depends=['place']
+
+
+['peel']
+duration='7 minutes'
+description='peel eggs and put each one in with the onions'
+depends=['onion', 'chill']
+
+

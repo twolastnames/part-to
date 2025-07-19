@@ -1,0 +1,105 @@
+[part_to]
+name = "Chicken Marsala"
+depends = ["Garnish"]
+
+['Flatten Chicken']
+duration = "5 minutes"
+description = "Slice each chicken breast carefully in half lengthwise (horizontally) and place one at a time, between 2 sheets of cling wrap or in a ziploc freezer bag. Carefully flatten the chicken breasts with a rolling pin until they are approximately ¼ inch thick. Don’t pound the breasts too hard as it could tear apart the breast. Ideally, you want flattened chicken breasts to a uniform thickness."
+tools = ["Rolling Pin"]
+ingredients = ["4 chicken breasts, boneless and skinless (about 2 lb.)"]
+
+['Season Chicken']
+duration = "1 minute"
+description = "Season both sides of each chicken breast with salt and pepper."
+depends = ["Flatten Chicken"]
+ingredients = ["1 teaspoon salt", "1 teaspoon ground black pepper"]
+
+['Prepare Flour']
+duration = "30 seconds"
+description = "Prepare a shallow plate with flour"
+ingredients = ["1/2 cup all-purpose flour"]
+
+['Flour Chicken']
+duration = "90 seconds"
+description = "Dip the chicken into the flour, evenly coating on both sides. Set aside."
+depends = ["Prepare Flour", "Season Chicken"]
+
+['Heat Oil']
+duration = "2 minutes"
+description ="Heat oil in a large skillet over medium-high."
+ingredients = ["4 tablespoons olive oil"]
+engagement = 10
+
+['Cook Chicken']
+duration = "10 minutes"
+description = "Sear the chicken for about 5 minutes per side until golden brown and fully cooked through. The internal temperature for the chicken should reach 165F. Then transfer chicken to a plate,"
+depends = ["Heat Oil", "Flour Chicken"]
+engagement = 15
+
+
+['Melt Butter']
+duration = "2 minutes"
+description = "Melt the butter in same pan"
+depends = ["Cook Chicken"]
+ingredients = ["4 tablespoons butter, unsalted"]
+engagement = 15
+
+
+['Saute Mushrooms']
+duration = "5 minutes"
+description = "sauté mushrooms until golden brown on both sides, about 5 minutes. Add a little more olive oil, if needed."
+depends = ["Melt Butter"]
+ingredients = ["4 cups brown mushrooms, thinly sliced"]
+engagement = 10
+
+
+['Prepare Seasoning']
+duration = "90 seconds"
+description = "Get Seasoning around"
+ingredients = ["2 teaspoon all-purpose flour", "1 teaspoon Italian seasoning", "2 tablespoon garlic, minced"]
+
+
+['Cook Seasoning']
+duration = "1 minute"
+description = "Stir in flour, Italian seasoning and garlic and sauté until fragrant, about 1 minute."
+depends = ["Saute Mushrooms", "Prepare Seasoning"]
+engagement = 10
+
+
+['Gather Sauce']
+duration = "90 seconds"
+description = "Wisk together marsala wine, chicken broth, and cream in bowl."
+ingredients = ["1 cup dry marsala wine", "2 cup chicken broth", "2/3 cup heavy cream"]
+
+['Add Sauce']
+duration = "30 seconds"
+description = "Pour in marsala wine, chicken broth, and cream and stir in."
+depends = ["Gather Sauce", "Cook Seasoning"]
+
+['Cook Sauce']
+duration = "4 minutes 30 seconds"
+description = "Reduce heat to medium and bring the sauce to a simmer until thickened to a desired consistency, about 4-5 minutes"
+depends = ["Add Sauce"]
+engagement = 10
+
+
+['Reheat Chicken']
+duration = "90 seconds"
+description = "Return chicken to skillet and cook and soak in sauce for 1-2 minutes"
+depends = ["Cook Sauce"]
+engagement = 10
+
+['Chop Parsley']
+duration = '2 minutes'
+description = "Finely chop 2 tbs parsley"
+ingredients = ["2 tablespoon fresh parsley, finely chopped (for garnish)"]
+
+['Garnish']
+duration = '1 minute'
+description = "Garnish with parsley and serve with pasta, rice, or over mashed potatoes"
+depends =['Chop Parsley', 'Reheat Chicken']
+
+
+
+
+

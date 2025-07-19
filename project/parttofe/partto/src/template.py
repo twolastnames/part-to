@@ -212,10 +212,9 @@ import { Layout } from "{{ depthDots }}components/Layout/Layout";
 export function {{name.title}} () {
   return (
     <Layout
-      className={ classes.{{ name.camel }} }
       pair={[
-        <div>WIP: Put first here</div>,
-        <div>WIP: Put second here</div>,
+        <div className={classes.{{name.camel}}Left}>WIP: Put first here</div>,
+        <div className={classes.{{name.camel}}Right}>WIP: Put second here</div>,
       ]}
     />
   );
@@ -226,7 +225,9 @@ export function {{name.title}} () {
             definition="""
 @import "{{ depthDots }}App.scss";
 
-.{{ name.camel }} {
+.{{ name.camel }}Left {
+}
+.{{ name.camel }}Right {
 }
             """,
         ),

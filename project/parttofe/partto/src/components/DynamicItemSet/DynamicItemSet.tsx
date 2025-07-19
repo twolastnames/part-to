@@ -11,6 +11,7 @@ export function DynamicItemSet({
   setOperations,
   items,
   emptyPage,
+  pausedByDefault,
   context,
 }: DynamicItemSetProps) {
   context.setCount(items.length);
@@ -22,7 +23,11 @@ export function DynamicItemSet({
       ) : items.length === 1 ? (
         <One item={items[0]} />
       ) : (
-        <Multiple context={context} items={items} />
+        <Multiple
+          pausedByDefault={pausedByDefault}
+          context={context}
+          items={items}
+        />
       )}
     </div>
   );

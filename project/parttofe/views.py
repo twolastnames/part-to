@@ -2,29 +2,28 @@ from django.shortcuts import render
 import sys
 import os
 import re
+import shutil
+
+file_types = ["css", "js", "media"]
 
 self_directory = os.path.dirname(os.path.abspath(__file__))
-js_directory = os.path.join(self_directory, "partto", "build", "static", "js")
-css_directory = os.path.join(self_directory, "partto", "build", "static", "css")
 
-js_files = []
-css_files = []
+
+def get_path(type):
+    return os.path.join(self_directory, "partto", "build", "static", type)
+
+
 try:
-    js_files = os.listdir(js_directory)
-    css_files = os.listdir(css_directory)
+    raw_files = {type: os.listdir(get_path(type)) for type in file_types}
 except:
-    print("could not find the js directory")
-    files = []
+    print("could not find a type directory")
+    raw_files = {}
 
 
 try:
-    shaed_js_files = {
-        re.sub("\.[a-f0-8]{8}", "", filename): "/static/static/js/{}".format(filename)
-        for filename in js_files
-    }
-    shaed_css_files = {
-        re.sub("\.[a-f0-8]{8}", "", filename): "/static/static/css/{}".format(filename)
-        for filename in css_files
+    shaed_files = {
+        type: ["/static/static/{}/{}".format(type, filename) for filename in filenames]
+        for type, filenames in raw_files.items()
     }
 except KeyError:
     print(
@@ -34,8 +33,16 @@ except KeyError:
 
 import json
 
-print("css files", shaed_css_files)
-print("js files", shaed_js_files)
+media_path = os.path.join(self_directory, "partto", "build", "static", "media")
+
+if not os.path.isdir(media_path):
+    os.makedirs(media_path)
+
+for file in os.listdir(get_path("media")):
+    shutil.copy(
+        os.path.join(self_directory, "partto", "build", "static", "media", file),
+        os.path.join(self_directory, "partto", "build", "media"),
+    )
 
 
 def index(*args, **kargs):
@@ -43,7 +50,7 @@ def index(*args, **kargs):
         args[0],
         "entry/index.html",
         context={
-            "js_files": shaed_js_files.values(),
-            "css_files": shaed_css_files.values(),
+            "js_files": shaed_files["js"],
+            "css_files": shaed_files["css"],
         },
     )

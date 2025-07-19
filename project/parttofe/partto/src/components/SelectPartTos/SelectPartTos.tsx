@@ -13,6 +13,8 @@ import { PartToId, RunStateId } from "../../api/sharedschemas";
 import { useRunGet } from "../../api/runget";
 import { SelectPartTosProps } from "./SelectPartTosTypes";
 import { LeftContext } from "../../providers/DynamicItemSetPair";
+import { ListItem } from "../PartTo/ListItem/ListItem";
+import { Spinner } from "../Spinner/Spinner";
 
 function getFirstPairItems(
   navigate: (arg: string) => void,
@@ -24,7 +26,7 @@ function getFirstPairItems(
     .filter((partTo) => !(ommittablePartTos || []).includes(partTo))
     .map((partTo) => ({
       key: partTo,
-      listView: <>{partTo}</>,
+      listView: <ListItem partTo={partTo} />,
       detailView: <PartToIdFromer partTo={partTo} />,
       itemOperations: [
         {
@@ -44,16 +46,13 @@ function getFirstPairItems(
     }));
 }
 
-const noRecipesMessage = [
-  'Select "Enter Recipe" from the menu to',
-  "put menus in the system.",
-].join(" ");
+const noRecipesMessage = "No Recipes Left To Add. Have an eventful meal.";
 
 export function SelectPartTos({ runState }: SelectPartTosProps) {
   const navigate = useNavigate();
   const run = useRunGet(
-    { runState: runState?.current || "" },
-    { shouldSkip: () => !runState?.current },
+    { runState: runState as RunStateId },
+    { shouldSkip: () => !runState },
   );
   const loading = "Loading...";
   const allRecipes = useParttosGet();
@@ -64,23 +63,37 @@ export function SelectPartTos({ runState }: SelectPartTosProps) {
   const firstPairEmptyText =
     allRecipes?.stage === Stage.Ok ? noRecipesMessage : loading;
 
+  const responses = [
+    {
+      stage:
+        runState && run.stage !== Stage.Ok && !errorMessage
+          ? Stage.Fetching
+          : Stage.Ok,
+    },
+    allRecipes,
+    runState ? run : { stage: Stage.Ok },
+  ];
+
   return (
-    <DynamicItemSet
-      items={getFirstPairItems(
-        navigate,
-        allRecipes?.data?.partTos || [],
-        run?.data?.activePartTos || [],
-        runState?.current,
-      )}
-      context={LeftContext}
-      setOperations={[]}
-      emptyPage={
-        errorMessage ? (
-          <>{errorMessage}</>
-        ) : (
-          <EmptySimpleView content={firstPairEmptyText} />
-        )
-      }
-    />
+    <Spinner responses={responses}>
+      <DynamicItemSet
+        items={getFirstPairItems(
+          navigate,
+          allRecipes?.data?.partTos || [],
+          run?.data?.activePartTos || [],
+          runState,
+        )}
+        pausedByDefault={true}
+        context={LeftContext}
+        setOperations={[]}
+        emptyPage={
+          errorMessage ? (
+            <>{errorMessage}</>
+          ) : (
+            <EmptySimpleView content={firstPairEmptyText} />
+          )
+        }
+      />
+    </Spinner>
   );
 }

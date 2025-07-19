@@ -31,6 +31,7 @@ const ChangingCarousel = () => {
       key={items.length.toString()}
       context={LeftContext}
       items={items}
+      pausedByDefault={true}
     />
   );
 };
@@ -52,6 +53,6 @@ test("holding paused state through rerender", async () => {
     await waitFor(() => screen.findByTitle("Unpaused"));
     seenPause = true;
   } catch (e) {}
-  expect(seenPause).toBeFalsy();
+  await waitFor(() => expect(seenPause).toBeFalsy());
   expect(await screen.findByTitle("Paused")).toBeTruthy();
 });

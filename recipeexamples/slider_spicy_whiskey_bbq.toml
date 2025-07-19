@@ -1,0 +1,72 @@
+[part_to]
+name = "Sliders - Spicy Whiskey BBQ"
+depends = ["Assemble"]
+
+['Meat']
+duration = "4 minutes"
+description = "form meat into 12 meat patties and salt and pepper both sides"
+ingredients = ["2lb ground beef, turkey, or bison"]
+
+['Melt']
+duration = "2 minutes"
+description = "Melt butter at medium-high heat"
+tools = ["frying skillet"]
+ingredients = ["4 tbs butter"]
+depends= ["Meat"]
+engagement = 10
+
+
+['Fry']
+duration = "7 minutes"
+description = "cook the patties until just about done in the middle, about 3-4 minutes per side. Then remove from pan and set aside."
+depends = ["Melt"]
+engagement = 15
+
+
+['Drain']
+duration = "1 minute"
+description = "Remove all but 2 tbs of grease from the pan."
+depends = ["Fry"]
+
+
+['Dice']
+duration = "4 minutes"
+description = "Dice an onion."
+ingredients = ["1 Onion"]
+
+
+['Saute']
+duration = "3 minutes"
+description = "put the diced onions in the hot skillet and cook."
+depends = ["Dice", "Drain"]
+engagement = 10
+
+
+['Reduce']
+duration = "2 minutes 30 seconds"
+description = "pour whiskey into skillet and let reduce to about half, about 2-3 minutes"
+depends = ["Saute"]
+ingredients = ["1/2 cup whiskey"]
+engagement = 10
+
+
+['Sauce']
+duration = "2 minutes"
+description = "combine bbq sauce and jalapenos"
+ingredients = ["1/4 cup jarred jalapenos, 1 cup bbq sauce"]
+
+
+['Reheat']
+duration = "2 minutes"
+description = "Put sauce and patties into skillet and reheat"
+depends = ["Sauce", "Reduce"]
+engagement = 10
+
+
+['Assemble']
+duration = "3 minutes"
+description = "put patties and sauce on slider buns"
+depends = ["Reheat"]
+ingredients = ["12 slider buns"]
+
+

@@ -10,6 +10,7 @@ test("snapshot", async () => {
   render(
     <ShellProvider>
       <List
+        onSelectionChanged={() => {}}
         context={LeftContext}
         items={[
           {

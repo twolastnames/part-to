@@ -11,4 +11,5 @@ cd $SCRIPT_DIRECTORY/..
 
 make test
 
+make build
 

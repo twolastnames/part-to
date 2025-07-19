@@ -1,0 +1,28 @@
+[part_to]
+name="Vegetarian Burger (from frozen)"
+depends=['Remove from Heat']
+
+['Remove from Heat']
+description="remove from heat and scrap any burnt stuff off"
+duration="20 seconds"
+depends=['cook']
+
+['put oil in pan']
+description="put 1/2 oil in pan"
+duration="20 seconds"
+
+['heat pan']
+description='heat pan to medium to medium high'
+duration='2 minutes'
+depends= ['put oil in pan']
+engagement=5
+
+['cook']
+description="put patty on hot pan and cook turning about every minute or so"
+duration="10 minutes"
+engagement=10
+depends= ['heat pan']
+
+
+
+

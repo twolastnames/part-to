@@ -8,6 +8,7 @@ exports[`toggle to list 1`] = `
   <div
     class="itemSet"
   >
+     
     <div
       class="dynamicItemSet"
       data-testid="DynamicItemSet"
@@ -28,8 +29,10 @@ exports[`toggle to list 1`] = `
           >
             <button
               aria-label="See all 2 items in a carousel"
-              class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+              class="mantine-focus-auto button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+              data-disabled="true"
               data-testid="Button"
+              disabled=""
               style="--ai-color: var(--mantine-color-white);"
               type="button"
             >
@@ -60,263 +63,38 @@ exports[`toggle to list 1`] = `
           </div>
         </div>
         <div
+          class="list"
           data-testid="List"
           style="height: 100%;"
         >
           <div
-            class="multiple"
-            data-testid="Carousel"
+            class="row"
           >
             <div
-              class="carousel"
+              class="item"
             >
               <div
-                class="carouselButton"
-              >
-                <div
-                  class="container"
-                >
-                  <button
-                    aria-label="Back One"
-                    class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
-                    data-testid="Button"
-                    style="--ai-color: var(--mantine-color-white);"
-                    type="button"
-                  >
-                    <span
-                      class="m_8d3afb97 mantine-ActionIcon-icon"
-                    >
-                      <svg
-                        class="tabler-icon tabler-icon-caret-up "
-                        fill="none"
-                        height="24"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M18 14l-6 -6l-6 6h12"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                </div>
-              </div>
-              <div
-                class="content"
-              >
-                <div
-                  class="listView"
-                />
-              </div>
-              <div
-                class="carouselButton"
-              >
-                <div
-                  class="container"
-                >
-                  <button
-                    aria-label="Forward One"
-                    class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
-                    data-testid="Button"
-                    style="--ai-color: var(--mantine-color-white);"
-                    type="button"
-                  >
-                    <span
-                      class="m_8d3afb97 mantine-ActionIcon-icon"
-                    >
-                      <svg
-                        class="tabler-icon tabler-icon-caret-down "
-                        fill="none"
-                        height="24"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M6 10l6 6l6 -6h-12"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                </div>
-              </div>
+                class="error"
+                data-testid="Spinner"
+              />
             </div>
+          </div>
+          <div
+            class="row"
+          >
             <div
-              class="iterationProgress"
-              data-testid="IterationProgress"
-            >
-              <span>
-                <span
-                  data-testid="Timer"
-                >
-                  <span
-                    data-testid="LocalProgress"
-                  >
-                    <div
-                      class="m_b32e4812 mantine-RingProgress-root"
-                      data-testid="Progress"
-                      style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
-                      title="Unpaused"
-                    >
-                      <svg
-                        class="m_d43b5134 mantine-RingProgress-svg"
-                      >
-                        <circle
-                          class="m_b1ca1fbf mantine-RingProgress-curve"
-                          cx="28"
-                          cy="28"
-                          fill="none"
-                          r="17.2"
-                          stroke-dasharray="108.043769586668, 0.027017696820872225"
-                          stroke-dashoffset="0"
-                          stroke-linecap="butt"
-                          stroke-width="8"
-                          transform="scale(1, -1) translate(0, -56)"
-                        />
-                        <circle
-                          class="m_b1ca1fbf mantine-RingProgress-curve"
-                          cx="28"
-                          cy="28"
-                          fill="none"
-                          r="17.2"
-                          stroke-dasharray="0.027017696820872225, 108.043769586668"
-                          stroke-dashoffset="108.07078728348888"
-                          stroke-linecap="butt"
-                          stroke-width="8"
-                          style="--curve-color: var(--secondary-color);"
-                        />
-                      </svg>
-                      <div
-                        class="m_b23f9dc4 mantine-RingProgress-label"
-                      >
-                        <div
-                          class="label"
-                        >
-                          1
-                        </div>
-                      </div>
-                    </div>
-                  </span>
-                </span>
-              </span>
-              <span
-                class="count"
-              >
-                <span
-                  data-testid="Count"
-                >
-                  <span
-                    data-testid="LocalProgress"
-                  >
-                    <div
-                      class="m_b32e4812 mantine-RingProgress-root"
-                      data-testid="Progress"
-                      style="--rp-size: calc(3.5rem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
-                      title="4 seconds"
-                    >
-                      <svg
-                        class="m_d43b5134 mantine-RingProgress-svg"
-                      >
-                        <circle
-                          class="m_b1ca1fbf mantine-RingProgress-curve"
-                          cx="28"
-                          cy="28"
-                          fill="none"
-                          r="17.2"
-                          stroke-dasharray="54.03539364174444, 54.03539364174444"
-                          stroke-dashoffset="0"
-                          stroke-linecap="butt"
-                          stroke-width="8"
-                          transform="scale(1, -1) translate(0, -56)"
-                        />
-                        <circle
-                          class="m_b1ca1fbf mantine-RingProgress-curve"
-                          cx="28"
-                          cy="28"
-                          fill="none"
-                          r="17.2"
-                          stroke-dasharray="54.03539364174444, 54.03539364174444"
-                          stroke-dashoffset="108.07078728348888"
-                          stroke-linecap="butt"
-                          stroke-width="8"
-                          style="--curve-color: var(--secondary-color);"
-                        />
-                      </svg>
-                      <div
-                        class="m_b23f9dc4 mantine-RingProgress-label"
-                      >
-                        <div
-                          class="label"
-                        >
-                          2
-                        </div>
-                      </div>
-                    </div>
-                  </span>
-                </span>
-              </span>
-            </div>
-            <div
-              class="buttonSet"
+              class="item"
             >
               <div
-                class="buttons"
-              >
-                <div
-                  class="buttonSet"
-                  data-testid="ButtonSet"
-                >
-                  <div
-                    class="container"
-                  >
-                    <button
-                      aria-label="Add to Meal"
-                      class="mantine-focus-auto mantine-active button m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
-                      data-testid="Button"
-                      style="--ai-color: var(--mantine-color-white);"
-                      type="button"
-                    >
-                      <span
-                        class="m_8d3afb97 mantine-ActionIcon-icon"
-                      >
-                        <svg
-                          class="tabler-icon tabler-icon-plus "
-                          fill="none"
-                          height="24"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          viewBox="0 0 24 24"
-                          width="24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M12 5l0 14"
-                          />
-                          <path
-                            d="M5 12l14 0"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+                class="error"
+                data-testid="Spinner"
+              />
             </div>
           </div>
         </div>
       </div>
     </div>
+     
   </div>
   <div
     class="itemSet"
@@ -370,7 +148,7 @@ exports[`toggle to list 1`] = `
           <div
             class="content"
           >
-            Select recipes from the left with the arrow button to put a meal together.
+            Select recipes from the first pane with the plus and add tasks for meal a meal to the second pane. When all your meal tasks are in the second pane, click the oven that will appear to start cooking.
           </div>
         </div>
          

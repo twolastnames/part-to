@@ -26,6 +26,8 @@ export type RunStateId = string;
 
 export type TaskDefinitionId = string;
 
+export type integer = number;
+
 export type ParameterMarshalers = BaseParameterMarshalers & {
   required: {
     PartToId: MarshalMapper<PartToId, string>;
@@ -173,15 +175,34 @@ export interface TaskDefinition {
   name: string;
   duration: Duration;
   description: string;
+  ingredients: Array<string>;
+  tools: Array<string>;
   depends?: Array<string>;
-  engagement?: number | undefined;
+  engagement?: integer | undefined;
 }
 
 export interface RunState {
   runState: RunStateId;
+  duration: Duration;
   timestamp: DateTime;
-  startTimes: Array<{ task: TaskDefinitionId; started: DateTime }>;
-  report?: DateTime | undefined;
+  upcoming: Array<{
+    duration: Duration;
+    till: Duration;
+    task: TaskDefinitionId;
+  }>;
+  timers: {
+    enforced: Array<{
+      task: TaskDefinitionId;
+      started: DateTime;
+      duration: Duration;
+    }>;
+    laxed: Array<{
+      task: TaskDefinitionId;
+      started: DateTime;
+      duration: Duration;
+    }>;
+    imminent: Array<{ till: Duration; task: TaskDefinitionId }>;
+  };
   complete?: DateTime | undefined;
   activePartTos?: Array<PartToId>;
   tasks: Array<TaskDefinitionId>;

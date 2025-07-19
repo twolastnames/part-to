@@ -1,0 +1,9 @@
+[part_to]
+name = "Sauce Tarter"
+depends = ["Mix"]
+
+['Mix']
+duration = "4 minutes"
+description = "mix up the ingredients in a bowl and serve or refigerate"
+ingredients = ["1 1/2 cup mayonnaise", "3 teaspoons sweet pickle relish", "1 1/2 teaspoon prepared yellow mustard", "1 1/2 teaspoon lemon juice"]
+

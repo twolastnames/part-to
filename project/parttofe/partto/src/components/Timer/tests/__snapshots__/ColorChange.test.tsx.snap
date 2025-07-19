@@ -5,63 +5,63 @@ exports[`color change will change 1`] = `
   class="ring"
   data-testid="Ring"
 >
-  <div
-    class="m_b32e4812 mantine-RingProgress-root"
-    style="--rp-size: calc(Infinityrem * var(--mantine-scale)); --rp-label-offset: calc(1rem * var(--mantine-scale));"
+  <span
+    class="show"
   >
-    <svg
-      class="m_d43b5134 mantine-RingProgress-svg"
-    >
-      <circle
-        class="m_b1ca1fbf mantine-RingProgress-curve"
-        cx="Infinity"
-        cy="Infinity"
-        fill="none"
-        r="Infinity"
-        stroke-dasharray="NaN, Infinity"
-        stroke-dashoffset="0"
-        stroke-linecap="butt"
-        stroke-width="8"
-        transform="scale(1, -1) translate(0, -Infinity)"
-      />
-      <circle
-        class="m_b1ca1fbf mantine-RingProgress-curve"
-        cx="Infinity"
-        cy="Infinity"
-        fill="none"
-        r="Infinity"
-        stroke-dasharray="NaN, Infinity"
-        stroke-dashoffset="Infinity"
-        stroke-linecap="butt"
-        stroke-width="8"
-        style="--curve-color: var(--secondary-color);"
-      />
-      <circle
-        class="m_b1ca1fbf mantine-RingProgress-curve"
-        cx="Infinity"
-        cy="Infinity"
-        fill="none"
-        r="Infinity"
-        stroke-dasharray="Infinity, NaN"
-        stroke-dashoffset="0"
-        stroke-linecap="butt"
-        stroke-width="8"
-        style="--curve-color: var(--highlight-color);"
-      />
-    </svg>
     <div
-      class="m_b23f9dc4 mantine-RingProgress-label"
+      class="m_b32e4812 mantine-RingProgress-root"
+      style="--rp-size: calc(6.25rem * var(--mantine-scale)); --rp-label-offset: calc(12.5rem * var(--mantine-scale));"
     >
-      <div
-        class="label"
+      <svg
+        class="m_d43b5134 mantine-RingProgress-svg"
       >
-        <div
-          class="normal"
-        >
-          5
-        </div>
-      </div>
+        <circle
+          class="m_b1ca1fbf mantine-RingProgress-curve"
+          cx="50"
+          cy="50"
+          fill="none"
+          r="20"
+          stroke-dasharray="0, 125.66370614359172"
+          stroke-dashoffset="0"
+          stroke-linecap="butt"
+          stroke-width="25"
+          transform="scale(1, -1) translate(0, -100)"
+        />
+        <circle
+          class="m_b1ca1fbf mantine-RingProgress-curve"
+          cx="50"
+          cy="50"
+          fill="none"
+          r="20"
+          stroke-dasharray="0, 125.66370614359172"
+          stroke-dashoffset="125.66370614359172"
+          stroke-linecap="butt"
+          stroke-width="25"
+          style="--curve-color: var(--secondary-color);"
+        />
+        <circle
+          class="m_b1ca1fbf mantine-RingProgress-curve"
+          cx="50"
+          cy="50"
+          fill="none"
+          r="20"
+          stroke-dasharray="125.66370614359172, 0"
+          stroke-dashoffset="125.66370614359172"
+          stroke-linecap="butt"
+          stroke-width="25"
+          style="--curve-color: var(--highlight-color);"
+        />
+      </svg>
     </div>
+  </span>
+  <div
+    class="label"
+  >
+    <span
+      class="label"
+    >
+      5
+    </span>
   </div>
 </div>
 `;

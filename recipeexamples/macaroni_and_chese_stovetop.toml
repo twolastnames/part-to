@@ -1,0 +1,67 @@
+[part_to]
+name = "Macaroni and Cheese (Stovetop)"
+depends = ["Combine"]
+
+['Boil']
+duration = "10 minutes"
+description = "Get a large pot boiling"
+tools=["large pot"]
+engagement = 2
+
+['Butter']
+duration = "1 minute"
+description = "Put a stick of butter in a dutch oven"
+tools=["Dutch Oven"]
+ingredients = ["1 stick unsalted Butter"]
+
+['Pasta']
+duration = "30 seconds"
+description = "Put Pasta in boiling water"
+depends = ["Boil"]
+ingredients = ["3/4 lb Pasta"]
+
+['Cook']
+duration = "8 minutes"
+description = "Cook pasta for 8 minutes and drain"
+depends = ["Pasta"]
+engagement = 2
+
+['Melt']
+duration = "2 minutes"
+description = "Melt butter"
+depends = ["Butter"]
+engagement = 10
+
+['Mix']
+duration = "2 minutes"
+description = "Mix flour, salt, & pepper in bowl"
+ingredients = ["1/2 cup Flour", "1 tsp salt", "1/2 tsp pepper"]
+
+['Roux']
+duration = "3 minutes 30 seconds"
+description = "Stir in flour mix and cook 3-4 minutes, until the roux is slightly darker"
+depends = ["Mix", 'Melt']
+engagement = 44
+
+['Milk']
+duration = "2 minutes"
+description = "Slowly wisk in milk, stirring continuously until thickened, about 2 minutes"
+ingredients = ["2 1/4 cups Milk"]
+depends = ["Roux"]
+
+['Cheese']
+duration = "3 minutes"
+description = "Reduce heat to a simmer and stir in cheese until melted."
+depends = ["Milk", "Shred"]
+engagement = 22
+
+['Shred']
+duration = "4 minutes"
+description = "Shred cheese"
+ingredients = ["2 cups shredded cheddar cheese"]
+
+['Combine']
+duration = "3 minutes"
+description = "Stir cooked pasta into cheese mixture and reheat"
+depends = ["Cook", "Cheese"]
+

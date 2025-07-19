@@ -1,12 +1,11 @@
 [part_to]
 name = "Bavarian Pot Roast"
-notes = "leftover juices make a mean gravy without bay leaf"
 depends = ["Remove Meat"]
 
 ['Put Oil in Dutch Oven']
 description = "put oil in dutch oven"
 duration = "30 seconds"
-tools = "dutch oven"
+tools = ["dutch oven"]
 ingredients = ["canola oil, 2 tbs"]
 
 ['Heat Dutch Oven']
@@ -20,6 +19,7 @@ description = "put roast meat in dutch oven and brown all sides"
 duration = "10 minutes"
 ingredients = ["beef chuck roast, boneless, 1 roast, about 3 lbs"]
 depends = ["Heat Dutch Oven"]
+engagement = 10
 
 ['Chop Onion']
 description = "chop an onion and put it in 4ish cup bowl"

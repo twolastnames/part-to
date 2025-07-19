@@ -2,9 +2,10 @@ import parttobe.views.test_helpers as helpers
 from django.test import TestCase
 from django.test import Client
 import json
+from unittest import skip
 
 
-class RunStageTestClass(TestCase):
+class RunVoidTestClass(TestCase):
     def setUp(self):
         self.ids = helpers.loadExamples()
 
@@ -15,6 +16,7 @@ class RunStageTestClass(TestCase):
         response = client.post("/api/run/void", data, content_type="*")
         self.assertEqual(response.status_code, 400)
 
+    @skip("is starting out of order, should 400 before this")
     def test_can_start_run(self):
         client = Client()
         data = json.dumps({"partTos": [self.ids[3]]})

@@ -14,19 +14,103 @@ from parttobe.views.test_helpers import (
 )
 from parttobe.views.test_nondjango_helpers import (
     get_toml_recipe_as_json,
+    toml_to_body,
 )
-
-
-def toml_to_body(toml):
-    body = {"part_to": toml["part_to"]}
-    tasks = {k: v for (k, v) in toml.items() if k != "part_to"}
-    body["tasks"] = [v1 | {"name": k1} for (k1, v1) in tasks.items()]
-    return body
 
 
 class PartToPostTestClass(TestCase):
     def setUp(self):
         models.get_task_definitions.cache_clear()
+
+    def test_block_of_same_will_not_freeze(self):
+        file_directory = os.path.dirname(__file__)
+        client = Client()
+        data = get_toml_recipe_as_json(
+            file_directory + "/../mocks_partto/salad_pear_apple.toml"
+        )
+        response = client.post(
+            "/api/partto/",
+            json.dumps(data),
+            content_type="*",
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_errors_when_tasks_depend_on_each_other(self):
+        file_directory = os.path.dirname(__file__)
+        client = Client()
+        data = get_toml_recipe_as_json(
+            file_directory + "/../mocks_partto/salad_pear_apple.toml"
+        )
+        data["tasks"] = [
+            (
+                {**task, **({"depends": ["Greens", "Pear"]})}
+                if "ingredients" in task and "Apple" in task["ingredients"]
+                else task
+            )
+            for task in data["tasks"]
+        ]
+        data["tasks"] = [
+            (
+                {**task, **({"depends": ["Greens", "Apple"]})}
+                if "ingredients" in task and "Pear" in task["ingredients"]
+                else task
+            )
+            for task in data["tasks"]
+        ]
+
+        response = client.post(
+            "/api/partto/",
+            json.dumps(data),
+            content_type="*",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content),
+            ['Cyclic dependency in "Pear"'],
+        )
+
+    def test_errors_when_part_to_depends_on_itself(self):
+        file_directory = os.path.dirname(__file__)
+        client = Client()
+        data = get_toml_recipe_as_json(
+            file_directory + "/../mocks_partto/salad_pear_apple.toml"
+        )
+        data["part_to"]["depends"] = ["Mix", "part_to"]
+        response = client.post(
+            "/api/partto/",
+            json.dumps(data),
+            content_type="*",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content),
+            ['Cyclic dependency in "part_to"'],
+        )
+
+    def test_errors_when_task_depends_on_itself(self):
+        file_directory = os.path.dirname(__file__)
+        client = Client()
+        data = get_toml_recipe_as_json(
+            file_directory + "/../mocks_partto/salad_pear_apple.toml"
+        )
+        data["tasks"] = [
+            (
+                {**task, **({"depends": ["Greens", "Bowl"]})}
+                if "depends" in task and "Bowl" in task["depends"]
+                else task
+            )
+            for task in data["tasks"]
+        ]
+        response = client.post(
+            "/api/partto/",
+            json.dumps(data),
+            content_type="*",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content),
+            ['Cyclic dependency in "Greens"'],
+        )
 
     def test_missing_part_to(self):
         file_directory = os.path.dirname(__file__)
@@ -132,6 +216,8 @@ class PartToPostTestClass(TestCase):
                 "name": "Play Euchre",
                 "duration": 25 * 60,
                 "description": "take a break and play a game of euchre with your family darn it",
+                "ingredients": [],
+                "tools": [],
             }
         )
         response = client.post(
@@ -165,8 +251,8 @@ class PartToPostTestClass(TestCase):
         self.assertEqual(
             taskless,
             {
-                "workDuration": 0.0,
-                "clockDuration": 0.010175,
+                "workDuration": 962.0,
+                "clockDuration": 9248.5,
                 "name": "Baked Beans (Easy)",
             },
         )

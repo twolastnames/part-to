@@ -1,0 +1,63 @@
+[part_to]
+name = "Fish Cod or Haddock (Convection Oven)"
+depends = ["Second Bake"]
+
+['Heat']
+duration = "1 minutes"
+description = "put baking dish in oven with rack/baskets on them and heat the oven on convection setting to 400 degrees"
+tools=['2 baking dishes', '2 crisper baskets or oven safe cookie cooling racks']
+engagement = 2
+
+['Flour']
+duration = "1 minutes"
+description = "mix the flour and pepper in a shallow bowl"
+ingredients=["2/3 cup all-purpose flour", "1/2 teaspoon pepper"]
+
+['Egg']
+duration = "1 minute"
+description = "Beat the eggs together with the water in a shallow bowl"
+ingredients= ["2 large eggs", "4 tablespoons water"]
+
+['Flakes']
+duration = "2 minutes"
+description = "Mix cheese and cayenne with the flakes"
+ingredients= ["2 tablespoon grated Parmesan cheese", "1/4 teaspoon cayenne pepper"]
+depends = ["Crush"]
+
+['Crush']
+duration = "2 minutes"
+description = "Crush up corn flakes in a shallow bowl"
+ingredients= ["1 1/3 cup crushed cornflakes"]
+
+['Salt']
+duration = "1 minute"
+description = "Sprinkle fish with salt"
+ingredients= ["2 pound haddocks or cod fillets", "1/2 teaspoon salt"]
+
+['Dip']
+duration = "2 minutes"
+description = "Dip fish and coat both sides in mixture orders: Flour, Egg, then Cornflake"
+depends = ["Salt", "Flakes", 'Egg', 'Flour']
+
+['Oven']
+duration = "1 minutes"
+description = "Put fish on the hot rack/baskets on the baking pans in the oven"
+depends = ["Dip", 'Heat']
+
+['First Bake']
+duration = "4 minutes"
+description = "bake for 4 minutes"
+depends = ["Oven"]
+engagement = 2
+
+['Turn']
+duration = "1 minute"
+description = "turn the fish"
+depends = ["First Bake"]
+
+['Second Bake']
+duration = "4 minutes"
+description = "bake for 4 minutes or so until it starts to flake"
+depends = ["Turn"]
+engagement = 2
+

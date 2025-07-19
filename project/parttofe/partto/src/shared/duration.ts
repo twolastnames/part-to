@@ -1,5 +1,7 @@
 export interface Duration {
   toMilliseconds: () => number;
+  add: (addend: Duration) => Duration;
+  subtract: (subtrahend: Duration) => Duration;
   toString: () => string;
   format: (formatter: keyof DurationFormats) => string;
 }
@@ -32,7 +34,8 @@ const durationFormatter =
             : [formatter(true, value)],
       [],
     );
-    return joiner(negative, stringValues);
+    const formattedString = joiner(negative, stringValues);
+    return (formattedString?.trim() || "") === "" ? "now" : formattedString;
   };
 
 const timerValueStringer = (_: boolean, value: number) => value.toString();
@@ -107,6 +110,9 @@ const formatDuration = (value: number, formatter?: keyof DurationFormats) =>
 
 export const getDuration: (arg: number) => Duration = (value) => ({
   toMilliseconds: () => value,
+  add: (addend: Duration) => getDuration(value + addend.toMilliseconds()),
+  subtract: (subtrahend: Duration) =>
+    getDuration(value + subtrahend.toMilliseconds()),
   format: (formatter?: keyof DurationFormats) =>
     formatDuration(value, formatter),
   toString: () => formatDuration(value),

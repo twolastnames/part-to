@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<div
+  class="detailShell"
+  data-testid="DetailShell"
+>
+  <div
+    class="name"
+  >
+    Some Name
+  </div>
+  <div
+    class="body"
+    data-testid="Body"
+  >
+    <div>
+      hello
+    </div>
+  </div>
+</div>
+`;

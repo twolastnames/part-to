@@ -22,7 +22,6 @@ from parttobe.endpoints import (
 from django.template import Context, Template
 import os
 
-
 ConstructedTemplate = Template(
     """
 {% autoescape off %}
@@ -44,6 +43,8 @@ import { Duration } from "../shared/duration";
 export type {{ id }} = string;
 {% endfor %}
 
+
+export type integer = number;
 
 export type ParameterMarshalers = BaseParameterMarshalers & {
 required: {

@@ -19,6 +19,11 @@ type Story = StoryObj<typeof PartTo>;
 export const Simple: Story = {
   args: {
     name: "A simple part to",
-    tasks: ["more", "things"],
+    children: (
+      <>
+        <div>More</div>
+        <div>Things</div>
+      </>
+    ),
   },
 };

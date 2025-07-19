@@ -1,0 +1,18 @@
+@import "../../../App.scss";
+
+.time {
+  font: var(--font-regular-weak);
+}
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xsmall);
+}
+
+.timeline {
+  margin: var(--gap-large);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-large);
+}

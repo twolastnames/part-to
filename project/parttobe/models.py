@@ -1,10 +1,22 @@
 from django.db import models
+from django.db import connection
+from parttobe.timeline import Definition
+from parttobe.timeline import Timeline
 import functools
 import collections
 import types
 import datetime
 import uuid
 import re
+from parttobe.common import common_repr
+
+
+class WrongDefinitionType(RuntimeError):
+    pass
+
+
+class ImproperRunStateSequence(RuntimeError):
+    pass
 
 
 @functools.lru_cache(maxsize=64)
@@ -19,6 +31,19 @@ class PartTo(models.Model):
     class Meta:
         unique_together = [("uuid")]
         indexes = [models.Index(fields=["uuid"])]
+
+    @staticmethod
+    def displayables():
+        return (
+            PartTo.objects.annotate(
+                newest_ones=models.Window(
+                    expression=models.Max("id"),
+                    partition_by=[models.F("name")],
+                )
+            )
+            .filter(newest_ones=models.F("id"))
+            .order_by("name")
+        )
 
     @property
     def task_definitions(self):
@@ -47,9 +72,7 @@ class Engagements:
         self.duties = []
 
     def append_duty(self, duty):
-        self.duties.append(
-            Engagement(duty, duty.duration.microseconds, duty.engagement)
-        )
+        self.duties.append(Engagement(duty, duty.duration.seconds, duty.engagement))
 
     def empty(self):
         """(completed_duties, work_left, time_consumed)"""
@@ -57,9 +80,10 @@ class Engagements:
             [Engagement.duty for engagement in self.duties],
             0,
             {
-                duty.duty.part_to: datetime.timedelta(microseconds=duty.duration)
+                duty.duty.part_to: datetime.timedelta(seconds=duty.duration)
                 for duty in self.duties
             },
+            datetime.timedelta(0),
         )
         self.duties = []
         return result
@@ -71,21 +95,30 @@ class Engagements:
         """(completed_duties, work_left, time_consumed)"""
         time_consumed = {duty.duty.part_to: 0 for duty in self.duties}
         self.duties.sort()
-        time_to_consume = self.duties[0].duration  # TODO: 500s here without duties
+        if not self.duties:
+            return [], 0, {}, datetime.timedelta(seconds=0)
+        time_to_consume = self.duties[0].duration
         completed_duties = [self.duties[0].duty]
-        self.duties = self.duties[1:]
+        self.duties = [duty.subtract(time_to_consume) for duty in self.duties[1:]]
         time_consumed = {
-            key: datetime.timedelta(microseconds=value + time_to_consume)
+            key: datetime.timedelta(seconds=value + time_to_consume)
             for key, value in time_consumed.items()
         }
-        return completed_duties, 0, time_consumed
+        return (
+            completed_duties,
+            0,
+            time_consumed,
+            datetime.timedelta(seconds=time_to_consume),
+        )
 
     def execute_task(self, task):
         """(completed_duties, work_left, time_consumed)"""
+        if not task.is_task():
+            raise SystemError("Expected a TaskDefinition without engagement")
         time_consumed = {duty.duty.part_to: 0 for duty in self.duties}
         completed_duties = []
         active = sum([duty.engagement for duty in self.duties]) / 100.0
-        work = task.duration.microseconds
+        work = task.duration.total_seconds()
         while work > 0 and len(self.duties) > 0:
             self.duties.sort()
             earliest = self.duties[0].duration
@@ -108,88 +141,90 @@ class Engagements:
             completed_duties,
             work,
             {
-                duty.duty.part_to: datetime.timedelta(microseconds=duty.duration)
-                for duty in self.duties
+                id: datetime.timedelta(seconds=count)
+                for id, count in time_consumed.items()
             },
+            task.duration,
         )
 
 
-def order_definitions(definitions):
-    time_consumed = {task.part_to: datetime.timedelta(0) for task in definitions}
-    left = [
-        definition
-        for definition in definitions
-        if definition.depended or definition.is_task()
-    ]
-    engagements = Engagements()
-    [
-        engagements.append_duty(definition)
-        for definition in definitions
-        if not definition.depended and not definition.is_task()
-    ]
-    result = []
-    for definition in definitions:
-        if definition.depended:
-            continue
-        completed_duties, work_left, consumed = engagements.execute_task(definition)
-        if definition in left:
-            left.remove(definition)
-        result.append(definition)
-        for completed in completed_duties:
-            if completed in result:
-                continue
-            result.append(completed)
-        for id, count in consumed.items():
-            time_consumed[id] += count
+@functools.total_ordering
+class CompletionAction(
+    collections.namedtuple("CompletionAction", "definition till duration")
+):
+    def __eq__(self, other):
+        return other.till == other.till
 
-    def next():
-        done = set([task for task in result])
-        dependeds = [task for task in left if task.depended in done]
-        rankings = [
-            key for key, value in sorted(time_consumed.items(), key=lambda x: x[1])
+    def __lt__(self, other):
+        return self.till < other.till
+
+
+class CompletionResult:
+    def __init__(self, timeline):
+        starts = {marker.id: marker.till for marker in timeline if not marker.is_done}
+        self.result = [
+            CompletionAction(
+                marker.id, starts[marker.id], marker.till - starts[marker.id]
+            )
+            for marker in timeline
+            if marker.is_done
         ]
-        found = None
-        for ranking in rankings:
-            for task in dependeds:
-                if task.part_to == ranking:
-                    found = task
-        return found
+        self.result.sort()
 
-    while left or len(engagements) > 0:
-        definition = next()
-        if definition:
-            left.remove(definition)
-            if not definition.is_task():
-                engagements.append_duty(definition)
-                continue
-            completed_duties, work_left, consumed = engagements.execute_task(definition)
-            result.append(definition)
-        else:
-            completed_duties, work_left, consumed = engagements.finish_next_duty()
-        for id, count in consumed.items():
-            time_consumed[id] += count
-        result.extend(completed_duties)
-    completed_duties, work_left, consumed = engagements.empty()
-    for id, count in consumed.items():
-        time_consumed[id] += count
-    result.reverse()
-    return result
+    def actions(self):
+        return self.result
+
+    def duration(self):
+        last = datetime.timedelta(seconds=0)
+        for action in self.result:
+            if action.till + action.duration > last:
+                last = action.till + action.duration
+        return last
+
+    def ready_tasks(self):
+        dependeds = [action.definition.depended for action in self.result]
+        return [
+            action.definition
+            for action in self.result
+            if action.definition.is_task() and action.definition not in dependeds
+        ]
+
+
+def calculate_completion(definitions, at_time=datetime.datetime.now()):
+    calculated_durations = calculate_durations(definitions, at_time)
+    for definition in definitions:
+        definition.set_calculated_duration(calculated_durations[definition.id])
+    timeline = Timeline(definitions)
+    return CompletionResult(timeline)
+
+def order_definitions(definitions):
+    return [
+        information.definition
+        for information in calculate_completion(definitions).actions()
+    ]
 
 
 def next_work(run_state):
     full_state = run_state.full_state()
-    if len([RunState.OPERATION_TEXTS[RunState.Operation.STAGED]]) < 1:
+    if len(full_state[RunState.OPERATION_TEXTS[RunState.Operation.STAGED]]) < 1:
         return run_state
-    started = full_state[RunState.OPERATION_TEXTS[RunState.Operation.STARTED]]
+    started = full_state[RunState.OPERATION_TEXTS[RunState.Operation.STARTED]].copy()
+    started.sort()
+    staged = full_state[RunState.OPERATION_TEXTS[RunState.Operation.STAGED]].copy()
+    staged.sort()
     if len([task for task in started if task.is_task()]) > 0:
         return run_state
-    completed = full_state[RunState.OPERATION_TEXTS[RunState.Operation.COMPLETED]]
-    possible = full_state[RunState.OPERATION_TEXTS[RunState.Operation.STAGED]].pop(0)
-    left = full_state[RunState.OPERATION_TEXTS[RunState.Operation.STAGED]]
-    for running in started:
-        if running.depended == possible:
-            return run_state
-    return run_state.append_states(RunState.Operation.STARTED, [possible])
+    result = calculate_completion(staged + started, full_state["timestamp"])
+    ready_tasks = result.ready_tasks()
+    to_add = []
+    if (
+        not [definition for definition in started if definition.is_task()]
+        and ready_tasks
+    ):
+        to_add.append(ready_tasks[0])
+    if not to_add:
+        return run_state
+    return run_state.append_states(RunState.Operation.STARTED, to_add)
 
 
 class IngredientDefinition(models.Model):
@@ -288,7 +323,15 @@ class TaskDefinition(models.Model):
 
     @property
     def duration(self):
+        if hasattr(self, "calculated_duration"):
+            return self.calculated_duration
         return self.initial_duration
+
+    def __repr__(self):
+        return common_repr(self, "id", "duration", "description", "engagement")
+
+    def set_calculated_duration(self, calculated):
+        self.calculated_duration = calculated
 
     @property
     def dependencies(self):
@@ -373,7 +416,7 @@ class TaskDefinition(models.Model):
         )
 
     def is_task(self):
-        return not self.engagement
+        return self.engagement is None
 
     def __eq__(self, other):
         if not other:
@@ -454,6 +497,42 @@ class RunState(models.Model):
             [self.id],
         )
 
+    def task_duration(self):
+        if not self.task:
+            raise WrongDefinitionType()
+        if not self.task.is_task():
+            raise WrongDefinitionType(
+                "definition {} is not a task".format(self.task.id)
+            )
+        if self.operation != self.Operation.COMPLETED:
+            raise WrongDefinitionType(
+                "task {} is not a completed task".format(self.task.id)
+            )
+        active_duties = set()
+        result = 0.0
+        on_time = None
+        for state in reversed(self.full_chain()):
+            if on_time and (
+                state.operation == self.Operation.STARTED
+                or state.operation == self.Operation.COMPLETED
+            ):
+                elapsed = state.created.timestamp() - on_time.timestamp()
+                engagement = sum([(duty.engagement / 100.0) for duty in active_duties])
+                result = result + (elapsed * (1.0 - engagement))
+            if on_time and state == self:
+                return datetime.timedelta(seconds=result)
+            if on_time or (
+                state.task == self.task and state.operation == self.Operation.STARTED
+            ):
+                on_time = state.created
+            if state.task.is_task():
+                continue
+            if state.operation == self.Operation.STARTED:
+                active_duties.add(state.task)
+            if state.operation == self.Operation.COMPLETED:
+                active_duties.remove(state.task)
+        return self.task.duration
+
     def full_chain(self):
         return RunState.objects.raw(
             """
@@ -479,180 +558,221 @@ class RunState(models.Model):
             RunState.OPERATION_TEXTS[index]: []
             for index in range(1, len(RunState.OPERATION_TEXTS))
         }
-        taskStates = self.task_states()
-        order = order_definitions([state.task for state in taskStates])
-        lookup = {state.task: state.operation for state in taskStates}
-        result["startTimes"] = [
-            {"task": state.task, "started": state.created}
-            for state in taskStates
-            if RunState.OPERATION_TEXTS[state.operation] == "started"
-        ]
+        task_states = self.task_states()
+
+        result["tasks"] = []
+        result["duties"] = []
+        order = order_definitions([state.task for state in task_states])
+        lookup = {state.task: state.operation for state in task_states}
         for task in order:
             operation = lookup[task]
             result[RunState.OPERATION_TEXTS[operation]].append(task)
+            result["tasks" if task.is_task() else "duties"].append(task)
         active_tasks = result["staged"] + result["started"]
         seen_part_tos = set()
         for task in active_tasks:
             seen_part_tos.add(task.part_to)
         result["activePartTos"] = list(seen_part_tos)
-        result["tasks"] = [task for task in result["started"] if task.is_task()]
-        result["duties"] = [task for task in result["started"] if not task.is_task()]
         result["timestamp"] = self.created
+        completion = calculate_completion(active_tasks, self.created)
+        completion_durations = {
+            action.definition: action.duration for action in completion.actions()
+        }
+        result["upcoming"] = [
+            {
+                "till": action.till,
+                "task": action.definition,
+                "duration": action.duration,
+            }
+            for action in completion.actions()
+        ]
+        result["duration"] = completion.duration()
+        timers = [
+            {
+                "task": state.task,
+                "started": state.created,
+                "duration": completion_durations[state.task],
+            }
+            for state in task_states
+            if RunState.OPERATION_TEXTS[state.operation] == "started"
+        ]
+        result["timers"] = {
+            "enforced": [timer for timer in timers if not timer["task"].is_task()],
+            "laxed": [timer for timer in timers if timer["task"].is_task()],
+            "imminent": self._imminent(completion, result["started"]),
+        }
         return result
 
+    def _imminent(self, completion, started):
+        dependeds = set(
+            [
+                action.definition.depended
+                for action in completion.actions()
+                if action.definition.depended
+            ]
+        )
+        ready_duties = [
+            action
+            for action in completion.actions()
+            if action.definition not in dependeds
+            and not action.definition.is_task()
+            and action.definition not in started
+        ]
+        ready_duties.sort(key=lambda action: action.till)
+        return [
+            {
+                "task": duty.definition,
+                "till": duty.till,
+            }
+            for duty in ready_duties
+        ]
+
     def append_states(self, operation, tasks):
-        if len(tasks) < 1:
-            return self
-        result = []
-        parent = self
-        for task in tasks:
-            parent.save()
-            parent = RunState(operation=operation, task=task, parent=parent)
-            result.append(parent)
-        parent.save()
-        return parent
+        return append_states(operation, tasks, self)
 
 
-def append_states(operation, tasks):
+def append_states(operation, tasks, run_state=None):
     if len(tasks) < 1:
-        return
-    initial = RunState(operation=operation, task=tasks[0])
-    return initial.append_states(operation, tasks[1:])
+        return run_state
+    inserts = ["({}, %s, %s, %s, %s)".format("%s" if run_state else "NULL")] + [
+        "(LAST_INSERT_ROWID(), %s, %s, %s,  %s)"
+    ] * (len(tasks) - 1)
+    columns = "(parent_id, uuid, created, task_id, operation)"
+    table = "parttobe_runstate"
+
+    statement = "INSERT INTO {} {} VALUES {};".format(table, columns, ",".join(inserts))
+
+    uuids = [uuid.uuid4() for ignored in tasks]
+    last_uuid = uuids[0]
+
+    values = ([run_state.id] if run_state else []) + sum(
+        [
+            [
+                str(uuids.pop()).replace("-", ""),
+                datetime.datetime.now(),
+                id,
+                operation,
+            ]
+            for id in [task.id for task in tasks]
+        ],
+        [],
+    )
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute(statement, values)
+        finally:
+            cursor.close()
+            return RunState.objects.get(uuid=last_uuid)
 
 
-class PartToRun(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
-
-    class Meta:
-        unique_together = [("uuid")]
-        indexes = [models.Index(fields=["uuid"])]
-
-    def left_definitions(self):
-        definitions = set()
-        run_parts = RunPart.objects.filter(run=self)
-        for run_part in run_parts:
-            definitions.update(get_task_definitions(run_part.part_to))
-        started = TaskStatus.objects.filter(run=self.id)
-        started_definitions = set(self.unwaiting_definitions())
-        return filter(
-            lambda definition: definition not in started_definitions,
-            definitions,
-        )
-
-    def startable_duties(self):
-        leftover_duties = list(
-            filter(
-                lambda definition: not definition.is_task(),
-                self.left_definitions(),
+def calculate_duty_durations(definitions, before):
+    if not definitions:
+        return {}
+    tasks = [definition for definition in definitions if not definition.is_task()]
+    statement = " UNION ALL ".join(
+        [
+            """
+    select * from (
+        WITH Durations AS (
+        WITH Paired AS (
+            WITH RECURSIVE Times AS (
+                WITH Completeds AS (
+                    SELECT 
+                        id,
+                        operation,
+                        task_id,
+                        parent_id,
+                        created
+                    FROM parttobe_runstate
+                    WHERE operation = %s
+                    AND task_id = %s
+                    AND created <= %s
+                    LIMIT 5
+                )
+                SELECT
+                    id,
+                    Completeds.id AS completedId,
+                    operation,
+                    task_id,
+                    parent_id,
+                    created
+                FROM Completeds
+                WHERE id = Completeds.id
+                UNION ALL
+                SELECT
+                    rs.id,
+                    completedId,
+                    rs.operation,
+                    rs.task_id,
+                    rs.parent_id,
+                    rs.created
+                FROM parttobe_runstate rs
+                JOIN Times ss ON ss.parent_id = rs.id
             )
+            SELECT 
+                id,
+                completedId,
+                task_id,
+                created,
+                operation
+            FROM Times t1
+            WHERE operation = %s OR operation = %s
         )
-        leftover_duties.sort(
-            key=lambda definition: definition.chain_duration(),
-            reverse=True,
+        SELECT p1.task_id AS task, ((    
+            JULIANDAY(p1.created) - JULIANDAY(p2.created)
+        ) * 24 * 60 * 60) AS duration  FROM Paired p1
+        INNER JOIN Paired p2
+        ON p2.completedId = p1.completedId
+        AND p1.operation > p2.operation
+        UNION ALL
+        SELECT u1.id AS task, (u1.initial_duration / 1000000) AS duration
+        FROM parttobe_taskdefinition u1
+        WHERE id = %s
+        LIMIT 5        
         )
-        return leftover_duties
-
-    def running_definitions(self):
-        started = TaskStatus.objects.filter(
-            run=self, started__isnull=False, ended__isnull=True
+        SELECT task, AVG(duration)
+        FROM Durations
+        GROUP BY task
         )
-        return map(lambda task: task.definition, started)
+    """
+        ]
+        * len(tasks)
+    )
 
-    def running_tasks(self):
-        return filter(
-            lambda definition: definition.is_task(),
-            self.running_definitions(),
+    values = []
+    for task in tasks:
+        values.extend(
+            [
+                RunState.Operation.COMPLETED,
+                task.id,
+                before,
+                RunState.Operation.COMPLETED,
+                RunState.Operation.STARTED,
+                task.id,
+            ]
         )
+    with connection.cursor() as cursor:
+        exectued = cursor.execute(statement, values)
+        query_result = exectued.fetchall()
+    return {row[0]: datetime.timedelta(seconds=round(row[1])) for row in query_result}
 
-    def running_duties(self):
-        return filter(
-            lambda definition: not definition.is_task(),
-            self.running_definitions(),
+
+def calculate_task_durations(definitions, before):
+    tasks = [definition for definition in definitions if definition.is_task()]
+    result = {}
+    for task in tasks:
+        completions = RunState.objects.filter(
+            task=task, operation=RunState.Operation.COMPLETED, created__lt=before
+        )[:5]
+        observeds = [completion.task_duration().seconds for completion in completions]
+        results = (
+            observeds if len(observeds) > 4 else observeds + [task.duration.seconds]
         )
-
-    def unwaiting_definitions(self):
-        started = TaskStatus.objects.filter(run=self.id, started__isnull=False)
-        return map(lambda task: task.definition, started)
-
-    def until_next_duty(self):
-        duties = self.startable_duties()
-        if len(duties) == 0:
-            return None
-        duty = duties[0]
-        left_tasks = list(
-            filter(
-                lambda definition: definition.is_task(),
-                self.left_definitions(),
-            )
-        ) + list(
-            filter(
-                lambda definition: definition.is_task(),
-                self.running_definitions(),
-            )
-        )
-        left_tasks.sort()
-        task_sum = datetime.timedelta()
-        for task in left_tasks:
-            if task.depends_on(duty):
-                continue
-            task_sum += task.duration
-        task_sum += duty.weight()
-        until = task_sum - duty.duration
-        return until if until > datetime.timedelta() else datetime.timedelta()
-
-    def first_undones(self):
-        lefts = self.left_definitions()
-        unwaiting_definitions = set(self.unwaiting_definitions())
-        earliests = {}
-        for left in lefts:
-            for dependency in left.dependency_chain_from():
-                if dependency in unwaiting_definitions:
-                    continue
-                earliests[dependency.part_to] = dependency
-        return earliests
-
-    def __next__(self):
-        next_duty_time = self.until_next_duty()
-        duties = self.startable_duties()
-        if next_duty_time is not None and next_duty_time <= datetime.timedelta():
-            return TaskStatus.objects.create(run=self, definition=duties[0])
-        left = list(
-            filter(
-                lambda definition: definition.is_task(),
-                self.left_definitions(),
-            )
-        )
-        if len(left) == 0:
-            raise StopIteration
-        left.sort()
-        if left[0] in map(lambda task: task.depended, duties):
-            return TaskStatus.objects.create(run=self, definition=duties[0])
-        return TaskStatus.objects.create(run=self, definition=left[0])
+        result[task.id] = datetime.timedelta(seconds=sum(results) / len(results))
+    return result
 
 
-class TaskStatus(models.Model):
-    run = models.ForeignKey("PartToRun", on_delete=models.CASCADE)
-    definition = models.ForeignKey("TaskDefinition", on_delete=models.CASCADE)
-    started = models.DateTimeField(default=datetime.datetime.now)
-    ended = models.DateTimeField(null=True)
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
-
-    class Meta:
-        unique_together = [("uuid")]
-        indexes = [models.Index(fields=["uuid"])]
-
-    def __call__(self):
-        self.ended = datetime.datetime.now()
-        self.save()
-
-
-class RunPart(models.Model):
-    part_to = models.ForeignKey("PartTo", on_delete=models.CASCADE)
-    run = models.ForeignKey("PartToRun", on_delete=models.CASCADE)
-
-
-def start_run(part_tos):
-    run = PartToRun.objects.create()
-    for part_to in part_tos:
-        RunPart.objects.create(part_to=part_to, run=run)
-    return run
+def calculate_durations(definitions, before):
+    task_durations = calculate_task_durations(definitions, before)
+    duty_durations = calculate_duty_durations(definitions, before)
+    return task_durations | duty_durations

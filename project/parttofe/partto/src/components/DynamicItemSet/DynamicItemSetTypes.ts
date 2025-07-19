@@ -19,4 +19,5 @@ export interface DynamicItemSetProps {
   setOperations: Array<Operation>;
   emptyPage: React.ReactElement;
   context: ContextDescription;
+  pausedByDefault?: boolean;
 }

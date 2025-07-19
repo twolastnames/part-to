@@ -13,6 +13,7 @@ import { debounce, DebouncedFunc } from "lodash";
 
 export type DynamicItemSetPairType = {
   selected: number;
+  setSelected: (selected: number) => void;
   getTotal: () => number;
   goBack: () => void;
   goForward: () => void;
@@ -24,6 +25,7 @@ export type DynamicItemSetPairType = {
 
 export const UndefinedDynamicItemSetPair = {
   selected: 0,
+  setSelected: (_: number) => undefined,
   goBack: () => undefined,
   goForward: () => undefined,
   getTotal: () => 0,
@@ -60,11 +62,12 @@ const setDurations = (key: string, value: Array<Duration>) => {
   );
 };
 
-const leftCount: MutableRefObject<number | null> = createRef();
+const leftCount: MutableRefObject<((value: number) => void) | null> =
+  createRef();
 const leftSettingKey: MutableRefObject<string | null> = createRef();
 const getLeftSettingKey = () => leftSettingKey.current || "left";
 function setLeftCount(value: number) {
-  leftCount.current = value;
+  leftCount.current && leftCount.current(value);
 }
 const LeftDynamicItemSetPairContext: ContextType = createContext<
   undefined | DynamicItemSetPairType
@@ -81,12 +84,13 @@ export const LeftContext: ContextDescription = {
   },
 };
 
-const rightCount: MutableRefObject<number | null> = createRef();
+const rightCount: MutableRefObject<((value: number) => void) | null> =
+  createRef();
 const rightSettingKey: MutableRefObject<string | null> = createRef();
 const getRightSettingKey = () => leftSettingKey.current || "left";
 
 function setRightCount(value: number) {
-  rightCount.current = value;
+  rightCount.current && rightCount.current(value);
 }
 const RightDynamicItemSetPairContext: ContextType = createContext<
   undefined | DynamicItemSetPairType
@@ -126,52 +130,60 @@ type ProviderState = {
   selected: number;
   showDuration: number;
   paused: boolean;
+  count: number;
 };
 
 function useProvider({
-  count,
+  setCount,
   getSettingKey,
   togglePauseClickSlower,
 }: {
   getSettingKey: () => string;
-  count: MutableRefObject<number | null>;
+  setCount: MutableRefObject<((value: number) => void) | null>;
   togglePauseClickSlower: DebouncedFunc<
     (setState: (arg: SetStateAction<ProviderState>) => void) => void
   >;
 }) {
   const durations = getDurations(getSettingKey());
-  const [state, setState] = useState<ProviderState>({
-    selected: 0,
-    showDuration: Math.floor(durations.length / 2),
-    paused: false,
-  });
+  const [{ count, selected, showDuration, paused }, setState] =
+    useState<ProviderState>({
+      selected: 0,
+      showDuration: Math.floor(durations.length / 2),
+      paused: false,
+      count: 0,
+    });
 
-  if (
-    state.selected !== 0 &&
-    (state.selected < 0 ||
-      count.current == null ||
-      state.selected >= count.current)
-  ) {
+  setCount.current = (value: number) => {
+    if (value === count) {
+      return;
+    }
+    setState((previous) => ({ ...previous, count: value }));
+  };
+
+  if (selected !== 0 && count !== 0 && (selected < 0 || selected >= count)) {
     setState((current) => ({ ...current, selected: 0 }));
   }
 
-  const duration = durations[state.showDuration];
+  const duration = durations[showDuration];
   return {
-    selected: state.selected,
+    selected: selected,
+    setSelected: (selected: number) => {
+      setState((current) => ({ ...current, selected }));
+    },
     goBack: () => {
-      count.current && goBack(count.current, setState);
+      goBack(count, setState);
     },
     goForward: () => {
-      count.current && goForward(count.current, setState);
+      goForward(count, setState);
     },
     showDuration: duration,
-    paused: state.paused,
-    getTotal: () => count.current || 0,
+    paused: paused,
+    getTotal: () => count,
     togglePause: () => {
       togglePauseClickSlower(setState);
     },
     nextShowDuration: () => {
-      const next = state.showDuration + 1;
+      const next = showDuration + 1;
       setState((previous) => ({
         ...previous,
         showDuration: next >= durations.length ? 0 : next,
@@ -193,7 +205,7 @@ export function LeftDynamicItemSetPairProvider({
   return (
     <LeftDynamicItemSetPairContext.Provider
       value={useProvider({
-        count: leftCount,
+        setCount: leftCount,
         getSettingKey: getLeftSettingKey,
         togglePauseClickSlower: leftTogglePauseClickSlower,
       })}
@@ -216,7 +228,7 @@ export function RightDynamicItemSetPairProvider({
   return (
     <RightDynamicItemSetPairContext.Provider
       value={useProvider({
-        count: rightCount,
+        setCount: rightCount,
         getSettingKey: getRightSettingKey,
         togglePauseClickSlower: rightTogglePauseClickSlower,
       })}

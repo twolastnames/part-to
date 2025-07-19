@@ -1,8 +1,7 @@
 from django.db import transaction
 from parttobe import models
 import datetime
-
-# import duration_parser
+from rest_framework.response import Response
 
 
 def ensure_list(value):
@@ -17,33 +16,6 @@ def check_task(task):
     return missing
 
 
-def traverse_tasks(tasks):
-    seen_keys = set()
-    if "part_to" not in tasks:
-        raise TaskNotFoundException("part_to")
-    seen_keys.add("part_to")
-    part_to = tasks["part_to"]
-    if "depends" not in part_to:
-        raise MissingTaskKeyException("part_to", "depends")
-    if "name" not in part_to:
-        raise MissingTaskKeyException("part_to", "name")
-    stack = part_to["depends"][:]
-    while len(stack) > 0:
-        current = stack.pop()
-        seen_keys.add(current)
-        if current not in tasks:
-            raise TaskNotFoundException(current)
-        task = tasks[current]
-        yield current, task
-        if "depends" in task:
-            for depend in task["depends"]:
-                stack.append(depend)
-    all_keys = set(tasks.keys())
-    extra_keys = all_keys - seen_keys
-    if extra_keys:
-        raise UnusedTaskFoundException(",".join(extra_keys))
-
-
 def invert_depends(tasks):
     invertion = {}
     for name, task in traverse_tasks(tasks):
@@ -55,7 +27,8 @@ def invert_depends(tasks):
 
 
 @transaction.atomic
-def save_job(tasks, dependeds):
+def save_job(tasks):
+    dependeds = invert_depends(tasks)
     saved_tasks = {}
     part_to = models.PartTo.objects.create(name=tasks["part_to"]["name"])
     stack = tasks["part_to"]["depends"][:]
@@ -64,7 +37,7 @@ def save_job(tasks, dependeds):
         if current in saved_tasks:
             continue
         if current in dependeds and dependeds[current] not in saved_tasks:
-            stack.append(current)
+            stack.insert(0, current)
             continue
         depended = saved_tasks[dependeds[current]] if current in dependeds else None
         task = tasks[current]
@@ -75,7 +48,11 @@ def save_job(tasks, dependeds):
             depended=depended,
             part_to=part_to,
             description=task["description"],
-            engagement=(task["engagement"] if "engagement" in task else None),
+            engagement=(
+                task["engagement"]
+                if "engagement" in task and task["engagement"] > 0
+                else None
+            ),
         )
         for ingredient in (
             ensure_list(task["ingredients"]) if "ingredients" in task else []
@@ -110,6 +87,15 @@ class TaskNotFoundException(RuntimeError):
         return 'Missing Task(s): "{}"'.format(self.task_name)
 
 
+class CyclicTaskDependencyException(RuntimeError):
+    def __init__(self, dependency):
+        self.dependency = dependency
+        super().__init__()
+
+    def __str__(self):
+        return 'Cyclic dependency in "{}"'.format(self.dependency)
+
+
 class MissingTaskKeyException(RuntimeError):
     def __init__(self, task_name, key_name):
         self.task_name = task_name
@@ -121,6 +107,9 @@ class MissingTaskKeyException(RuntimeError):
 
 
 def traverse_tasks(tasks):
+    for key, task in tasks.items():
+        if "depends" in task and key in task["depends"]:
+            raise CyclicTaskDependencyException(key)
     seen_keys = set()
     if "part_to" not in tasks:
         raise TaskNotFoundException("part_to")
@@ -136,6 +125,15 @@ def traverse_tasks(tasks):
         seen_keys.add(current)
         if current not in tasks:
             raise TaskNotFoundException(current)
+        if "depends" in tasks[current]:
+            for stacked in stack:
+                if "depends" not in tasks[stacked]:
+                    continue
+                if (
+                    current in tasks[stacked]["depends"]
+                    and stacked in tasks[current]["depends"]
+                ):
+                    raise CyclicTaskDependencyException(stacked)
         task = tasks[current]
         yield current, task
         if "depends" in task:
@@ -172,14 +170,12 @@ def validate(part_to=None, tasks=None):
 def handle(argument):
     validation = validate(argument.part_to, argument.tasks)
     if validation:
-        return argument.respond_400(validation[0]["messages"])
+        return Response(validation[0]["messages"], 400)
     together = {"part_to": argument.part_to} | {
         task["name"]: task for task in argument.tasks
     }
-    id = save_job(together, invert_depends(together))
-    return argument.respond_200(
-        {
-            "partTo": str(id),
-            "message": "job insert successfull",
-        }
-    )
+    id = save_job(together)
+    return {
+        "partTo": str(id),
+        "message": "job insert successfull",
+    }

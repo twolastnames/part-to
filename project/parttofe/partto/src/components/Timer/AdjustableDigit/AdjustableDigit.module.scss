@@ -1,0 +1,27 @@
+@import "../../../App.scss";
+
+.adjustableDigit {
+  position: relative;
+}
+
+.decrement {
+  position: absolute;
+  bottom: -26px;
+  left: 12px;
+  color: var(--secondary-color);
+  font-size: 9px;
+  cursor: pointer;
+  transform: rotate(90deg);
+  opacity: 0.2;
+}
+
+.increment {
+  position: absolute;
+  top: -24px;
+  left: 12px;
+  color: var(--secondary-color);
+  font-size: 9px;
+  cursor: pointer;
+  transform: rotate(-90deg);
+  opacity: 0.5;
+}

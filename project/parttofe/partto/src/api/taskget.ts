@@ -14,6 +14,7 @@ import { Duration } from "../shared/duration";
 import {
   parameterMarshalers,
   unmarshalers,
+  integer,
   Four04Reply,
   RunOperationReply,
   RunOperation,
@@ -28,19 +29,19 @@ import {
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 export type TaskGet200Body = {
-  name: string;
   duration: Duration;
   description: string;
-  depends?: Array<string>;
-  engagement?: number | undefined;
+  partTo: PartToId;
+  ingredients: Array<string>;
+  tools: Array<string>;
 };
 
 type Wire200Body = {
-  name: string;
   duration: number;
   description: string;
-  depends?: Array<string>;
-  engagement?: number | undefined;
+  partTo: PartToId;
+  ingredients: Array<string>;
+  tools: Array<string>;
 };
 
 export type TaskGetArguments = { task: TaskDefinitionId };
@@ -67,13 +68,15 @@ export const useTaskGet: (
     ],
     {
       200: (body: Wire200Body) => ({
-        name: unmarshalers.required["string"](body.name),
         duration: unmarshalers.required["duration"](body.duration),
         description: unmarshalers.required["string"](body.description),
-        depends: body.depends?.map((value) =>
+        partTo: unmarshalers.required["PartToId"](body.partTo),
+        ingredients: body.ingredients.map((value) =>
           unmarshalers.required["string"](value),
         ),
-        engagement: unmarshalers.unrequired["number"](body.engagement),
+        tools: body.tools.map((value) =>
+          unmarshalers.required["string"](value),
+        ),
       }),
     },
     options,

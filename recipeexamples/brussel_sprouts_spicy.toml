@@ -1,0 +1,45 @@
+[part_to]
+name = "Brussel Sprouts (spicy)"
+depends = ["Mix"]
+
+['Heat Oven']
+duration = "8 minutes"
+description = "Heat oven to 450 degrees"
+engagement= 2
+
+['Prepare Sprouts']
+duration = "3 minutes"
+description = "Slice off any hard ends of the Brussels sprouts, as needed. Slice them in half lengthwise and place them in a large bowl."
+ingredients = ["1 1/2 pounds Brussels sprouts"]
+
+['Salt']
+duration = "2 minutes"
+description = "Mix the sprouts with the olive oil, salt, and black pepper."
+ingredients = ["3 tablespoons olive oil", "1 teaspoon kosher salt", "1/4 teaspoon black pepper"]
+depends = ['Prepare Sprouts']
+
+['Line Sheet']
+duration = "1 minute"
+description = "Line a baking sheet with parchment paper."
+
+['Place Sprouts']
+duration = "1 minute"
+description = "Pour the spouts onto the sheet and turn them all cut side down."
+depends = ['Line Sheet', 'Salt']
+
+['Cook']
+duration = "25 minutes"
+description = "Roast for 25 minutes until very browned and tender (don’t stir!)."
+depends = ["Place Sprouts", "Heat Oven"]
+engagement = 5
+
+['Make Sauce']
+duration = "3 minutes"
+description = "In a bowl large enough for the sprouts too, whisk together the balsamic vinegar, honey or maple syrup, and 1 teaspoon hot sauce."
+ingredients = ["2 tablespoons balsamic vinegar", "2 tablespoon honey or maple syrup", "1 teaspoon hot sauce, plus more to drizzle: Frank’s Hot Sauce, Sriracha, or other"]
+
+['Mix']
+duration = "2 minutes"
+description = "Toss sprouts with the sauce"
+depends = ['Make Sauce', 'Cook']
+

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { rem } from "@mantine/core";
 import {
   IconPlayerTrackNext,
@@ -17,6 +18,14 @@ import {
   IconPlus,
   IconCancel,
   IconCheck,
+  IconEye,
+  IconChecklist,
+  IconPlaneArrival,
+  IconBowlSpoon,
+  IconBinoculars,
+  IconAlarm,
+  IconClock,
+  IconPicnicTable,
 } from "@tabler/icons-react";
 
 import classes from "./Icon.module.scss";
@@ -54,3 +63,11 @@ export const Empty = IconMoodEmpty;
 export const Plus = IconPlus;
 export const Cancel = IconCancel;
 export const Check = IconCheck;
+export const Duty = IconEye;
+export const Task = IconChecklist;
+export const Imminent = IconPlaneArrival;
+export const Recipe = IconBowlSpoon;
+export const Overview = IconBinoculars;
+export const Alarmed = IconAlarm;
+export const Timed = IconClock;
+export const PartTo = IconPicnicTable;

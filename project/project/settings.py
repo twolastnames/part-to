@@ -31,7 +31,6 @@ else:
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -59,6 +58,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "parttobe.middlewares.ApiBodyValidation",
+    "parttobe.middlewares.ApiQueryValidation",
     "parttobe.middlewares.Headers",
 ]
 

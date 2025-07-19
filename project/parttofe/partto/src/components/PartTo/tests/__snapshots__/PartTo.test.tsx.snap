@@ -2,8 +2,8 @@
 
 exports[`snapshot 1`] = `
 <div
-  class="partTo"
-  data-testid="PartTo"
+  class="detailShell"
+  data-testid="DetailShell"
 >
   <div
     class="name"
@@ -11,24 +11,12 @@ exports[`snapshot 1`] = `
     A simple part to
   </div>
   <div
-    class="workDuration"
-  />
-  <div
-    class="clockDuration"
-  />
-  <div
-    class="tasks"
+    class="body"
+    data-testid="Body"
   >
-    <div
-      class="task"
-    >
-      more
-    </div>
-    <div
-      class="task"
-    >
-      things
-    </div>
+    <p>
+      More Stuff
+    </p>
   </div>
 </div>
 `;

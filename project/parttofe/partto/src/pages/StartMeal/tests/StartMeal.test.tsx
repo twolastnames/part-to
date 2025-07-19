@@ -4,10 +4,11 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { StartMeal } from "../StartMeal";
 import { ShellProvider } from "../../../providers/ShellProvider";
 import fetchMock from "jest-fetch-mock";
-import task1 from "../../../mocks/task1.json";
+import task2 from "../../../mocks/task2.json";
 import partTo1 from "../../../mocks/partTo1.json";
 
 test("snapshot", async () => {
+  jest.spyOn(Math, "random").mockReturnValue(0.123456789);
   fetchMock.mockResponse((request: Request) => {
     if (request.url.includes("/api/parttos/")) {
       return Promise.resolve(
@@ -20,7 +21,7 @@ test("snapshot", async () => {
       return Promise.resolve(JSON.stringify(partTo1));
     }
     if (request.url.includes("/api/task/")) {
-      return Promise.resolve(JSON.stringify(task1));
+      return Promise.resolve(JSON.stringify(task2));
     }
     return Promise.reject("");
   });
@@ -30,9 +31,9 @@ test("snapshot", async () => {
     </ShellProvider>,
   );
   const { findAllByTestId } = within(
-    await waitFor(async () => screen.getAllByTestId("PartTo")[0]),
+    await waitFor(async () => screen.getAllByTestId("DetailShell")[0]),
   );
-  await findAllByTestId("Definition");
+  await findAllByTestId("Accordion");
   const page = screen.getByTestId("Layout");
   expect(page).toMatchSnapshot();
 });

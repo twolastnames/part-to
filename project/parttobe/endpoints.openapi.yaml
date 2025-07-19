@@ -7,6 +7,51 @@ info:
   license:
     name: MIT
 paths:
+  /api/applicationVersion/:
+    get:
+      summary: supply Part To application version
+      operationId: version:get
+      responses:
+        '404':
+          description: version file is missing
+          content:
+            '*':
+              schema:
+                $ref: "#/components/schemas/Four04Reply"
+        '500':
+          description: a backend bug
+          content:
+            '*':
+              schema:
+                type: string
+        '200':
+          description: Expected response to a valid request
+          content:
+            '*':
+              schema:
+                type: object
+                required:
+                - major
+                - minor
+                - fix
+                - build
+                - variant
+                - timestamp
+                properties:
+                  major:
+                    type: integer
+                  minor:
+                    type: integer
+                  fix:
+                    type: integer
+                  build:
+                    type: integer
+                  variant:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+
   /api/parttos/:
     get:
       summary: list all part tos
@@ -190,7 +235,30 @@ paths:
           content:
             '*':
               schema:
-                $ref: "#/components/schemas/TaskDefinition"
+                type: object
+                required:
+                - duration
+                - description
+                - partTo
+                - ingredients
+                - tools
+                properties:
+                  duration:
+                    type: string
+                    format: duration
+                  description:
+                    type: string
+                  partTo:
+                    type: string
+                    format: PartToId
+                  ingredients:
+                    type: array
+                    items:
+                      type: string
+                  tools:
+                    type: array
+                    items:
+                      type: string
   /api/run/:
     get:
       summary: read a run state
@@ -249,6 +317,11 @@ paths:
                 runState:
                   type: string
                   format: RunStateId
+                definitions:
+                  type: array
+                  items:
+                    type: string
+                    format: TaskDefinitionId
       responses:
         '404':
           description: a frontend bug
@@ -502,7 +575,7 @@ paths:
                 - from
                 properties:
                   estimatedDuration:
-                    type: number
+                    type: integer
                     format: duration
                   initialEstimation:
                     type: object
@@ -511,7 +584,7 @@ paths:
                     - usedInCalculation
                     properties:
                       duration:
-                        type: number
+                        type: integer
                         format: duration
                       usedInCalculation:
                         type: boolean
@@ -568,10 +641,10 @@ components:
         name:
           type: string
         workDuration:
-          type: number
+          type: integer
           format: duration
         clockDuration:
-          type: number
+          type: integer
           format: duration
         tasks:
           type: array
@@ -583,21 +656,31 @@ components:
       - name
       - duration
       - description
+      - ingredients
+      - tools
       type: object
       properties:
         name:
           type: string
         duration:
-          type: number
+          type: integer
           format: duration
         description:
           type: string
+        ingredients:
+          type: array
+          items:
+            type: string
+        tools:
+          type: array
+          items:
+            type: string
         depends:
           type: array
           items:
             type: string
         engagement:
-          type: number
+          type: integer
     RunState:
       required:
       - runState
@@ -609,32 +692,95 @@ components:
       - voided
       - completed
       - timestamp
-      - startTimes
+      - upcoming
+      - timers
+      - duration
       type: object
       properties:
         runState:
           type: string
           format: RunStateId
+        duration:
+          type: string
+          format: duration
         timestamp:
           type: string
           format: date-time
-        startTimes:
+        upcoming:
           type: array
           items:
             type: object
             required:
             - task
-            - started
+            - till
+            - duration
             properties:
+              duration:
+                type: string
+                format: duration
+              till:
+                type: string
+                format: duration
               task:
                 type: string
                 format: TaskDefinitionId
-              started:
-                type: string
-                format: date-time
-        report:
-          type: string
-          format: date-time
+        timers:
+          type: object
+          required:
+          - enforced
+          - laxed
+          - imminent
+          properties:
+            enforced:
+              type: array
+              items:
+                type: object
+                required:
+                - task
+                - started
+                - duration
+                properties:
+                  task:
+                    type: string
+                    format: TaskDefinitionId
+                  started:
+                    type: string
+                    format: date-time
+                  duration:
+                    type: string
+                    format: duration
+            laxed:
+              type: array
+              items:
+                type: object
+                required:
+                - task
+                - started
+                - duration
+                properties:
+                  task:
+                    type: string
+                    format: TaskDefinitionId
+                  started:
+                    type: string
+                    format: date-time
+                  duration:
+                    type: string
+                    format: duration
+            imminent:
+              type: array
+              items:
+                type: object
+                required:
+                - till
+                - task
+                properties:
+                  till:
+                    type: string
+                    format: duration
+                  task:
+                    type: string
+                    format: TaskDefinitionId
         complete:
           type: string
           format: date-time

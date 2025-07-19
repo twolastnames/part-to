@@ -1,9 +1,7 @@
 import React from "react";
 
-import classes from "./ManageTasks.module.scss";
-import { ManageTasksProps } from "./ManageTasksTypes";
+import { ManageTasksProps, RunStateItemGetter } from "./ManageTasksTypes";
 import { RunStateId, TaskDefinitionId } from "../../api/sharedschemas";
-import { useRunGet } from "../../api/runget";
 import { Spinner } from "../Spinner/Spinner";
 import { DynamicItemSet } from "../DynamicItemSet/DynamicItemSet";
 import { ContextDescription } from "../../providers/DynamicItemSetPair";
@@ -13,41 +11,77 @@ import { doRunvoidPost } from "../../api/runvoidpost";
 import { getRoute } from "../../routes";
 import { Cancel, Check } from "../Icon/Icon";
 import { doRuncompletePost } from "../../api/runcompletepost";
-import { Detail } from "./Detail/Detail";
+import { TaskDefinition } from "../TaskDefinition/TaskDefinition";
+import { useRunState } from "../../hooks/runState";
+import { ClassNames as DefinitionClassNames } from "../TaskDefinition/TaskDefinitionTypes";
+import { RunGet200Body } from "../../api/runget";
+import { ListItem } from "../TaskDefinition/ListItem/ListItem";
+import { IconClassSets } from "../TaskDefinition/ListItem/ListItemTypes";
 
 export function ManageTasksIdFromer({
-  runState,
   typeKey,
   emptyText,
+  definitionListSets,
   context,
+  getPrependedItems,
+  definitionClassNames,
 }: {
   typeKey: "duties" | "tasks";
-  runState: RunStateId;
   emptyText: string;
+  definitionListSets: IconClassSets;
   context: ContextDescription;
+  getPrependedItems?: RunStateItemGetter;
+  definitionClassNames: DefinitionClassNames;
 }) {
-  const response = useRunGet({ runState });
+  const response = useRunState();
+  const tasks = (response?.data?.["started"] || []).filter((key) =>
+    (response.data?.[typeKey] || []).includes(key),
+  );
   return (
     <Spinner responses={[response]}>
       <ManageTasks
+        definitionListSets={definitionListSets}
         context={context}
         emptyText={emptyText}
-        tasks={response.data?.[typeKey] || []}
-        runState={runState}
+        tasks={tasks}
+        getPrependedItems={getPrependedItems}
+        definitionClassNames={definitionClassNames}
       />
     </Spinner>
   );
 }
 
 function getItems(
+  definitionClassNames: DefinitionClassNames,
+  definitionListSets: IconClassSets,
   navigate: (arg: string) => void,
   runState: RunStateId,
   tasks: Array<TaskDefinitionId>,
+  context: ContextDescription,
+  offset: number,
 ) {
-  return tasks.map((taskDefinitionId: TaskDefinitionId) => ({
+  return tasks.map((taskDefinitionId: TaskDefinitionId, index: number) => ({
     key: taskDefinitionId,
-    listView: <>{taskDefinitionId}</>,
-    detailView: <Detail task={taskDefinitionId} runState={runState} />,
+    listView: (
+      <ListItem
+        iconClassSets={definitionListSets}
+        runState={runState}
+        task={taskDefinitionId}
+      />
+    ),
+    detailView: (
+      <TaskDefinition
+        locatable={{
+          context,
+          onLocate: (setter: (value: number) => void) => () => {
+            setter(index + offset);
+          },
+        }}
+        task={taskDefinitionId}
+        runState={runState}
+        classNames={definitionClassNames}
+      />
+    ),
     itemOperations: [
       {
         text: "Skip and Void",
@@ -81,21 +115,55 @@ function getItems(
   }));
 }
 
+function isComplete(runState?: RunGet200Body) {
+  return (
+    runState &&
+    runState.completed.length &&
+    !runState.staged.length &&
+    !runState.started.length
+  );
+}
+
+const completedText = "Done Yo!";
+
 export function ManageTasks({
   context,
   tasks,
-  runState,
   emptyText,
+  getPrependedItems,
+  definitionClassNames,
+  definitionListSets,
 }: ManageTasksProps) {
   const navigate = useNavigate();
+  const runStateData = useRunState();
+
+  const prepended =
+    getPrependedItems && runStateData.data
+      ? getPrependedItems(navigate, runStateData.data, context, (ignored) => 0)
+      : [];
+
   return (
-    <div className={classes.manageTasks} data-testid="ManageTasks">
+    <Spinner responses={[runStateData]}>
       <DynamicItemSet
         context={context}
-        items={getItems(navigate, runState, tasks)}
+        items={(prepended.length > 0 ? [prepended[0]] : prepended).concat(
+          getItems(
+            definitionClassNames,
+            definitionListSets,
+            navigate,
+            runStateData?.data?.runState as RunStateId,
+            tasks,
+            context,
+            prepended.length ? 1 : 0,
+          ),
+        )}
         setOperations={[]}
-        emptyPage={<EmptySimpleView content={emptyText} />}
+        emptyPage={
+          <EmptySimpleView
+            content={isComplete(runStateData.data) ? completedText : emptyText}
+          />
+        }
       />
-    </div>
+    </Spinner>
   );
 }

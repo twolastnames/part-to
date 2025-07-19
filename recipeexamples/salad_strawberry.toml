@@ -1,0 +1,48 @@
+[part_to]
+name = "Salad Strawberry"
+depends = ["divy"]
+
+['dressing']
+duration = "3 minutes"
+description = "whisk the ingredients together in a bowl"
+ingredients = ["2 tablespoons aged balsamic vinegar", "2 tablespoons Dijon mustard", "1 to 2 tablespoons* pure maple syrup or honey", "1/4 teaspoon salt", "6 tablespoons olive oil"]
+
+['strawberries']
+duration = "4 minutes"
+description = "clean and slice 2 cups of strawberries"
+ingredients = ["strawberries - to make to slicked cups"]
+
+['greens']
+duration = "1 minutes"
+description = "wash the greens"
+ingredients = ["8 cups mix of lettuce and spinach"]
+
+['cutonion']
+duration = "2 minutes"
+description = "thinly slice"
+ingredients = ["1/2 red onion"]
+
+['soakonion']
+duration = "15 minutes"
+description = "soak onion in water for 15 minutes then drain"
+engagement= 10
+depends = ["cutonion"]
+
+['preheat']
+duration = "8 minutes"
+description = "preheat oven to 350 degrees"
+engagement= 1
+
+['toast']
+duration = "7 minutes"
+description = "put nuts in oven 7-8 minutes and/or until fragrant. Watch close"
+depends = ["preheat"]
+engagement= 20
+ingredients=['1/3 cup almonds, pecans, or walnuts']
+
+['divy']
+duration = "2 minutes"
+description = "put some strawberries, onion, nuts, cheese crumbles, & dressing on a bed of greens and sprinkle with pepper"
+ingredients = ["pepper", "1/3 cup feta cheese crumbles"]
+depends = ["dressing", "soakonion", "toast", "strawberries", "greens"]
+

@@ -1,5 +1,9 @@
 @import "../../../../App.scss";
 
+.clickable {
+  cursor: pointer;
+}
+
 .note {
   border: 1px solid var(--background-color);
   margin: var(--gap-medium);

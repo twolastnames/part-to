@@ -39,25 +39,36 @@ $(NENV): $(VENV)
 $(NODE_MODULES): $(VENV)  $(NENV)
 	$(WITH_ENV) cd $(NODE_BASE) && $(NODE_ENV_PATH) $(NPM) ci
 
-$(NODE_BUILD): $(VENV) $(NENV) $(shell find ${NODE_SOURCE} -type f) $(NODE_MODULES)
+$(NODE_BUILD): $(VENV) project/parttofe/partto/node_modules $(NENV) $(shell find ${NODE_SOURCE} -type f) project/parttofe/partto/package-lock.json
 	$(WITH_ENV) $(NODE) -v && cd $(NODE_BASE) && $(NODE) ./node_modules/.bin/react-scripts build
 
 build: $(VENV) $(NENV) $(NODE_BUILD)
 
 clean:
-	rm -rf $(NODE_BUILD) $(NODE_MODULES) $(NENV_BASE) $(VENV_BASE)
+	rm -rf $(NODE_BUILD) $(NENV_BASE) $(VENV_BASE) $(NODE_MODULES)
+
+insertdefaultrecipes:
+	${WITH_ENV} python3 project/manage.py insertrecipe recipeexamples/*
+
+full: $(NENV) test migrate insertdefaultrecipes runback
 
 runback: $(VENV) $(NENV) $(NODE_BUILD) migrate
-	$(WITH_ENV) cd project && python3 manage.py runserver
+	$(WITH_ENV) cd project && python3 manage.py runserver $(ARGUMENTS)
 
 runfront: $(VENV) $(NENV) $(NODE_BUILD)
 	$(WITH_ENV) cd $(NODE_SOURCE) && REACT_APP_PART_TO_API_BASE=http://localhost:8000 $(NPM) run start
 
-testfront: $(NENV)
-	$(WITH_ENV) cd $(NODE_SOURCE) && $(NPM) run test -- --watchAll=false
+runstorybook: $(VENV) $(NENV) $(NODE_BUILD)
+	$(WITH_ENV) cd $(NODE_SOURCE) && npm run storybook
 
-testback: $(NENV)
-	$(WITH_ENV) cd $(PROJECT) && python3 manage.py test parttobe
+testfront: $(NENV) project/parttofe/partto/node_modules
+	$(WITH_ENV) cd $(NODE_SOURCE) && npm run test -- --watchAll=false $(ARGUMENTS)
+
+testback: $(NENV) $(NODE_BUILD)
+	$(WITH_ENV) cd $(PROJECT) && PYTHONHASHSEED=18 python3 manage.py test parttobe$(ARGUMENTS)
+
+command: $(NENV)
+	$(WITH_ENV) python3 project/manage.py $(ARGUMENTS)
 
 checkformat:
 	$(WITH_ENV) black --check . && cd $(NODE_SOURCE) && npm run checkformat

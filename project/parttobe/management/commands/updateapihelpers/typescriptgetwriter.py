@@ -34,6 +34,7 @@ import { Duration } from "../shared/duration";
 import { 
   parameterMarshalers,
   unmarshalers,
+  integer,
 {% for shared_type in shared_types %}
   {{ shared_type }},
 {% endfor %}

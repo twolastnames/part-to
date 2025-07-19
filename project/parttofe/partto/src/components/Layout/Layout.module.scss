@@ -11,7 +11,7 @@
 
 @media #{$landscape} {
   .itemSet {
-    flex: 1 1 0;
+    flex: 1 1 1;
     height: 100vh;
     width: 100%;
     border-left: 1px solid var(--secondary-color);
@@ -33,14 +33,3 @@
     height: calc(100vh - var(--navigation-height));
   }
 }
-
-/*
-@include mediaSet(
-  $selector: .itemSet,
-  $key: flex-direction,
-  $cell: column,
-  $portrait: row,
-  $tablet: row,
-  $laptop: row
-)
-*/

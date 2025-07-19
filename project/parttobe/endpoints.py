@@ -141,6 +141,18 @@ def response_definitions(operations=operations, id=None):
             )
 
 
+def get_definition(request):
+    path = request.path
+    try:
+        return openapi["paths"][path][request.method.lower()]
+    except KeyError:
+        pass
+
+
+def get_request_body_schema(definition):
+    return definition["requestBody"]["content"]["*"]["schema"]
+
+
 def get_request_body_arguments(operation):
     try:
         return operation["requestBody"]["content"]["*"]["schema"]["properties"].keys()

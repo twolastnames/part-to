@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.test import Client
 from freezegun import freeze_time
 from parttobe import models
+from datetime import timedelta
 import json
 import toml
 import os
@@ -61,3 +62,141 @@ def loadExamples():
         else:
             ids.append(response.data["partTo"])
     return ids
+
+
+class ClientTester(TestCase):
+    def setUp(self):
+        self.ids = loadExamples()
+
+    def __init__(self, input):
+        super().__init__(input)
+        self.client = Client()
+        self.definitionIds = {}
+
+    def changeState(self, state, description):
+        response = self.client.post(
+            "/api/run/{}".format(state),
+            {
+                "runState": self.runState,
+                "definitions": [self.definitionIds[description]],
+            },
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.runState = response.data["runState"]
+        response = self.client.get("/api/run/?runState={}".format(self.runState))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.headers["Cache-Control"], "public, max-age=31536000, immutable"
+        )
+        self.runStateData = response.data
+
+    def assertTimerDescriptions(self, type, *descriptions):
+        test_descriptions = []
+        for imminent, description in zip(
+            self.runStateData["timers"][type], descriptions
+        ):
+            self.definitionIds[description] = imminent["task"]
+            response = self.client.get("/api/task/?task={}".format(imminent["task"]))
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                response.headers["Cache-Control"], "public, max-age=31536000, immutable"
+            )
+            test_descriptions.append(response.data["description"])
+        self.assertListEqual(list(test_descriptions), list(descriptions))
+
+    def assertImminentTills(self, *tills):
+        self.assertListEqual(
+            [
+                timedelta(seconds=timer["till"])
+                for timer in self.runStateData["timers"]["imminent"]
+            ],
+            list(tills),
+        )
+
+    def assertUpcomingTills(self, *tills):
+        self.assertListEqual(
+            [
+                timedelta(seconds=timer["till"])
+                for timer in self.runStateData["upcoming"]
+            ],
+            list(tills),
+        )
+
+    def assertTimerDurations(self, type, *durations):
+        self.assertEqual(len(durations), len(self.runStateData["timers"][type]))
+        test_durations = []
+        for timer, duration in zip(self.runStateData["timers"][type], durations):
+            test_durations.append(timedelta(seconds=timer["duration"]))
+        self.assertListEqual(list(test_durations), list(durations))
+
+    def assertUpcomingDescriptions(self, *descriptions):
+        test_descriptions = []
+        for upcoming, description in zip(self.runStateData["upcoming"], descriptions):
+            response = self.client.get("/api/task/?task={}".format(upcoming["task"]))
+            self.definitionIds[description] = upcoming["task"]
+            self.assertEqual(
+                response.headers["Cache-Control"], "public, max-age=31536000, immutable"
+            )
+            self.assertEqual(response.status_code, 200)
+            test_descriptions.append(response.data["description"])
+        self.assertListEqual(list(test_descriptions), list(descriptions))
+
+    def assertStartedDescriptions(self, *descriptions):
+        test_descriptions = []
+        for started, description in zip(self.runStateData["started"], descriptions):
+            response = self.client.get("/api/task/?task={}".format(started))
+            self.definitionIds[description] = started
+            self.assertEqual(
+                response.headers["Cache-Control"], "public, max-age=31536000, immutable"
+            )
+            self.assertEqual(response.status_code, 200)
+            test_descriptions.append(response.data["description"])
+        self.assertListEqual(list(test_descriptions), list(descriptions))
+
+    def stagePartTos(self, *names):
+        response = self.client.get("/api/parttos/")
+        self.assertEqual(response.status_code, 200)
+        self.partToDatas = [
+            {
+                "response": self.client.get("/api/partto/?partTo={}".format(key)),
+                "key": key,
+            }
+            for key in response.data["partTos"]
+        ]
+        self.runState = None
+        for data in self.partToDatas:
+            if data["response"].data["name"] not in names:
+                continue
+            runStateAppendage = {"runState": self.runState} if self.runState else {}
+            response = self.client.post(
+                "/api/run/stage",
+                {"partTos": [data["key"]]} | runStateAppendage,
+                content_type="application/json",
+            )
+            self.assertEqual(response.status_code, 200)
+            self.runState = response.data["runState"]
+        response = self.client.get("/api/run/?runState={}".format(self.runState))
+        self.assertEqual(
+            response.headers["Cache-Control"], "public, max-age=31536000, immutable"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.runStateData = response.data
+
+    def startPartTos(self, *names):
+        self.stagePartTos(*names)
+        response = self.client.post(
+            "/api/run/start",
+            {
+                "runState": self.runState,
+            },
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.runState = response.data["runState"]
+        response = self.client.get("/api/run/?runState={}".format(self.runState))
+        self.assertEqual(
+            response.headers["Cache-Control"], "public, max-age=31536000, immutable"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.runStateData = response.data

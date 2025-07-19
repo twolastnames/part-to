@@ -1,5 +1,5 @@
 import { expect, describe, it } from "@jest/globals";
-import { getDateTime } from "./dateTime";
+import { Format, getDateTime } from "./dateTime";
 import { getDuration } from "./duration";
 
 describe("DateTime", () => {
@@ -31,10 +31,16 @@ test("duration subtraction", () => {
   ).toEqual(new Date("April 27, 1989 8:55 AM").getTime());
 });
 
-test("date subtraction", () => {
+test("format short time", () => {
   expect(
     getDateTime(new Date("April 27, 1989 9:00 AM"))
       .subtract(getDateTime(new Date("April 27, 1989 8:55 AM")))
       .toMilliseconds(),
   ).toEqual(getDuration(5 * 60 * 1000).toMilliseconds());
+});
+
+test("date subtraction", () => {
+  expect(
+    getDateTime(new Date("April 27, 1989 9:31 AM")).format(Format.TIME),
+  ).toEqual("9:31 AM");
 });

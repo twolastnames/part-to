@@ -1,0 +1,73 @@
+[part_to]
+name="Potatoes Crispy Smashed"
+depends=['cook']
+
+
+['preheat oven']
+description='Preheat oven on convection setting to 400 degrees'
+duration='8 minutes'
+engagement=5
+
+
+['put water in pot']
+description='put enough water to cover potatoes in a pot on the stove'
+duration='45 seconds'
+ingredients=['Pinch of Salt', '4 cups water']
+
+['boil water']
+description='boil the water'
+duration='8 minutes'
+depends= ['put water in pot']
+engagement=5
+
+['rinse potatoes']
+description='rinse potatoes'
+duration='1 minute'
+ingredients=['1 Pound Petite Gold Potatoes']
+
+
+['add potatoes']
+description='carefully, add the potatoes'
+duration='45 seconds'
+depends=['rinse potatoes', 'boil water']
+
+['boil potatoes']
+description='cover and boil over low/medium heat'
+duration='15 minutes'
+depends= ['add potatoes']
+engagement=5
+
+['drain potatoes']
+description='drain the potatoes'
+duration='45 seconds'
+depends= ['boil potatoes']
+
+['dry pototoes']
+description='let potatoes sit for 5 minutes to dry'
+duration='5 minutes'
+engagement=5
+depends= ['drain potatoes']
+
+['put on cookie sheet']
+description='put the potatoes on a lined cookie sheet'
+duration='30 seconds'
+depends= ['dry pototoes']
+
+['smash potatoes']
+description='smash potatoes with a fork or cup bottom'
+duration='3 minutes'
+depends= ['put on cookie sheet']
+
+['season']
+description='put olive oil garlic powder and salt on top'
+duration='1 minute'
+ingredients=['Olive or Avocado Oil','1 Tbsp Garlic Powder (Optional)','Salt']
+depends= ['smash potatoes']
+
+['cook']
+description='put in oven'
+duration='20 minutes'
+depends= ['season','preheat oven']
+engagement=5
+
+

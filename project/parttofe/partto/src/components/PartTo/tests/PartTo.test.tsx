@@ -5,11 +5,14 @@ import { ShellProvider } from "../../../providers/ShellProvider";
 import { PartTo } from "../PartTo";
 
 test("snapshot", () => {
+  jest.spyOn(Math, "random").mockReturnValue(0.123456789);
   render(
     <ShellProvider>
-      <PartTo name="A simple part to" tasks={["more", "things"]} />
+      <PartTo name="A simple part to">
+        <p>More Stuff</p>
+      </PartTo>
     </ShellProvider>,
   );
-  const component = screen.getByTestId("PartTo");
+  const component = screen.getByTestId("DetailShell");
   expect(component).toMatchSnapshot();
 });

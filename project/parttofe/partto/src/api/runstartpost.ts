@@ -15,6 +15,7 @@ import {
   parameterMarshalers,
   bodyMarshalers,
   unmarshalers,
+  integer,
   Four04Reply,
   RunOperationReply,
   RunOperation,
@@ -27,9 +28,15 @@ import {
 } from "./sharedschemas";
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-export type RunstartPostBody = { runState?: RunStateId | undefined };
+export type RunstartPostBody = {
+  runState?: RunStateId | undefined;
+  definitions?: Array<TaskDefinitionId>;
+};
 
-type WireBody = { runState?: RunStateId | undefined };
+type WireBody = {
+  runState?: RunStateId | undefined;
+  definitions?: Array<TaskDefinitionId>;
+};
 
 export type RunstartPost200Body = { runState: RunStateId };
 
@@ -64,7 +71,12 @@ export const doRunstartPost = async ({
     ExternalHandlers
   >(
     "/api/run/start",
-    { runState: bodyMarshalers.unrequired["RunStateId"](body.runState) },
+    {
+      runState: bodyMarshalers.unrequired["RunStateId"](body.runState),
+      definitions: body.definitions?.map((value) =>
+        bodyMarshalers.required["TaskDefinitionId"](value),
+      ),
+    },
     {
       200: (body: Wire200Body) => ({
         runState: unmarshalers.required["RunStateId"](body.runState),
