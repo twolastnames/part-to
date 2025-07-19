@@ -1,0 +1,5 @@
+.git
+nenv
+venv
+**/node_modules
+

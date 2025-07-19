@@ -3,7 +3,7 @@ import { addErrorNote } from "../components/Layout/NavigationBar/Noted/Noted";
 import { DateTime, getDateTime } from "../shared/dateTime";
 import { Duration, getDuration } from "../shared/duration";
 
-const partToApiBase = process.env.PART_TO_API_BASE || "http://localhost:8000";
+const partToApiBase = process.env.REACT_APP_PART_TO_API_BASE || "";
 
 export enum Stage {
   Skipped,
