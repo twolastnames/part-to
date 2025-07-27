@@ -85,6 +85,10 @@ release: $(NENV)
 image: $(NENV)
 	sudo bash -c "${WITH_ENV} docker build -t twolastnames/part-to ."
 
+up: $(NENV)
+	sudo bash -c "${WITH_ENV} docker volume create partto_exe"
+	sudo bash -c "${WITH_ENV} docker compose up -d"
+
 test: testfront testback
 
 enterimage: $(VENV) migrate
