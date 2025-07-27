@@ -23,11 +23,9 @@ GIT_HOOKS_PATH=githooks
 VENV_CHECK := $(shell command -v virtualenv 2> /dev/null)
 
 $(VENV):
+	-python3 -m venv venv
+	. $(VENV_BASE)/bin/activate
 	if [ -d ".git" ]; then git config core.hooksPath $(GIT_HOOKS_PATH); fi
-ifndef  VENV_CHECK
-	-python3 -m pip install virtualenv
-endif
-	virtualenv $(VENV_BASE)
 	$(WITH_VENV) python3 -m pip install -r requirements.txt
 
 $(NENV): $(VENV)
