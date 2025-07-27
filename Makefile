@@ -20,7 +20,6 @@ WITH_ENV=$(WITH_VENV) . $(NENV) &&
 
 GIT_HOOKS_PATH=githooks
 
-export PART_TO_DATA_DIRECTORY=/var/partto
 VENV_CHECK := $(shell command -v virtualenv 2> /dev/null)
 
 $(VENV):
