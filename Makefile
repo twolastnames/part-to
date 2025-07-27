@@ -83,11 +83,10 @@ release: $(NENV)
 	$(WITH_ENV) ./bin/release.py
 
 image: $(NENV)
-	mkdir -p /var/partto
-	sudo bash -c "${WITH_ENV} ./bin/docker_operations.py ensure_image"
+	sudo bash -c "${WITH_ENV} docker build -t twolastnames/part-to ."
 
 test: testfront testback
 
 enterimage: $(VENV) migrate
-	cd project && ../venv/bin/gunicorn --bind :20222 --workers 4 --access-logfile $(PART_TO_DATA_DIRECTORY)/partto.out.log --error-logfile $(PART_TO_DATA_DIRECTORY)/partto.err.log --log-level debug project.wsgi
+	cd project && PART_TO_DATA_DIRECTORY=/var/partto ../venv/bin/gunicorn --bind :20222 --workers 4 --access-logfile $(PART_TO_DATA_DIRECTORY)/partto.out.log --error-logfile $(PART_TO_DATA_DIRECTORY)/partto.err.log --log-level debug project.wsgi
 

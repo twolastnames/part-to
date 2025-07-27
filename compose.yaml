@@ -1,11 +1,11 @@
 services:
   app:
-    image: partto
-    build: .
+    image: twolastnames/part-to
     network_mode: host
     ports:
       - 0.0.0.0:20222:20222
     volumes:
+      - partto_exe:/opt/partto
       - partto_data:/var/partto
   nginx:
     network_mode: host
@@ -14,7 +14,7 @@ services:
       - 0.0.0.0:22222:22222
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - partto_data:/usr/share/nginx/html
+      - partto_exe:/usr/share/nginx/html
 volumes:
   partto_data:
     external: false
