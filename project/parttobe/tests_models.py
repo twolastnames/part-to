@@ -101,7 +101,7 @@ class CollectionTaskTestClass(TestCase):
                 chain_from,
             )
         )
-        self.assertEquals(
+        self.assertEqual(
             result,
             [
                 "do task1",
@@ -126,7 +126,7 @@ class CollectionTaskTestClass(TestCase):
                 chain_from,
             )
         )
-        self.assertEquals(
+        self.assertEqual(
             result,
             [
                 "do task1",
@@ -152,7 +152,7 @@ class CollectionTaskTestClass(TestCase):
                 chain_from,
             )
         )
-        self.assertEquals(
+        self.assertEqual(
             result,
             [
                 "do task1",
