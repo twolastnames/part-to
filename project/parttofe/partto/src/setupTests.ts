@@ -4,6 +4,11 @@
 // learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom";
 
+jest.mock("idb-keyval", () => ({
+  get: (key: string) => undefined,
+  set: (key: string, value: string) => undefined,
+}));
+
 jest.mock("react-router-dom", () => ({
   ...(jest.requireActual("react-router-dom") as any),
   useNavigate: () => jest.fn(),

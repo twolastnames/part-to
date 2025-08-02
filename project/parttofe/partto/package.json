@@ -17,6 +17,7 @@
     "@types/react-test-renderer": "^18.3.0",
     "eslint": "^8.57.0",
     "history": "^5.3.0",
+    "idb-keyval": "^6.2.2",
     "jest-fetch-mock": "^3.0.3",
     "lodash": "^4.17.21",
     "parcel": "^2.12.0",
@@ -37,8 +38,8 @@
     "test": "react-scripts test --silent",
     "inspect": "DEBUG_PRINT_LIMIT=9999999 react-scripts test --silent",
     "eject": "react-scripts eject",
-    "clean": "rm -rf node_mudules",
-    "veryclean": "rm -rf node_mudules package-lock.json build",
+    "clean": "rm -rf node_modules",
+    "veryclean": "rm -rf node_modules package-lock.json build",
     "checkformat": "eslint src && prettier -c src",
     "format": "eslint src && prettier --write src"
   },

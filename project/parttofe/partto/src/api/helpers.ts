@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { addErrorNote } from "../components/Layout/NavigationBar/Noted/Noted";
 import { DateTime, getDateTime } from "../shared/dateTime";
 import { Duration, getDuration } from "../shared/duration";
+import { get, set } from "idb-keyval";
 
 const partToApiBase = process.env.REACT_APP_PART_TO_API_BASE || "";
 
@@ -195,10 +196,7 @@ async function handleResponse<RESPONSE_TYPE>(
     data,
   };
   if (response.headers.get("Cache-Control")?.includes("immutable")) {
-    localStorage.setItem(
-      getImmutableKey(response.url),
-      JSON.stringify(returnable),
-    );
+    set(getImmutableKey(response.url), JSON.stringify(returnable));
   }
   return returnable;
 }
@@ -287,13 +285,15 @@ export function useGet<
       }
       parseResult(status, wiredResponse);
     };
-    const stored = localStorage.getItem(getImmutableKey(endpointUrl));
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      parseResult(parsed.status, parsed);
-    } else {
-      makeCall();
-    }
+    (async () => {
+      const stored = await get(getImmutableKey(endpointUrl));
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        parseResult(parsed.status, parsed);
+      } else {
+        makeCall();
+      }
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, JSON.stringify(parameters)]);
   return result;
