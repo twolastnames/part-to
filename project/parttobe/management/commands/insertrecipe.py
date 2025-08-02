@@ -10,12 +10,25 @@ from collections import namedtuple
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("recipes", nargs="+")
+        parser.add_argument("--no-overwrite", action="store_true")
 
     def handle(self, *args, **options):
         client = Client()
-        print(options["recipes"])
+        has_recipes = client.get("/api/parttos/")
+        names = (
+            set()
+            if "no-overwrite" in options and options["no-overwrite"]
+            else set(
+                [
+                    client.get("/api/partto/?partTo={}".format(id)).data["name"]
+                    for id in has_recipes.data["partTos"]
+                ]
+            )
+        )
         for recipe in options["recipes"]:
             payload = get_toml_recipe_as_json(recipe)
+            if payload["part_to"]["name"] in names:
+                continue
             response = client.post(
                 "/api/partto/",
                 payload,
