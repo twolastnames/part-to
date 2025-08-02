@@ -115,7 +115,7 @@ class _Task(_Chunk):
     def change_engagement(self, engagement):
         return _Task(
             self.id,
-            self.weight / engagement,
+            self.weight / (engagement if engagement >= 0.01 else 0.01),
             depended=self.depended,
             engagement=engagement,
         )
@@ -379,9 +379,7 @@ class _TimeWindow:
             active_task = ready_tasks[0]
         if active_task:
             engagement = sum([duty.engagement for duty in ready_duties])
-            active_task = active_task.change_engagement(
-                1.0 - (engagement if engagement <= 1.0 else 1.0)
-            )
+            active_task = active_task.change_engagement(1.0 - engagement)
         for_window = [active_task] + ready_duties if active_task else ready_duties
         duration = min([chunk.duration for chunk in for_window])
         comparable = set(for_window)
