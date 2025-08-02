@@ -62,6 +62,10 @@ clean:
 insertrecipes: $(VENV)
 	${WITH_VENV} python3 project/manage.py insertrecipe --no-overwrite recipeexamples/*
 
+forcerecipe:
+	pip3 install toml
+	./bin/insert_recipe.py -o $(ORIGIN) $(FILE)
+
 full: $(NENV) test migrate insertrecipes runback
 
 runback: $(VENV) $(NENV) $(NODE_BUILD) migrate

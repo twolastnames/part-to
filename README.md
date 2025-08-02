@@ -15,3 +15,13 @@ A user picks what recipes they want to cook in a meal. It then displays the indi
 | runfront  | Run a development frontend with hot rebuild. It's accessable on port 3000. |
 | clean     | Delete anything this file generates. |
 | test      | Run unit tests. |
+
+
+
+## Contributions
+
+Obviously, writing some code for features/fixes would be appreciated and discussions could start by adding an issue to this project. I'd also like to hear in the issues about problems with running make commands.
+
+Another contribution, would be to add your favorite recipes. Examples can be seen in the `examplerecipes` directory. The easiest way to add/test a recipe to a running instance is create a virtual environment and `FILE=myrecipe.toml ORIGIN=http://myhost:20222 make forcerecipe`. With this target a recipe of the same name will be overwritten. Once the recipe works correctly, just add it to the `examplerecipes` directory and make a PR. Recipes in that directory end up in releases.
+
+Note: an "engagement" in a recipe is a percent of time spent managing that duty. 100% is the default and is called a task.
