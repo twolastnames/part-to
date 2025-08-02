@@ -8,7 +8,7 @@ A user picks what recipes they want to cook in a meal. It then displays the indi
 
 | Command   | Description |
 |-----------|-------------|
-| up        | with docker, runs the application an port 22222 and requires use of port 20222. The quickest way to see the application with docker is the command: `sudo echo sudoized && git clone https://github.com/twolastnames/part-to.git && make up`
+| up        | with docker, runs the application an port 22222 and requires use of port 20222. The quickest way to see the application with docker is the command: `sudo echo sudoized && git clone https://github.com/twolastnames/part-to.git && cd part-to && make up`. Note: nginx will 502 backend calls for a few minutes while waiting for the part-to backend to seed and launch.
 | updateapi | From reading the openapi file, generates the front end API and backend templates for handling requests in an unmarshalled manner. |
 | release   | From githook enforced commit message sematics, cut a release branch of proper version and prepend the release notes. | 
 | runback   | Run a development backend. The front end can be accessed on port 8000, but the front end doesn't hot rebuild. |
