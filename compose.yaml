@@ -5,8 +5,7 @@ services:
     ports:
       - 0.0.0.0:20222:20222
     volumes:
-      - partto_exe:/opt/partto
-      - partto_data:/var/partto
+      - ${DATA_VOLUME_NAME}:/var/partto
   nginx:
     network_mode: host
     image: nginx
@@ -14,8 +13,10 @@ services:
       - 0.0.0.0:22222:22222
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - partto_exe:/usr/share/nginx/html
+      - ${SRC_VOLUME_NAME}:/usr/share/nginx/html
 volumes:
-  partto_data:
-    external: false
+  parttodata:
+    external: true
+  parttosrc:
+    external: true
 

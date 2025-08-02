@@ -8,6 +8,8 @@ NENV_BASE=nenv
 NENV=$(NENV_BASE)/bin/activate
 
 PROJECT=project
+LOCAL_PART_TO_DATA_DIRECTORY=/var/partto
+PART_TO_SRC_DIRECTORY=/opt/partto
 NODE_BASE=project/parttofe/partto
 NODE_SOURCE=$(NODE_BASE)/src
 NODE_MODULES=$(NODE_BASE)/node_modules
@@ -39,15 +41,28 @@ $(NODE_MODULES): $(VENV)  $(NENV) project/parttofe/partto/package-lock.json
 $(NODE_BUILD): $(VENV) $(NENV) $(shell find ${NODE_SOURCE} -type f) $(NODE_MODULES)
 	$(WITH_ENV) $(NODE) -v && cd $(NODE_BASE) && $(NODE) ./node_modules/.bin/react-scripts build
 
+FE_IMAGE_NAME=twolastnames/part-to-fe
+
+feimage:
+	cd $(NODE_BASE) && sudo docker build -t $(FE_IMAGE_NAME) .
+
+ABSOLUTE_NODE_BASE=$(PWD)/$(NODE_BASE)
+
+SRC_VOLUME_NAME=parttosrc
+
+febuild:
+	sudo docker volume create $(SRC_VOLUME_NAME)
+	cd $(NODE_BASE) && sudo docker run --mount type=bind,source="$(ABSOLUTE_NODE_BASE)",target="/opt/parttoin" -v ${SRC_VOLUME_NAME}:/opt/partto -t $(FE_IMAGE_NAME) .
+
 build: $(VENV) $(NENV) $(NODE_BUILD)
 
 clean:
 	rm -rf $(NODE_BUILD) $(NODE_MODULES) $(NENV_BASE) $(VENV_BASE)
 
-insertdefaultrecipes:
-	${WITH_ENV} python3 project/manage.py insertrecipe recipeexamples/*
+insertrecipes: $(VENV)
+	${WITH_VENV} python3 project/manage.py insertrecipe --no-overwrite recipeexamples/*
 
-full: $(NENV) test migrate insertdefaultrecipes runback
+full: $(NENV) test migrate insertrecipes runback
 
 runback: $(VENV) $(NENV) $(NODE_BUILD) migrate
 	$(WITH_ENV) cd project && python3 manage.py runserver $(ARGUMENTS)
@@ -73,8 +88,8 @@ checkformat:
 format: $(NENV) $(NODE_MODULES)
 	$(WITH_ENV) black . && cd $(NODE_SOURCE) && npm run format
 
-migrate: $(NENV)
-	$(WITH_ENV) python3 project/manage.py migrate
+migrate: $(VENV)
+	$(WITH_VENV) python3 project/manage.py migrate
 
 updateapi: $(NENV)
 	$(WITH_ENV) python3 project/manage.py updateapi
@@ -82,15 +97,20 @@ updateapi: $(NENV)
 release: $(NENV)
 	$(WITH_ENV) ./bin/release.py
 
-image: $(NENV)
-	sudo bash -c "${WITH_ENV} docker build -t twolastnames/part-to ."
+image: $(VENV)
+	sudo bash -c "$(WITH_VENV) docker build -t twolastnames/part-to ."
 
-up: $(NENV)
-	sudo bash -c "${WITH_ENV} docker volume create partto_exe"
-	sudo bash -c "${WITH_ENV} docker compose up -d"
+DATA_VOLUME_NAME=parttodata
+
+up: febuild
+	sudo docker volume create $(DATA_VOLUME_NAME)
+	sudo bash -c "DATA_VOLUME_NAME=$(DATA_VOLUME_NAME) SRC_VOLUME_NAME=$(SRC_VOLUME_NAME) docker compose up -d"
+
+down:
+	sudo bash -c "DATA_VOLUME_NAME=$(DATA_VOLUME_NAME) SRC_VOLUME_NAME=$(SRC_VOLUME_NAME) docker compose down"
 
 test: testfront testback
 
 enterimage: $(VENV) migrate
-	cd project && PART_TO_DATA_DIRECTORY=/var/partto ../venv/bin/gunicorn --bind :20222 --workers 4 --access-logfile $(PART_TO_DATA_DIRECTORY)/partto.out.log --error-logfile $(PART_TO_DATA_DIRECTORY)/partto.err.log --log-level debug project.wsgi
-
+	$(WITH_VENV) PART_TO_DATA_DIRECTORY=$(LOCAL_PART_TO_DATA_DIRECTORY) python3 project/manage.py insertrecipe --no-overwrite recipeexamples/*
+	$(WITH_VENV) bash -c "cd project && PART_TO_DATA_DIRECTORY=$(LOCAL_PART_TO_DATA_DIRECTORY) ../venv/bin/gunicorn --bind :20222 --workers 4 --access-logfile $(LOCAL_PART_TO_DATA_DIRECTORY)/partto.out.log --error-logfile $(LOCAL_PART_TO_DATA_DIRECTORY)/partto.err.log --log-level debug project.wsgi"

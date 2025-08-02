@@ -29,7 +29,7 @@ if "DJANGO_DEBUG" in os.environ:
 else:
     DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -106,8 +106,8 @@ DATABASES = {
 }
 
 LOGGING = {
-        "version": 1,
-        "disable_existing_loggers": False,
+    "version": 1,
+    "disable_existing_loggers": False,
     "handlers": {
         "file": {
             "class": "logging.FileHandler",
