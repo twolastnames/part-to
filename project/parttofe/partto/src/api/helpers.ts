@@ -194,7 +194,7 @@ async function handleResponse<RESPONSE_TYPE>(
     stage: Stage.Ok,
     data,
   };
-  if (response.headers.get("Cache-Control")?.includes("immutable")) {
+  if (response.headers.get("Cache-Control")?.includes("immutable") && returnable.status === 200) {
     localStorage.setItem(
       getImmutableKey(response.url),
       JSON.stringify(returnable),

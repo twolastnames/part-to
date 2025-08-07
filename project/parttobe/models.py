@@ -182,7 +182,8 @@ class CompletionResult:
         return last
 
     def ready_tasks(self):
-        dependeds = [action.definition.depended for action in self.result]
+        depended_definitions = [action.definition.dependeds for action in self.result]
+        dependeds = sum(depended_definitions, [])
         return [
             action.definition
             for action in self.result
@@ -209,9 +210,7 @@ def next_work(run_state):
     if len(full_state[RunState.OPERATION_TEXTS[RunState.Operation.STAGED]]) < 1:
         return run_state
     started = full_state[RunState.OPERATION_TEXTS[RunState.Operation.STARTED]].copy()
-    started.sort()
     staged = full_state[RunState.OPERATION_TEXTS[RunState.Operation.STAGED]].copy()
-    staged.sort()
     if len([task for task in started if task.is_task()]) > 0:
         return run_state
     result = calculate_completion(staged + started, full_state["timestamp"])
@@ -307,6 +306,13 @@ class EngagementSet:
             ],
         )
 
+class Dependent(models.Model):
+    depended = models.ForeignKey("TaskDefinition", on_delete=models.CASCADE, related_name='dependent_taskdefinition_depended')
+    dependency = models.ForeignKey("TaskDefinition", on_delete=models.CASCADE, related_name='dependent_taskdefinition_dependency')
+
+    class Meta:
+        unique_together = [("depended", "dependency")]
+        indexes = [models.Index(fields=["depended"]), models.Index(fields=["dependency"])]
 
 @functools.total_ordering
 class TaskDefinition(models.Model):
@@ -314,7 +320,6 @@ class TaskDefinition(models.Model):
     part_to = models.ForeignKey("PartTo", on_delete=models.CASCADE)
     description = models.CharField(max_length=0x100)
     engagement = models.BigIntegerField(null=True)
-    depended = models.ForeignKey("TaskDefinition", on_delete=models.CASCADE, null=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
 
     class Meta:
@@ -334,10 +339,12 @@ class TaskDefinition(models.Model):
         self.calculated_duration = calculated
 
     @property
+    def dependeds(self):
+        return [dependency.depended for dependency in Dependent.objects.filter(dependency=self)]
+
+    @property
     def dependencies(self):
-        part_tos = self.part_to.task_definitions
-        result = set(filter(lambda o: o.depended == self, part_tos))
-        return result
+        return [dependent.dependency for dependent in Dependent.objects.filter(depended=self)]
 
     def depended_chain_from(self, ommitted=set()):
         on = self
@@ -605,11 +612,11 @@ class RunState(models.Model):
 
     def _imminent(self, completion, started):
         dependeds = set(
-            [
-                action.definition.depended
+            sum([
+                action.definition.dependeds
                 for action in completion.actions()
-                if action.definition.depended
-            ]
+                if action.definition.dependeds
+            ],[])
         )
         ready_duties = [
             action

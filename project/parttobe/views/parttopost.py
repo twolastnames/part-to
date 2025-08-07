@@ -28,9 +28,46 @@ def invert_depends(tasks):
 
 @transaction.atomic
 def save_job(tasks):
+    part_to = models.PartTo.objects.create(name=tasks["part_to"]["name"])
+    saved_tasks = {}
+    for key, definition in tasks.items():
+        if key == "part_to":
+            continue
+        saved_tasks[key] = models.TaskDefinition.objects.create(
+            initial_duration=definition["duration"],
+            part_to=part_to,
+            description=definition["description"],
+            engagement=(
+                definition["engagement"]
+                if "engagement" in definition and definition["engagement"] > 0
+                else None
+            ),
+        )
+        for ingredient in (
+            ensure_list(definition["ingredients"]) if "ingredients" in definition else []
+        ):
+            models.IngredientDefinition.objects.create(
+                name=ingredient,
+                task=saved_tasks[key],
+            )
+        for tool in ensure_list(definition["tools"]) if "tools" in definition else []:
+            models.ToolDefinition.objects.create(
+                name=tool,
+                task=saved_tasks[key],
+            )
+    for key, definition in tasks.items():
+        if key == "part_to":
+            continue
+        if 'depends' not in definition:
+            continue
+        for dependency in ensure_list(definition['depends']):
+            models.Dependent.objects.create(dependency=saved_tasks[dependency], depended=saved_tasks[key])
+    for saveable in saved_tasks.values():
+        saveable.save()
+    return part_to.uuid
+
     dependeds = invert_depends(tasks)
     saved_tasks = {}
-    part_to = models.PartTo.objects.create(name=tasks["part_to"]["name"])
     stack = tasks["part_to"]["depends"][:]
     while len(stack) > 0:
         current = stack.pop()

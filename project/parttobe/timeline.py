@@ -34,10 +34,16 @@ class Definition:
             return False
         return self.id == other.id
 
+def _dependeds_from_many(definition):
+    if not definition.dependeds:
+        return []
+    return definition.dependeds
 
 def _define(definition):
     if not definition:
         return None
+    if not hasattr(definition, 'dependeds'):
+        definition.dependeds = []
     if hasattr(definition, "engagement") and (
         definition.engagement != 0.0 and definition.engagement is not None
     ):
@@ -49,14 +55,14 @@ def _define(definition):
                 if isinstance(definition.engagement, int)
                 else definition.engagement
             ),
-            depended=_define(definition.depended),
+            dependeds=[_define(one) for one in _dependeds_from_many(definition)],
         )
     else:
         return _Task(
             str(definition.id),
             float(definition.duration.seconds),
             engagement=1.0,
-            depended=_define(definition.depended),
+            dependeds=[_define(one) for one in _dependeds_from_many(definition)],
         )
 
 
@@ -66,7 +72,7 @@ class _Chunk:
         self.id = id
         self.duration = duration
         self.container = kwargs["container"] if "container" in kwargs else None
-        self.depended = kwargs["depended"] if "depended" in kwargs else None
+        self.dependeds = kwargs["dependeds"] if "dependeds" in kwargs else None
         self.engagement = kwargs["engagement"] if "engagement" in kwargs else 1.0
 
     @property
@@ -93,14 +99,14 @@ class _Chunk:
             self.id,
             self.duration - duration,
             engagement=self.engagement,
-            depended=self.depended,
+            dependeds=self.dependeds,
         )
         task1 = type(self)(
             self.id,
             duration,
             after=task2,
             engagement=self.engagement,
-            depended=self.depended,
+            dependeds=self.dependeds,
         )
         return (task1, task2)
 
@@ -116,7 +122,7 @@ class _Task(_Chunk):
         return _Task(
             self.id,
             self.weight / engagement,
-            depended=self.depended,
+            dependeds=self.dependeds,
             engagement=engagement,
         )
 
@@ -128,7 +134,7 @@ class _Task(_Chunk):
             sum([task.change_engagement(1.0).duration for task in tasks])
             + self.change_engagement(1.0).duration
         )
-        return _Task(self.id, duration, depended=self.depended, engagement=1.0)
+        return _Task(self.id, duration, dependeds=self.dependeds, engagement=1.0)
 
 
 class _Duty(_Chunk):
@@ -212,15 +218,14 @@ class _TaskPostpender(_TaskPlacer):
 class FrontloaderState:
     def __init__(self, target):
         self.last_on_checked = None
-        self.coming_dependeds = set(
-            sum(
-                [
-                    [chunk.depended for chunk in window.chunks if chunk.depended]
-                    for window in target.start_from()
-                ],
-                [],
-            )
-        )
+        self.completed = set()
+        self.dependencies = {}
+        for window in target.start_from():
+            for chunk in window.chunks:
+                for depended in chunk.dependeds:
+                    if depended not in self.dependencies:
+                        self.dependencies[depended] = set()
+                    self.dependencies[depended].add(chunk)
         self.loose_tasks = [
             window.pop_task() for window in target.start_from() if window.task
         ]
@@ -233,14 +238,18 @@ class FrontloaderState:
         for chunk in on.before.chunks:
             if chunk in on.chunks:
                 continue
-            if chunk.depended and chunk.depended in self.coming_dependeds:
-                self.coming_dependeds.remove(chunk.depended)
+            self.completed.add(chunk)
         self.last_on_checked = on.before
 
     @property
     def ready(self):
         for task in self.loose_tasks:
-            if task not in self.coming_dependeds:
+            pass
+            if task not in self.dependencies:
+                return task
+            dependencies = self.dependencies[task]
+            left = dependencies.intersection(self.completed)
+            if len(left) == len(dependencies):
                 return task
 
 
@@ -344,22 +353,23 @@ class _TimeWindow:
         seen_dependeds = set()
         dependeds = []
         for on in defineds:
-            if hasattr(on, "depended") and on.depended:
-                if on.depended not in completeds:
-                    if on.depended not in seen_dependeds:
-                        seen_dependeds.add(on.depended)
-                        dependeds.append(on.depended)
+            for depended in on.dependeds:
+                if depended not in completeds:
+                    if depended not in seen_dependeds:
+                        seen_dependeds.add(depended)
+                        dependeds.append(depended)
                 dependends.add(on)
-        dependeds_in_completed = [
-            chunk for chunk in dependeds if chunk not in dependends
-        ] + [chunk for chunk in defineds if (chunk.depended in completeds)]
-        undependeds = [
-            chunk
-            for chunk in defineds
-            if not chunk.depended and chunk not in seen_dependeds
-        ]
+        #dependeds_in_completed = [
+        #    chunk for chunk in dependeds if chunk not in dependends
+        #] # + [chunk for chunk in defineds if (chunk.depended in completeds)]
+        #undependeds = [
+        #    chunk
+        #    for chunk in defineds
+        #    if not chunk.depended and chunk not in seen_dependeds
+        #]
 
-        ready_dependeds = dependeds_in_completed + undependeds
+        #ready_dependeds = dependeds_in_completed + undependeds
+        ready_dependeds = [ defined for defined in defineds if not (set(defined.dependeds) - completeds) or not defined.dependeds]
         defineds_hash = {defined: defined for defined in defineds}
         readies = [
             (defineds_hash[ready] if ready in defineds_hash else ready)
@@ -551,21 +561,11 @@ class _TimeWindow:
             raise RuntimeError("Internal Error: leftover task error")
         if not ready:
             return self
-        seen_duties = set()
-        target = _TaskPostpender()(self, ready, seen_duties)
+        target = _TaskPostpender()(self, ready, set())
         state.loose_tasks.remove(ready)
-        on_dependeds = set(
-            [chunk.depended for chunk in target.chunks if chunk.depended]
-        )
-        completed_duties = seen_duties - on_dependeds
-        state.coming_dependeds -= completed_duties
-        if ready.depended and ready.depended in state.coming_dependeds:
-            state.coming_dependeds.remove(ready.depended)
+        state.completed.add(ready)
         if not target.after and state.loose_tasks:
             raise RuntimeError("Internal Error: leftover task error")
-            for task in state.loose_tasks:
-                target = _TaskPostpender()(target, task, set())
-            return target
         if not target.after:
             return target
         return target.after.frontload_tasks(state)

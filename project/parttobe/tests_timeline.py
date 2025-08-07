@@ -17,13 +17,13 @@ class CollectionTaskTestClass(TestCase):
     def test_can_echo_a_simple_task(self):
         task = Definition(1, 200, 1.0)
         self.assertEqual(task.engagement, 1.0)
-        self.assertEqual(task.depended, None)
+        self.assertEqual(task.dependeds, [])
         self.assertEqual(task.duration, timedelta(seconds=200))
 
     def test_can_position_chunks(self):
         task1 = Definition(1, 200, None)
         task2 = Definition(2, 300, None)
-        task1.depended = task2
+        task1.dependeds = [task2]
         self.assertEqual(task1.id, 1)
         self.assertEqual(task1.depended.id, 2)
 
@@ -84,19 +84,19 @@ class CollectionTaskTestClass(TestCase):
         duty13 = Definition("duty13", 900, 0.0)
         # grease 3 quart baking pan
         task14 = Definition("task14", 45, None)
-        task2.depended = duty1
-        duty3.depended = task2
-        task4.depended = duty3
-        duty5.depended = task4
-        duty6.depended = duty5
-        task7.depended = duty6
-        duty8.depended = duty6
-        task9.depended = duty8
-        task10.depended = duty5
-        duty11.depended = task4
-        task12.depended = duty11
-        duty13.depended = task12
-        task14.depended = task4
+        task2.dependeds = [duty1]
+        duty3.dependeds = [task2]
+        task4.dependeds = [duty3]
+        duty5.dependeds = [task4]
+        duty6.dependeds = [duty5]
+        task7.dependeds = [duty6]
+        duty8.dependeds = [duty6]
+        task9.dependeds = [duty8]
+        task10.dependeds = [duty5]
+        duty11.dependeds = [task4]
+        task12.dependeds = [duty11]
+        duty13.dependeds = [task12]
+        task14.dependeds = [task4]
         line = list(
             Timeline(
                 [
@@ -165,13 +165,13 @@ class CollectionTaskTestClass(TestCase):
         duty7 = Definition("duty7", 600, 0.1)
         # heat oil in dutch oven
         duty8 = Definition("duty8", 150, 0.02)
-        task1.depended = duty8
-        task2.depended = task6
-        task3.depended = task2
-        duty5.depended = task4
-        task6.depended = duty5
-        duty7.depended = task6
-        duty8.depended = duty7
+        task1.dependeds = [duty8]
+        task2.dependeds = [task6]
+        task3.dependeds = [task2]
+        duty5.dependeds = [task4]
+        task6.dependeds = [duty5]
+        duty7.dependeds = [task6]
+        duty8.dependeds = [duty7]
         line = Timeline([task1, task2, task3, task4, duty5, task6, duty7, duty8])
         line = list(line)
         self.assertEqual(line[0], Marker(task1, timedelta(seconds=0.0), False))
@@ -194,7 +194,7 @@ class CollectionTaskTestClass(TestCase):
     def test_can_order_2_tasks_in_forward(self):
         task1 = Definition(1, 200, None)
         task2 = Definition(2, 300, None)
-        task1.depended = task2
+        task1.dependeds = [task2]
         line = Timeline([task1, task2])
         line = list(line)
         self.assertEqual(line[0], Marker(task1, timedelta(seconds=0.0), False))
@@ -205,7 +205,7 @@ class CollectionTaskTestClass(TestCase):
     def test_can_order_2_tasks_in_reverse(self):
         task1 = Definition(1, 200, None)
         task2 = Definition(2, 300, None)
-        task1.depended = task2
+        task1.dependeds = [task2]
         line = Timeline([task2, task1])
         line = list(line)
         self.assertEqual(line[0], Marker(task1, timedelta(seconds=0.0), False))
@@ -217,7 +217,7 @@ class CollectionTaskTestClass(TestCase):
         task1 = Definition("task1", 200, None)
         task2 = Definition("task2", 300, None)
         task3 = Definition("task3", 100, None)
-        task3.depended = task2
+        task3.dependeds = [task2]
         line = Timeline([task2, task1, task3])
         line = list(line)
         self.assertEqual(line[0], Marker(task1, timedelta(seconds=0.0), False))
@@ -231,7 +231,7 @@ class CollectionTaskTestClass(TestCase):
         task1 = Definition("task1", 200, None)
         task2 = Definition("task2", 300, None)
         task3 = Definition("task3", 100, None)
-        task3.depended = task2
+        task3.dependeds = [task2]
         line = Timeline([task2, task3, task1])
         line = list(line)
         self.assertEqual(line[0], Marker(task1, timedelta(seconds=0.0), False))
@@ -257,10 +257,10 @@ class CollectionTaskTestClass(TestCase):
         task3 = Definition("task3", 120, None)
         task4 = Definition("task4", 60, None)
         duty5 = Definition("duty5", 480, 0.02)
-        duty2.depended = task1
-        task3.depended = duty2
-        task4.depended = task3
-        duty5.depended = duty2
+        duty2.dependeds = [task1]
+        task3.dependeds = [duty2]
+        task4.dependeds = [task3]
+        duty5.dependeds = [duty2]
         line = Timeline([task1, duty2, task3, task4, duty5])
         line = list(line)
         self.assertEqual(line[0], Marker(duty5, timedelta(seconds=0.0), False))
@@ -344,7 +344,7 @@ class CollectionTaskTestClass(TestCase):
         task2 = Definition("task2", 20, None)
         duty3 = Definition("duty3", 20, 0.10)
         duty4 = Definition("duty4", 60, 0.25)
-        duty3.depended = task2
+        duty3.dependeds = [task2]
         line = Timeline([duty3, task1, duty4, task2])
         line = list(line)
         self.assertEqual(line[0], Marker(duty4, timedelta(seconds=0.0), False))
@@ -376,7 +376,7 @@ class CollectionTaskTestClass(TestCase):
         task2 = Definition("task2", 20, None)
         duty3 = Definition("duty3", 20, 0.10)
         duty4 = Definition("duty4", 60, 0.25)
-        duty3.depended = task2
+        duty3.dependeds = [task2]
         line = Timeline([task2, duty4, task1, duty3])
         line = list(line)
         self.assertEqual(line[0], Marker(duty4, timedelta(seconds=0.0), False))
@@ -423,7 +423,7 @@ class CollectionTaskTestClass(TestCase):
         task1 = Definition("task1", 25, None)
         task2 = Definition("task2", 30, None)
         duty3 = Definition("duty3", 20, 0.25)
-        task1.depended = task2
+        task1.dependeds = [task2]
         line = Timeline([duty3, task1, task2])
         line = list(line)
         self.assertEqual(line[0], Marker(task1, timedelta(seconds=0.0), False))
@@ -440,7 +440,7 @@ class CollectionTaskTestClass(TestCase):
         task1 = Definition("task1", 25, None)
         task2 = Definition("task2", 30, None)
         duty3 = Definition("duty3", 20, 0.25)
-        task1.depended = task2
+        task1.dependeds = [task2]
         line = Timeline([task2, duty3, task1])
         line = list(line)
         self.assertEqual(line[0], Marker(task1, timedelta(seconds=0.0), False))
@@ -463,7 +463,7 @@ class CollectionTaskTestClass(TestCase):
     def test_duty_will_deal_with_depended_duty(self):
         duty1 = Definition(1, 100, 0.20)
         duty2 = Definition(2, 200, 0.75)
-        duty2.depended = duty1
+        duty2.dependeds = [duty1]
         line = list(Timeline([duty1, duty2]))
         self.assertEqual(line[0], Marker(duty2, timedelta(seconds=0.0), False))
         self.assertEqual(line[1], Marker(duty2, timedelta(seconds=200.0), True))
@@ -473,7 +473,7 @@ class CollectionTaskTestClass(TestCase):
     def test_duty_will_deal_with_depended_duty_reversed(self):
         duty1 = Definition(1, 100, 0.20)
         duty2 = Definition(2, 200, 0.75)
-        duty2.depended = duty1
+        duty2.dependeds = [duty1]
         line = Timeline([duty2, duty1])
         line = list(line)
         self.assertEqual(line[0], Marker(duty2, timedelta(seconds=0.0), False))
@@ -490,9 +490,9 @@ class CollectionTaskTestClass(TestCase):
         duty3 = Definition("duty3", 240, 0.05)
         # boil water in large pot
         duty4 = Definition("duty4", 540, 0.02)
-        duty2.depended = task1
-        duty3.depended = duty2
-        duty4.depended = duty3
+        duty2.dependeds = [task1]
+        duty3.dependeds = [duty2]
+        duty4.dependeds = [duty3]
         # remove from heat
         task5 = Definition("task5", 20, None)
         # put corn in and boil
@@ -503,10 +503,10 @@ class CollectionTaskTestClass(TestCase):
         task8 = Definition("task8", 60, None)
         # boil water in large pot
         duty9 = Definition("duty9", 480, 0.02)
-        duty6.depended = task5
-        task7.depended = duty6
-        task8.depended = task7
-        duty9.depended = duty6
+        duty6.dependeds = [task5]
+        task7.dependeds = [duty6]
+        task8.dependeds = [task7]
+        duty9.dependeds = [duty6]
         # good
         # line = list(Timeline([
         # task5,
@@ -581,13 +581,13 @@ class CollectionTaskTestClass(TestCase):
         task7 = Definition("task7", 120, None)
         # remove meat and slice
         task8 = Definition("task8", 120, None)
-        duty1.depended = task8
-        task2.depended = duty1
-        duty3.depended = task2
-        duty4.depended = duty3
-        task5.depended = duty4
-        task6.depended = task2
-        task7.depended = task6
+        duty1.dependeds = [task8]
+        task2.dependeds = [duty1]
+        duty3.dependeds = [task2]
+        duty4.dependeds = [duty3]
+        task5.dependeds = [duty4]
+        task6.dependeds = [task2]
+        task7.dependeds = [task6]
         # remove pan from oven and let stand for 5 minutes
         duty9 = Definition("duty9", 300, 0.05)
         # remove beans from oven
@@ -616,19 +616,19 @@ class CollectionTaskTestClass(TestCase):
         duty21 = Definition("duty21", 900, 0.01)
         # grease 3 quart baking pan
         task22 = Definition("task22", 45, None)
-        task10.depended = duty9
-        duty11.depended = task10
-        task12.depended = duty11
-        duty13.depended = task12
-        duty14.depended = duty13
-        task15.depended = duty14
-        duty16.depended = duty14
-        task17.depended = duty16
-        task18.depended = duty13
-        duty19.depended = task12
-        task20.depended = duty19
-        duty21.depended = task20
-        task22.depended = task12
+        task10.dependeds = [duty9]
+        duty11.dependeds = [task10]
+        task12.dependeds = [duty11]
+        duty13.dependeds = [task12]
+        duty14.dependeds = [duty13]
+        task15.dependeds = [duty14]
+        duty16.dependeds = [duty14]
+        task17.dependeds = [duty16]
+        task18.dependeds = [duty13]
+        duty19.dependeds = [task12]
+        task20.dependeds = [duty19]
+        duty21.dependeds = [task20]
+        task22.dependeds = [task12]
         line = list(
             Timeline(
                 [
@@ -744,14 +744,14 @@ class CollectionTaskTestClass(TestCase):
         task8 = Definition("task8", 60, None)
         # Combine crumble components in a medium dish and stir
         task9 = Definition("task9", 240, None)
-        duty2.depended = duty1
-        task3.depended = duty1
-        duty4.depended = task3
-        task5.depended = duty4
-        task6.depended = task5
-        task7.depended = task6
-        task8.depended = task5
-        task9.depended = duty4
+        duty2.dependeds = [duty1]
+        task3.dependeds = [duty1]
+        duty4.dependeds = [task3]
+        task5.dependeds = [duty4]
+        task6.dependeds = [task5]
+        task7.dependeds = [task6]
+        task8.dependeds = [task5]
+        task9.dependeds = [duty4]
         # put oil in dutch oven
         task10 = Definition("task10", 30, None)
         # put the following in the bowl onion bowl: 1/2 tsp ground ginger, 1/2 tsp pepper, 1 bay leaf,  1 tsp ground cinnamon, 1 tsp salt, 2 tbs sugar, 1 tbs white vinegar, 8 oz tomato sauce, 3/4 cup beer or beef broth, 1 1/4 cup water
@@ -768,13 +768,13 @@ class CollectionTaskTestClass(TestCase):
         duty16 = Definition("duty16", 600, 0.1)
         # heat oil in dutch oven
         duty17 = Definition("duty17", 150, 0.02)
-        task10.depended = duty17
-        task11.depended = task15
-        task12.depended = task11
-        duty0.depended = task13
-        task15.depended = duty0
-        duty16.depended = task15
-        duty17.depended = duty16
+        task10.dependeds = [duty17]
+        task11.dependeds = [task15]
+        task12.dependeds = [task11]
+        duty0.dependeds = [task13]
+        task15.dependeds = [duty0]
+        duty16.dependeds = [task15]
+        duty17.dependeds = [duty16]
         line = list(
             Timeline(
                 [
