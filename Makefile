@@ -57,10 +57,13 @@ febuild:
 build: $(VENV) $(NENV) $(NODE_BUILD)
 
 clean:
-	rm -rf $(NODE_BUILD) $(NODE_MODULES) $(NENV_BASE) $(VENV_BASE)
+	rm -rf $(NODE_BUILD) $(NODE_MODULES) $(NENV_BASE) $(VENV_BASE) project/db.sqlite3
 
 insertrecipes: $(VENV)
 	${WITH_VENV} python3 project/manage.py insertrecipe --no-overwrite recipeexamples/*
+
+resetrecipes: $(VENV)
+	${WITH_VENV} python3 project/manage.py insertrecipe recipeexamples/*
 
 forcerecipe:
 	pip3 install toml

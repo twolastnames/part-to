@@ -182,7 +182,8 @@ class CompletionResult:
         return last
 
     def ready_tasks(self):
-        dependeds = [action.definition.depended for action in self.result]
+        depended_definitions = [action.definition.dependeds for action in self.result]
+        dependeds = sum(depended_definitions, [])
         return [
             action.definition
             for action in self.result
@@ -197,6 +198,7 @@ def calculate_completion(definitions, at_time=datetime.datetime.now()):
     timeline = Timeline(definitions)
     return CompletionResult(timeline)
 
+
 def order_definitions(definitions):
     return [
         information.definition
@@ -209,9 +211,7 @@ def next_work(run_state):
     if len(full_state[RunState.OPERATION_TEXTS[RunState.Operation.STAGED]]) < 1:
         return run_state
     started = full_state[RunState.OPERATION_TEXTS[RunState.Operation.STARTED]].copy()
-    started.sort()
     staged = full_state[RunState.OPERATION_TEXTS[RunState.Operation.STAGED]].copy()
-    staged.sort()
     if len([task for task in started if task.is_task()]) > 0:
         return run_state
     result = calculate_completion(staged + started, full_state["timestamp"])
@@ -308,13 +308,32 @@ class EngagementSet:
         )
 
 
+class Dependent(models.Model):
+    depended = models.ForeignKey(
+        "TaskDefinition",
+        on_delete=models.CASCADE,
+        related_name="dependent_taskdefinition_depended",
+    )
+    dependency = models.ForeignKey(
+        "TaskDefinition",
+        on_delete=models.CASCADE,
+        related_name="dependent_taskdefinition_dependency",
+    )
+
+    class Meta:
+        unique_together = [("depended", "dependency")]
+        indexes = [
+            models.Index(fields=["depended"]),
+            models.Index(fields=["dependency"]),
+        ]
+
+
 @functools.total_ordering
 class TaskDefinition(models.Model):
     initial_duration = models.DurationField()
     part_to = models.ForeignKey("PartTo", on_delete=models.CASCADE)
     description = models.CharField(max_length=0x100)
     engagement = models.BigIntegerField(null=True)
-    depended = models.ForeignKey("TaskDefinition", on_delete=models.CASCADE, null=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
 
     class Meta:
@@ -334,35 +353,18 @@ class TaskDefinition(models.Model):
         self.calculated_duration = calculated
 
     @property
+    def dependeds(self):
+        return [
+            dependency.depended
+            for dependency in Dependent.objects.filter(dependency=self)
+        ]
+
+    @property
     def dependencies(self):
-        part_tos = self.part_to.task_definitions
-        result = set(filter(lambda o: o.depended == self, part_tos))
-        return result
-
-    def depended_chain_from(self, ommitted=set()):
-        on = self
-        while on:
-            yield on
-            on = on.depended
-
-    def dependency_chain_from(self):
-        queue = [self]
-
-        def sort_queue():
-            queue.sort(key=TaskDefinition.chain_duration, reverse=True)
-
-        while len(queue):
-            sort_queue()
-            on = queue.pop(0)
-            dependencies = on.dependencies
-            queue += dependencies
-            yield on
-
-    def depends_on(self, other):
-        for task in self.dependency_chain_from():
-            if other == task:
-                return True
-        return False
+        return [
+            dependent.dependency
+            for dependent in Dependent.objects.filter(depended=self)
+        ]
 
     def duties(self):
         for task in self.depended_chain_from():
@@ -383,29 +385,6 @@ class TaskDefinition(models.Model):
         duration_out = datetime.timedelta()
         while True:
             engagements.sort()
-
-    def chain_duration(self):
-        engagements = []
-        duration = datetime.timedelta()
-        for task in TaskDefinition.depended_chain_from(self):
-            if task.engagement:
-                engagements.append(
-                    EngagementSet(task.id, task.engagement, task.duration)
-                )
-            else:
-                (consumed_duration, engagements) = task.consume_duration(engagements)
-                duration += task.duration + consumed_duration
-        if len(engagements):
-            engagements.sort()
-            duration += engagements[-1].duration
-        return duration
-
-    def duration_to(self):
-        duration = datetime.timedelta(seconds=0)
-        tasks = reversed(list(TaskDefinition.dependency_chain_from(self)))
-        for task in tasks:
-            duration += task.duration
-        return duration
 
     def consume_duration(self, engagements):
         earliest_duration_work = EngagementSet.earliest_duration_work(engagements)
@@ -605,11 +584,14 @@ class RunState(models.Model):
 
     def _imminent(self, completion, started):
         dependeds = set(
-            [
-                action.definition.depended
-                for action in completion.actions()
-                if action.definition.depended
-            ]
+            sum(
+                [
+                    action.definition.dependeds
+                    for action in completion.actions()
+                    if action.definition.dependeds
+                ],
+                [],
+            )
         )
         ready_duties = [
             action
