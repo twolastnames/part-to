@@ -1,3 +1,8 @@
+## 1.2.0.1-alpha
+*released: Aug 24, 2025 06:34 PM UTC*
+- have multi dependent support *(feat)*
+- better describe recipe contribution *(docs)*
+
 ## 1.1.0.1-alpha
 *released: Aug 02, 2025 06:24 PM UTC*
 - give contribution advice *(docs)*
