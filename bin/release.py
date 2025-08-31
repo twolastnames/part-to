@@ -20,7 +20,7 @@ major=1
 minor={{ minor }}
 fix={{ fix }}
 build={{ build }}
-variant="alpha"
+variant="beta"
 timestamp="{{ timestamp }}"
 
 """
@@ -128,7 +128,7 @@ class Release:
         write_notes(self.notes_filename, version, self.repo.iter_commits())
         self.repo.index.add([self.version_filename, self.notes_filename])
         self.repo.index.commit(
-            "release: {major}.{minor}.{fix}.{build}-alpha".format(**version)
+            "release: {major}.{minor}.{fix}.{build}-beta".format(**version)
         )
         if largest_prefix.name == "feat":
             self.repo.git.checkout("-b", "release_{major}.{minor}".format(**version))
