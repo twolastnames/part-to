@@ -1,3 +1,7 @@
+## 1.2.1.2-beta
+*released: Aug 31, 2025 11:31 PM UTC*
+- stop button flickers *(fix)*
+
 ## 1.2.0.2-beta
 *released: Aug 31, 2025 09:04 PM UTC*
 - have beta releases *(chore)*
