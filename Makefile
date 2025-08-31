@@ -105,7 +105,8 @@ release: $(NENV)
 	$(WITH_ENV) ./bin/release.py
 
 image: $(VENV)
-	sudo bash -c "$(WITH_VENV) docker build -t twolastnames/part-to ."
+	sudo bash -c "$(WITH_VENV) docker build -t twolastnames/part-to:latest ."
+	sudo bash -c "$(WITH_VENV) docker push twolastnames/part-to:latest"
 
 DATA_VOLUME_NAME=parttodata
 
@@ -115,6 +116,9 @@ up: febuild
 
 down:
 	sudo bash -c "DATA_VOLUME_NAME=$(DATA_VOLUME_NAME) SRC_VOLUME_NAME=$(SRC_VOLUME_NAME) docker compose down"
+	sudo docker pull twolastnames/part-to:latest
+
+bounce: down up
 
 test: testfront testback
 
