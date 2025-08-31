@@ -1,3 +1,10 @@
+## 1.2.0.2-beta
+*released: Aug 31, 2025 09:04 PM UTC*
+- have beta releases *(chore)*
+- have versioned builds *(chore)*
+- have version string logic *(chore)*
+- have quicker new version deployment *(chore)*
+
 ## 1.2.0.1-alpha
 *released: Aug 24, 2025 06:34 PM UTC*
 - have multi dependent support *(feat)*
