@@ -38,7 +38,12 @@ class Command(BaseCommand):
                     )
                 )
             for task in tasks:
-                if not task.depended:
+                if not task.dependeds:
                     continue
-                print("{}.depended = {}".format(ids[task.id], ids[task.depended.id]))
+                print(
+                    "{}.dependeds = [{}]".format(
+                        ids[task.id],
+                        (",").join(ids[depended.id] for depended in task.dependeds),
+                    )
+                )
         print("line = list(Timeline([{}]))".format(", ".join(ids.values())))
