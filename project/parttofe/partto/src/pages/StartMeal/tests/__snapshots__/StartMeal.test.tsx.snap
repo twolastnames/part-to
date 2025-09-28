@@ -205,7 +205,14 @@ exports[`snapshot 1`] = `
           <div
             class="content"
           >
-            Select recipes from the first pane with the plus and add tasks for meal a meal to the second pane. When all your meal tasks are in the second pane, click the oven that will appear to start cooking.
+            <div>
+              <div>
+                Select recipes from the first pane with the plus and add tasks for meal a meal to the second pane. When all your meal tasks are in the second pane, click the oven that will appear to start cooking.
+              </div>
+              <div>
+                Error Getting Version
+              </div>
+            </div>
           </div>
         </div>
          

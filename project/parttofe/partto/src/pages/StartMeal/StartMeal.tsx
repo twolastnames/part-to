@@ -6,6 +6,7 @@ import { DynamicItemSet } from "../../components/DynamicItemSet/DynamicItemSet";
 import { SelectPartTos } from "../../components/SelectPartTos/SelectPartTos";
 import { Spinner } from "../../components/Spinner/Spinner";
 import { RightContext } from "../../providers/DynamicItemSetPair";
+import { Version } from "../../components/Version/Version";
 
 const secondPairEmptyText = [
   "Select recipes from the first pane with the plus",
@@ -26,7 +27,14 @@ export function StartMeal() {
           setOperations={[]}
           emptyPage={
             <Spinner responses={[allRecipes]}>
-              <EmptySimpleView content={secondPairEmptyText} />
+              <EmptySimpleView
+                content={
+                  <div>
+                    <div>{secondPairEmptyText}</div>
+                    <Version />
+                  </div>
+                }
+              />
             </Spinner>
           }
         />,

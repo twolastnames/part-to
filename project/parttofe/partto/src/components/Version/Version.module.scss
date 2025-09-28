@@ -1,0 +1,10 @@
+@import "../../App.scss";
+
+.version {
+  margin: var(--gap-xlarge) var(--gap-small);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font: var(--font-strong-medium);
+}
