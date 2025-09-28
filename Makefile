@@ -108,6 +108,10 @@ image: $(VENV)
 	sudo bash -c "docker build -t twolastnames/part-to:$(shell $(WITH_VENV) python bin/version.py) ."
 	sudo bash -c "docker push twolastnames/part-to:$(shell $(WITH_VENV) python bin/version.py)"
 
+latest: $(VENV)
+	sudo bash -c "docker tag twolastnames/part-to:$(shell $(WITH_VENV) python bin/version.py) twolastnames/part-to:latest"
+	sudo bash -c "docker push twolastnames/part-to:latest"
+
 DATA_VOLUME_NAME=parttodata
 
 up: febuild
