@@ -1,3 +1,7 @@
+## 1.4.0.1-beta
+*released: Sep 28, 2025 03:09 PM UTC*
+- fix image versioning *(chore)*
+
 ## 1.4.0.0-beta
 *released: Sep 28, 2025 02:58 PM UTC*
 - have fix/build versioning *(feat)*
