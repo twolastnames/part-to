@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ActionIcon as MantineButton, Tooltip } from "@mantine/core";
 
 import classes from "./Button.module.scss";
