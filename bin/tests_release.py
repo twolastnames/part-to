@@ -47,7 +47,7 @@ major=1
 minor=17
 fix=1
 build=2
-variant="alpha"
+variant="beta"
 timestamp="2023-11-30T15:30:00.000Z"
 """
             )
@@ -75,7 +75,7 @@ major=1
 minor=17
 fix=1
 build=2
-variant="alpha"
+variant="beta"
 timestamp="2023-11-30T15:30:00.000Z"
 """,
             )
@@ -103,7 +103,7 @@ major=1
 minor=17
 fix=1
 build=2
-variant="alpha"
+variant="beta"
 timestamp="2023-11-30T15:30:00.000Z"
 """,
             )
@@ -133,7 +133,7 @@ major=1
 minor=17
 fix=1
 build=2
-variant="alpha"
+variant="beta"
 timestamp="2023-11-30T15:30:00.000Z"
 """,
             )
@@ -163,7 +163,7 @@ major=1
 minor=17
 fix=1
 build=2
-variant="alpha"
+variant="beta"
 timestamp="2023-11-30T15:30:00.000Z"
 """,
             )
@@ -194,7 +194,7 @@ major=1
 minor=17
 fix=1
 build=2
-variant="alpha"
+variant="beta"
 timestamp="2023-11-30T15:30:00.000Z"
 """,
             )
@@ -228,7 +228,7 @@ major=1
 minor=17
 fix=1
 build=2
-variant="alpha"
+variant="beta"
 timestamp="2023-11-30T15:30:00.000Z"
 """,
             )
@@ -260,7 +260,7 @@ major=1
 minor=17
 fix=1
 build=2
-variant="alpha"
+variant="beta"
 timestamp="2023-11-30T15:30:00.000Z"
 """,
             )
@@ -271,17 +271,17 @@ timestamp="2023-11-30T15:30:00.000Z"
             Commit("feat: boom!"),
             Commit("docs: big"),
             Commit("fix: it good"),
-            Commit("release: 1.3.4.5-alpha"),
+            Commit("release: 1.3.4.5-beta"),
         ]
         Release(self.repo, self.error, VERSION_FILENAME, NOTES_FILENAME)()
         self.repo.index.add.assert_called_with([VERSION_FILENAME, NOTES_FILENAME])
-        self.repo.index.commit.assert_called_once_with("release: 1.18.1.2-alpha")
+        self.repo.index.commit.assert_called_once_with("release: 1.18.0.0-beta")
         self.repo.git.checkout.assert_called_once_with("-b", "release_1.18")
-        self.repo.create_tag.assert_called_once_with("release_1.18.1.2-alpha")
+        self.repo.create_tag.assert_called_once_with("release_1.18.0.0-beta")
         with open(NOTES_FILENAME, "r") as file:
             self.assertEqual(
                 file.read(),
-                """## 1.18.1.2-alpha
+                """## 1.18.0.0-beta
 *released: Mar 21, 2024 01:23 AM UTC*
 - boom! *(feat)*
 - big *(docs)*
@@ -303,9 +303,9 @@ previous notes
 [version]
 major=1
 minor=18
-fix=1
-build=2
-variant="alpha"
+fix=0
+build=0
+variant="beta"
 timestamp="2024-03-21T01:23:45+00:00"
 """,
             )
@@ -316,17 +316,17 @@ timestamp="2024-03-21T01:23:45+00:00"
         self.repo.iter_commits = lambda: [
             Commit("docs: big"),
             Commit("fix: it good"),
-            Commit("release: 1.10.2.2-alpha"),
+            Commit("release: 1.10.2.2-beta"),
         ]
         Release(self.repo, self.error, VERSION_FILENAME, NOTES_FILENAME)()
         self.repo.index.add.assert_called_with([VERSION_FILENAME, NOTES_FILENAME])
-        self.repo.index.commit.assert_called_with("release: 1.17.2.2-alpha")
+        self.repo.index.commit.assert_called_with("release: 1.17.2.0-beta")
         self.repo.git.checkout.assert_not_called()
-        self.repo.create_tag.assert_called_once_with("release_1.17.2.2-alpha")
+        self.repo.create_tag.assert_called_once_with("release_1.17.2.0-beta")
         with open(NOTES_FILENAME, "r") as file:
             self.assertEqual(
                 file.read(),
-                """## 1.17.2.2-alpha
+                """## 1.17.2.0-beta
 *released: Mar 21, 2024 01:23 AM UTC*
 - big *(docs)*
 - it good *(fix)*
@@ -348,8 +348,8 @@ previous notes
 major=1
 minor=17
 fix=2
-build=2
-variant="alpha"
+build=0
+variant="beta"
 timestamp="2024-03-21T01:23:45+00:00"
 """,
             )
@@ -358,18 +358,18 @@ timestamp="2024-03-21T01:23:45+00:00"
     def test_will_not_error_on_wip_after_release(self):
         self.repo.iter_commits = lambda: [
             Commit("docs: big"),
-            Commit("release: 1.3.4.5-alpha"),
+            Commit("release: 1.3.4.5-beta"),
             Commit("wip: it good"),
         ]
         Release(self.repo, self.error, VERSION_FILENAME, NOTES_FILENAME)()
         self.repo.index.add.assert_called_with([VERSION_FILENAME, NOTES_FILENAME])
-        self.repo.index.commit.assert_called_with("release: 1.17.1.3-alpha")
+        self.repo.index.commit.assert_called_with("release: 1.17.1.3-beta")
         self.repo.git.checkout.assert_not_called()
-        self.repo.create_tag.assert_called_once_with("release_1.17.1.3-alpha")
+        self.repo.create_tag.assert_called_once_with("release_1.17.1.3-beta")
         with open(NOTES_FILENAME, "r") as file:
             self.assertEqual(
                 file.read(),
-                """## 1.17.1.3-alpha
+                """## 1.17.1.3-beta
 *released: Mar 21, 2024 01:23 AM UTC*
 - big *(docs)*
 
@@ -391,7 +391,7 @@ major=1
 minor=17
 fix=1
 build=3
-variant="alpha"
+variant="beta"
 timestamp="2024-03-21T01:23:45+00:00"
 """,
             )
@@ -422,7 +422,7 @@ major=1
 minor=17
 fix=1
 build=2
-variant="alpha"
+variant="beta"
 timestamp="2023-11-30T15:30:00.000Z"
 """,
             )

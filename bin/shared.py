@@ -2,21 +2,24 @@ import functools
 
 
 class VersionMutator:
-    def __init__(self, name, branch_starts):
+    def __init__(self, name, branch_starts, zeroables):
         self.name = name
         self.branch_starts = branch_starts
+        self.zeroables = zeroables
 
     def is_allowed_branch(self, branch):
         return branch.startswith(tuple(self.branch_starts))
 
     def __call__(self, version):
         version[self.name] = version[self.name] + 1
+        for zeroable in self.zeroables:
+            version[zeroable] = 0
 
 
-minorVersionMutator = VersionMutator("minor", ["master"])
-fixVersionMutator = VersionMutator("fix", ["release", "master"])
-buildVersionMutator = VersionMutator("build", ["release", "master"])
-errorVersionMutator = VersionMutator("error", [])
+minorVersionMutator = VersionMutator("minor", ["master"], ["fix", "build"])
+fixVersionMutator = VersionMutator("fix", ["release", "master"], ["build"])
+buildVersionMutator = VersionMutator("build", ["release", "master"], [])
+errorVersionMutator = VersionMutator("error", [], [])
 
 
 class SemanticPrefixUnknown(RuntimeError):
