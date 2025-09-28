@@ -1,3 +1,7 @@
+## 1.4.0.0-beta
+*released: Sep 28, 2025 02:58 PM UTC*
+- have fix/build versioning *(feat)*
+
 ## 1.3.2.2-beta
 *released: Sep 28, 2025 03:51 AM UTC*
 - have version number an start page *(feat)*
