@@ -10,6 +10,7 @@ export type Offset = {
 export interface TimerProps {
   start?: DateTime;
   duration: Duration;
+  consumed?: Duration;
   adjustment?: Offset;
   ringClasses: ClassNames;
 }

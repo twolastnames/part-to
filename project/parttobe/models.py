@@ -191,18 +191,28 @@ class CompletionResult:
         ]
 
 
-def calculate_completion(definitions, at_time=datetime.datetime.now()):
+def calculate_completion(definitions, at_time, elapsed={}):
     calculated_durations = calculate_durations(definitions, at_time)
     for definition in definitions:
-        definition.set_calculated_duration(calculated_durations[definition.id])
-    timeline = Timeline(definitions)
-    return CompletionResult(timeline)
+        duration = (
+            calculated_durations[definition.id] - elapsed[definition]
+            if (definition in elapsed)
+            else (calculated_durations[definition.id])
+        )
+        definition.set_calculated_duration(
+            duration
+            if duration > datetime.timedelta(seconds=0)
+            else datetime.timedelta(seconds=0)
+        )
+    return CompletionResult(Timeline(definitions))
 
 
 def order_definitions(definitions):
     return [
         information.definition
-        for information in calculate_completion(definitions).actions()
+        for information in calculate_completion(
+            definitions, datetime.datetime.now()
+        ).actions()
     ]
 
 
@@ -543,6 +553,11 @@ class RunState(models.Model):
         result["duties"] = []
         order = order_definitions([state.task for state in task_states])
         lookup = {state.task: state.operation for state in task_states}
+        elapsed = {
+            state.task: self.created - state.created
+            for state in task_states
+            if state.operation == RunState.Operation.STARTED
+        }
         for task in order:
             operation = lookup[task]
             result[RunState.OPERATION_TEXTS[operation]].append(task)
@@ -553,7 +568,7 @@ class RunState(models.Model):
             seen_part_tos.add(task.part_to)
         result["activePartTos"] = list(seen_part_tos)
         result["timestamp"] = self.created
-        completion = calculate_completion(active_tasks, self.created)
+        completion = calculate_completion(active_tasks, self.created, elapsed)
         completion_durations = {
             action.definition: action.duration for action in completion.actions()
         }

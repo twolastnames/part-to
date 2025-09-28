@@ -68,7 +68,11 @@ export function TaskDefinition({
 
   return (
     <Spinner responses={[taskResponse, runStateResponse]}>
-      <div className={classes.taskDefinition} data-testid="TaskDefinition">
+      <div
+        key={runState}
+        className={classes.taskDefinition}
+        data-testid="TaskDefinition"
+      >
         <div className={classNames.layout}>
           <h3 className={classNames.upcomingTitle}>Upcoming:</h3>
           <div className={classNames.upcomingDescription}>

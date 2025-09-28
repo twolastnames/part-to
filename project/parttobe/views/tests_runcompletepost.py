@@ -128,7 +128,7 @@ class RunCompleteTestClass(helpers.ClientTester):
         self.assertUpcomingTills(
             timedelta(seconds=0),
             timedelta(seconds=0),
-            timedelta(seconds=180, microseconds=612245),
+            timedelta(seconds=61, microseconds=224490),
             timedelta(seconds=480),
             timedelta(seconds=720),
         )

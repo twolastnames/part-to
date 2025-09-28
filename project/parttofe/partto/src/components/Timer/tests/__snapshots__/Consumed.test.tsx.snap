@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+<div
+  class="ring"
+  data-testid="Ring"
+>
+  <span
+    class="show"
+  >
+    <div
+      class="m_b32e4812 mantine-RingProgress-root"
+      style="--rp-size: calc(6.25rem * var(--mantine-scale)); --rp-label-offset: calc(12.5rem * var(--mantine-scale));"
+    >
+      <svg
+        class="m_d43b5134 mantine-RingProgress-svg"
+      >
+        <circle
+          class="m_b1ca1fbf mantine-RingProgress-curve"
+          cx="50"
+          cy="50"
+          fill="none"
+          r="20"
+          stroke-dasharray="0, 125.66370614359172"
+          stroke-dashoffset="0"
+          stroke-linecap="butt"
+          stroke-width="25"
+          transform="scale(1, -1) translate(0, -100)"
+        />
+        <circle
+          class="m_b1ca1fbf mantine-RingProgress-curve"
+          cx="50"
+          cy="50"
+          fill="none"
+          r="20"
+          stroke-dasharray="0, 125.66370614359172"
+          stroke-dashoffset="125.66370614359172"
+          stroke-linecap="butt"
+          stroke-width="25"
+          style="--curve-color: var(--secondary-color);"
+        />
+        <circle
+          class="m_b1ca1fbf mantine-RingProgress-curve"
+          cx="50"
+          cy="50"
+          fill="none"
+          r="20"
+          stroke-dasharray="125.66370614359172, 0"
+          stroke-dashoffset="125.66370614359172"
+          stroke-linecap="butt"
+          stroke-width="25"
+          style="--curve-color: var(--highlight-color);"
+        />
+      </svg>
+    </div>
+  </span>
+  <div
+    class="label"
+  >
+    <span
+      class="label"
+    >
+      6
+    </span>
+  </div>
+</div>
+`;

@@ -84,7 +84,9 @@ export function TimerProvider({ children }: PropsWithChildren) {
           message: "Duty Complete?",
           component: (
             <Timer
+              key={`${task}-${started.toString()}`}
               start={started}
+              consumed={timestamp?.subtract(started)}
               duration={duration}
               adjustment={{
                 offset: offsets[task] || getDuration(0),
@@ -110,7 +112,9 @@ export function TimerProvider({ children }: PropsWithChildren) {
           message: "Past Expected Time",
           component: (
             <Timer
+              key={`${task}-${started.toString()}`}
               ringClasses={RingedRing}
+              consumed={timestamp?.subtract(started)}
               start={started}
               duration={duration}
             />

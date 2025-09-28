@@ -68,6 +68,7 @@ export function Timer({
   start,
   duration,
   adjustment,
+  consumed,
   ringClasses,
 }: TimerProps) {
   const [rerenderKey, setRerenderKey] = useState<number>(Math.random());
@@ -78,7 +79,8 @@ export function Timer({
     adjustment?.setOffset(offset.current);
   };
 
-  const getEffectiveDuration = () => duration.add(offset.current);
+  const getEffectiveDuration = () =>
+    duration.add(offset.current).add(consumed ? consumed : getDuration(0));
   const [magnitude, setMagnitude] = useState<number>(
     getMagnitude(started, getEffectiveDuration()),
   );
