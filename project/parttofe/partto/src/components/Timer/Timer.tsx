@@ -33,10 +33,10 @@ const getEnforcedDurationLabel = (
                 ) : (
                   <AdjustableDigit
                     increment={
-                      adders.length <= adder
+                      adders.length <= adder + 1
                         ? undefined
                         : () => {
-                            addOffset(getDuration(adders[adder]));
+                            addOffset(getDuration(adders[adder + 1]));
                           }
                     }
                     decrement={
