@@ -1,3 +1,7 @@
+## 1.3.2.2-beta
+*released: Sep 28, 2025 03:51 AM UTC*
+- have version number an start page *(feat)*
+
 ## 1.2.2.2-beta
 *released: Sep 28, 2025 02:07 AM UTC*
 - remove unused imports *(refactor)*
