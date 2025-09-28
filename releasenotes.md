@@ -1,3 +1,11 @@
+## 1.2.2.2-beta
+*released: Sep 28, 2025 02:07 AM UTC*
+- remove unused imports *(refactor)*
+- increment next left on up timer adjustment *(fix)*
+- have imminent logic on back *(fix)*
+- have test humper work with multiple dependents *(chore)*
+- fix image versioning *(chore)*
+
 ## 1.2.1.2-beta
 *released: Aug 31, 2025 11:31 PM UTC*
 - stop button flickers *(fix)*
