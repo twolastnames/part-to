@@ -105,8 +105,8 @@ release: $(NENV)
 	$(WITH_ENV) ./bin/release.py
 
 image: $(VENV)
-	sudo bash -c "$(WITH_VENV) docker build -t twolastnames/part-to:$(shell python bin/version.py) ."
-	sudo bash -c "$(WITH_VENV) docker push twolastnames/part-to:$(shell python bin/version.py)"
+	sudo bash -c "docker build -t twolastnames/part-to:$(shell $(WITH_VENV) python bin/version.py) ."
+	sudo bash -c "docker push twolastnames/part-to:$(shell $(WITH_VENV) python bin/version.py)"
 
 DATA_VOLUME_NAME=parttodata
 
