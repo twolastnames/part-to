@@ -165,6 +165,27 @@ class PartToPostTestClass(TestCase):
             ["'depends' is a required property"],
         )
 
+    def test_zero_duration(self):
+        file_directory = os.path.dirname(__file__)
+        client = Client()
+        data = get_toml_recipe_as_json(
+            file_directory + "/../mocks_partto/baked_beans.toml"
+        )
+        for task in data["tasks"]:
+            if task["name"] != "simmer_beans":
+                continue
+            task["duration"] = 0
+        response = client.post(
+            "/api/partto/",
+            json.dumps(data),
+            content_type="*",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content),
+            ['"duration" must be greater than 1 second on: "simmer_beans"'],
+        )
+
     def test_missing_duration(self):
         file_directory = os.path.dirname(__file__)
         client = Client()

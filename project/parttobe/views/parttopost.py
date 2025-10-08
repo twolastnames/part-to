@@ -8,6 +8,10 @@ def ensure_list(value):
     return value if isinstance(value, list) else [value]
 
 
+def check_duration(task):
+    return task["duration"].seconds < 1
+
+
 def check_task(task):
     missing = []
     for key in ["duration", "description"]:
@@ -147,6 +151,17 @@ class MissingTaskKeyException(RuntimeError):
         return 'Missing "{}" key on: "{}"'.format(self.key_name, self.task_name)
 
 
+class GeneralErrorException(RuntimeError):
+    def __init__(self, task_name, key_name, error):
+        self.task_name = task_name
+        self.key_name = key_name
+        self.error = error
+        super().__init__()
+
+    def __str__(self):
+        return '"{}" {}: "{}"'.format(self.task_name, self.error, self.key_name)
+
+
 def traverse_tasks(tasks):
     for key, task in tasks.items():
         if "depends" in task and key in task["depends"]:
@@ -191,6 +206,11 @@ def verify_tasks(tasks):
         missing = check_task(task)
         if len(missing) > 0:
             raise MissingTaskKeyException(name, ",".join(missing))
+        zero = check_duration(task)
+        if zero:
+            raise GeneralErrorException(
+                "duration", name, "must be greater than 1 second on"
+            )
 
 
 def request_to_dictionary(part_to, tasks):
