@@ -717,6 +717,15 @@ class Marker:
         )
 
 
+def get_insignificant_start(defineds):
+    insignificants = [defined for defined in defineds if defined.insignificant]
+    if not insignificants:
+        return None
+    window = _TimeWindow([])
+    window.chunks = insignificants
+    return window
+
+
 class Timeline:
     def __init__(self, definitions):
         if len(definitions) == 0:
@@ -727,6 +736,12 @@ class Timeline:
         self.one = _TimeWindow([]).expand_for(defineds)
         self.one = self.one.first.frontload_tasks()
         self.one = self.one.first.fill_in_gaps(dependencies, set(), set())
+        start = get_insignificant_start(defineds)
+        if not start:
+            return
+        start.after = self.one.first
+        self.one.first.before = start
+        self.one = self.one.first
 
     def __repr__(self):
         return "][".join([repr(window) for window in self])

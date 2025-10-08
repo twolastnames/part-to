@@ -45,6 +45,16 @@ class CollectionTaskTestClass(TestCase):
         self.assertEqual(line[0], Marker(task, timedelta(seconds=0.0), False))
         self.assertEqual(line[1], Marker(task, timedelta(seconds=200.0), True))
 
+    def test_will_keep_zero_duration_tasks(self):
+        task1 = Definition("task1", 0, None)
+        task2 = Definition("task2", 300, None)
+        line = Timeline([task2, task1])
+        line = list(line)
+        self.assertEqual(line[0], Marker(task1, timedelta(seconds=0.0), False))
+        self.assertEqual(line[1], Marker(task1, timedelta(seconds=0.0), True))
+        self.assertEqual(line[2], Marker(task2, timedelta(seconds=0.0), False))
+        self.assertEqual(line[3], Marker(task2, timedelta(seconds=300.0), True))
+
     def test_can_order_2_nondepended_tasks(self):
         task1 = Definition("task1", 200, None)
         task2 = Definition("task2", 300, None)
