@@ -1,3 +1,10 @@
+## 1.5.0.0-beta
+*released: Oct 08, 2025 07:05 PM UTC*
+- do not discard overdue tasks *(fix)*
+- fix empty/broken test *(test)*
+- do not allow zero durations in recipe definitions *(feat)*
+- have latest tag target *(chore)*
+
 ## 1.4.0.1-beta
 *released: Sep 28, 2025 03:09 PM UTC*
 - fix image versioning *(chore)*
