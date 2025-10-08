@@ -194,7 +194,7 @@ class PartToPostTestClass(TestCase):
         )
         for task in data["tasks"]:
             if task["name"] != "simmer_beans":
-                return
+                continue
             del task["duration"]
         response = client.post(
             "/api/partto/",
@@ -204,7 +204,7 @@ class PartToPostTestClass(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             json.loads(response.content),
-            {"message": 'Missing "duration" key on: "Simmer Beans"'},
+            ["'duration' is a required property"],
         )
 
     def test_missing_task(self):
