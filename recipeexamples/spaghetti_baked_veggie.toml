@@ -44,7 +44,7 @@ ingredients = ['16 oz mushrooms']
 
 ['Spice']
 duration = "1 minutes"
-description = "put 2 tbs oil in the bowl"
+description = "put seasoning in bowl"
 depends = ["Bowl"]
 ingredients = ['1/2 tsp salt', '1/2 tsp pepper', '2 tsp dried basil', '1 tsp dried oregano']
 
@@ -94,9 +94,14 @@ description = "put remaining cheese over top"
 depends = ["Goop"]
 ingredients = ['1 1/2 cup shredded mozzerella chese']
 
+['Preheat']
+duration = "17 minutes"
+description = "Preheat Oven to 375"
+engagement=2
+
 ['Bake']
 duration = "17 minutes"
 description = "bake for 15-20 minutes or until cheese is bubbling and starting to brown on edge of dish"
-depends = ["Second Cheese"]
+depends = ["Second Cheese", "Preheat"]
 engagement=5
 
