@@ -579,6 +579,8 @@ class RunState(models.Model):
                 "duration": action.duration,
             }
             for action in completion.actions()
+            if action.till == datetime.timedelta(seconds=0)
+            or action.duration > datetime.timedelta(seconds=0)
         ]
         result["duration"] = completion.duration()
         timers = [
