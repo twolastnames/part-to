@@ -1,3 +1,9 @@
+## 1.5.1.0-beta
+*released: Nov 01, 2025 06:19 PM UTC*
+- have more recipes *(chore)*
+- spagetti *(fix)*
+- stop zero duration tasks *(fix)*
+
 ## 1.5.0.0-beta
 *released: Oct 08, 2025 07:05 PM UTC*
 - do not discard overdue tasks *(fix)*
