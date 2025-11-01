@@ -1,0 +1,117 @@
+[part_to]
+name = "Pork Chop Honey/Garlic"
+depends = ["garnish"]
+
+['preheat']
+duration = "10 minutes"
+description = "preheat broiler"
+tools = ['broiler']
+depends = []
+ingredients = []
+engagement = 2
+
+['season']
+duration = "2 minutes"
+description = "season the chops"
+tools = []
+depends = []
+ingredients = [ "pinch Salt", "pinch Pepper", "1 tsp Garlic Powder", "4 Pork chops with or w/o bones" ]
+
+['oil']
+duration = "1 minutes"
+description = "put oil in pan"
+tools = []
+depends = []
+ingredients = [ "2 tbs olive Oil", ]
+
+['heat']
+duration = "3 minutes"
+description = "heat oil in pan to medium high heat"
+tools = []
+depends = ['oil']
+engagement = 12
+
+['sear']
+duration = "9 minutes"
+description = "sear chops on both sides until golden on each side and cooked through"
+tools = ['pan']
+depends = ['heat', 'season']
+ingredients = []
+engagement = 22
+
+['transfer']
+duration = "1 minutes"
+description = "transfer chops to plate"
+tools = []
+depends = ['sear']
+ingredients = []
+
+['butter']
+duration = "2 minutes"
+description = "reduce heat to medium and melt butter while scraping up chop bits"
+tools = []
+depends = ['transfer']
+ingredients = [ "1 tbs unsalted Butter" ]
+engagement = 22
+
+['garlic']
+duration = "2 minutes"
+description = "mince garlic cloves and put in bowl"
+tools = []
+depends = []
+ingredients = [ "6 Garlic cloves" ]
+
+['smell']
+duration = "30 seconds"
+description = "cook garlic until fragrent, about 30 seconds"
+tools = []
+depends = ['garlic', 'butter']
+ingredients = []
+engagement = 50
+
+['gathersauce']
+duration = "3 minutes 30 seconds"
+description = "put honey, broth, and vinegar in a bowl"
+ingredients = [ "1/4 cup Honey", "1/4 cup water or chicken broth", "2 tbs rice wine vinegar (or apple cider vinegar or white vinegar)" ]
+
+
+['sauce']
+duration = "3 minutes 30 seconds"
+description = "add honey, broth, and vinegar and cook for 3-4 minutes to thicken at increased medium high heat"
+tools = []
+depends = ['smell', 'gathersauce' ]
+engagement = 52
+
+['baste']
+duration = "2 minutes"
+description = "add chops back to pan and baste generously with the sauce. add 1-2 tbs of water if it gets too thick"
+tools = []
+depends = ['sauce']
+ingredients = []
+engagement = 52
+
+['broil']
+duration = "90 seconds"
+description = "broil for 1-2 minutes until edges are slightly charred"
+tools = []
+depends = ['baste', 'preheat']
+ingredients = []
+engagement = 22
+
+['garnish']
+duration = "10 seconds"
+description = "optionally, garnish"
+tools = []
+depends = ['broil']
+ingredients = [ "Parsley Garnish (optional)" ]
+
+
+
+
+
+
+
+
+
+
+

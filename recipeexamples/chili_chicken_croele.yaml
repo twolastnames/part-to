@@ -1,0 +1,113 @@
+[part_to]
+name = "Chili Chicken Creole"
+depends = ["Serve"]
+
+['Oil']
+duration = "1 minutes"
+description = "put oil in saucepan"
+tools = ["large saucepan"]
+ingredients = [ "1 tablespoon Vegetable Oil" ]
+
+['Heat']
+duration = "3 minutes"
+description = "heat oil in saucepan to medium heat"
+depends = ['Oil']
+engagement = 11
+
+['Chicken']
+duration = "6 minutes"
+description = "Add and cook chicken, sausage, and chili powder for 5-7 minutes, chicken is no longer pink"
+depends = ["Heat", "Cut"]
+ingredients = [ "1 pound ground chicken", "1 teaspoon chili powder" ]
+engagement = 11
+
+['Cut']
+duration = "4 minutes"
+description = "cut andouille sausage into 1/2-inch coin slices"
+ingredients = [ "12 ounces andouille sausage" ]
+
+['Hold']
+duration = "2 minutes"
+description = "Put cooked chicken/sausage mixture in a bowl on the side"
+depends = ["Chicken"]
+
+['Garlic']
+duration = "2 minutes"
+description = "finely chop garlic and put it in the bowl"
+ingredients = [ "2 garlic cloves" ]
+depends = ["Bowl"]
+
+['Bell']
+duration = "2 minutes"
+description = "chop bell peppers and put it in the bowl"
+ingredients = [ "1.5 mediumm bell peppers" ]
+depends = ["Bowl"]
+
+['Onion']
+duration = "2 minutes"
+description = "chop onions and put it in the bowl"
+ingredients = [ "2 large white onions" ]
+depends = ["Bowl"]
+
+['Bowl']
+duration = "1 minutes"
+description = "Get bowl to hold 5 cups"
+tools = [ "bowl" ]
+
+['Veggies']
+duration = "5 minutes"
+description = "Add onion, bell pepper, and garlic to the same saucepan; cook and stir until tender, about 5 minutes."
+depends = ['Bell', 'Onion', 'Garlic', 'Hold']
+tools = [  ]
+ingredients = [ ]
+engagement = 22
+
+['Season']
+duration = "2 minutes"
+description = "gather cumin, paprika, salt, and remaining 1 teaspoon chili powder"
+ingredients = [ "1 teaspoon ground cumin", "1 teaspoon paprika", "1 teaspoon salt", "1 teaspoons chili powder" ]
+
+['Spice']
+duration = "90 seconds"
+description = "add and cook cumin/paprika mix until spices are fragrant, 1 to 2 minutes more."
+depends = ['Season', 'Veggies']
+engagement = 22
+
+['Tomatoes']
+duration = "3 minutes"
+description = "bring mixture to boil"
+depends = ['Spice', 'Beans']
+ingredients = [ "1 (28 ounce) can Hunt's Crushed Tomatoes", "1 (10 ounce) can Ro*Tel Hot Diced Tomatoes with Habaneros, undrained" ]
+engagement = 2
+
+['Beans']
+duration = "2 minutes"
+description = "Rinse and drain beans"
+depends = []
+tools = [  "1 (15 ounce) can black beans, drained, rinsed"]
+ingredients = [ ]
+
+['Cook']
+duration = "10 minutes"
+description = "Reduce heat and simmer for 10 minutes"
+depends = ['Tomatoes']
+engagement = 5
+
+['Serve']
+duration = "1 minute"
+description = "Top each serving with sour cream and parsley."
+depends = ['Cook', 'Parsley']
+tools = [  ]
+ingredients = [ "sour cream for garnish" ]
+
+['Parsley']
+duration = "3 minutes"
+description = "Chop some parsley"
+depends = []
+tools = [  ]
+ingredients = [ "freshly chopped parsley for garnish" ]
+
+
+
+
+

@@ -1,0 +1,145 @@
+[part_to]
+name = "Lasagna"
+depends = ["rest"]
+
+['dutch oven']
+duration = "2 minutes"
+description = "get out a dutch oven and put the sausage and ground beef into it"
+ingredients = [ "1 lb sweet italian Sausage", "3/4 lean ground beef" ]
+tools = ['dutch oven']
+depends = []
+
+['onion']
+duration = "3 minutes"
+description = "mince half a cup of onion and put it in the dutch oven"
+ingredients = [ "enough onion for 1/2 cup" ]
+tools = []
+depends = ['dutch oven']
+
+['garlic']
+duration = "3 minutes"
+description = "crush 2 garlic cloves and put them in the dutch oven"
+ingredients = [ "2 garlic cloves" ]
+tools = []
+depends = ['dutch oven']
+
+['brown']
+duration = "10 minutes"
+description = "put dutch oven on medium high heat stove and brown the meat"
+ingredients = []
+tools = []
+engagement = 12
+depends = ['garlic', 'onion']
+
+['gather sauce']
+duration = "5 minutes"
+description = "gather the sauce ingredients in a bowl"
+ingredients = [ "28 oz Crushed tomatoes", "12 oz tomato paste", "13 oz tomato sauce",  "1/2 cup water", "2 tbs white Sugar", "1 1/2 tsp dried basil", "1/2 tsp fennel seeds",  "1 tsp italian seasoning", "1 tsp salt", "1/4 tsp pepper",  "2 tbs (4 whole) fresh chopped parsley" ]
+tools = []
+depends = []
+
+['simmer']
+duration = "90 minutes"
+description = "stir sauce into meat mixture and simmer for 90 minutes, stirring occasionally"
+ingredients = []
+tools = []
+engagement = 5
+depends = ['gather sauce', 'brown']
+
+['boil']
+duration = "10 minutes"
+description = "bring a large pot of slightly salted water to boil"
+ingredients = []
+tools = []
+engagement = 5
+depends = []
+
+['noodles']
+duration = "9 minutes"
+description = "put noodles into water and boil 8-10 minutes"
+ingredients = [ "12 Lasagna noodles" ]
+tools = []
+engagement = 5
+depends = ['boil']
+
+['drain']
+duration = "2 minutes"
+description = "drain noodles and rinse with cold water"
+ingredients = []
+tools = []
+depends = ['noodles']
+
+['beat']
+duration = "2 minutes"
+description = "put an egg and salt in about a 2 cup bowl and beat the egg"
+ingredients = [ "1 egg", "1/2 tsp salt" ]
+tools = []
+depends = []
+
+['parsley']
+duration = "2 minutes"
+description = "chop parsley and mix it in with the eggs and salt"
+ingredients = ["2 tbs (4 whole) fresh chopped parsley" ]
+tools = []
+depends = ['beat']
+
+['ricotta']
+duration = "1 minutes"
+description = "mix the ricota cheese in the bowl with egg, parsley, and salt"
+ingredients = [ "16 oz Ricotta cheese", ]
+tools = []
+depends = ['parsley']
+
+['preheat']
+duration = "12 minutes"
+description = "preheat an oven to 375 degrees"
+ingredients = []
+tools = ['375 degree oven']
+engagement = 2
+depends = []
+
+['assemble']
+duration = "10 minutes"
+description = "spread 1 1/2 cups of meat sauce in the bottom of a 9x13-inch baking dish. Arrange 6 noodles lengthwise over meat sauce, overlapping slightly. Spread with 1/2 of the ricotta cheese mixture. Top with 1/3 of the mozzarella cheese slices. Spoon 1 1/2 cups meat sauce over mozzarella, and sprinkle with 1/4 cup Parmesan cheese. Repeat layers, and top with remaining mozzarella and Parmesan cheese."
+ingredients = [ "3/4 cup grated parmesan cheese" ]
+tools = []
+depends = ['ricotta', 'slice', 'drain', 'simmer']
+
+['slice']
+duration = "2 minutes"
+description = "slice mozzerella cheese"
+ingredients = [ "3/4 lb mozzarella cheese (to slice)" ]
+tools = []
+depends = []
+
+['foil']
+duration = "1 minutes"
+description = "put foil over lasagna, either not touching the cheese or oiled"
+ingredients = []
+tools = []
+depends = ['assemble']
+
+['bake1']
+duration = "25 minutes"
+description = "bake for 25 minutes and remove the foil"
+ingredients = []
+tools = []
+engagement = 2
+depends = ['preheat', 'foil']
+
+['bake2']
+duration = "25 minutes"
+description = "bake an additional 25 minutes"
+ingredients = []
+tools = []
+engagement = 2
+depends = ['bake1']
+
+['rest']
+duration = "10 minutes"
+description = "remove from oven and let rest 10 minutes before serving"
+ingredients = []
+tools = []
+engagement = 2
+depends = ['bake2']
+

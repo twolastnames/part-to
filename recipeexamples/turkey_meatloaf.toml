@@ -1,0 +1,82 @@
+[part_to]
+name = "Turkey Meatloaf"
+depends = ["bake2"]
+
+['bowl']
+duration = "1 minutes"
+description = "get a large mixing bowl out"
+tools = ["large mixing bowl"]
+
+['onion']
+duration = "3 minutes"
+description = "chop 2 onions and put it in the bowl"
+ingredients = [ "2 small onion, chopped" ]
+depends = ["bowl"]
+
+['crackers']
+duration = "2 minutes"
+description = "crush crackers and put them in the bowl"
+ingredients = [ "1.5 cup crushed buttery round crackers" ]
+depends = ["bowl"]
+
+['egg']
+duration = "1 minutes"
+description = "crack 2 eggs into the bowl"
+ingredients = [ "2 large egg" ]
+depends = ["bowl"]
+
+['garlic']
+duration = "2 minutes"
+description = "mince 4 garlic cloves and put them in the large bowl"
+ingredients = [ "4 cloves garlic, minced" ]
+depends = ["bowl"]
+
+['rest']
+duration = "2 minutes"
+description = "put ingredients in bowl"
+ingredients = [ "3 pounds ground turkey", "1 cup milk", "1 tablespoon salt", "1.5 teaspoon ground black pepper" ]
+depends = ["bowl"]
+
+['grease']
+duration = "1 minutes"
+description = "lightly grease a large baking sheet"
+tools = ["baking sheet"]
+
+['craft']
+duration = "2 minutes"
+description = "make 2 loaves out of meat on baking sheet"
+depends = ["grease", "rest", "garlic", "egg", "crackers", "onion"]
+
+['glaze']
+duration = "2 minutes"
+description = "mix glaze ingredients"
+ingredients = [ "1 cup ketchup", "1/2 cup brown sugar", "2 tablespoon Worcestershire sauce" ]
+tools = ["small bowl"]
+
+['bake1']
+duration = "30 minutes"
+description = "bake for 30 minutes"
+depends = ["craft", "preheat"]
+engagement = 2
+
+['preheat']
+duration = "12 minutes"
+description = "preheat an oven to 350 degrees"
+tools = ["350 degree oven"]
+engagement = 2
+
+['flavor']
+duration = "2 minutes"
+description = "remove loaves from oven to spread the glaze on them"
+depends = ["glaze", "bake1"]
+
+['bake2']
+duration = "30 minutes"
+description = "Return loaf to the oven and continue baking until no longer pink in the center, about 30 minutes more; an instant-read thermometer inserted into the center should read at least 160 degrees F."
+depends = ["flavor"]
+engagement = 3
+
+
+
+
+

@@ -1,0 +1,65 @@
+[part_to]
+name = "Brunch Farmers"
+depends = ["melt"]
+
+['potato']
+duration = "3 minutes"
+description = "cut potatoes into thin slices"
+ingredients = [ "14 oz potato (2 medium potato)" ]
+tools = []
+depends = []
+
+['dice']
+duration = "4 minutes"
+description = "dice the onions and set aside with olive oil put in with it"
+ingredients = [ "2 small onions", "2 tsp olive oil" ]
+tools = []
+depends = []
+
+['water']
+duration = "1 minutes"
+description = "put water in wider frying pan"
+ingredients = [ "3 cups water" ]
+tools = []
+depends = []
+
+['cook']
+duration = "7 minutes"
+description = "put potatoes in pan and turn to medium/high heat for 7-8 minutes"
+ingredients = []
+tools = []
+depends = ['water', 'potato']
+engagement = 11
+
+['crisp']
+duration = "8 minutes"
+description = "put the diced onion and olive oil in and cook for 7-8 minutes, once the potatoes crisp as the fluid soaks up"
+ingredients = []
+tools = []
+depends = ['dice', 'cook']
+engagement = 11
+
+['eggs']
+duration = "2 minutes"
+description = "Crack the eggs into a cup and give a quick whisk with a fork and vinegar."
+ingredients = [ "4 eggs", "2 tsp vinegar"]
+tools = []
+depends = []
+
+
+['cheese']
+duration = "2 minutes"
+description = "mix flavors in with eggs"
+ingredients = [ "2 tsp basil, dried (or fresh)", "2 tsp rosemary, dried (or fresh)", "Salt and pepper to taste", "4 oz low fat mozzarella" ]
+tools = []
+depends = ['eggs']
+
+['melt']
+duration = "3 minutes 30 seconds"
+description = "put the cheese and eggs in and cook until the eggs are done, 2-5 minutes"
+ingredients = []
+tools = []
+depends = ['cheese', 'crisp']
+engagement = 22
+
+
