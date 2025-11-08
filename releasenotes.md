@@ -1,3 +1,10 @@
+## 1.5.2.0-beta
+*released: Nov 08, 2025 05:11 PM UTC*
+- have more recipes *(chore)*
+- have overwrite recipe target *(chore)*
+- recipe overwrites *(fix)*
+- save gap filling for later *(fix)*
+
 ## 1.5.1.0-beta
 *released: Nov 01, 2025 06:19 PM UTC*
 - have more recipes *(chore)*
