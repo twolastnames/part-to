@@ -1,0 +1,68 @@
+[part_to]
+name = "Brussels Sprouts Lemon Parmesan"
+depends = ["bowl"]
+
+# https://www.thepioneerwoman.com/food-cooking/recipes/a80611/thanksgiving-dinner-lemon-parmesan-roasted-brussels-sprouts/
+
+
+['preheat']
+duration = "15 minutes"
+description = "preheat oven to 400 degrees F"
+tools = ['oven']
+depends = []
+engagement = 1
+
+
+['parchment']
+duration = "1 minute"
+description = "line a baking sheet with parchment paper"
+
+
+['cut']
+duration = "3 minutes"
+description = "wash end trim edges of brussels and cut the brussels sprouts in half and place them on the lined baking sheet, crowded together"
+ingredients = [ "1 1/2 lb. Brussels Sprout" ]
+depends = ['parchment']
+
+
+['chop']
+duration = "2 minutes"
+description = "chop 2 cloves of garlic and spread them on the brussel sprouts"
+ingredients = [ "2 cloves Garlic, Or More To Taste" ]
+depends = ['cut']
+
+
+['lemon']
+duration = "1 minute"
+description = "cut the lemon in half and use one half to squeeze its juices over the brussels sprouts"
+ingredients = ['1 lemon']
+depends = ['oil']
+
+
+['oil']
+duration = "1 minute"
+description = "drizzle sprouts with olive oil"
+ingredients = [ "2 Tbsp. Olive Oil" ]
+depends = ['chop']
+
+
+['season']
+duration = "1 minute"
+description = "salt and pepper"
+ingredients = [ "Kosher Salt And Freshly Ground Black Pepper, To Taste" ]
+depends = ['lemon']
+
+
+['roast']
+duration = "28 minutes"
+description = "roast in oven 25-30 minutes stirring once. Remove when tender and crispy"
+depends = ['season', 'preheat']
+engagement = 4
+
+['bowl']
+duration = "2 minutes"
+description = "transfer sprouts from pan to serving dish, juice other have of lemon on it, add parmesan cheese and toss"
+ingredients = [ "1/3 cup Shredded Parmesan Cheese", ]
+depends = ['roast']
+
+

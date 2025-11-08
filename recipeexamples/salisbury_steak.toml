@@ -1,0 +1,98 @@
+[part_to]
+name = "Salisbury Steak"
+depends = ["simmer"]
+
+['dice']
+duration = "3 minutes"
+description = "dice half a cup of onion and put in a bowl with mushrooms and 1 tsp salt (or to taste)"
+ingredients = [ "1.5 cup diced onion", "18 large white button mushrooms, sliced", " 1 tsp salt or to taste" ]
+
+['beat']
+duration = "2 minutes"
+description = "beat eggs in a medium bowl with flavourings"
+ingredients = ["2 eggs, beaten", "3 tablespoons ketchup" , "1.5 tablespoon Worcestershire sauce" , "1.5 teaspoon dry mustard", "1.5 teaspoon soy sauce", "3/4 teaspoon freshly ground black pepper", "1.5 pinch cayenne pepper, or to taste" ]
+
+['meat']
+duration = "6 minutes"
+description = "mix bread crumbs, then beef in with the egg mixture"
+ingredients = [ "1.5 pound 85% lean ground beef", "3/4 cup plain bread crumbs" ]
+depends = ['beat']
+
+['sit']
+duration = "2 hours"
+description = "cover the top end edges (not top of bowl) of the meat mixture with saran and let set for 2 to 32 hours in the refigerator"
+depends = ['meat']
+engagement = 1
+
+['melt']
+duration = "2 minutes"
+description = "melt butter in large non-stick skillet at high heat"
+ingredients = [ "3 tablespoons salted butter" ]
+depends = ['dice']
+engagement = 30
+
+['veggies']
+duration = "6 minutes"
+description = "add onions and mushrooms and cook for 5 to 8 minutes, until nicely browned"
+depends = ['melt']
+engagement = 5
+
+
+['bake']
+duration = "3 minutes"
+description = "put flour in with onions and mushrooms and stir for 3 minutes"
+depends = ['veggies', 'flour']
+engagement = 50
+
+['flour']
+duration = "1 minute"
+description = "measure out 3 tbs of flour"
+ingredients = [ "3 tablespoons all-purpose flour" ]
+
+['broth']
+duration = "3 minutes"
+description = "lightly mix broth, ketchup and Worcestershire sauce"
+ingredients = [ "3.5 cups high-quality, low-sodium beef broth", "3 tablespoons ketchup", "1.5 tablespoon Worcestershire sauce" ]
+
+['cook']
+duration = "10 minutes"
+description = "put the broth mixture into the skillet at medium heat for 10 minutes, when gravy thickens slightly and reduces. Taste adjust salting as needed."
+depends = ['broth', 'bake']
+engagement = 5
+
+['divide']
+duration = "2 minutes"
+description = "remove meat mixture from refridgerator and divide into 6 equal 1/2 inch thick ovals and lighthly salt each side"
+ingredients = [ "salt" ]
+depends = ['sit']
+
+['transfer']
+duration = "2 minutes"
+description = "move gravy to heat resistant bowl and scrap sides to get pan clean"
+depends = ['cook']
+
+['melt2']
+duration = "2 minutes"
+description = "melt butter in skillet at medium-high heat"
+ingredients = [ "3 tablespoons salted butter" ]
+depends = ['transfer']
+engagement = 12
+
+['fry']
+duration = "6 minutes"
+description = "add patties and cook 2-3 minutes per side, until browned"
+depends = ['melt2', 'divide']
+engagement = 12
+
+['return']
+duration = "3 minutes"
+description = "pour gravy back in skillet on top of patties and bring to simmer"
+depends = ['fry', 'transfer']
+
+['simmer']
+duration = "5 minutes"
+description = "simmer for 5 minutes. center of meat should be 160 degrees F"
+depends = ['return']
+engagement = 5
+
+

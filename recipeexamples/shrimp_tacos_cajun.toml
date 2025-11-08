@@ -1,0 +1,72 @@
+[part_to]
+name = "Shrimp Tacos Cajun"
+depends = ["serve"]
+
+['greens']
+duration = "5 minutes"
+description = "mix in bowl after dicing onion & jalepeno, chopping cilantro. Then mix the coleslaw mix in (extra cilantro can be cut for serving)"
+ingredients = [ "3 cups coleslaw mix", "3/8 cup diced jalapeño", "3/8 cup diced red onion", "3/8 cup chopped cilantro (or more for side)" ]
+tools = ['large bowl']
+
+['dressing']
+duration = "3 minutes"
+description = "mix up the dressing in a bowl"
+ingredients = [ "3/4 cup mayonnaise", "3/8 cup sour cream", "3/8 cup fresh lime juice" ]
+
+['slaw']
+duration = "2 minutes"
+description = "mix dressing in with coleslaw greens/veggies and chill until ready to use"
+depends = ['greens', 'dressing']
+tools = []
+
+['seasoning']
+duration = "2 minutes"
+description = "mince garlic and mix it with the cajun seasoing in a bowl big enough to toss with shrimp later"
+ingredients = [ "3 cloves garlic minced", "3 tbsps. Cajun seasoning" ]
+depends = ['slaw']
+
+['shrimp']
+duration = "5 minutes"
+description = "peel and deveine shrimp (optionally remove the tail) and mix it with the seasoning in the bowl"
+ingredients = [ "1 1/2 lb. raw large shrimp" ]
+depends = ['seasoning']
+
+['preheat']
+duration = "2 minutes"
+description = "preheat oil at medium high heat"
+depends = ['shrimp', 'oil']
+engagement = 2
+
+['oil']
+duration = "1 minutes"
+description = "put oil in large skillet"
+ingredients = [ "3 tbsps. olive oil" ]
+
+['cook']
+duration = "5 minutes"
+description = "put cook shrimp 2-3 minutes per side"
+depends = ['preheat']
+engagement = 22
+
+['oven']
+duration = "15 minutes"
+description = "preheat oven to 325 degrees F"
+tools = ['oven, temperature matters less']
+engagement = 2
+
+['sheet']
+duration = "2 minutes"
+description = "put enough shells on a baking sheet for first servings"
+ingredients = [ "12 taco-sized flour tortillas" ]
+
+['warm']
+duration = "2 minutes"
+description = "warm shells in oven, they should feel warm to touch"
+depends = ['sheet', 'oven']
+engagement = 22
+
+['serve']
+duration = "2 minutes"
+description = "setup buffet with shells, shrimp, coleslaw, cilantro, & lime juice"
+depends = ['warm', 'cook']
+

@@ -1,0 +1,71 @@
+[part_to]
+name = "Salad Taco"
+depends = ["serve"]
+
+
+['oil']
+duration = "1 minutes"
+description = "put oil in large skillet"
+ingredients = [ "1 Tbsp. vegetable oil" ]
+depends = []
+tools = []
+
+['heat']
+duration = "2 minutes"
+description = "heat large skillet with oil in it to medium high"
+depends = ['oil']
+engagement = 22
+
+['brown']
+duration = "6 minutes 30 seconds"
+description = "add beef and cook for 6 to 7 minutes while breaking it up with a wooden spoon"
+ingredients = [ "1 lb. ground sirloin beef" ]
+depends = ['heat']
+engagement = 22
+
+['hydrate']
+duration = "2 minutes"
+description = "put water and taco seasoning in beef"
+ingredients = [ "1 (1-oz.) package taco seasoning", "2/3 cup water" ]
+depends = ['brown']
+
+['beans']
+duration = "2 minutes"
+description = "drain and rinse beans"
+ingredients = [ "1 (15-oz.) can black beans" ]
+
+['addbeans']
+duration = "3 minutes"
+description = "add beans and stir gently to combine and warm through, about 3 minutes"
+depends = ['beans', 'hydrate']
+engagement = 12
+
+
+['greens']
+duration = "10 minutes"
+description = "in the bowl with the lettuce put: the sliced red onion, grated cheese, halved tomatoes, diced avacado, chopped cilantro"
+ingredients = [ "1 cup grated cheddar cheese", "1 cup halved cherry tomatoes", "1 avocado, diced", "1/2 cup sliced red onion", "1/4 cup chopped cilantro leaves", ]
+depends = ['lettuce']
+
+['lettuce']
+duration = "2 minutes"
+description = "chop the head of lettuce and put it in a large serving bowl"
+ingredients = [ "1 head romaine lettuce" ]
+
+['limes']
+duration = "2 minutes"
+description = "halve 3 limes"
+ingredients = [ "3 limes", ]
+
+['toss']
+duration = "2 minutes"
+description = "put cooked things in with lettuce and greens and toss"
+depends = ['lettuce', 'greens', 'addbeans']
+
+['serve']
+duration = "2 minutes"
+description = "present with tortilla chips, squeezable limes and optionally something hot"
+ingredients = [ "Tortilla chips and sour cream, for serving", "Thinly sliced jalapeño or hot sauce (optional) ", ]
+depends = ['toss', 'limes']
+
+

@@ -1,0 +1,48 @@
+[part_to]
+name = "Pork Rasberry Balsamic"
+depends = ["serve"]
+
+['flatten']
+duration = "6 minutes"
+description = "cut pork into 1 inch coins and flatten to a 1/2 inch, then sprinkle with garlic powder"
+ingredients = [ "1 pork tenderloin (1 pound), cut into 1-inch slices", "1 teaspoon garlic powder", ]
+
+['oil']
+duration = "1 minutes"
+description = "put oil in large skillet"
+ingredients = [ "1 tablespoon olive oil", ]
+tools = ['large skillet']
+
+['preheat']
+duration = "2 minutes"
+description = "preheat the oil in the large skillet over medium high heat"
+depends = ['oil']
+engagement = 11
+
+['cook']
+duration = "8 minutes"
+description = "cook pork in oil for 3-5 minutes on each side or until no longer pink"
+depends = ['preheat', 'flatten']
+engagement = 22
+
+['remove']
+duration = "1 minutes"
+description = "Remove pork and keep warm"
+depends = ['cook']
+
+['sauce']
+duration = "3 minutes"
+description = "put the contents of the sauce in a bowl"
+ingredients = [ "1/2 cup seedless raspberry jam", "2 tablespoons balsamic vinegar", "2 teaspoons Dijon mustard", ]
+
+['simmer']
+duration = "2 minutes 30 seconds"
+description = "Cook and stir sauce for 2-3 minutes or until thickened"
+depends = ['remove', 'sauce']
+engagement = 33
+
+['serve']
+duration = "1 minutes"
+description = "serve pork with sauce"
+depends = ['simmer', 'remove']
+

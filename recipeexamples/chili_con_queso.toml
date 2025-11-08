@@ -1,0 +1,79 @@
+[part_to]
+name = "Chili Con Queso"
+depends = ["remove"]
+
+['butter']
+duration = "1 minutes"
+description = "put butter in a medium saucepan"
+ingredients = [ "1 tbsp butter (or any neutral oil)" ]
+depends = []
+engagement = 2
+
+['veggies']
+duration = "4 minutes"
+description = "finely dice an onion and seed/mince a jalepeno and put them in a bowl"
+ingredients = [ "1 small onion", "1 jalapeño" ]
+
+['mince']
+duration = "2 minutes"
+description = "mince garlic cloves and put them in a bowl"
+ingredients = [ "2 cloves garlic, minced" ]
+
+['cube']
+duration = "2 minutes"
+description = "cube Velveeta cheese"
+ingredients = [ "8 oz Velveeta cheese" ]
+
+['dairy']
+duration = "3 minutes"
+description = "shred cheddar cheese and put it in a bowl with milk, cumin, and chili powder"
+ingredients = [ "1 cup shredded cheddar cheese", "1/2 cup milk", "1/2 tsp ground cumin", "1/4 tsp chili powder" ]
+
+['melt']
+duration = "2 minutes"
+description = "Melt the butter in a medium saucepan over medium heat."
+depends = ['butter', 'veggies', 'mince']
+engagement = 22
+
+
+['cook']
+duration = "5 minutes"
+description = "Add the onion and jalapeño, cooking until soft, about 5 minutes."
+depends = ['melt']
+engagement = 12
+
+['fragrant']
+duration = "30 seconds"
+description = "Stir in the garlic and cook for another 30 seconds until fragrant."
+depends = ['cook']
+engagement = 22
+
+['tomatoes']
+duration = "2 minutes"
+description = "Pour in the diced tomatoes with green chilies, stirring to combine."
+depends = ['fragrant']
+ingredients = [ "1 can (10 oz) diced tomatoes with green chilies, undrained" ]
+
+['velveeta']
+duration = "2 minutes"
+description = "Reduce heat to low and add the Velveeta cubes, stirring until melted."
+depends = ['tomatoes', 'cube']
+engagement = 32
+
+['smooth']
+duration = "3 minutes"
+description = "Gradually mix in the cheddar cheese, milk, cumin, and chili powder, stirring until smooth."
+depends = ['velveeta', 'dairy']
+engagement = 50
+
+['keep']
+duration = "5 minutes"
+description = "Keep the heat low to prevent the cheese from separating, stirring occasionally for about 5 minutes, until everything is melted and combined."
+depends = ['smooth']
+engagement = 12
+
+['remove']
+duration = "1 minutes"
+description = "remove from heat."
+depends = ['keep']
+
