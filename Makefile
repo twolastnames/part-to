@@ -62,6 +62,9 @@ clean:
 insertrecipes: $(VENV)
 	${WITH_VENV} python3 project/manage.py insertrecipe --no-overwrite recipeexamples/*
 
+overwriterecipe: $(VENV)
+	${WITH_VENV} python3 project/manage.py insertrecipe $(FILE)
+
 resetrecipes: $(VENV)
 	${WITH_VENV} python3 project/manage.py insertrecipe recipeexamples/*
 
