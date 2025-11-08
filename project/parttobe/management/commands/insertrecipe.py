@@ -17,7 +17,7 @@ class Command(BaseCommand):
         has_recipes = client.get("/api/parttos/")
         names = (
             set()
-            if "no-overwrite" in options and options["no-overwrite"]
+            if not options["no_overwrite"]
             else set(
                 [
                     client.get("/api/partto/?partTo={}".format(id)).data["name"]
