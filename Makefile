@@ -125,6 +125,9 @@ down:
 	sudo bash -c "DATA_VOLUME_NAME=$(DATA_VOLUME_NAME) SRC_VOLUME_NAME=$(SRC_VOLUME_NAME) docker compose down"
 	sudo docker pull twolastnames/part-to:latest
 
+update:
+	sudo bash -c "docker pull twolastnames/part-to"
+
 bounce: down up
 
 test: testfront testback
