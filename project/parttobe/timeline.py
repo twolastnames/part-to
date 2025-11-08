@@ -735,7 +735,8 @@ class Timeline:
         dependencies = _dependencies_from_defineds(defineds)
         self.one = _TimeWindow([]).expand_for(defineds)
         self.one = self.one.first.frontload_tasks()
-        self.one = self.one.first.fill_in_gaps(dependencies, set(), set())
+        # TODO: reintroduce this for prettier timelines
+        # self.one = self.one.first.fill_in_gaps(dependencies, set(), set())
         start = get_insignificant_start(defineds)
         if not start:
             return
