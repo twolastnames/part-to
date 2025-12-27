@@ -342,7 +342,7 @@ class Dependent(models.Model):
 class TaskDefinition(models.Model):
     initial_duration = models.DurationField()
     part_to = models.ForeignKey("PartTo", on_delete=models.CASCADE)
-    description = models.CharField(max_length=0x100)
+    description = models.CharField()
     engagement = models.BigIntegerField(null=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
 
@@ -718,13 +718,13 @@ def calculate_duty_durations(definitions, before):
             WHERE operation = %s OR operation = %s
         )
         SELECT p1.task_id AS task, ((    
-            JULIANDAY(p1.created) - JULIANDAY(p2.created)
-        ) * 24 * 60 * 60) AS duration  FROM Paired p1
+            EXTRACT(epoch from p1.created) - EXTRACT(epoch from p2.created)
+        )) AS duration  FROM Paired p1
         INNER JOIN Paired p2
         ON p2.completedId = p1.completedId
         AND p1.operation > p2.operation
         UNION ALL
-        SELECT u1.id AS task, (u1.initial_duration / 1000000) AS duration
+        SELECT u1.id AS task, EXTRACT(epoch from u1.initial_duration) AS duration
         FROM parttobe_taskdefinition u1
         WHERE id = %s
         LIMIT 5        
