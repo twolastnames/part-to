@@ -1,0 +1,119 @@
+[part_to]
+name = "Shrimp Andouille Gumbo"
+depends = ["serve"]
+
+['put_oil']
+duration = "1 minutes"
+description = "put peanut oil in a large heavy pot"
+ingredients = [ "1/2 cup peanut oil" ]
+tools = ["Dutch oven or heavy pot"]
+
+['oil']
+duration = "2 minutes"
+description = "Heat peanut oil in a large heavy pot until hot"
+depends = ["put_oil"]
+engagement = 25
+
+['measure_flour']
+duration = "1 minutes"
+description = "Measure out the roux's flour"
+ingredients = [ "1/2 cup + 2 tbs all purpose flour" ]
+
+['roux']
+duration = "25 minutes"
+description = "Whisk flour into hot oil and cook, stirring constantly, until roux reaches dark penny color, about 20 to 30 minutes. Note: that as the roux cooks, first it will clump up and thicken, but as the flour continues to brown past the peanut butter color stage, it will loosen up a bit."
+ingredients = [ "1/2 cup + 2 tbs all purpose flour" ]
+depends = ["oil", "measure_flour"]
+engagement = 70
+
+['trinity']
+duration = "5 minutes"
+description = "Chop bell pepper, onion, and celery (the holy trinity)"
+ingredients = [
+  "1 green bell pepper",
+  "1 medium onion",
+  "3 celery stalks"
+]
+
+['garlic']
+duration = "2 minutes"
+description = "Mince garlic cloves"
+ingredients = [ "4 garlic cloves" ]
+
+['veg_cook']
+duration = "7 minutes"
+description = "Stir bell pepper, onion, and celery into roux and cook 5 minutes, then add garlic and cook 2 more minutes"
+depends = ["roux", "trinity"]
+engagement = 25
+
+['garlic_cook']
+duration = "2 minutes"
+description = "add garlic and about cook 2 minutes"
+depends = ["veg_cook", "garlic"]
+engagement = 25
+
+['season']
+duration = "1 minutes"
+description = "Stir in Cajun seasoning"
+ingredients = [ "1 tbs Cajun seasoning" ]
+depends = ["garlic_cook"]
+
+['stock_heat']
+duration = "10 minutes"
+description = "Heat stock and water in a separate pot until steamy"
+ingredients = [
+  "1 quart shellfish or chicken stock",
+  "1 cup water"
+]
+tools = ["saucepan"]
+engagement = 15
+
+['stock_add']
+duration = "5 minutes"
+description = "Slowly add hot stock and water to roux mixture while stirring constantly"
+depends = ["season", "stock_heat"]
+
+['simmer_base']
+duration = "30 minutes"
+description = "Bring gumbo to a gentle simmer, add Worcestershire sauce and salt, and cook, about 30 minutes"
+ingredients = [ "2 tsp Worcestershire sauce", "Salt to taste" ]
+depends = ["stock_add"]
+engagement = 20
+
+['sausage_prep']
+duration = "5 minutes"
+description = "Slice andouille sausage into rounds"
+ingredients = [ "8–12 oz smoked andouille sausage" ]
+
+['sausage']
+duration = "5 minutes"
+description = "Stir sausage into gumbo and heat through"
+depends = ["simmer_base", "sausage_prep"]
+engagement = 15
+
+['shrimp_prep']
+duration = "10 minutes"
+description = "Peel and devein shrimp"
+ingredients = [ "2 lb shrimp" ]
+
+['shrimp']
+duration = "5 minutes"
+description = "Add shrimp and optional filé powder, simmer until shrimp are just cooked"
+ingredients = [ "1 tbs filé powder (optional)", "Black pepper to taste" ]
+depends = ["sausage", "shrimp_prep"]
+engagement = 25
+
+['green_onion']
+duration = "3 minutes"
+description = "Chop green onions"
+ingredients = [ "3–5 green onions" ]
+
+['serve']
+duration = "2 minutes"
+description = "Serve gumbo over rice and garnish with green onions, filé powder, and hot sauce"
+ingredients = [
+  "Hot sauce to taste",
+  "Cooked white rice"
+]
+depends = ["shrimp", "green_onion"]
+

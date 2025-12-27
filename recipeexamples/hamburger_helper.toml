@@ -1,0 +1,78 @@
+[part_to]
+name = "Hamburger Helper"
+
+depends = ["garnish"]
+['oil']
+duration = "1 minutes"
+description = "put oil in a skillet"
+ingredients = [ "1 tbs vegetable Oil", ]
+
+['preheat']
+duration = "1 minutes"
+description = "Heat oil in a large skillet over medium-high heat until the oil is sizzling hot, about 1 minute"
+tools = ['large skillet']
+depends = ['oil']
+engagement = 12
+
+['veggies']
+duration = "4 minutes"
+description = "dice an onion and mince 3 cloves and put them in a bowl"
+ingredients = [ "1 small onion", "3 garlic cloves", ]
+
+['gather']
+duration = "3 minutes"
+description = "gather the spices"
+ingredients = [ "1/2 tsp paprika", "1/2 tsp salt", "1/4 tsp pepper", ]
+
+['slop']
+duration = "2 minutes"
+description = "put milk, broth and uncooked macaroni in a bowl"
+ingredients = [ "1 1/2 cup Milk", "1 cup beef broth", "2 cups uncooked elbow macaroni", ]
+
+['sizzle']
+duration = "2 minutes"
+description = "add the onion and garlic and saute until tender, about 2 minutes"
+depends = ['beef', 'veggies']
+engagement = 12
+
+['paste']
+duration = "2 minutes"
+description = "mix paste in, then mix in the spice"
+ingredients = [ "2 tbs Tomato paste", ]
+depends = ['sizzle', 'gather']
+
+['beef']
+duration = "9 minutes"
+description = "Add ground beef and cook until browned on all sides, about 6-8 minutes. Break up beef into small pieces to help even browning."
+ingredients = [ "1 lb ground beef", ]
+depends = ['preheat']
+engagement = 12
+
+['shred']
+duration = "4 minutes"
+description = "shred 1 cup of cheddar cheese"
+ingredients = [ "1 cup Cheddar cheese", ]
+
+['pasta']
+duration = "9 minutes"
+description = "Add milk, beef broth, and uncooked macaroni. Stir well and bring to a boil. Cover the lid and simmer over medium heat for 8-10 minutes until the pasta is tender. Make sure to stir occasionally to prevent the pasta from sticking to the bottom of the pan."
+engagement = 12
+depends = ['slop', 'paste']
+
+['chop']
+duration = "3 minutes"
+description = "chop about an 1/8 cup parsley"
+ingredients = [ "Fresh Parsley (optional)", ]
+depends = []
+
+['melt']
+duration = "2 minutes"
+description = "Add cheddar cheese and stir until melted and well combined."
+depends = ['pasta', 'shred']
+engagement = 62
+
+['garnish']
+duration = "1 minutes"
+description = "Optionally, garnish or top with the parsley"
+depends = ['chop', 'melt']
+

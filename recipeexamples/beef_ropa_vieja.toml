@@ -1,0 +1,124 @@
+[part_to]
+name = "Beef Ropa Vieja"
+depends = ["serve"]
+
+['preheat']
+duration = "15 minutes"
+description = "preheat oven to 350 degrees F"
+tools = ['350 degree F oven']
+engagement = 2
+
+['cut']
+duration = "4 minutes"
+description = "Cut flank steak into large pieces that will fit on the bottom of a Dutch oven in 2 batches. Season with salt and pepper."
+ingredients = [ "2 1/2 pounds (1.1 kg) beef flank steak (see note)", "Kosher salt and freshly ground black pepper", ]
+
+['oil']
+duration = "1 minutes"
+description = "put oil in dutch oven"
+ingredients = [ "3 tablespoons (45 ml) vegetable oil, plus more if needed", ]
+tools = ['dutch oven']
+
+['heatoil']
+duration = "2 minutes"
+description = "Heat oil in Dutch oven over medium-high heat until shimmering."
+depends = ['oil', 'cut']
+engagement = 22
+
+['fry']
+duration = "13 minutes"
+description = "Working in batches, add steak to dutch oven and cook, turning, until browned, about 6 minutes per batch. Transfer cooked steak to a plate and set aside."
+depends = ['heatoil']
+engagement = 72
+
+['slice']
+duration = "3 minutes"
+description = "slice onion. Stem, seed and thingly slice bell peppers"
+ingredients = [ "1 large yellow onion (about 15 ounces; 415 g)", "3 red, yellow, and/or orange bell peppers (about 8 3/4 ounces; 250 g each)", ]
+
+['veggies']
+duration = "8 minutes"
+description = "Add onion and bell peppers to Dutch oven and cook, stirring and scraping up browned bits from bottom of pot, until onion and peppers are tender, about 8 minutes."
+depends = ['slice', 'fry']
+engagement = 22
+
+['mince']
+duration = "3 minutes"
+description = "mince cloves"
+ingredients = [ "8 medium cloves garlic (3/4 ounce; 25 g), minced", ]
+
+['garlic']
+duration = "1 minutes"
+description = "Add garlic and cook for 1 minute longer; lower heat and/or add more oil at any point if ingredients threaten to burn."
+engagement = 22
+depends = ['mince', 'veggies']
+
+['spices']
+duration = "2 minutes"
+description = "gather spices"
+ingredients = [ "1 tablespoon (15 ml) tomato paste", "1 teaspoon ground cumin", "1 teaspoon dried oregano", "1/2 teaspoon ground allspice (equal portions of ground - nutmeg, cloves, & cinnamon)", ]
+
+['pour']
+duration = "1 minutes"
+description = "measure out wine"
+ingredients = [ "1/2 cup (120 ml) dry white wine", ]
+
+['wine']
+duration = "2 minutes"
+description = "Add white wine and bring to a simmer, scraping up any browned bits from bottom of pot. Boil until raw alcohol smell has cooked off from wine, about 2 minutes."
+depends = ['pour', 'paste']
+engagement = 22
+
+['paste']
+duration = "1 minutes"
+description = "Stir in tomato paste, cumin, oregano, and allspice and cook, stirring and scraping, for 1 minute."
+depends = ['spices', 'garlic']
+engagement = 22
+
+['base']
+duration = "2 minutes"
+description = "gather stock and chicken stock"
+ingredients = [ "1 (14-ounce; 396 g) can peeled whole tomatoes in their juices, crushed", "1 cup (240 ml) homemade or store-bought chicken stock, plus more if needed" ]
+
+['return']
+duration = "2 minutes"
+description = "add canned tomatoes and stock. Return beef to pot, nestling it under the liquid among onions and peppers, along with any of its accumulated juices. Nestle bay leaves, carrot, and celery into pot. Add more stock, just enough to cover all the ingredients, if necessary."
+depends = ['base', 'wine', 'leave']
+
+['leave']
+duration = "2 minutes"
+description = "half crosswire a medium carrot & celery rib. stage them with bay leaves"
+ingredients = [ "2 bay leaves", "1 medium carrot", "1 celery rib", ]
+
+['bake']
+duration = "90 minutes"
+description = "Cover Dutch oven and transfer to oven, then let cook until beef is very tender, about 1 1/2 hours."
+depends = ['return', 'preheat']
+engagement = 2
+
+['discard']
+duration = "6 minutes"
+description = "Remove bay leaves, carrot, and celery from pot and discard. Remove beef from pot and, using 2 forks, pull apart into very thin, long shreds. Return beef to pot, stirring to combine with vegetables and cooking liquid."
+depends = ['bake']
+
+['thirds']
+duration = "3 minutes"
+description = "slice green olives"
+ingredients = [ "1/2 cup (90 g) pimento-stuffed olives, sliced into thirds", ]
+
+['cilantro']
+duration = "2 minutes"
+description = "chop cilantro"
+ingredients = [ "1 small handful chopped cilantro leaves and tender stems (about 1/2 loosely packed cup)", ]
+
+['thicken']
+duration = "5 minutes"
+description = "Stir in olives, return Dutch oven to medium heat, and simmer until juices have reduced just enough to coat the beef in a rich, saucy glaze. Season with salt and pepper."
+depends = ['discard', 'thirds']
+engagement = 12
+
+['serve']
+duration = "1 minutes"
+description = "Stir in cilantro, then serve with rice and beans."
+depends = ['thicken', 'cilantro']
+

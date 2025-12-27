@@ -1,0 +1,39 @@
+[part_to]
+name = "Pork Chops Cream Mushroom"
+depends = ["serve"]
+
+['onion']
+duration = "2 minutes"
+description = "slice an onion"
+ingredients = ['1 yellow onion']
+
+['preheat']
+duration = "12 minutes"
+description = "preheat an oven to 325 degrees"
+tools = ['325 degree oven']
+engagement = 2
+
+['assemble']
+duration = "3 minutes"
+description = "layer onions on bottom of baking dish, then top with chops, then top with condensed soup"
+ingredients = [ '8 boneless pork chops', '52 oz condensed soup', ]
+tools = ['3 qt (9x13) baking dish']
+depends = ['onion']
+
+['stock']
+duration = "2 minutes"
+description = "break up cubes in water and dump over chops/soup assembly. Cover with aluminum foil"
+ingredients = ['1/2 cup water', '4 beef bouillon cubes']
+depends = ['assemble']
+
+['cook']
+duration = "60 minutes"
+description = "cook about an hour when the chops are no longer pink in the middle. Stir the gravy once or twice during that time."
+depends = ['preheat', 'stock']
+engagement = 2
+
+['serve']
+duration = "1 minutes"
+description = "remove from oven and remove foil"
+depends = ['cook']
+

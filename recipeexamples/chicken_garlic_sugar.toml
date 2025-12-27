@@ -1,0 +1,68 @@
+[part_to]
+name = "Chicken Garlic Sugar"
+depends = ["serve"]
+
+['preheat']
+duration = "15 minutes"
+description = "preheat oven to 400 degrees"
+tools = ['400 degree oven']
+engagement = 2
+
+['salt']
+duration = "3 minutes"
+description = "salt and pepper chicken to taste"
+ingredients = [ '8 (5 ounce) bone-in, skin-on chicken thighs', 'salt and ground black pepper to taste' ]
+
+['melt']
+duration = "2 minutes"
+description = "Melt 2 tablespoons butter in a large oven-proof skillet over medium-high heat."
+ingredients = [ '2 tablespoons unsalted butter' ]
+tools = ['large oven safe skillet']
+depends = ['salt']
+engagement = 32
+
+['brown']
+duration = "5 minutes"
+description = "Add chicken to the melted butter and sear until just browned, 2 to 3 minutes per side. Remove chicken to a plate."
+depends = ['melt']
+engagement = 32
+
+['flavor']
+duration = "4 minutes"
+description = "gather the spices and sweetners"
+ingredients = [ '1/4 cup packed brown sugar', '1 tablespoon honey', '1/2 teaspoon dried oregano', '1/4 teaspoon dried thyme', '1/4 teaspoon dried basil' ]
+
+['bits']
+duration = "2 minutes"
+description = "melt 1 more tablespoon butter in the pan and pull any bits of the browned chicken into it"
+ingredients = [ '1 tablespoon unsalted butter' ]
+depends = ['garlic']
+engagement = 32
+
+['mince']
+duration = "2 minutes"
+description = "mince 4 garlic cloves"
+ingredients = [ '4 cloves garlic' ]
+
+['garlic']
+duration = "30 minutes"
+description = "put the garlic in and stir until fragrant, about 30 seconds"
+depends = ['mince', 'brown']
+engagement = 42
+
+['return']
+duration = "2 minutes"
+description = "turn off the burner heat. Stir in the spices and sweetners and put the chicken back in, skin down"
+depends = ['bits', 'flavor']
+
+['bake']
+duration = "23 minutes"
+description = "bake 20-25 minutes"
+depends = ['return', 'preheat']
+engagement = 2
+
+['serve']
+duration = "1 minute"
+description = "remove from oven and drizzle pan sauce on chicken when serving"
+depends = ['bake']
+

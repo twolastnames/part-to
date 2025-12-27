@@ -1,0 +1,71 @@
+[part_to]
+name = "Chicken Coq au Vin"
+depends = ["return"]
+
+['breading']
+duration = "2 minutes"
+description = "mix ingredients for breading in a bowl"
+ingredients = [ "1/4 cup all-purpose flour", "1 teaspoon dried thyme or 2 teaspoons frish thyme", "1/2 teaspoon salt", ]
+tools = ['medium mixing bowl']
+
+['bread']
+duration = "4 minutes"
+description = "trim up chicken and put in the flower mixture. move the chicken around to know the flower is on both sides of the thighs"
+ingredients = [ "6 boneless skinless chicken thighs (4 ounces each)", ]
+depends = ['breading']
+
+['oil']
+duration = "1 minutes"
+description = "put oil in dutch oven or high sided skillet"
+ingredients = [ "1 tablespoon olive oil", ]
+
+['heat']
+duration = "2 minutes"
+description = "heat oil over medium/high heat"
+depends = ['oil', ]
+engagement = 12
+
+['chicken']
+duration = "7 minutes"
+description = "Cook chicken until golden brown, 3-4 minutes per side. Remove from pan; keep warm."
+depends = ['bread', 'heat']
+engagement = 32
+
+['veggies']
+duration = "10 minutes"
+description = "gather and mix non chicken foods to cook"
+ingredients = [ "1/2 teaspoon salt", "6 cups quartered baby portobello mushrooms", "2 cups sliced fresh carrots", "3 pieces Canadian bacon, chopped", "1 tablespoon tomato paste", ]
+
+['second']
+duration = "2 minutes"
+description = "add the non chicken foods and cook for 2 minutes"
+depends = ['veggies', 'chicken']
+engagement = 42
+
+
+['measure']
+duration = "2 minutes"
+description = "measure out wine and broth"
+ingredients = [ "1 cup chicken broth", "1 cup dry red wine", ]
+tools = ['at least a 16oz drinking cup']
+
+['dump']
+duration = "3 minutes"
+description = "dump in wine and broth and bring to a boil"
+depends = ['measure', 'second']
+engagement = 22
+
+['return']
+duration = "9 minutes"
+description = "Return chicken to pan; reduce heat. Cook until chicken reaches 170° and carrots are just tender, 8-10 minutes. "
+depends = ['dump']
+engagement = 22
+
+#['']
+#duration = " minutes"
+#description = ""
+#ingredients = []
+#tools = []
+#depends = []
+#engagement = 2
+

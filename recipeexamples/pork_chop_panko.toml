@@ -1,0 +1,56 @@
+[part_to]
+name = "Pork Chop Panko"
+depends = ["bake"]
+
+['preheat']
+duration = "15 minutes"
+description = "preheat oven to 375 degrees"
+tools = ['375 degree oven']
+engagement = 2
+
+['line']
+duration = "2 minutes"
+description = "line a large baking sheet with parchment paper"
+tools = ['large baking sheet', 'parchment paper']
+
+['seasoning']
+duration = "2 minutes"
+description = "mix seasoning"
+ingredients = [ "1 teaspoon salt", "1 teaspoon black pepper", "2 teaspoons dried Italian seasoning or oregano" ]
+
+['coat']
+duration = "3 minutes"
+description = "coat the chops in the seasoning and place on parchment paper on the baking pan"
+ingredients = [ "8 bone-in pork chops" ]
+depends = ['seasoning', 'line']
+
+['squeeze']
+duration = "2 minutes"
+description = "sprinkle/squeeze lemon juice over the chops"
+ingredients = [ "4 teaspoons lemon juice" ]
+depends = ['coat']
+
+['spread']
+duration = "3 minutes"
+description = "spread the mustard over the chops"
+ingredients = [ "4 teaspoons Dijon mustard" ]
+depends = ['squeeze']
+
+['crumbs']
+duration = "3 minutes"
+description = "put the breadcrumbs in a bowl and rotate tossing the chops in them to put the crumbs on the chops"
+ingredients = [ "2 cups panko breadcrumbs divided" ]
+depends = ['spread']
+
+['oil']
+duration = "2 minutes"
+description = "sprinkle the oil over the chops"
+ingredients = [ "4 tablespoons extra virgin olive oil" ]
+depends = ['crumbs']
+
+['bake']
+duration = "20 minutes"
+description = "bake for 20 minutes or until the internal temperature is at least 145 degrees"
+depends = ['oil', 'preheat']
+engagement = 2
+

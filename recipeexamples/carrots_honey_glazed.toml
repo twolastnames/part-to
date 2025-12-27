@@ -1,0 +1,72 @@
+[part_to]
+name = "Carrots Honey Glazed"
+depends = ["serve"]
+
+
+
+['preheat']
+duration = "15 minutes"
+description = "preheat oven to 400 degrees F"
+tools = ['400 degree F oven']
+engagement = 2
+
+['melt']
+duration = "1 minutes"
+description = "melt butter in a bowl large enough to mix spices into"
+ingredients = [ "2 tablespoons melted unsalted butter", ]
+engagement = 22
+
+['seasoning']
+duration = "3 minutes"
+description = "mix seasonings in with melted butter"
+ingredients = [ "1/8 teaspoon black pepper", "1/8 teaspoon ground nutmeg", "1/4 teaspoon ground cinnamon", "3/4 teaspoon kosher salt", "1/2 tablespoon light brown sugar", "1 1/2 tablespoons honey", ]
+depends = ['melt']
+
+['reserve']
+duration = "1 minutes"
+description = "put 1 tbs of the butter mixture off to the side"
+depends = ['seasoning']
+
+['cut']
+duration = "4 minutes"
+description = "peel and trim carrots and put them in a large bowl"
+ingredients = [ "1 lb small carrots", ]
+
+['chives']
+duration = "2 minutes"
+description = "get chives in a small bowl by either slicing fresh or using freeze dried"
+ingredients = [ "1/2 tbs fresh sliced chives or 1/2 tsp freeze dried chives", ]
+
+['place']
+duration = "2 minutes"
+description = "spread carrots in a single layer on a baking sheet"
+tools = ['baking sheet']
+depends = ['reserve', 'toss']
+
+['bake']
+duration = "30 minutes"
+description = "put carrots in the oven for 30 minutes"
+depends = ['place', 'preheat']
+engagement = 5
+
+['toss']
+duration = "2 minutes"
+description = "toss the carrots with the unreserved butter mixture"
+depends = ['reserve', 'cut']
+
+['serve']
+duration = "2 minutes"
+description = "remove carrots from the oven, toss with reserved butter mixture, put in serving dish, and top with chives"
+depends = ['bake', 'chives']
+
+#['']
+#duration = " minutes"
+#description = ""
+#ingredients = []
+#tools = []
+#depends = []
+#engagement = 2
+
+
+
+

@@ -14,7 +14,7 @@ depends = ["Remove Beans from Oven"]
 engagement = 5
 
 ['Bake Beans']
-description = "bake to desired consistency"
+description = "bake to desired consistency, about 2 hours and 30 minutes"
 duration = "2 hours 30 minutes"
 engagement = 2
 depends = ["Heat Oven", "Assemble Beans"]

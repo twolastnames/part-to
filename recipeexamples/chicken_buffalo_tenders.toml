@@ -1,0 +1,36 @@
+[part_to]
+name = "Chicken Buffalo Tenders"
+depends = ["complete"]
+
+['toss']
+duration = "5 minutes"
+description = "mix the ranch seasoning and olive oil in mixing bowl. Trim and add the chicken tenders to the oil/seasoning mix and toss together"
+ingredients = [ "2 pounds chicken tenderloins", "3 tablespoons ranch seasoning, (1 packet)", "1 tablespoons olive oil", ]
+tools = ['large mixing bowl']
+
+['oil']
+duration = "1 minutes"
+description = "put oil in large skillet"
+ingredients = [ "1 tablespoons olive oil", ]
+tools = ['large skillet']
+
+['cook']
+duration = "6 minutes"
+description = "Place chicken tenderloins in a single layer on the skillet. Cook for 2 minutes without stirring or flipping, then flip, reduce heat to low, and cover. Cook for 3-4 additional minutes, until the chicken reaches 165˚F internal temperature. Remove chicken from skillet and let rest."
+engagement = 32
+depends = ['oil', 'toss']
+
+['sauce']
+duration = "2 minutes"
+description = "put butter in microwave safe bowl and melt, then mix in the hot pepper sauce. then let it sit some to thicken"
+ingredients = [ "1/2 cup hot pepper sauce", "3 tablespoons butter", ]
+tools = ['small microwave safe bowl']
+engagement = 52
+
+['complete']
+duration = "1 minutes"
+description = "toss the cooked chicken into the butter/sauce mixture"
+depends = ['sauce', 'cook']
+
+
+

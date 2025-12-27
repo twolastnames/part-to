@@ -1,0 +1,79 @@
+[part_to]
+name = "Chicken Orange"
+depends = ["serve"]
+
+['sauce']
+duration = "6 minutes"
+description = "get zest from an orange and mix up the sauce"
+ingredients = [ "orange zest , from large orange", "1 tablespoon cornstarch", "2 tablespoons rice wine", "1/4 cup water", "1 teaspoon sesame oil", "3 tablespoons low sodium soy sauce", "10 tablespoons sugar", "10 tablespoons white vinegar", ]
+
+['cut']
+duration = "5 minutes"
+description = "cut chicken into 1-inch pieces and put it in with the beat egg mixture"
+ingredients = [ "2 pounds chicken thighs , boneless, skinless" ]
+depends = ['slop']
+
+['slop']
+duration = "3 minutes"
+description = "in a bowl that will also include the chicken, beat the egg with oil, salt, and pepper"
+ingredients = [ "1 large egg", "1 1/2 teaspoon salt", "1 teaspoon black pepper", "1 tablespoon vegetable", ]
+tools = ['large bowl']
+
+['breading']
+duration = "2 minutes"
+description = "mix flour and cornstarch in a bowl"
+ingredients = [ "1/2 cup cornstarch", "1/4 cup flour", ]
+
+['oil']
+duration = "1 minutes"
+description = "put oil in pan"
+ingredients = [ "1 tbs vegetable oil, have more ready to add conditionally during fried", ]
+tools = ['frying pan or wok']
+
+['finish']
+duration = "3 minutes"
+description = "mince garlic and ginger (unless using dry ground) and mix with crushed red pepper flakes in a bowl"
+ingredients = [ "1 1/2 tablespoons freshly ginger or 1/2 teaspoon ground ginger", "2 cloves garlic", "1/2 teaspoon crushed red pepper flakes", ]
+
+['fry']
+duration = "12 minutes"
+description = "while maintaining the egg mixture uniformity over the chicken, coat pieces of of chicken in the flour/cornstarch and put in the hot pan to batch cook. each piece will take about 3-4 minutes and will need to be turned/rotated. place visually cooked chicken on a plate when cooked. add more oil if the pan dries"
+depends = ['preheat', 'breading', 'cut']
+engagement = 42
+
+['preheat']
+duration = "2 minutes"
+description = "preheat the pan/wok"
+engagement = 22
+depends = ['oil']
+
+['drain']
+duration = "2 minutes"
+description = "drain all but about a tablespoon of oil from pan"
+depends = ['fry']
+
+['fragrance']
+duration = "10 seconds"
+description = "add the garlic, ginger, pepper flaks and mix in with the hot oil"
+depends = ['drain', 'finish']
+
+['flavor']
+duration = "5 minutes"
+description = "add orange zest sauce into the pan and stir up and bring to boil"
+depends = ['fragrance', 'sauce']
+engagement = 22
+
+['serve']
+duration = "2 minutes"
+description = "add the cooked chicken to heat it and turn off the heat"
+depends = ['flavor']
+engagement = 52
+
+#['']
+#duration = " minutes"
+#description = ""
+#ingredients = []
+#tools = []
+#engagement = 2
+#depends = []
+
